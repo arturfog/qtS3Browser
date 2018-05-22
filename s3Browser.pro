@@ -14,8 +14,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    filebrowser.cpp \
-    s3client.cpp
+    s3Client.cpp \
+    s3model.cpp \
+    s3item.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,3 +37,7 @@ INCLUDEPATH += $$PWD/inc
 DEPENDPATH += $$PWD/inc
 
 unix:!macx: LIBS += -L$$PWD/lib/ -laws-cpp-sdk-s3
+
+HEADERS += \
+    s3model.h \
+    s3item.h

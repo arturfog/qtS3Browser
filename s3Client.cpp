@@ -3,6 +3,12 @@
 #include <aws/s3/model/Bucket.h>
 
 class S3Client {
+    void downloadFile() {
+        //QFile file(":/default.txt");
+        //file.open(QIODevice::ReadOnly);
+        //TreeModel model(file.readAll());
+        //file.close();
+    }
     void listBuckets() {
         Aws::SDKOptions options;
         Aws::InitAPI(options);
