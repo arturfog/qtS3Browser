@@ -8,6 +8,11 @@
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
+#include <aws/s3/model/ListObjectsRequest.h>
+#include <aws/s3/model/Object.h>
+
+#include <iostream>
+#include <fstream>
 
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -19,11 +24,43 @@ void S3Client::init() {
         //config.region = region;
         config->readRateLimiter = m_limiter;
         config->writeRateLimiter = m_limiter;
-        config->endpointOverride = "172.17.0.2:9444";
+        config->endpointOverride = "fakes3.com:9444";
         config->scheme = Aws::Http::Scheme::HTTP;
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(*config));
         this->s3_client = s3_client;
     }
+    Aws::ShutdownAPI(options);
+}
+
+void S3Client::listObjects(const Aws::String &bucket_name) {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        std::cout << "Objects in S3 bucket: " << bucket_name << std::endl;
+
+        Aws::S3::Model::ListObjectsRequest objects_request;
+        objects_request.WithBucket(bucket_name);
+
+        auto list_objects_outcome = s3_client->ListObjects(objects_request);
+
+        if (list_objects_outcome.IsSuccess())
+        {
+            Aws::Vector<Aws::S3::Model::Object> object_list =
+                list_objects_outcome.GetResult().GetContents();
+
+            for (auto const &s3_object : object_list)
+            {
+                std::cout << "* " << s3_object.GetKey() << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "ListObjects error: " <<
+                list_objects_outcome.GetError().GetExceptionName() << " " <<
+                list_objects_outcome.GetError().GetMessage() << std::endl;
+        }
+    }
+
     Aws::ShutdownAPI(options);
 }
 
@@ -98,11 +135,11 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
 
         object_request.WithBucket(bucket_name).WithKey(key_name);
 
-//        // Binary files must also have the std::ios_base::bin flag or'ed in
-//        //auto input_data = Aws::MakeShared<Aws::FStream>("PutObjectInputStream",
-//        //    file_name.c_str(), std::ios_base::in | std::ios_base::binary);
+        // Binary files must also have the std::ios_base::bin flag or'ed in
+        auto input_data = Aws::MakeShared<Aws::FStream>("PutObjectInputStream",
+            file_name.c_str(), std::ios_base::in | std::ios_base::binary);
 
-//        //object_request.SetBody(input_data);
+        object_request.SetBody(input_data);
 
         auto put_object_outcome = s3_client->PutObject(object_request);
 

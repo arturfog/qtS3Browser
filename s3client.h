@@ -24,6 +24,8 @@ public:
 
     void init();
 
+    void listObjects(const Aws::String &bucket_name);
+
     void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
 
     void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name);

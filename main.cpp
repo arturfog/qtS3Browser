@@ -110,6 +110,9 @@ int main(int argc, char *argv[])
 
     S3Client s3;
     s3.listBuckets();
+    s3.deleteObject("fakes3", "s3browser.elf");
+    s3.uploadFile("fakes3", "s3browser.elf", "s3browser");
+    s3.listObjects("fakes3");
     return 0; //app.exec();
 }
 #include "main.moc"
