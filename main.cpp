@@ -6,6 +6,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include "s3client.h"
+
 static inline QString permissionString(const QFileInfo &fi)
 {
     const QFile::Permissions permissions = fi.permissions();
@@ -94,18 +96,20 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    qmlRegisterUncreatableType<DisplayFileSystemModel>("io.qt.examples.quick.controls.filesystembrowser", 1, 0,
-                                                       "FileSystemModel", "Cannot create a FileSystemModel instance.");
-    QFileSystemModel *fsm = new DisplayFileSystemModel(&engine);
-    fsm->setRootPath(QDir::homePath());
-    fsm->setResolveSymlinks(true);
-    engine.rootContext()->setContextProperty("fileSystemModel", fsm);
-    engine.rootContext()->setContextProperty("rootPathIndex", fsm->index(fsm->rootPath()));
-    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+//    QQmlApplicationEngine engine;
+//    qmlRegisterUncreatableType<DisplayFileSystemModel>("io.qt.examples.quick.controls.filesystembrowser", 1, 0,
+//                                                       "FileSystemModel", "Cannot create a FileSystemModel instance.");
+//    QFileSystemModel *fsm = new DisplayFileSystemModel(&engine);
+//    fsm->setRootPath(QDir::homePath());
+//    fsm->setResolveSymlinks(true);
+//    engine.rootContext()->setContextProperty("fileSystemModel", fsm);
+//    engine.rootContext()->setContextProperty("rootPathIndex", fsm->index(fsm->rootPath()));
+//    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
+//    if (engine.rootObjects().isEmpty())
+//        return -1;
 
-    return app.exec();
+    S3Client s3;
+    s3.listBuckets();
+    return 0; //app.exec();
 }
 #include "main.moc"
