@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>FileBrowser.qml</file>
+        <file>FileDelegate.qml</file>
+        <file>S3Browser.qml</file>
     </qresource>
 </RCC>

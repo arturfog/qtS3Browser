@@ -15,8 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     s3model.cpp \
-    s3item.cpp \
-    s3client.cpp
+    s3client.cpp \
+    iconprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -40,5 +40,5 @@ unix:!macx: LIBS += -L$$PWD/lib/ -laws-cpp-sdk-s3
 
 HEADERS += \
     s3model.h \
-    s3item.h \
-    s3client.h
+    s3client.h \
+    iconprovider.h

@@ -3,32 +3,50 @@
 
 #include <QList>
 #include <QVariant>
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
+#include <QStringList>
 
-#include "s3item.h"
-
-class S3Model : public QAbstractItemModel
+class S3Item
 {
-    Q_OBJECT
-
 public:
-    explicit S3Model(const QString &data, QObject *parent = 0);
-    ~S3Model();
+    S3Item(const QString &name, const QString &path);
 
-    QVariant data(const QModelIndex &index, int role) const override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QString filePath() const;
+    QString fileName() const;
 
 private:
-    void setupModelData(const QStringList &lines, S3Item *parent);
+    QString m_name;
+    QString m_path;
+};
 
-    S3Item *rootItem;
+class S3Model : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    enum AnimalRoles {
+        NameRole = Qt::UserRole + 1,
+        PathRole,
+        S3PathRole
+    };
+
+    Q_INVOKABLE QString getS3Path() const {
+            return s3Path();
+        }
+
+    S3Model(QObject *parent = 0);
+
+    void addS3Item(const S3Item &animal);
+
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+
+    QString s3Path() const;
+
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+protected:
+    QHash<int, QByteArray> roleNames() const;
+private:
+    QList<S3Item> m_s3items;
 };
 
 #endif // S3MODEL_H

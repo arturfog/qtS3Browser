@@ -15,10 +15,7 @@ Item {
 
         anchors.fill: parent
 
-        model: FolderListModel {
-            id: folder
-            folder: view.path
-        }
+        model: s3Model
 
         delegate: FileDelegate { }
 
@@ -38,7 +35,7 @@ Item {
                     onClicked: view.path = folder.parentFolder
                 }
                 Text {
-                    text: view.path
+                    text: s3Model.getS3Path()
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
@@ -52,7 +49,7 @@ Item {
             Row {
                 anchors.fill: parent
                 Text {
-                    text: "["+folder.count+" Files]"
+                    text: "["+s3Model.rowCount()+" Files]"
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }

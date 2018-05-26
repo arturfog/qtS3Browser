@@ -2,12 +2,38 @@ import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQml.Models 2.2
 import QtQuick.Controls 1.5
+import QtQuick.Layouts 1.0
 
-Window {
+ApplicationWindow {
     visible: true
-    width: 640
+    width: 800
     height: 480
     title: qsTr("s3FileBrowser")
+
+    statusBar: StatusBar {
+            RowLayout {
+                anchors.fill: parent
+                Label { text: "Read Only" }
+            }
+        }
+
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            MenuItem { text: "Open..." }
+            MenuItem {
+                text: "Close"
+                onTriggered: Qt.quit();
+            }
+        }
+
+        Menu {
+            title: "Edit"
+            MenuItem { text: "Cut" }
+            MenuItem { text: "Copy" }
+            MenuItem { text: "Paste" }
+        }
+    }
 
 
     Row {
@@ -16,14 +42,37 @@ Window {
         anchors.fill: parent
         anchors.margins: 2 * 12 + row.height
 
-       FileBrowser {
-           anchors.margins: 24
-           id: view1
-       }
+        Column {
+            width: parent.width / 2
+            height: parent.height
+            FileBrowser {
+                anchors.fill: parent
+                path: "file:///home/" // let's start with the Home folder
+            }
+        }
 
-       FileBrowser {
-           anchors.margins: 24
-           id: view2
-       }
+        Column {
+            width: 30
+            height: parent.height
+
+            Button {
+                width: parent.width
+                text: Left
+            }
+
+            Button {
+                width: parent.width
+                text: Right
+            }
+        }
+
+        Column {
+            width: parent.width / 2
+            height: parent.height
+            S3Browser {
+                anchors.fill: parent
+                path: "file:///home/" // let's start with the Home folder
+            }
+        }
     }
 }
