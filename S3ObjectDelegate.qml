@@ -4,7 +4,7 @@ Rectangle {
     id:delegate
     width: view.width
     height:34
-    color: view.colors[index & 3]
+    //color: view.colors[index & 3]
     Row {
         anchors.fill: parent
         Image {
@@ -14,6 +14,7 @@ Rectangle {
             source: "image://iconProvider/"+filePath
         }
         Text {
+            id: i_fileName
             text: fileName
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -21,8 +22,6 @@ Rectangle {
     MouseArea {
         id:mouseArea
         anchors.fill: parent
-        //onClicked: fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
-        onClicked: color = "lightblue"
-        onDoubleClicked: fileIsDir ? view.path = fileURL : 0
+        onDoubleClicked: s3Model.getObjects(i_fileName.text)
     }
 }

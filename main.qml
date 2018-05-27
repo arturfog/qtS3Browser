@@ -20,7 +20,6 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: "File"
-            MenuItem { text: "Open..." }
             MenuItem {
                 text: "Close"
                 onTriggered: Qt.quit();
@@ -28,10 +27,30 @@ ApplicationWindow {
         }
 
         Menu {
-            title: "Edit"
-            MenuItem { text: "Cut" }
-            MenuItem { text: "Copy" }
-            MenuItem { text: "Paste" }
+            title: "S3"
+            MenuItem {
+                text: "Connect..."
+                onTriggered: s3Model.getBuckets()
+            }
+            MenuSeparator { }
+            MenuItem { text: "Create bucket" }
+            MenuItem { text: "Create directory" }
+            MenuItem { text: "Download" }
+            MenuItem { text: "Upload" }
+            MenuSeparator { }
+            MenuItem { text: "Disconnect" }
+        }
+
+        Menu {
+            title: "Bookmarks"
+            MenuItem { text: "Create bookmark" }
+            MenuSeparator { }
+            MenuItem { text: "Empty" }
+        }
+
+        Menu {
+            title: "Help"
+            MenuItem { text: "About" }
         }
     }
 
@@ -45,33 +64,25 @@ ApplicationWindow {
         Column {
             width: parent.width / 2
             height: parent.height
+
             FileBrowser {
-                anchors.fill: parent
+                height: parent.height
+                width: parent.width
                 path: "file:///home/" // let's start with the Home folder
             }
         }
 
         Column {
-            width: 30
+            width: 32
             height: parent.height
-
-            Button {
-                width: parent.width
-                text: Left
-            }
-
-            Button {
-                width: parent.width
-                text: Right
-            }
         }
 
         Column {
             width: parent.width / 2
             height: parent.height
             S3Browser {
-                anchors.fill: parent
-                path: "file:///home/" // let's start with the Home folder
+                height: parent.height
+                width: parent.width
             }
         }
     }

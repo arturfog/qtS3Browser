@@ -6,6 +6,8 @@
 #include <QAbstractListModel>
 #include <QStringList>
 
+#include "s3client.h"
+
 class S3Item
 {
 public:
@@ -25,13 +27,12 @@ class S3Model : public QAbstractListModel
 public:
     enum AnimalRoles {
         NameRole = Qt::UserRole + 1,
-        PathRole,
-        S3PathRole
+        PathRole
     };
 
-    Q_INVOKABLE QString getS3Path() const {
-            return s3Path();
-        }
+    Q_INVOKABLE QString getS3Path() const { return s3Path(); }
+    Q_INVOKABLE void getBuckets() const { getBuckets(); }
+    Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
 
     S3Model(QObject *parent = 0);
 
@@ -41,10 +42,15 @@ public:
 
     QString s3Path() const;
 
+    void getBuckets();
+
+    void getObjects(const std::string &bucket);
+
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
+    S3Client s3;
 private:
     QList<S3Item> m_s3items;
 };

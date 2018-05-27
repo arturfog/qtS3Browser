@@ -4,5 +4,10 @@
         <file>FileBrowser.qml</file>
         <file>FileDelegate.qml</file>
         <file>S3Browser.qml</file>
+        <file>S3ObjectDelegate.qml</file>
+        <file>icons/32_download_icon.png</file>
+        <file>icons/32_refresh_icon.png</file>
+        <file>icons/32_up_icon.png</file>
+        <file>icons/32_upload_icon.png</file>
     </qresource>
 </RCC>

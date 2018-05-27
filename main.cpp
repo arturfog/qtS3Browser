@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     S3Model model;
-
     QQmlApplicationEngine engine;
     QQuickView view(&engine, nullptr);
 
