@@ -13,13 +13,19 @@ Item {
         width: parent.width
         height: 38
         Button {
-            width: 48
-            iconSource: "icons/32_download_icon.png"
+            width:48
+            iconSource: "icons/32_up_icon.png"
+            onClicked: view.path = folder.parentFolder
         }
 
         Button {
             width: 48
             iconSource: "icons/32_refresh_icon.png"
+        }
+
+        Button {
+            width: 48
+            iconSource: "icons/32_download_icon.png"
         }
     }
 
@@ -29,10 +35,11 @@ Item {
         y: 38
         ListView {
             id: view
-            //property var colors: ["white","#E0FFE0","white","#EEEEFF" ]
+            property var colors: ["white","lightgray","white","lightgray" ]
             property string path
 
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height
 
             model: s3Model
 
@@ -43,33 +50,21 @@ Item {
             header: Rectangle {
                 width: browser.width
                 height: 34
-                color: "yellow"
                 z:2
-                Row {
-                    anchors.fill: parent
-                    Button {
-                        width:32
-                        height :32
-                        iconSource: "icons/32_up_icon.png"
-                        onClicked: view.path = folder.parentFolder
-                    }
-                    Button {
-                        width:32
-                        height :32
-                        iconSource: "icons/32_refresh_icon.png"
-                        onClicked: view.path = folder.parentFolder
-                    }
-                    Text {
-                        text: s3Model.getS3Path()
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
+                color: "orange"
+                border.color: "black"
+                border.width: 1
+
+                TextInput {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: s3Model.getS3Path()
                 }
             }
             footerPositioning: ListView.OverlayHeader
             footer: Rectangle {
                 width: browser.width
                 height: 34
-                color: "yellow"
+                color: "orange"
                 z:2
                 Row {
                     anchors.fill: parent

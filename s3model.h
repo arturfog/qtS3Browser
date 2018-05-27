@@ -36,7 +36,9 @@ public:
 
     S3Model(QObject *parent = 0);
 
-    void addS3Item(const S3Item &animal);
+    void addS3Item(const S3Item &item);
+
+    void clearItems();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 

@@ -28,6 +28,12 @@ void S3Model::addS3Item(const S3Item &item)
     endInsertRows();
 }
 
+void S3Model::clearItems() {
+    beginRemoveRows(QModelIndex(), 0, rowCount());
+    m_s3items.clear();
+    endRemoveRows();
+}
+
 int S3Model::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return m_s3items.count();
@@ -39,8 +45,14 @@ QString S3Model::s3Path() const {
 }
 
 void S3Model::getObjects(const std::string &bucket) {
+    clearItems();
+
     std::vector<std::string> objects;
     s3.listObjects(bucket.c_str(), objects);
+
+    for(auto item : objects) {
+        addS3Item(S3Item(QString(item.c_str()), QString(bucket.c_str())));
+    }
 }
 
 void S3Model::getBuckets() {
@@ -48,7 +60,7 @@ void S3Model::getBuckets() {
     s3.getBuckets(buckets);
 
     for(auto item : buckets) {
-        addS3Item(S3Item(QString(item.c_str()), "Large"));
+        addS3Item(S3Item(QString(item.c_str()), "/"));
     }
 }
 

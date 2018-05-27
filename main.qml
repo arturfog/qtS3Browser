@@ -10,6 +10,10 @@ ApplicationWindow {
     height: 480
     title: qsTr("s3FileBrowser")
 
+    property var testWindow: CreateItemWindow {
+
+    }
+
     statusBar: StatusBar {
             RowLayout {
                 anchors.fill: parent
@@ -33,7 +37,12 @@ ApplicationWindow {
                 onTriggered: s3Model.getBuckets()
             }
             MenuSeparator { }
-            MenuItem { text: "Create bucket" }
+            MenuItem {
+                text: "Create bucket"
+                onTriggered: {
+                    testWindow.visible = true
+                }
+            }
             MenuItem { text: "Create directory" }
             MenuItem { text: "Download" }
             MenuItem { text: "Upload" }

@@ -15,6 +15,12 @@ Item {
 
         Button {
             width: 48
+            iconSource: "icons/32_up_icon.png"
+            onClicked: view.path = folder.parentFolder
+        }
+
+        Button {
+            width: 48
             iconSource: "icons/32_refresh_icon.png"
         }
 
@@ -48,20 +54,13 @@ Item {
             header: Rectangle {
                 width: browser.width
                 height: 34
-                color: "gray"
                 z:2
-                Row {
-                    anchors.fill: parent
-                    Button {
-                        width:32
-                        height :32
-                        iconSource: "icons/32_up_icon.png"
-                        onClicked: view.path = folder.parentFolder
-                    }
-                    Text {
-                        text: view.path
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
+                border.color: "black"
+                border.width: 1
+
+                TextInput {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: view.path
                 }
             }
 

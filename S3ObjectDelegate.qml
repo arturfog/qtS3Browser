@@ -4,7 +4,7 @@ Rectangle {
     id:delegate
     width: view.width
     height:34
-    //color: view.colors[index & 3]
+    color: view.colors[index & 3]
     Row {
         anchors.fill: parent
         Image {
@@ -22,6 +22,10 @@ Rectangle {
     MouseArea {
         id:mouseArea
         anchors.fill: parent
-        onDoubleClicked: s3Model.getObjects(i_fileName.text)
+        onClicked: color = "lightblue"
+        onDoubleClicked:  {
+            s3Model.getObjects(i_fileName.text)
+            view.forceLayout()
+        }
     }
 }
