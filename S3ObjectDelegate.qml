@@ -22,9 +22,13 @@ Rectangle {
     MouseArea {
         id:mouseArea
         anchors.fill: parent
-        onClicked: color = "lightblue"
+        onClicked: {
+            view.currentIndex = index
+        }
+
         onDoubleClicked:  {
             s3Model.getObjects(i_fileName.text)
+            path = s3Model.getS3Path()
             view.forceLayout()
         }
     }

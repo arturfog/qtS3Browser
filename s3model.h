@@ -32,7 +32,15 @@ public:
 
     Q_INVOKABLE QString getS3Path() const { return s3Path(); }
     Q_INVOKABLE void getBuckets() const { getBuckets(); }
+    Q_INVOKABLE void goBack() const { goBack(); }
     Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
+    Q_INVOKABLE void createBucket(const QString &text) { createBucket(text.toStdString()); }
+    Q_INVOKABLE void refresh() const { refresh(); }
+    Q_INVOKABLE void removeBucket(const unsigned int idx) {
+        if (idx < m_s3items.count()) {
+            removeBucket(m_s3items.at(idx).fileName().toStdString());
+        }
+    }
 
     S3Model(QObject *parent = 0);
 
@@ -44,7 +52,17 @@ public:
 
     QString s3Path() const;
 
+    void goTo(QString path);
+
+    void goBack();
+
     void getBuckets();
+
+    void refresh();
+
+    void createBucket(const std::string &bucket);
+
+    void removeBucket(const std::string &bucket);
 
     void getObjects(const std::string &bucket);
 
@@ -55,6 +73,7 @@ protected:
     S3Client s3;
 private:
     QList<S3Item> m_s3items;
+    QStringList m_s3Path;
 };
 
 #endif // S3MODEL_H

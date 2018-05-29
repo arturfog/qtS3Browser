@@ -19,6 +19,7 @@ QString S3Item::filePath() const
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
+    m_s3Path.push_back("s3://");
 }
 
 void S3Model::addS3Item(const S3Item &item)
@@ -39,13 +40,30 @@ int S3Model::rowCount(const QModelIndex & parent) const {
     return m_s3items.count();
 }
 
+void S3Model::goTo(QString path)
+{
+    m_s3Path.push_back(path);
+}
+
+void S3Model::goBack()
+{
+    if (m_s3Path.count() >= 2) {
+        m_s3Path.removeLast();
+
+        if(m_s3Path.count() == 1) {
+            getBuckets();
+        }
+    }
+}
+
 QString S3Model::s3Path() const {
-    qInfo() << "Getting path";
-    return QString("s3://");
+    QString path = m_s3Path.join("/");
+    return path;
 }
 
 void S3Model::getObjects(const std::string &bucket) {
     clearItems();
+    goTo(bucket.c_str());
 
     std::vector<std::string> objects;
     s3.listObjects(bucket.c_str(), objects);
@@ -56,12 +74,30 @@ void S3Model::getObjects(const std::string &bucket) {
 }
 
 void S3Model::getBuckets() {
+    clearItems();
     std::vector<std::string> buckets;
     s3.getBuckets(buckets);
 
     for(auto item : buckets) {
         addS3Item(S3Item(QString(item.c_str()), "/"));
     }
+}
+
+void S3Model::refresh()
+{
+    if(m_s3Path.count() <= 2) {
+        getBuckets();
+    }
+}
+
+void S3Model::createBucket(const std::string &bucket)
+{
+    s3.createBucket(bucket.c_str());
+}
+
+void S3Model::removeBucket(const std::string &bucket)
+{
+    s3.deleteBucket(bucket.c_str());
 }
 
 QVariant S3Model::data(const QModelIndex & index, int role) const {

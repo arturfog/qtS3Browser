@@ -15,17 +15,27 @@ Item {
         Button {
             width:48
             iconSource: "icons/32_up_icon.png"
-            onClicked: view.path = folder.parentFolder
+            onClicked: {
+                s3Model.goBack()
+                path = s3Model.getS3Path()
+            }
         }
 
         Button {
             width: 48
             iconSource: "icons/32_refresh_icon.png"
+            onClicked: s3Model.refresh()
         }
 
         Button {
             width: 48
             iconSource: "icons/32_download_icon.png"
+        }
+
+        Button {
+            width: 48
+            iconSource: "icons/32_download_icon.png"
+            onClicked: s3Model.removeBucket(view.currentIndex)
         }
     }
 
@@ -36,10 +46,12 @@ Item {
         ListView {
             id: view
             property var colors: ["white","lightgray","white","lightgray" ]
-            property string path
+            property string path : s3Model.getS3Path()
 
             width: parent.width
             height: parent.height
+
+            //onCurrentItemChanged: console.log(view.currentIndex + ' selected')
 
             model: s3Model
 
@@ -57,10 +69,20 @@ Item {
 
                 TextInput {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: s3Model.getS3Path()
+                    text: path
                 }
             }
+
+            highlight: Rectangle {
+                color: "lightblue"
+                opacity: 0.5
+                z: 2
+            }
+            focus: true
+            highlightFollowsCurrentItem: true
+
             footerPositioning: ListView.OverlayHeader
+
             footer: Rectangle {
                 width: browser.width
                 height: 34

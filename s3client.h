@@ -28,6 +28,8 @@ public:
 
     void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
 
+    void deleteBucket(const Aws::String &bucket_name);
+
     void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name);
 
     void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,

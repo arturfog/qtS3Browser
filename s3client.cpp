@@ -5,12 +5,15 @@
 #include <aws/core/utils/ratelimiter/DefaultRateLimiter.h>
 
 #include <aws/s3/model/Bucket.h>
+#include <aws/s3/model/Object.h>
+// Objects
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/model/ListObjectsRequest.h>
-#include <aws/s3/model/Object.h>
+// Buckets
 #include <aws/s3/model/CreateBucketRequest.h>
+#include <aws/s3/model/DeleteBucketRequest.h>
 
 #include <iostream>
 #include <fstream>
@@ -123,9 +126,29 @@ void S3Client::getBuckets(std::vector<std::string> &list) {
 }
 
 void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name) {
-        Aws::S3::Model::GetObjectRequest getObjectRequest;
-        getObjectRequest.SetBucket(bucket_name);
-        getObjectRequest.SetKey(key_name);
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        Aws::S3::Model::GetObjectRequest object_request;
+        object_request.WithBucket(bucket_name).WithKey(key_name);
+
+        auto get_object_outcome = s3_client->GetObject(object_request);
+
+        if (get_object_outcome.IsSuccess())
+        {
+            Aws::OFStream local_file;
+            local_file.open(key_name.c_str(), std::ios::out | std::ios::binary);
+            local_file << get_object_outcome.GetResult().GetBody().rdbuf();
+            std::cout << "Done!" << std::endl;
+        }
+        else
+        {
+            std::cout << "GetObject error: " <<
+                         get_object_outcome.GetError().GetExceptionName() << " " <<
+                         get_object_outcome.GetError().GetMessage() << std::endl;
+        }
+    }
+    Aws::ShutdownAPI(options);
 }
 
 void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
@@ -149,6 +172,31 @@ void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &k
             std::cout << "DeleteObject error: " <<
                 delete_object_outcome.GetError().GetExceptionName() << " " <<
                 delete_object_outcome.GetError().GetMessage() << std::endl;
+        }
+    }
+    Aws::ShutdownAPI(options);
+}
+
+void S3Client::deleteBucket(const Aws::String &bucket_name)
+{
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        std::cout << "DeleteBucket "  << bucket_name << std::endl;
+        Aws::S3::Model::DeleteBucketRequest bucket_request;
+        bucket_request.SetBucket(bucket_name);
+
+        auto outcome = s3_client->DeleteBucket(bucket_request);
+
+        if (outcome.IsSuccess())
+        {
+            std::cout << "Done!" << std::endl;
+        }
+        else
+        {
+            std::cout << "DeleteBucket error: "
+                      << outcome.GetError().GetExceptionName() << " - "
+                      << outcome.GetError().GetMessage() << std::endl;
         }
     }
     Aws::ShutdownAPI(options);

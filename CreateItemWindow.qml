@@ -16,6 +16,7 @@ Window {
             border.width: 1
 
             TextInput {
+                id: itemName
                 anchors.verticalCenter: parent.verticalCenter
                 text: "view.path"
             }
@@ -28,9 +29,17 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 text: "Create"
+                onClicked: {
+                    s3Model.createBucket(itemName.text)
+                    s3Model.refresh()
+                    close()
+                }
             }
             Button {
                 text: "Cancel"
+                onClicked: {
+                    close()
+                }
             }
         }
 

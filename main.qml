@@ -46,8 +46,6 @@ ApplicationWindow {
             MenuItem { text: "Create directory" }
             MenuItem { text: "Download" }
             MenuItem { text: "Upload" }
-            MenuSeparator { }
-            MenuItem { text: "Disconnect" }
         }
 
         Menu {
