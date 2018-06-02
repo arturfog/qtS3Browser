@@ -66,7 +66,7 @@ ApplicationWindow {
         anchors.top: parent.top
         anchors.topMargin: 12
         anchors.fill: parent
-        anchors.margins: 2 * 12 + row.height
+        //anchors.margins: 2 * 12 + row.height
 
         Column {
             width: parent.width / 2

@@ -36,7 +36,7 @@ public:
     Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
     Q_INVOKABLE void createBucket(const QString &text) { createBucket(text.toStdString()); }
     Q_INVOKABLE void refresh() const { refresh(); }
-    Q_INVOKABLE void removeBucket(const unsigned int idx) {
+    Q_INVOKABLE void removeBucket(const int idx) {
         if (idx < m_s3items.count()) {
             removeBucket(m_s3items.at(idx).fileName().toStdString());
         }

@@ -28,8 +28,7 @@ void S3Client::init() {
         //config.region = region;
         config->readRateLimiter = m_limiter;
         config->writeRateLimiter = m_limiter;
-        config->endpointOverride = "172.17.0.2:9444";
-        //config->endpointOverride = "blabla:9444";
+        config->endpointOverride = "s3.amazonaws.com:9444";
         config->scheme = Aws::Http::Scheme::HTTP;
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(*config));
         this->s3_client = s3_client;
@@ -182,8 +181,9 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
-        std::cout << "DeleteBucket "  << bucket_name << std::endl;
+        std::cout << "DeleteBucket ["  << bucket_name << "]" << std::endl;
         Aws::S3::Model::DeleteBucketRequest bucket_request;
+
         bucket_request.SetBucket(bucket_name);
 
         auto outcome = s3_client->DeleteBucket(bucket_request);

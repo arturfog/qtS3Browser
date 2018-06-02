@@ -31,14 +31,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS += -L$$PWD/lib/ -laws-cpp-sdk-core
-
-INCLUDEPATH += $$PWD/inc
-DEPENDPATH += $$PWD/inc
-
-unix:!macx: LIBS += -L$$PWD/lib/ -laws-cpp-sdk-s3
+# INCLUDEPATH += $$PWD/inc
+# DEPENDPATH += $$PWD/inc
 
 HEADERS += \
     s3model.h \
     s3client.h \
     iconprovider.h
+
+CONFIG += conan_basic_setup
+include(conanbuildinfo.pri)

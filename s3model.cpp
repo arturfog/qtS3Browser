@@ -97,6 +97,7 @@ void S3Model::createBucket(const std::string &bucket)
 
 void S3Model::removeBucket(const std::string &bucket)
 {
+    //s3.deleteObject(bucket.c_str(), "");
     s3.deleteBucket(bucket.c_str());
 }
 
