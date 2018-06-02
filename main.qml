@@ -1,17 +1,25 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQml.Models 2.2
-import QtQuick.Controls 1.5
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
+import QtQuick.Controls.Material 2.1
 
 ApplicationWindow {
+    id: app_window
     visible: true
     width: 800
     height: 480
     title: qsTr("s3FileBrowser")
 
-    property var testWindow: CreateItemWindow {
+    property var createBucketWindow: CreateItemWindow {
+        win_title: "Create bucket"
+        create_action: 0
+    }
 
+    property var createFolderWindow: CreateItemWindow {
+        win_title: "Create folder"
+        create_action: 1
     }
 
     statusBar: StatusBar {
@@ -22,10 +30,12 @@ ApplicationWindow {
         }
 
     menuBar: MenuBar {
+        id: menu_bar
         Menu {
             title: "File"
             MenuItem {
                 text: "Close"
+                iconSource: "icons/32_up_icon.png"
                 onTriggered: Qt.quit();
             }
         }
@@ -40,7 +50,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Create bucket"
                 onTriggered: {
-                    testWindow.visible = true
+                    createBucketWindow.visible = true
                 }
             }
             MenuItem { text: "Create directory" }

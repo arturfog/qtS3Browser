@@ -1,5 +1,5 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.2
 import QtQuick.Dialogs 1.2
 import Qt.labs.folderlistmodel 2.1
 
@@ -7,14 +7,19 @@ Item {
     id: browser
     property alias path: view.path
     width: 300
-    height: 200
+    height: 400
 
     Row {
+        id: top_buttons_row
         width: parent.width
-        height: 38
+        height: 48
+        z:2
+
         Button {
             width:48
-            iconSource: "icons/32_up_icon.png"
+            height: parent.height
+            icon.source: "icons/32_up_icon.png"
+            icon.color: "transparent"
             onClicked: {
                 s3Model.goBack()
                 path = s3Model.getS3Path()
@@ -23,35 +28,48 @@ Item {
 
         Button {
             width: 48
-            iconSource: "icons/32_refresh_icon.png"
+            height: parent.height
+            icon.source: "icons/32_refresh_icon.png"
+            icon.color: "transparent"
             onClicked: s3Model.refresh()
         }
 
         Button {
             width: 48
-            iconSource: "icons/32_download_icon.png"
+            height: parent.height
+            icon.source: "icons/32_download_icon.png"
+            icon.color: "transparent"
         }
 
         Button {
             width: 48
-            iconSource: "icons/32_download_icon.png"
+            height: parent.height
+            icon.source: "icons/32_delete_icon.png"
+            icon.color: "transparent"
             onClicked: s3Model.removeBucket(view.currentIndex)
+        }
+
+        Button {
+            width: 48
+            height: parent.height
+            icon.source: "icons/32_new_folder_icon.png"
+            icon.color: "transparent"
+            onClicked: {
+                createFolderWindow.visible = true
+            }
         }
     }
 
     Row {
         width: parent.width
-        height: parent.height - 38
-        y: 38
+        height: parent.height - top_buttons_row.height
+        y: top_buttons_row.height
         ListView {
             id: view
-            property var colors: ["white","lightgray","white","lightgray" ]
             property string path : s3Model.getS3Path()
 
             width: parent.width
             height: parent.height
-
-            //onCurrentItemChanged: console.log(view.currentIndex + ' selected')
 
             model: s3Model
 
@@ -84,10 +102,11 @@ Item {
             footerPositioning: ListView.OverlayHeader
 
             footer: Rectangle {
+                id: s3_footer
                 width: browser.width
                 height: 34
-                color: "orange"
-                z:2
+                color: app_window.color
+                z: 2
                 Row {
                     anchors.fill: parent
                     Text {

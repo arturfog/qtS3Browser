@@ -4,7 +4,7 @@ Rectangle {
     id:delegate
     width: view.width
     height:34
-    color: view.colors[index & 3]
+    color: "white"
     Row {
         anchors.fill: parent
         Image {
@@ -21,8 +21,9 @@ Rectangle {
     MouseArea {
         id:mouseArea
         anchors.fill: parent
-        //onClicked: fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
-        onClicked: color = "lightblue"
-        onDoubleClicked: fileIsDir ? view.path = fileURL : 0
+        onClicked: {
+            view.currentIndex = index
+        }
+        onDoubleClicked: fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
     }
 }

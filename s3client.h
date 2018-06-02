@@ -26,6 +26,8 @@ public:
 
     void listObjects(const Aws::String &bucket_name, std::vector<std::string> &list);
 
+    void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
+
     void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
 
     void deleteBucket(const Aws::String &bucket_name);
@@ -34,6 +36,8 @@ public:
 
     void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                     const Aws::String &file_name);
+
+    void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
 
     void getBuckets(std::vector<std::string> &list);
 

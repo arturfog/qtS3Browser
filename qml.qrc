@@ -10,5 +10,7 @@
         <file>icons/32_up_icon.png</file>
         <file>icons/32_upload_icon.png</file>
         <file>CreateItemWindow.qml</file>
+        <file>icons/32_delete_icon.png</file>
+        <file>icons/32_new_folder_icon.png</file>
     </qresource>
 </RCC>

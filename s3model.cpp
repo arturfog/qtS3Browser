@@ -1,5 +1,6 @@
 #include "s3model.h"
 
+#include <tuple>
 #include <QDebug>
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -56,20 +57,36 @@ void S3Model::goBack()
     }
 }
 
+QString S3Model::getCurrentBucket()
+{
+    if (m_s3Path.count() >= 2) {
+        return m_s3Path[1];
+    }
+
+    return "";
+}
+
 QString S3Model::s3Path() const {
     QString path = m_s3Path.join("/");
     return path;
+}
+
+bool isFile(const QString &filename) {
+    //if(filename.contains())
 }
 
 void S3Model::getObjects(const std::string &bucket) {
     clearItems();
     goTo(bucket.c_str());
 
+    QString qsBucket(bucket.c_str());
+
     std::vector<std::string> objects;
     s3.listObjects(bucket.c_str(), objects);
 
     for(auto item : objects) {
-        addS3Item(S3Item(QString(item.c_str()), QString(bucket.c_str())));
+        QString qsItem(item.c_str());
+        addS3Item(S3Item(qsItem, qsBucket));
     }
 }
 
@@ -95,9 +112,13 @@ void S3Model::createBucket(const std::string &bucket)
     s3.createBucket(bucket.c_str());
 }
 
+void S3Model::createFolder(const std::string &folder)
+{
+    s3.createFolder(getCurrentBucket().toStdString().c_str(), folder.c_str());
+}
+
 void S3Model::removeBucket(const std::string &bucket)
 {
-    //s3.deleteObject(bucket.c_str(), "");
     s3.deleteBucket(bucket.c_str());
 }
 

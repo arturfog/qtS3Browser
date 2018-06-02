@@ -4,7 +4,6 @@ Rectangle {
     id:delegate
     width: view.width
     height:34
-    color: view.colors[index & 3]
     Row {
         anchors.fill: parent
         Image {

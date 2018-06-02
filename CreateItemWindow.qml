@@ -5,8 +5,13 @@ import QtQuick.Controls 1.5
 import QtQuick.Layouts 1.0
 
 Window {
+    id: create_item_win
     x: 100; y: 100; width: 300; height: 100
-    title: "Create bucket"
+
+    property var win_title: String
+    property var create_action: Number
+
+    title: win_title
 
         Rectangle {
             width: parent.width
@@ -18,7 +23,7 @@ Window {
             TextInput {
                 id: itemName
                 anchors.verticalCenter: parent.verticalCenter
-                text: "view.path"
+                text: "New"
             }
         }
 
@@ -28,11 +33,16 @@ Window {
             width: 150
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
+                id: cw_cb
                 text: "Create"
                 onClicked: {
-                    s3Model.createBucket(itemName.text)
-                    s3Model.refresh()
-                    close()
+                    if (create_action === 0) {
+                        s3Model.createBucket(itemName.text)
+                        s3Model.refresh()
+                        close()
+                    } else {
+                        s3Model.createFolder(itemName.text)
+                    }
                 }
             }
             Button {

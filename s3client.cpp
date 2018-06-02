@@ -45,7 +45,7 @@ void S3Client::listObjects(const Aws::String &bucket_name, std::vector<std::stri
 
         Aws::S3::Model::ListObjectsRequest objects_request;
         objects_request.WithBucket(bucket_name);
-
+        objects_request.SetDelimiter("/");
         auto list_objects_outcome = s3_client->ListObjects(objects_request);
 
         if (list_objects_outcome.IsSuccess())
@@ -53,10 +53,19 @@ void S3Client::listObjects(const Aws::String &bucket_name, std::vector<std::stri
             Aws::Vector<Aws::S3::Model::Object> object_list =
                     list_objects_outcome.GetResult().GetContents();
 
+           auto common_list =
+                    list_objects_outcome.GetResult().GetCommonPrefixes();
+
             for (auto const &s3_object : object_list)
             {
                 list.emplace_back(s3_object.GetKey().c_str());
                 std::cout << "* " << s3_object.GetKey() << std::endl;
+            }
+
+            for (auto const &s3_object : common_list)
+            {
+                list.emplace_back(s3_object.GetPrefix().c_str());
+                std::cout << "* " << s3_object.GetPrefix() << std::endl;
             }
         }
         else
@@ -68,6 +77,32 @@ void S3Client::listObjects(const Aws::String &bucket_name, std::vector<std::stri
         std::cout << "ListObjects done " << std::endl;
     }
 
+    Aws::ShutdownAPI(options);
+}
+
+void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
+{
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        std::cout << "Object info in S3 bucket: " << bucket_name << std::endl;
+
+        Aws::S3::Model::GetObjectRequest object_request;
+        object_request.WithBucket(bucket_name).WithKey(key_name);
+
+        auto get_object_outcome = s3_client->GetObject(object_request);
+
+        if (get_object_outcome.IsSuccess())
+        {
+            get_object_outcome.GetResult().GetContentType();
+        }
+        else
+        {
+            std::cout << "GetObject error: " <<
+                         get_object_outcome.GetError().GetExceptionName() << " " <<
+                         get_object_outcome.GetError().GetMessage() << std::endl;
+        }
+    }
     Aws::ShutdownAPI(options);
 }
 
@@ -197,6 +232,32 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
             std::cout << "DeleteBucket error: "
                       << outcome.GetError().GetExceptionName() << " - "
                       << outcome.GetError().GetMessage() << std::endl;
+        }
+    }
+    Aws::ShutdownAPI(options);
+}
+
+void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name) {
+    Aws::SDKOptions options;
+    Aws::S3::Model::PutObjectRequest object_request;
+    Aws::InitAPI(options);
+    {
+        std::cout << "Uploading to S3 bucket " <<
+            bucket_name << " at key " << key_name << std::endl;
+
+        object_request.WithBucket(bucket_name).WithKey(key_name);
+
+        auto put_object_outcome = s3_client->PutObject(object_request);
+
+        if (put_object_outcome.IsSuccess())
+        {
+            std::cout << "Done!" << std::endl;
+        }
+        else
+        {
+            std::cout << "PutObject error: " <<
+                put_object_outcome.GetError().GetExceptionName() << " " <<
+                put_object_outcome.GetError().GetMessage() << std::endl;
         }
     }
     Aws::ShutdownAPI(options);

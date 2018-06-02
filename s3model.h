@@ -34,7 +34,8 @@ public:
     Q_INVOKABLE void getBuckets() const { getBuckets(); }
     Q_INVOKABLE void goBack() const { goBack(); }
     Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
-    Q_INVOKABLE void createBucket(const QString &text) { createBucket(text.toStdString()); }
+    Q_INVOKABLE void createBucket(const QString &bucket) { createBucket(bucket.toStdString()); }
+    Q_INVOKABLE void createFolder(const QString &folder) { createFolder(folder.toStdString()); }
     Q_INVOKABLE void refresh() const { refresh(); }
     Q_INVOKABLE void removeBucket(const int idx) {
         if (idx < m_s3items.count()) {
@@ -56,11 +57,15 @@ public:
 
     void goBack();
 
+    QString getCurrentBucket();
+
     void getBuckets();
 
     void refresh();
 
     void createBucket(const std::string &bucket);
+
+    void createFolder(const std::string &folder);
 
     void removeBucket(const std::string &bucket);
 
