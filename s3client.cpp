@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <regex>
 
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -37,15 +38,20 @@ void S3Client::init() {
     Aws::ShutdownAPI(options);
 }
 
-void S3Client::listObjects(const Aws::String &bucket_name, std::vector<std::string> &list) {
+void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
+                           std::vector<std::string> &list) {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
-        std::cout << "Objects in S3 bucket: " << bucket_name << std::endl;
+        std::cout << "Objects in S3 bucket: " << bucket_name << " key: " << key << std::endl;
 
         Aws::S3::Model::ListObjectsRequest objects_request;
         objects_request.WithBucket(bucket_name);
         objects_request.SetDelimiter("/");
+
+        if(key != "") {
+            objects_request.SetPrefix(key);
+        }
         auto list_objects_outcome = s3_client->ListObjects(objects_request);
 
         if (list_objects_outcome.IsSuccess())
@@ -53,19 +59,20 @@ void S3Client::listObjects(const Aws::String &bucket_name, std::vector<std::stri
             Aws::Vector<Aws::S3::Model::Object> object_list =
                     list_objects_outcome.GetResult().GetContents();
 
-           auto common_list =
-                    list_objects_outcome.GetResult().GetCommonPrefixes();
+           auto common_list = list_objects_outcome.GetResult().GetCommonPrefixes();
+
+           for (auto const &s3_object : common_list)
+           {
+               std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
+
+               list.emplace_back(item);
+               std::cout << "* " << s3_object.GetPrefix() << std::endl;
+           }
 
             for (auto const &s3_object : object_list)
             {
                 list.emplace_back(s3_object.GetKey().c_str());
-                std::cout << "* " << s3_object.GetKey() << std::endl;
-            }
-
-            for (auto const &s3_object : common_list)
-            {
-                list.emplace_back(s3_object.GetPrefix().c_str());
-                std::cout << "* " << s3_object.GetPrefix() << std::endl;
+                std::cout << "** " << s3_object.GetKey() << std::endl;
             }
         }
         else

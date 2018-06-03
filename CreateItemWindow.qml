@@ -38,11 +38,11 @@ Window {
                 onClicked: {
                     if (create_action === 0) {
                         s3Model.createBucket(itemName.text)
-                        s3Model.refresh()
-                        close()
                     } else {
                         s3Model.createFolder(itemName.text)
                     }
+                    s3Model.refresh()
+                    close()
                 }
             }
             Button {

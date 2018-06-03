@@ -24,7 +24,8 @@ public:
 
     void init();
 
-    void listObjects(const Aws::String &bucket_name, std::vector<std::string> &list);
+    void listObjects(const Aws::String &bucket_name, const Aws::String &key,
+                     std::vector<std::string> &list);
 
     void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
 

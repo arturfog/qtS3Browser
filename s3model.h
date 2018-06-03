@@ -37,9 +37,15 @@ public:
     Q_INVOKABLE void createBucket(const QString &bucket) { createBucket(bucket.toStdString()); }
     Q_INVOKABLE void createFolder(const QString &folder) { createFolder(folder.toStdString()); }
     Q_INVOKABLE void refresh() const { refresh(); }
-    Q_INVOKABLE void removeBucket(const int idx) {
+    Q_INVOKABLE void remove(const int idx) {
         if (idx < m_s3items.count()) {
-            removeBucket(m_s3items.at(idx).fileName().toStdString());
+            if(getCurrentPathDepth() <= 1) {
+                removeBucket(m_s3items.at(idx).fileName().toStdString());
+            } else {
+                removeObject(m_s3items.at(idx).fileName().toStdString());
+            }
+
+            refresh();
         }
     }
 
@@ -53,11 +59,13 @@ public:
 
     QString s3Path() const;
 
-    void goTo(QString path);
+    void goTo(const QString &path);
 
     void goBack();
 
-    QString getCurrentBucket();
+    QString getCurrentBucket() const;
+
+    inline int getCurrentPathDepth() const { return m_s3Path.count(); }
 
     void getBuckets();
 
@@ -69,7 +77,9 @@ public:
 
     void removeBucket(const std::string &bucket);
 
-    void getObjects(const std::string &bucket);
+    void removeObject(const std::string &key);
+
+    void getObjects(const std::string &item, bool refresh = false);
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 

@@ -41,7 +41,7 @@ int S3Model::rowCount(const QModelIndex & parent) const {
     return m_s3items.count();
 }
 
-void S3Model::goTo(QString path)
+void S3Model::goTo(const QString &path)
 {
     m_s3Path.push_back(path);
 }
@@ -57,7 +57,7 @@ void S3Model::goBack()
     }
 }
 
-QString S3Model::getCurrentBucket()
+QString S3Model::getCurrentBucket() const
 {
     if (m_s3Path.count() >= 2) {
         return m_s3Path[1];
@@ -71,22 +71,31 @@ QString S3Model::s3Path() const {
     return path;
 }
 
-bool isFile(const QString &filename) {
-    //if(filename.contains())
-}
-
-void S3Model::getObjects(const std::string &bucket) {
+void S3Model::getObjects(const std::string &item, bool refresh) {
     clearItems();
-    goTo(bucket.c_str());
 
-    QString qsBucket(bucket.c_str());
+    QString qsKey(item.c_str());
+    QString qsBucket = getCurrentBucket();
 
-    std::vector<std::string> objects;
-    s3.listObjects(bucket.c_str(), objects);
+    if(refresh == false || qsBucket.isEmpty()) {
+        goTo(item.c_str());
+        qsBucket = getCurrentBucket();
+        qDebug() << "2 item: [" << qsKey << "] bucket[" << qsBucket << "]";
+    }
 
-    for(auto item : objects) {
-        QString qsItem(item.c_str());
-        addS3Item(S3Item(qsItem, qsBucket));
+    if(qsKey.compare(qsBucket) == 0) {
+        qsKey = "";
+    }
+
+    if(qsKey == "" || qsKey.contains("/")) {
+        qDebug() << "3 item: [" << qsKey << "] bucket[" << qsBucket << "]";
+        std::vector<std::string> objects;
+        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), objects);
+
+        for(auto obj : objects) {
+            QString qsItem(obj.c_str());
+            addS3Item(S3Item(qsItem, qsBucket));
+        }
     }
 }
 
@@ -102,8 +111,10 @@ void S3Model::getBuckets() {
 
 void S3Model::refresh()
 {
-    if(m_s3Path.count() <= 2) {
+    if(m_s3Path.count() <= 1) {
         getBuckets();
+    } else {
+        getObjects(getCurrentBucket().toStdString(), true);
     }
 }
 
@@ -120,6 +131,11 @@ void S3Model::createFolder(const std::string &folder)
 void S3Model::removeBucket(const std::string &bucket)
 {
     s3.deleteBucket(bucket.c_str());
+}
+
+void S3Model::removeObject(const std::string &key)
+{
+    s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str());
 }
 
 QVariant S3Model::data(const QModelIndex & index, int role) const {

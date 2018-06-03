@@ -23,6 +23,7 @@ Item {
             onClicked: {
                 s3Model.goBack()
                 path = s3Model.getS3Path()
+                s3Model.refresh()
             }
         }
 
@@ -46,7 +47,9 @@ Item {
             height: parent.height
             icon.source: "icons/32_delete_icon.png"
             icon.color: "transparent"
-            onClicked: s3Model.removeBucket(view.currentIndex)
+            onClicked: {
+                s3Model.remove(view.currentIndex)
+            }
         }
 
         Button {
