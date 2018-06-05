@@ -81,7 +81,7 @@ public:
 
     void removeObject(const std::string &key);
 
-    void getObjects(const std::string &item, bool refresh = false);
+    void getObjects(const std::string &item, bool goBack = false);
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 

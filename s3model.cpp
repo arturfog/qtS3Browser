@@ -52,6 +52,7 @@ void S3Model::goBack()
         getBuckets();
     } else {
         m_s3Path.removeLast();
+        qDebug() << "1 goBack: [" << getPathWithoutBucket() << "]";
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
@@ -82,11 +83,11 @@ QString S3Model::s3Path() const {
     return path;
 }
 
-void S3Model::getObjects(const std::string &item, bool refresh) {
+void S3Model::getObjects(const std::string &item, bool goBack) {
 
     QString qsBucket = getCurrentBucket();
 
-    if(refresh == false && qsBucket.isEmpty()) {
+    if(qsBucket.isEmpty()) {
         clearItems();
         goTo(item.c_str());
         qsBucket = getCurrentBucket();
@@ -104,7 +105,9 @@ void S3Model::getObjects(const std::string &item, bool refresh) {
         std::vector<std::string> objects;
 
         if (qsKey.contains("/")) {
-            goTo(item.c_str());
+            if(goBack == false) {
+                goTo(item.c_str());
+            }
             qsKey = getPathWithoutBucket();
         }
 
@@ -131,7 +134,7 @@ void S3Model::getBuckets() {
 
 void S3Model::refresh()
 {
-    if(m_s3Path.count() <= 1) {
+    if(m_s3Path.count() <= 0) {
         qDebug() << "1 refresh: [" << getPathWithoutBucket() << "]";
         getBuckets();
     } else {
