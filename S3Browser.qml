@@ -23,7 +23,6 @@ Item {
             onClicked: {
                 s3Model.goBack()
                 path = s3Model.getS3Path()
-                s3Model.refresh()
             }
         }
 

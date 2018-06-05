@@ -65,6 +65,8 @@ public:
 
     QString getCurrentBucket() const;
 
+    QString getPathWithoutBucket() const;
+
     inline int getCurrentPathDepth() const { return m_s3Path.count(); }
 
     void getBuckets();

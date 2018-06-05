@@ -20,7 +20,6 @@ QString S3Item::filePath() const
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
-    m_s3Path.push_back("s3://");
 }
 
 void S3Model::addS3Item(const S3Item &item)
@@ -48,52 +47,73 @@ void S3Model::goTo(const QString &path)
 
 void S3Model::goBack()
 {
-    if (m_s3Path.count() >= 2) {
+    if (m_s3Path.count() <= 1) {
         m_s3Path.removeLast();
-
-        if(m_s3Path.count() == 1) {
-            getBuckets();
-        }
+        getBuckets();
+    } else {
+        m_s3Path.removeLast();
+        getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
 
 QString S3Model::getCurrentBucket() const
 {
-    if (m_s3Path.count() >= 2) {
-        return m_s3Path[1];
+    if (m_s3Path.count() >= 1) {
+        return m_s3Path[0];
+    }
+
+    return "";
+}
+
+QString S3Model::getPathWithoutBucket() const
+{
+    if (m_s3Path.count() >= 1) {
+        return m_s3Path.mid(1).join("");
     }
 
     return "";
 }
 
 QString S3Model::s3Path() const {
-    QString path = m_s3Path.join("/");
+    QString path = QString("s3://").append(getCurrentBucket());
+    if(m_s3Path.count() >= 1) {
+        path = path.append("/").append(getPathWithoutBucket());
+    }
     return path;
 }
 
 void S3Model::getObjects(const std::string &item, bool refresh) {
-    clearItems();
 
-    QString qsKey(item.c_str());
     QString qsBucket = getCurrentBucket();
 
-    if(refresh == false || qsBucket.isEmpty()) {
+    if(refresh == false && qsBucket.isEmpty()) {
+        clearItems();
         goTo(item.c_str());
         qsBucket = getCurrentBucket();
-        qDebug() << "2 item: [" << qsKey << "] bucket[" << qsBucket << "]";
     }
+
+    QString qsKey(item.c_str());
 
     if(qsKey.compare(qsBucket) == 0) {
         qsKey = "";
     }
 
     if(qsKey == "" || qsKey.contains("/")) {
-        qDebug() << "3 item: [" << qsKey << "] bucket[" << qsBucket << "]";
+        clearItems();
+
         std::vector<std::string> objects;
+
+        if (qsKey.contains("/")) {
+            goTo(item.c_str());
+            qsKey = getPathWithoutBucket();
+        }
+
+        qDebug() << "3 qsKey: [" << qsKey << "] bucket[" << qsBucket << "]";
         s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), objects);
 
         for(auto obj : objects) {
             QString qsItem(obj.c_str());
+            qsItem.replace(getPathWithoutBucket(), "");
             addS3Item(S3Item(qsItem, qsBucket));
         }
     }
@@ -112,9 +132,11 @@ void S3Model::getBuckets() {
 void S3Model::refresh()
 {
     if(m_s3Path.count() <= 1) {
+        qDebug() << "1 refresh: [" << getPathWithoutBucket() << "]";
         getBuckets();
     } else {
-        getObjects(getCurrentBucket().toStdString(), true);
+        qDebug() << "refresh: [" << getPathWithoutBucket() << "]";
+        getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
 
