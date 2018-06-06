@@ -1,3 +1,21 @@
+/*
+# Copyright (C) 2018  Artur Fogiel
+# This file is part of qtS3Browser.
+#
+# qtS3Browser is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# qtS3Browser is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef S3MODEL_H
 #define S3MODEL_H
 
@@ -36,6 +54,7 @@ public:
     Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
     Q_INVOKABLE void createBucket(const QString &bucket) { createBucket(bucket.toStdString()); }
     Q_INVOKABLE void createFolder(const QString &folder) { createFolder(folder.toStdString()); }
+    Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
     Q_INVOKABLE void refresh() const { refresh(); }
     Q_INVOKABLE void remove(const int idx) {
         if (idx < m_s3items.count()) {
@@ -80,6 +99,10 @@ public:
     void removeBucket(const std::string &bucket);
 
     void removeObject(const std::string &key);
+
+    void upload(const QString &file);
+
+    void download(const QString& file);
 
     void getObjects(const std::string &item, bool goBack = false);
 

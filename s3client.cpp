@@ -1,3 +1,21 @@
+/*
+# Copyright (C) 2018  Artur Fogiel
+# This file is part of qtS3Browser.
+#
+# qtS3Browser is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# qtS3Browser is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "s3client.h"
 
 #include <aws/core/auth/AWSCredentialsProvider.h>
@@ -274,6 +292,7 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
                 const Aws::String &file_name) {
     Aws::SDKOptions options;
     Aws::S3::Model::PutObjectRequest object_request;
+
     Aws::InitAPI(options);
     {
         std::cout << "Uploading " << file_name << " to S3 bucket " <<

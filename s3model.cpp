@@ -1,3 +1,21 @@
+/*
+# Copyright (C) 2018  Artur Fogiel
+# This file is part of qtS3Browser.
+#
+# qtS3Browser is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# qtS3Browser is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "s3model.h"
 
 #include <tuple>
@@ -161,6 +179,20 @@ void S3Model::removeBucket(const std::string &bucket)
 void S3Model::removeObject(const std::string &key)
 {
     s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str());
+}
+
+void S3Model::upload(const QString& file)
+{
+    QString filename(file.split("/").last());
+    s3.uploadFile(getCurrentBucket().toStdString().c_str(),
+                  getPathWithoutBucket().append(filename).toStdString().c_str(),
+                  file.toStdString().c_str());
+}
+
+void S3Model::download(const QString& file)
+{
+    s3.downloadFile(getCurrentBucket().toStdString().c_str(),
+                    getPathWithoutBucket().toStdString().c_str());
 }
 
 QVariant S3Model::data(const QModelIndex & index, int role) const {

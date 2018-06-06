@@ -35,6 +35,10 @@ Item {
             height: parent.height
             icon.source: "icons/32_upload_icon.png"
             icon.color: "transparent"
+            onClicked: {
+                var filePath = folder.get(view.currentIndex, "filePath")
+                s3Model.uploadQML(filePath)
+            }
         }
 
         Button {
