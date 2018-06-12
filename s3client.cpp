@@ -33,10 +33,13 @@
 #include <aws/s3/model/CreateBucketRequest.h>
 #include <aws/s3/model/DeleteBucketRequest.h>
 
+
 #include <iostream>
 #include <fstream>
 #include <regex>
-
+/**
+ * @brief S3Client::init
+ */
 void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -55,7 +58,12 @@ void S3Client::init() {
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::listObjects
+ * @param bucket_name
+ * @param key
+ * @param list
+ */
 void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
                            std::vector<std::string> &list) {
     Aws::SDKOptions options;
@@ -104,7 +112,11 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
 
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::getObjectInfo
+ * @param bucket_name
+ * @param key_name
+ */
 void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
 {
     Aws::SDKOptions options;
@@ -119,7 +131,10 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &
 
         if (get_object_outcome.IsSuccess())
         {
-            get_object_outcome.GetResult().GetContentType();
+            auto result = get_object_outcome.GetResult();
+            result.GetContentType();
+            result.GetLastModified();
+            result.GetContentLength();
         }
         else
         {
@@ -130,7 +145,10 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::createBucket
+ * @param bucket_name
+ */
 void S3Client::createBucket(const Aws::String &bucket_name) {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -154,6 +172,24 @@ void S3Client::createBucket(const Aws::String &bucket_name) {
     Aws::ShutdownAPI(options);
 }
 
+void S3Client::uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
+{
+    std::cout << "Upload Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
+}
+
+void S3Client::downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
+{
+    std::cout << "Download Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
+}
+
+void S3Client::statusUpdate(const Aws::Transfer::TransferManager *manager, const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
+{
+    std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
+}
+/**
+ * @brief S3Client::getBuckets
+ * @param list
+ */
 void S3Client::getBuckets(std::vector<std::string> &list) {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -183,7 +219,11 @@ void S3Client::getBuckets(std::vector<std::string> &list) {
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::downloadFile
+ * @param bucket_name
+ * @param key_name
+ */
 void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name) {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -209,7 +249,11 @@ void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &k
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::deleteObject
+ * @param bucket_name
+ * @param key_name
+ */
 void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -235,7 +279,10 @@ void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &k
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::deleteBucket
+ * @param bucket_name
+ */
 void S3Client::deleteBucket(const Aws::String &bucket_name)
 {
     Aws::SDKOptions options;
@@ -261,7 +308,11 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
     }
     Aws::ShutdownAPI(options);
 }
-
+/**
+ * @brief S3Client::createFolder
+ * @param bucket_name
+ * @param key_name
+ */
 void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name) {
     Aws::SDKOptions options;
     Aws::S3::Model::PutObjectRequest object_request;
@@ -284,6 +335,52 @@ void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &k
                 put_object_outcome.GetError().GetExceptionName() << " " <<
                 put_object_outcome.GetError().GetMessage() << std::endl;
         }
+    }
+    Aws::ShutdownAPI(options);
+}
+
+
+void S3Client::uploadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+                           const Aws::String &file_name) {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
+        transferConfig.s3Client = s3_client;
+
+        transferConfig.transferStatusUpdatedCallback = &statusUpdate;
+
+        transferConfig.uploadProgressCallback = &uploadProgress;
+
+        transferConfig.downloadProgressCallback = &downloadProgress;
+
+        auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+        auto transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
+                                                          "text/plain", Aws::Map<Aws::String, Aws::String>());
+
+        transferHandle->WaitUntilFinished();
+    }
+    Aws::ShutdownAPI(options);
+}
+
+void S3Client::downloadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+                           const Aws::String &file_name) {
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
+    {
+        Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
+        transferConfig.s3Client = s3_client;
+
+        transferConfig.transferStatusUpdatedCallback = &statusUpdate;
+
+        transferConfig.uploadProgressCallback = &uploadProgress;
+
+        transferConfig.downloadProgressCallback = &downloadProgress;
+
+        auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+        auto transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
+
+        transferHandle->WaitUntilFinished();
     }
     Aws::ShutdownAPI(options);
 }

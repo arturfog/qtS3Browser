@@ -27,6 +27,9 @@
 #include <aws/core/utils/memory/stl/AWSString.h>
 
 #include <aws/s3/S3Client.h>
+//
+#include <aws/transfer/TransferManager.h>
+#include <aws/transfer/TransferHandle.h>
 
 #include <string>
 
@@ -53,6 +56,11 @@ public:
 
     void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name);
 
+    void downloadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
+
+    void uploadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
     void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                     const Aws::String &file_name);
 
@@ -61,6 +69,10 @@ public:
     void getBuckets(std::vector<std::string> &list);
 
     void createBucket(const Aws::String &bucket_name);
+
+    static void uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    static void downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    static void statusUpdate(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
 };
 
 
