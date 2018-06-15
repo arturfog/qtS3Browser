@@ -13,9 +13,8 @@ Item {
         id: top_buttons_row
         width: parent.width
         height: 48
-        z:2
 
-        Button {
+        ToolButton {
             width:48
             height: parent.height
             icon.source: "icons/32_up_icon.png"
@@ -26,7 +25,7 @@ Item {
             }
         }
 
-        Button {
+        ToolButton {
             width: 48
             height: parent.height
             icon.source: "icons/32_refresh_icon.png"
@@ -34,14 +33,14 @@ Item {
             onClicked: s3Model.refresh()
         }
 
-        Button {
+        ToolButton {
             width: 48
             height: parent.height
             icon.source: "icons/32_download_icon.png"
             icon.color: "transparent"
         }
 
-        Button {
+        ToolButton {
             width: 48
             height: parent.height
             icon.source: "icons/32_delete_icon.png"
@@ -51,7 +50,7 @@ Item {
             }
         }
 
-        Button {
+        ToolButton {
             width: 48
             height: parent.height
             icon.source: "icons/32_new_folder_icon.png"
@@ -62,10 +61,11 @@ Item {
         }
     }
 
-    Row {
+    ScrollView {
         width: parent.width
         height: parent.height - top_buttons_row.height
         y: top_buttons_row.height
+        clip: true
         ListView {
             id: view
             property string path : s3Model.getS3Path()
@@ -96,7 +96,7 @@ Item {
             highlight: Rectangle {
                 color: "lightblue"
                 opacity: 0.5
-                z: 2
+                z: 1
             }
             focus: true
             highlightFollowsCurrentItem: true

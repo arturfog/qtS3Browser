@@ -74,9 +74,7 @@ ApplicationWindow {
 
     Row {
         anchors.top: parent.top
-        anchors.topMargin: 12
         anchors.fill: parent
-        //anchors.margins: 2 * 12 + row.height
 
         Column {
             width: parent.width / 2
@@ -90,8 +88,15 @@ ApplicationWindow {
         }
 
         Column {
-            width: 32
+            width: 8
             height: parent.height
+
+            Rectangle {
+                height: parent.height
+                width: 1
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "black"
+            }
         }
 
         Column {

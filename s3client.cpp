@@ -131,10 +131,10 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &
 
         if (get_object_outcome.IsSuccess())
         {
-            auto result = get_object_outcome.GetResult();
-            result.GetContentType();
-            result.GetLastModified();
-            result.GetContentLength();
+            //auto result = get_object_outcome.GetResult();
+            //result.GetContentType();
+            //result.GetLastModified();
+            //result.GetContentLength();
         }
         else
         {
