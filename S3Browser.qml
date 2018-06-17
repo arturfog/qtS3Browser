@@ -79,18 +79,56 @@ Item {
 
             headerPositioning: ListView.OverlayHeader
 
-            header: Rectangle {
-                width: browser.width
-                height: 34
+            header: Column {
+                width: browser.width - 5
+                height: 72
                 z:2
-                color: "orange"
-                border.color: "black"
-                border.width: 1
 
-                TextInput {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: path
+                Rectangle {
+                    width: parent.width
+                    border.width: 1
+                    border.color: "black"
+                    height: 32
+                    color: "orange"
+
+                    TextInput {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: path
+                    }
                 }
+
+                Row {
+                    width: parent.width
+                    height: 32
+                    Rectangle {
+                        width: parent.width - 100
+                        height: 32
+                        Text {
+                            x: 30
+                            width: 230
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "Name"
+
+                        }
+                    }
+                    Rectangle {
+                        width: 1
+                        height: 32
+                        color: "black"
+                    }
+
+                    Rectangle {
+                        width: 100
+                        height: 32
+                        Text {
+                            x: 3
+                            width: 100
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "Size"
+                        }
+                    }
+                }
+
             }
 
             highlight: Rectangle {

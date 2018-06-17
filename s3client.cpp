@@ -31,12 +31,14 @@
 #include <aws/s3/model/ListObjectsRequest.h>
 // Buckets
 #include <aws/s3/model/CreateBucketRequest.h>
-#include <aws/s3/model/DeleteBucketRequest.h>
+
 
 
 #include <iostream>
 #include <fstream>
 #include <regex>
+
+std::function<void(const std::string&)> S3Client::m_func;
 /**
  * @brief S3Client::init
  */
@@ -66,51 +68,45 @@ void S3Client::init() {
  */
 void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
                            std::vector<std::string> &list) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
-    {
-        std::cout << "Objects in S3 bucket: " << bucket_name << " key: " << key << std::endl;
+    std::cout << "Objects in S3 bucket: " << bucket_name << " key: " << key << std::endl;
 
-        Aws::S3::Model::ListObjectsRequest objects_request;
-        objects_request.WithBucket(bucket_name);
-        objects_request.SetDelimiter("/");
+    Aws::S3::Model::ListObjectsRequest objects_request;
+    objects_request.WithBucket(bucket_name);
+    objects_request.SetDelimiter("/");
 
-        if(key != "") {
-            objects_request.SetPrefix(key);
-        }
-        auto list_objects_outcome = s3_client->ListObjects(objects_request);
-
-        if (list_objects_outcome.IsSuccess())
-        {
-            Aws::Vector<Aws::S3::Model::Object> object_list =
-                    list_objects_outcome.GetResult().GetContents();
-
-           auto common_list = list_objects_outcome.GetResult().GetCommonPrefixes();
-
-           for (auto const &s3_object : common_list)
-           {
-               std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
-
-               list.emplace_back(item);
-               std::cout << "* " << s3_object.GetPrefix() << std::endl;
-           }
-
-            for (auto const &s3_object : object_list)
-            {
-                list.emplace_back(s3_object.GetKey().c_str());
-                std::cout << "** " << s3_object.GetKey() << std::endl;
-            }
-        }
-        else
-        {
-            std::cout << "ListObjects error: " <<
-                         list_objects_outcome.GetError().GetExceptionName() << " " <<
-                         list_objects_outcome.GetError().GetMessage() << std::endl;
-        }
-        std::cout << "ListObjects done " << std::endl;
+    if(key != "") {
+        objects_request.SetPrefix(key);
     }
+    auto list_objects_outcome = s3_client->ListObjects(objects_request);
 
-    Aws::ShutdownAPI(options);
+    if (list_objects_outcome.IsSuccess())
+    {
+        Aws::Vector<Aws::S3::Model::Object> object_list =
+                list_objects_outcome.GetResult().GetContents();
+
+        auto common_list = list_objects_outcome.GetResult().GetCommonPrefixes();
+
+        for (auto const &s3_object : common_list)
+        {
+            std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
+
+            list.emplace_back(item);
+            std::cout << "* " << s3_object.GetPrefix() << std::endl;
+        }
+
+        for (auto const &s3_object : object_list)
+        {
+            list.emplace_back(s3_object.GetKey().c_str());
+            std::cout << "** " << s3_object.GetKey() << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "ListObjects error: " <<
+                     list_objects_outcome.GetError().GetExceptionName() << " " <<
+                     list_objects_outcome.GetError().GetMessage() << std::endl;
+    }
+    std::cout << "ListObjects done " << std::endl;
 }
 /**
  * @brief S3Client::getObjectInfo
@@ -119,70 +115,76 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
  */
 void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
 {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
+    std::cout << "Object info in S3 bucket: " << bucket_name << std::endl;
+
+    Aws::S3::Model::GetObjectRequest object_request;
+    object_request.WithBucket(bucket_name).WithKey(key_name);
+
+    auto get_object_outcome = s3_client->GetObject(object_request);
+
+    if (get_object_outcome.IsSuccess())
     {
-        std::cout << "Object info in S3 bucket: " << bucket_name << std::endl;
-
-        Aws::S3::Model::GetObjectRequest object_request;
-        object_request.WithBucket(bucket_name).WithKey(key_name);
-
-        auto get_object_outcome = s3_client->GetObject(object_request);
-
-        if (get_object_outcome.IsSuccess())
-        {
-            //auto result = get_object_outcome.GetResult();
-            //result.GetContentType();
-            //result.GetLastModified();
-            //result.GetContentLength();
-        }
-        else
-        {
-            std::cout << "GetObject error: " <<
-                         get_object_outcome.GetError().GetExceptionName() << " " <<
-                         get_object_outcome.GetError().GetMessage() << std::endl;
-        }
+        auto result = get_object_outcome.GetResult().GetContentType();
+        //result.GetContentType();
+        //result.GetLastModified();
+        //result.GetContentLength();
     }
-    Aws::ShutdownAPI(options);
+    else
+    {
+        std::cout << "GetObject error: " <<
+                     get_object_outcome.GetError().GetExceptionName() << " " <<
+                     get_object_outcome.GetError().GetMessage() << std::endl;
+    }
 }
 /**
  * @brief S3Client::createBucket
  * @param bucket_name
  */
-void S3Client::createBucket(const Aws::String &bucket_name) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
+void S3Client::createBucket(const Aws::String &bucket_name)
+{
+    Aws::S3::Model::CreateBucketRequest request;
+    request.SetBucket(bucket_name);
+    s3_client->CreateBucketAsync(request, &createBucketHandler);
+}
+/**
+ * @brief S3Client::createBucketHandler
+ * @param client
+ * @param request
+ * @param outcome
+ * @param context
+ */
+void S3Client::createBucketHandler(const Aws::S3::S3Client *,
+                                   const Aws::S3::Model::CreateBucketRequest &,
+                                   const Aws::S3::Model::CreateBucketOutcome &outcome,
+                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext>&)
+{
+    std::cout << "createBucketHandler !" << std::endl;
+    if (outcome.IsSuccess())
     {
-        Aws::S3::Model::CreateBucketRequest request;
-        request.SetBucket(bucket_name);
-
-        auto outcome = s3_client->CreateBucket(request);
-
-        if (outcome.IsSuccess())
-        {
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "CreateBucket error: "
-                << outcome.GetError().GetExceptionName() << std::endl
-                << outcome.GetError().GetMessage() << std::endl;
-        }
+        std::cout << "Done!" << std::endl;
     }
-    Aws::ShutdownAPI(options);
+    else
+    {
+        std::cout << "CreateBucket error: "
+                  << outcome.GetError().GetExceptionName() << std::endl
+                  << outcome.GetError().GetMessage() << std::endl;
+    }
 }
 
-void S3Client::uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
+void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
+                              const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
     std::cout << "Upload Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
 }
 
-void S3Client::downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
+void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
+                                const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
     std::cout << "Download Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
 }
 
-void S3Client::statusUpdate(const Aws::Transfer::TransferManager *manager, const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
+void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
     std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
 }
@@ -190,34 +192,40 @@ void S3Client::statusUpdate(const Aws::Transfer::TransferManager *manager, const
  * @brief S3Client::getBuckets
  * @param list
  */
-void S3Client::getBuckets(std::vector<std::string> &list) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
+void S3Client::getBuckets(std::function<void(const std::string&)> func) {
+    m_func = func;
+    s3_client->ListBucketsAsync(&getBucketsHandler);
+}
+/**
+ * @brief S3Client::getBucketsHandler
+ * @param client
+ * @param outcome
+ * @param context
+ */
+void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
+                                 const Aws::S3::Model::ListBucketsOutcome &outcome,
+                                 const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    if (outcome.IsSuccess())
     {
-        auto outcome = s3_client->ListBuckets();
+        std::cout << "Your Amazon S3 buckets:" << std::endl;
 
-        if (outcome.IsSuccess())
+        Aws::Vector<Aws::S3::Model::Bucket> bucket_list = outcome.GetResult().GetBuckets();
+
+        for (auto const &bucket : bucket_list)
         {
-            std::cout << "Your Amazon S3 buckets:" << std::endl;
-
-            Aws::Vector<Aws::S3::Model::Bucket> bucket_list = outcome.GetResult().GetBuckets();
-
-            for (auto const &bucket : bucket_list)
-            {
-                list.emplace_back(bucket.GetName().c_str());
-                std::cout << "  * " << bucket.GetName() << std::endl;
-            }
-
-            std::cout << "ListBuckets done " << std::endl;
+            m_func(bucket.GetName().c_str());
+            std::cout << "  * " << bucket.GetName() << std::endl;
         }
-        else
-        {
-            std::cout << "ListBuckets error: "
-                << outcome.GetError().GetExceptionName() << " - "
-                << outcome.GetError().GetMessage() << std::endl;
-        }
+
+        std::cout << "ListBuckets done " << std::endl;
     }
-    Aws::ShutdownAPI(options);
+    else
+    {
+        std::cout << "ListBuckets error: "
+                  << outcome.GetError().GetExceptionName() << " - "
+                  << outcome.GetError().GetMessage() << std::endl;
+    }
 }
 /**
  * @brief S3Client::downloadFile
@@ -255,8 +263,6 @@ void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &k
  * @param key_name
  */
 void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
     {
         std::cout << "Deleting" << key_name << " from S3 bucket: " <<
             bucket_name << std::endl;
@@ -277,36 +283,43 @@ void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &k
                 delete_object_outcome.GetError().GetMessage() << std::endl;
         }
     }
-    Aws::ShutdownAPI(options);
 }
+
 /**
  * @brief S3Client::deleteBucket
  * @param bucket_name
  */
 void S3Client::deleteBucket(const Aws::String &bucket_name)
 {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
+    std::cout << "DeleteBucket ["  << bucket_name << "]" << std::endl;
+    Aws::S3::Model::DeleteBucketRequest request;
+    request.SetBucket(bucket_name);
+
+    s3_client->DeleteBucketAsync(request, &deleteBucketHandler);
+}
+/**
+ * @brief S3Client::deleteBucketHandler
+ * @param client
+ * @param request
+ * @param outcome
+ * @param context
+ */
+void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
+                                   const Aws::S3::Model::DeleteBucketRequest &,
+                                   const Aws::S3::Model::DeleteBucketOutcome &outcome,
+                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    std::cout << "deleteBucketHandler !" << std::endl;
+    if (outcome.IsSuccess())
     {
-        std::cout << "DeleteBucket ["  << bucket_name << "]" << std::endl;
-        Aws::S3::Model::DeleteBucketRequest bucket_request;
-
-        bucket_request.SetBucket(bucket_name);
-
-        auto outcome = s3_client->DeleteBucket(bucket_request);
-
-        if (outcome.IsSuccess())
-        {
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "DeleteBucket error: "
-                      << outcome.GetError().GetExceptionName() << " - "
-                      << outcome.GetError().GetMessage() << std::endl;
-        }
+        std::cout << "Done!" << std::endl;
     }
-    Aws::ShutdownAPI(options);
+    else
+    {
+        std::cout << "DeleteBucket error: "
+                  << outcome.GetError().GetExceptionName() << " - "
+                  << outcome.GetError().GetMessage() << std::endl;
+    }
 }
 /**
  * @brief S3Client::createFolder

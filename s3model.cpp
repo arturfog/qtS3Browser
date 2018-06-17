@@ -38,6 +38,7 @@ QString S3Item::filePath() const
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
+    QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
 }
 
 void S3Model::addS3Item(const S3Item &item)
@@ -135,21 +136,28 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
         for(auto obj : objects) {
             QString qsItem(obj.c_str());
             qsItem.replace(getPathWithoutBucket(), "");
-            addS3Item(S3Item(qsItem, qsBucket));
+            QString path = qsItem;
+            if(qsItem.contains("/")) {
+                path = "/";
+            }
+
+            addS3Item(S3Item(qsItem, path));
         }
     }
 }
-
+/**
+ * @brief S3Model::getBuckets
+ */
 void S3Model::getBuckets() {
     clearItems();
-    std::vector<std::string> buckets;
-    s3.getBuckets(buckets);
-
-    for(auto item : buckets) {
-        addS3Item(S3Item(QString(item.c_str()), "/"));
-    }
+    std::function<void(const std::string&)> callback = [&](const std::string& item) {
+        emit this->addItemSignal(QString(item.c_str()));
+    };
+    s3.getBuckets(callback);
 }
-
+/**
+ * @brief S3Model::refresh
+ */
 void S3Model::refresh()
 {
     if(m_s3Path.count() <= 0) {
@@ -191,6 +199,7 @@ void S3Model::upload(const QString& file)
 
 void S3Model::download(const QString& file)
 {
+    (void)file;
     s3.downloadFile(getCurrentBucket().toStdString().c_str(),
                     getPathWithoutBucket().toStdString().c_str());
 }

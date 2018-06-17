@@ -48,6 +48,11 @@ public:
         PathRole
     };
 
+    Q_SIGNAL void addItemSignal(const QString& item);
+    Q_SLOT void addItemSlot(const QString& item) {
+        addS3Item(S3Item(item, "/"));
+    }
+
     Q_INVOKABLE QString getS3Path() const { return s3Path(); }
     Q_INVOKABLE void getBuckets() const { getBuckets(); }
     Q_INVOKABLE void goBack() const { goBack(); }
@@ -58,7 +63,7 @@ public:
     Q_INVOKABLE void refresh() const { refresh(); }
     Q_INVOKABLE void remove(const int idx) {
         if (idx < m_s3items.count()) {
-            if(getCurrentPathDepth() <= 1) {
+            if(getCurrentPathDepth() <= 0) {
                 removeBucket(m_s3items.at(idx).fileName().toStdString());
             } else {
                 removeObject(m_s3items.at(idx).fileName().toStdString());
