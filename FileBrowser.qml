@@ -15,6 +15,17 @@ Item {
     ToolBar {
         width: parent.width
         height: 48
+
+//        Row {
+//            width: parent.width
+//            height: 2
+//            Rectangle {
+//                width: parent.width
+//                height: 1
+//                color: "black"
+//            }
+//        }
+
         Row {
             anchors.fill: parent
             ToolButton {
@@ -49,6 +60,18 @@ Item {
                 icon.color: "transparent"
                 text: qsTr("Delete")
             }
+
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_new_folder_icon.png"
+                icon.color: "transparent"
+                text: "New"
+                onClicked: {
+                    createFolderWindow.x = app_window.x
+                    createFolderWindow.y = app_window.y
+                    createFolderWindow.visible = true
+                }
+            }
         }
     }
 
@@ -76,17 +99,19 @@ Item {
             headerPositioning: ListView.OverlayHeader
 
             header: Column {
-                width: browser.width - 5
+                width: browser.width
                 height: 72
                 z:2
 
                 Rectangle {
                     width: parent.width
-                    border.width: 1
+                    border.width: 2
                     border.color: "black"
                     height: 32
 
                     TextInput {
+                        x:5
+                        width: parent.width
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path
                     }
@@ -107,9 +132,16 @@ Item {
                         }
                     }
                     Rectangle {
+                        width: 1
+                        height: 32
+                        color: "black"
+                    }
+
+                    Rectangle {
                         width: 100
                         height: 32
                         Text {
+                            x: 3
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
@@ -122,10 +154,12 @@ Item {
             highlight: Rectangle {
                 color: "lightblue"
                 opacity: 0.5
-                z: 1
+                z: 0
             }
             focus: true
             highlightFollowsCurrentItem: true
+            highlightMoveDuration:1
+            smooth: true
 
             Keys.onUpPressed: {
                 var newIndex = currentIndex - 1;

@@ -9,7 +9,6 @@ Rectangle {
 
     Row {
         anchors.fill: parent
-        spacing: 3
 
         Image {
             id: icon
@@ -22,7 +21,7 @@ Rectangle {
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
             text: fileName
-            width: parent.width - 140
+            width: parent.width - 135
             anchors.verticalCenter: parent.verticalCenter
         }
 

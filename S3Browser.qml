@@ -15,6 +15,17 @@ Item {
         width: parent.width
         height: 48
         id: top_buttons_row
+
+//        Row {
+//            width: parent.width
+//            height: 2
+//            Rectangle {
+//                width: parent.width
+//                height: 1
+//                color: "black"
+//            }
+//        }
+
         Row {
             anchors.fill: parent
             ToolButton {
@@ -84,18 +95,20 @@ Item {
             headerPositioning: ListView.OverlayHeader
 
             header: Column {
-                width: browser.width - 5
+                width: browser.width
                 height: 72
                 z:2
 
                 Rectangle {
-                    width: parent.width
-                    border.width: 1
+                    width: parent.width - 2
+                    border.width: 2
                     border.color: "black"
                     height: 32
                     color: "orange"
 
                     TextInput {
+                        x:5
+                        width: parent.width
                         anchors.verticalCenter: parent.verticalCenter
                         text: path
                     }
@@ -138,10 +151,12 @@ Item {
             highlight: Rectangle {
                 color: "lightblue"
                 opacity: 0.5
-                z: 1
+                z: 0
             }
             focus: true
             highlightFollowsCurrentItem: true
+            highlightMoveDuration:1
+            smooth: true
 
             footerPositioning: ListView.OverlayHeader
 

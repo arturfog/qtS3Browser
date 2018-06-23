@@ -228,36 +228,6 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
     }
 }
 /**
- * @brief S3Client::downloadFile
- * @param bucket_name
- * @param key_name
- */
-void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
-    {
-        Aws::S3::Model::GetObjectRequest object_request;
-        object_request.WithBucket(bucket_name).WithKey(key_name);
-
-        auto get_object_outcome = s3_client->GetObject(object_request);
-
-        if (get_object_outcome.IsSuccess())
-        {
-            Aws::OFStream local_file;
-            local_file.open(key_name.c_str(), std::ios::out | std::ios::binary);
-            local_file << get_object_outcome.GetResult().GetBody().rdbuf();
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "GetObject error: " <<
-                         get_object_outcome.GetError().GetExceptionName() << " " <<
-                         get_object_outcome.GetError().GetMessage() << std::endl;
-        }
-    }
-    Aws::ShutdownAPI(options);
-}
-/**
  * @brief S3Client::deleteObject
  * @param bucket_name
  * @param key_name
@@ -270,18 +240,27 @@ void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &k
         Aws::S3::Model::DeleteObjectRequest object_request;
         object_request.WithBucket(bucket_name).WithKey(key_name);
 
-        auto delete_object_outcome = s3_client->DeleteObject(object_request);
-
-        if (delete_object_outcome.IsSuccess())
-        {
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "DeleteObject error: " <<
-                delete_object_outcome.GetError().GetExceptionName() << " " <<
-                delete_object_outcome.GetError().GetMessage() << std::endl;
-        }
+        s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
+    }
+}
+/**
+ * @brief S3Client::deleteObjectHandler
+ * @param outcome
+ */
+void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
+                                   const Aws::S3::Model::DeleteObjectRequest &,
+                                   const Aws::S3::Model::DeleteObjectOutcome &outcome,
+                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    if (outcome.IsSuccess())
+    {
+        std::cout << "Done!" << std::endl;
+    }
+    else
+    {
+        std::cout << "DeleteObject error: " <<
+            outcome.GetError().GetExceptionName() << " " <<
+            outcome.GetError().GetMessage() << std::endl;
     }
 }
 
@@ -296,13 +275,12 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
     request.SetBucket(bucket_name);
 
     s3_client->DeleteBucketAsync(request, &deleteBucketHandler);
+
+    // TODO: Remove all objects inside
 }
 /**
  * @brief S3Client::deleteBucketHandler
- * @param client
- * @param request
  * @param outcome
- * @param context
  */
 void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteBucketRequest &,
@@ -331,24 +309,38 @@ void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &k
     std::cout << "Uploading to S3 bucket " <<
         bucket_name << " at key " << key_name << std::endl;
 
-    object_request.WithBucket(bucket_name).WithKey(key_name);
+    object_request.SetBucket(bucket_name);
+    object_request.SetKey(key_name);
 
-    auto put_object_outcome = s3_client->PutObject(object_request);
-
-    if (put_object_outcome.IsSuccess())
+    s3_client->PutObjectAsync(object_request, &createFolderHandler);
+}
+/**
+ * @brief S3Client::createFolderHandler
+ * @param outcome
+ */
+void S3Client::createFolderHandler(const Aws::S3::S3Client *,
+                                   const Aws::S3::Model::PutObjectRequest &,
+                                   const Aws::S3::Model::PutObjectOutcome &outcome,
+                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    if (outcome.IsSuccess())
     {
         std::cout << "Done!" << std::endl;
     }
     else
     {
         std::cout << "PutObject error: " <<
-            put_object_outcome.GetError().GetExceptionName() << " " <<
-            put_object_outcome.GetError().GetMessage() << std::endl;
+            outcome.GetError().GetExceptionName() << " " <<
+            outcome.GetError().GetMessage() << std::endl;
     }
 }
-
-
-void S3Client::uploadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+/**
+ * @brief S3Client::uploadFile
+ * @param bucket_name
+ * @param key_name
+ * @param file_name
+ */
+void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
@@ -367,8 +359,13 @@ void S3Client::uploadFile2(const Aws::String &bucket_name, const Aws::String &ke
         transferHandle->WaitUntilFinished();
     }
 }
-
-void S3Client::downloadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
+/**
+ * @brief S3Client::downloadFile
+ * @param bucket_name
+ * @param key_name
+ * @param file_name
+ */
+void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
@@ -384,36 +381,6 @@ void S3Client::downloadFile2(const Aws::String &bucket_name, const Aws::String &
         auto transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
 
         transferHandle->WaitUntilFinished();
-    }
-}
-
-void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                const Aws::String &file_name) {
-    Aws::S3::Model::PutObjectRequest object_request;
-    {
-        std::cout << "Uploading " << file_name << " to S3 bucket " <<
-            bucket_name << " at key " << key_name << std::endl;
-
-        object_request.WithBucket(bucket_name).WithKey(key_name);
-
-        // Binary files must also have the std::ios_base::bin flag or'ed in
-        auto input_data = Aws::MakeShared<Aws::FStream>("PutObjectInputStream",
-            file_name.c_str(), std::ios_base::in | std::ios_base::binary);
-
-        object_request.SetBody(input_data);
-
-        auto put_object_outcome = s3_client->PutObject(object_request);
-
-        if (put_object_outcome.IsSuccess())
-        {
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "PutObject error: " <<
-                put_object_outcome.GetError().GetExceptionName() << " " <<
-                put_object_outcome.GetError().GetMessage() << std::endl;
-        }
     }
 }
 

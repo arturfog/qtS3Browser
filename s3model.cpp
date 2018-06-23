@@ -199,9 +199,9 @@ void S3Model::upload(const QString& file)
 
 void S3Model::download(const QString& file)
 {
-    (void)file;
     s3.downloadFile(getCurrentBucket().toStdString().c_str(),
-                    getPathWithoutBucket().toStdString().c_str());
+                    getPathWithoutBucket().toStdString().c_str(),
+                    file.toStdString().c_str());
 }
 
 QVariant S3Model::data(const QModelIndex & index, int role) const {

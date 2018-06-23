@@ -8,8 +8,9 @@ import QtQuick.Controls.Material 2.2
 ApplicationWindow {
     id: app_window
     visible: true
-    width: 800
+    width: 840
     height: 480
+    minimumWidth: 800
     title: qsTr("s3FileBrowser")
 
     property var createBucketWindow: CreateItemWindow {
@@ -95,7 +96,7 @@ ApplicationWindow {
         }
 
         Column {
-            width: 2
+            width: 3
             height: parent.height
 
             Rectangle {
