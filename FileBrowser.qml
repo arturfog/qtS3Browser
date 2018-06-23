@@ -1,10 +1,10 @@
 import QtQuick 2.11
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.4
 import QtQuick.Controls.Material 2.3
 import QtQuick.Dialogs 1.2
-import Qt.labs.folderlistmodel 2.1
+import Qt.labs.folderlistmodel 2.2
 
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 
 Item {
     id: browser
@@ -12,41 +12,43 @@ Item {
     width: 300
     Keys.forwardTo: view
 
-    Row {
+    ToolBar {
         width: parent.width
         height: 48
-
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_up_icon.png"
-            icon.color: "transparent"
-            onClicked: view.path = folder.parentFolder
-        }
-
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_refresh_icon.png"
-            icon.color: "transparent"
-        }
-
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_upload_icon.png"
-            icon.color: "transparent"
-            onClicked: {
-                var filePath = folder.get(view.currentIndex, "filePath")
-                s3Model.uploadQML(filePath)
+        Row {
+            anchors.fill: parent
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_up_icon.png"
+                icon.color: "transparent"
+                text: qsTr("Up")
+                onClicked: view.path = folder.parentFolder
             }
-        }
 
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_delete_icon.png"
-            icon.color: "transparent"
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_refresh_icon.png"
+                icon.color: "transparent"
+                text: qsTr("Refresh")
+            }
+
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_upload_icon.png"
+                icon.color: "transparent"
+                text: qsTr("Upload")
+                onClicked: {
+                    var filePath = folder.get(view.currentIndex, "filePath")
+                    s3Model.uploadQML(filePath)
+                }
+            }
+
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_delete_icon.png"
+                icon.color: "transparent"
+                text: qsTr("Delete")
+            }
         }
     }
 

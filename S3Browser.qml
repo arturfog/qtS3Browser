@@ -1,7 +1,9 @@
-import QtQuick 2.5
-import QtQuick.Controls 2.2
+import QtQuick 2.11
+import QtQuick.Controls 2.4
 import QtQuick.Dialogs 1.2
-import Qt.labs.folderlistmodel 2.1
+import Qt.labs.folderlistmodel 2.2
+
+import QtQuick.Layouts 1.3
 
 Item {
     id: browser
@@ -9,54 +11,56 @@ Item {
     width: 300
     height: 400
 
-    Row {
-        id: top_buttons_row
+    ToolBar {
         width: parent.width
         height: 48
-
-        ToolButton {
-            width:48
-            height: parent.height
-            icon.source: "icons/32_up_icon.png"
-            icon.color: "transparent"
-            onClicked: {
-                s3Model.goBack()
-                path = s3Model.getS3Path()
+        id: top_buttons_row
+        Row {
+            anchors.fill: parent
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_up_icon.png"
+                icon.color: "transparent"
+                text: "Up"
+                onClicked: {
+                    s3Model.goBack()
+                    path = s3Model.getS3Path()
+                }
             }
-        }
 
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_refresh_icon.png"
-            icon.color: "transparent"
-            onClicked: s3Model.refresh()
-        }
-
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_download_icon.png"
-            icon.color: "transparent"
-        }
-
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_delete_icon.png"
-            icon.color: "transparent"
-            onClicked: {
-                s3Model.remove(view.currentIndex)
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_refresh_icon.png"
+                icon.color: "transparent"
+                text: "Refresh"
+                onClicked: s3Model.refresh()
             }
-        }
 
-        ToolButton {
-            width: 48
-            height: parent.height
-            icon.source: "icons/32_new_folder_icon.png"
-            icon.color: "transparent"
-            onClicked: {
-                createFolderWindow.visible = true
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_download_icon.png"
+                icon.color: "transparent"
+                text: "Download"
+            }
+
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_delete_icon.png"
+                icon.color: "transparent"
+                text: "Delete"
+                onClicked: {
+                    s3Model.remove(view.currentIndex)
+                }
+            }
+
+            ToolButton {
+                height: parent.height
+                icon.source: "icons/32_new_folder_icon.png"
+                icon.color: "transparent"
+                text: "New"
+                onClicked: {
+                    createFolderWindow.visible = true
+                }
             }
         }
     }

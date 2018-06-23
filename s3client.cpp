@@ -47,8 +47,8 @@ void S3Client::init() {
     Aws::InitAPI(options);
     {
         auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
-        config->connectTimeoutMs = 30000;
-        config->requestTimeoutMs = 30000;
+        config->connectTimeoutMs = 3000;
+        config->requestTimeoutMs = 3000;
         //config.region = region;
         config->readRateLimiter = m_limiter;
         config->writeRateLimiter = m_limiter;
@@ -327,36 +327,29 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
  * @param key_name
  */
 void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name) {
-    Aws::SDKOptions options;
     Aws::S3::Model::PutObjectRequest object_request;
-    Aws::InitAPI(options);
+    std::cout << "Uploading to S3 bucket " <<
+        bucket_name << " at key " << key_name << std::endl;
+
+    object_request.WithBucket(bucket_name).WithKey(key_name);
+
+    auto put_object_outcome = s3_client->PutObject(object_request);
+
+    if (put_object_outcome.IsSuccess())
     {
-        std::cout << "Uploading to S3 bucket " <<
-            bucket_name << " at key " << key_name << std::endl;
-
-        object_request.WithBucket(bucket_name).WithKey(key_name);
-
-        auto put_object_outcome = s3_client->PutObject(object_request);
-
-        if (put_object_outcome.IsSuccess())
-        {
-            std::cout << "Done!" << std::endl;
-        }
-        else
-        {
-            std::cout << "PutObject error: " <<
-                put_object_outcome.GetError().GetExceptionName() << " " <<
-                put_object_outcome.GetError().GetMessage() << std::endl;
-        }
+        std::cout << "Done!" << std::endl;
     }
-    Aws::ShutdownAPI(options);
+    else
+    {
+        std::cout << "PutObject error: " <<
+            put_object_outcome.GetError().GetExceptionName() << " " <<
+            put_object_outcome.GetError().GetMessage() << std::endl;
+    }
 }
 
 
 void S3Client::uploadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
         transferConfig.s3Client = s3_client;
@@ -373,13 +366,10 @@ void S3Client::uploadFile2(const Aws::String &bucket_name, const Aws::String &ke
 
         transferHandle->WaitUntilFinished();
     }
-    Aws::ShutdownAPI(options);
 }
 
 void S3Client::downloadFile2(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
-    Aws::SDKOptions options;
-    Aws::InitAPI(options);
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
         transferConfig.s3Client = s3_client;
@@ -395,15 +385,11 @@ void S3Client::downloadFile2(const Aws::String &bucket_name, const Aws::String &
 
         transferHandle->WaitUntilFinished();
     }
-    Aws::ShutdownAPI(options);
 }
 
 void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                 const Aws::String &file_name) {
-    Aws::SDKOptions options;
     Aws::S3::Model::PutObjectRequest object_request;
-
-    Aws::InitAPI(options);
     {
         std::cout << "Uploading " << file_name << " to S3 bucket " <<
             bucket_name << " at key " << key_name << std::endl;
@@ -429,7 +415,6 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
                 put_object_outcome.GetError().GetMessage() << std::endl;
         }
     }
-    Aws::ShutdownAPI(options);
 }
 
 const Aws::String S3Client::ALLOCATION_TAG = "QTS3Client";

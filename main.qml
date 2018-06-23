@@ -1,9 +1,9 @@
-import QtQuick 2.9
-import QtQuick.Window 2.2
-import QtQml.Models 2.2
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.0
-import QtQuick.Controls.Material 2.1
+import QtQuick 2.11
+import QtQuick.Window 2.3
+import QtQml.Models 2.3
+import QtQuick.Controls 2.4
+import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.2
 
 ApplicationWindow {
     id: app_window
@@ -22,20 +22,17 @@ ApplicationWindow {
         create_action: 1
     }
 
-    statusBar: StatusBar {
-            RowLayout {
-                anchors.fill: parent
-                Label { text: "Read Only" }
-            }
-        }
+    property var createBookmarkWindow: CreateBookmarkWindow {
+
+    }
 
     menuBar: MenuBar {
         id: menu_bar
+
         Menu {
             title: "File"
             MenuItem {
                 text: "Close"
-                iconSource: "icons/32_up_icon.png"
                 onTriggered: Qt.quit();
             }
         }
@@ -53,14 +50,24 @@ ApplicationWindow {
                     createBucketWindow.visible = true
                 }
             }
-            MenuItem { text: "Create directory" }
+            MenuItem {
+                text: "Create directory"
+                onTriggered: {
+                    createFolderWindow.visible = true
+                }
+            }
             MenuItem { text: "Download" }
             MenuItem { text: "Upload" }
         }
 
         Menu {
             title: "Bookmarks"
-            MenuItem { text: "Create bookmark" }
+            MenuItem {
+                text: "Create bookmark"
+                onTriggered: {
+                    createBookmarkWindow.visible = true
+                }
+            }
             MenuSeparator { }
             MenuItem { text: "Empty" }
         }
@@ -88,7 +95,7 @@ ApplicationWindow {
         }
 
         Column {
-            width: 8
+            width: 2
             height: parent.height
 
             Rectangle {

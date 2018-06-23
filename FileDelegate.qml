@@ -1,17 +1,17 @@
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
+import QtQuick 2.11
+import QtQuick.Layouts 1.3
 
 Rectangle {
     id:delegate
     width: view.width
     height:34
     color: "transparent"
+
     Row {
         anchors.fill: parent
         spacing: 3
 
         Image {
-
             id: icon
             width: delegate.height - 2
             height:width

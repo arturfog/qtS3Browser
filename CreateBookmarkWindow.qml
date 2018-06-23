@@ -5,52 +5,64 @@ import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 
 Window {
-    id: create_item_win
-    x: 100; y: 100; width: 300; height: 100
-    minimumHeight: 100; maximumHeight: 100
-    minimumWidth: 250
+    id: create_bookmark_win
+    x: 100; y: 100; width: 300; height: 200
+    minimumHeight: 200; maximumHeight: 200
+    minimumWidth: 200
 
-    property var win_title: String
-    property var create_action: Number
-
-    title: win_title
+    title: "Create bookmark"
 
     Rectangle {
         width: parent.width
         height: parent.height
+        color: "transparent"
 
         Rectangle {
             x: 10
             y: 10
-            width: parent.width - x - 10
+            width: parent.width - 20
             height: 34
             border.color: "black"
             color: "white"
             border.width: 1
 
             TextInput {
-                id: itemName
+                id: bookmarkName
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Bucket name"
+                text: "Bookmark name"
+                maximumLength: 128
+            }
+        }
+
+        Rectangle {
+            x: 10
+            y: 55
+            width: parent.width - 20
+            height: 34
+            border.color: "black"
+            color: "white"
+            border.width: 1
+
+            TextInput {
+                id: bookmarkPath
+                x: 5
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+                text: "s3://"
                 maximumLength: 128
             }
         }
 
         Row {
-            y: 55
+            y: 110
             anchors.horizontalCenter: parent.horizontalCenter
 
             Button {
                 id: cw_cb
                 text: "Create"
                 onClicked: {
-                    if (create_action === 0) {
-                        s3Model.createBucket(itemName.text)
-                    } else {
-                        s3Model.createFolder(itemName.text)
-                    }
                     s3Model.refresh()
                     close()
                 }
