@@ -118,10 +118,20 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
         qsKey = "";
     }
 
+    std::function<void(const std::string&)> callback = [&](const std::string& item) {
+        QString qsItem(item.c_str());
+        qsItem.replace(getPathWithoutBucket(), "");
+        QString path = qsItem;
+
+        if(qsItem.contains("/")) {
+          path = "/";
+        }
+
+        emit this->addItemSignal(qsItem, path);
+    };
+
     if(qsKey == "" || qsKey.contains("/")) {
         clearItems();
-
-        std::vector<std::string> objects;
 
         if (qsKey.contains("/")) {
             if(goBack == false) {
@@ -131,18 +141,7 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
         }
 
         qDebug() << "3 qsKey: [" << qsKey << "] bucket[" << qsBucket << "]";
-        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), objects);
-
-        for(auto obj : objects) {
-            QString qsItem(obj.c_str());
-            qsItem.replace(getPathWithoutBucket(), "");
-            QString path = qsItem;
-            if(qsItem.contains("/")) {
-                path = "/";
-            }
-
-            addS3Item(S3Item(qsItem, path));
-        }
+        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), callback);
     }
 }
 /**
@@ -151,7 +150,7 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
 void S3Model::getBuckets() {
     clearItems();
     std::function<void(const std::string&)> callback = [&](const std::string& item) {
-        emit this->addItemSignal(QString(item.c_str()));
+        emit this->addItemSignal(QString(item.c_str()), "/");
     };
     s3.getBuckets(callback);
 }

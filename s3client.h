@@ -56,7 +56,11 @@ public:
     void init();
 
     void listObjects(const Aws::String &bucket_name, const Aws::String &key,
-                     std::vector<std::string> &list);
+                     std::function<void(const std::string&)> func);
+    static void listObjectsHandler(const Aws::S3::S3Client* client,
+                                   const Aws::S3::Model::ListObjectsRequest& request,
+                                   const Aws::S3::Model::ListObjectsOutcome& outcome,
+                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 
     void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
     // DELETE OBJECT

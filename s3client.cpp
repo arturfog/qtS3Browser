@@ -67,44 +67,60 @@ void S3Client::init() {
  * @param list
  */
 void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
-                           std::vector<std::string> &list) {
-    std::cout << "Objects in S3 bucket: " << bucket_name << " key: " << key << std::endl;
+                           std::function<void(const std::string&)> func) {
+    std::cout << "Objects in S3 bucket: [" << bucket_name << "] key: [" << key << "]" << std::endl;
 
     Aws::S3::Model::ListObjectsRequest objects_request;
-    objects_request.WithBucket(bucket_name);
+    objects_request.SetBucket(bucket_name);
     objects_request.SetDelimiter("/");
 
     if(key != "") {
         objects_request.SetPrefix(key);
     }
-    auto list_objects_outcome = s3_client->ListObjects(objects_request);
 
-    if (list_objects_outcome.IsSuccess())
+    m_func = func;
+    s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
+}
+/**
+ * @brief S3Client::listObjectsHandler
+ * @param request
+ * @param outcome
+ */
+void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
+                                  const Aws::S3::Model::ListObjectsRequest &request,
+                                  const Aws::S3::Model::ListObjectsOutcome &outcome,
+                                  const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    if (outcome.IsSuccess())
     {
-        Aws::Vector<Aws::S3::Model::Object> object_list =
-                list_objects_outcome.GetResult().GetContents();
+        Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
-        auto common_list = list_objects_outcome.GetResult().GetCommonPrefixes();
+        auto common_list = outcome.GetResult().GetCommonPrefixes();
+        auto key = request.GetPrefix();
 
         for (auto const &s3_object : common_list)
         {
-            std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
 
-            list.emplace_back(item);
+            std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
+            //list.emplace_back(item);
+            m_func(item);
             std::cout << "* " << s3_object.GetPrefix() << std::endl;
         }
 
         for (auto const &s3_object : object_list)
         {
-            list.emplace_back(s3_object.GetKey().c_str());
+            //list.emplace_back(s3_object.GetKey().c_str());
+            m_func(s3_object.GetKey().c_str());
             std::cout << "** " << s3_object.GetKey() << std::endl;
         }
+
+        std::cout << "size: " << common_list.size() << std::endl;
     }
     else
     {
         std::cout << "ListObjects error: " <<
-                     list_objects_outcome.GetError().GetExceptionName() << " " <<
-                     list_objects_outcome.GetError().GetMessage() << std::endl;
+                     outcome.GetError().GetExceptionName() << " " <<
+                     outcome.GetError().GetMessage() << std::endl;
     }
     std::cout << "ListObjects done " << std::endl;
 }

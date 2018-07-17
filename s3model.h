@@ -48,9 +48,9 @@ public:
         PathRole
     };
 
-    Q_SIGNAL void addItemSignal(const QString& item);
-    Q_SLOT void addItemSlot(const QString& item) {
-        addS3Item(S3Item(item, "/"));
+    Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
+    Q_SLOT void addItemSlot(const QString& item, const QString& path) {
+        addS3Item(S3Item(item, path));
     }
 
     Q_INVOKABLE QString getS3Path() const { return s3Path(); }
