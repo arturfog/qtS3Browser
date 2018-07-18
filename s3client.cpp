@@ -19,19 +19,17 @@
 #include "s3client.h"
 
 #include <aws/core/auth/AWSCredentialsProvider.h>
-
+// Utils
 #include <aws/core/utils/ratelimiter/DefaultRateLimiter.h>
-
-#include <aws/s3/model/Bucket.h>
-#include <aws/s3/model/Object.h>
 // Objects
+#include <aws/s3/model/Object.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/model/ListObjectsRequest.h>
 // Buckets
+#include <aws/s3/model/Bucket.h>
 #include <aws/s3/model/CreateBucketRequest.h>
-
 
 
 #include <iostream>
@@ -39,6 +37,8 @@
 #include <regex>
 
 std::function<void(const std::string&)> S3Client::m_func;
+std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
+        Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
 /**
  * @brief S3Client::init
  */
@@ -204,6 +204,14 @@ void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
 {
     std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
 }
+
+void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
+                            const Aws::Client::AWSError<Aws::S3::S3Errors>& error)
+{
+    std::cout << "Transfer Status = " << error.GetMessage() << "\n";
+}
+
 /**
  * @brief S3Client::getBuckets
  * @param list
@@ -322,7 +330,7 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
  */
 void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name) {
     Aws::S3::Model::PutObjectRequest object_request;
-    std::cout << "Uploading to S3 bucket " <<
+    std::cout << "Creating folder in S3 bucket " <<
         bucket_name << " at key " << key_name << std::endl;
 
     object_request.SetBucket(bucket_name);
@@ -359,14 +367,17 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
 void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
     {
-        Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
+        Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
         transferConfig.s3Client = s3_client;
 
         transferConfig.transferStatusUpdatedCallback = &statusUpdate;
-
         transferConfig.uploadProgressCallback = &uploadProgress;
-
         transferConfig.downloadProgressCallback = &downloadProgress;
+        transferConfig.errorCallback = &errorHandler;
+
+        std::cout << "Uploading file to S3 bucket " <<
+            bucket_name << " at key " << key_name <<
+            " with filename: " << file_name << std::endl;
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
         auto transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
@@ -384,14 +395,18 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
 void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
                            const Aws::String &file_name) {
     {
-        Aws::Transfer::TransferManagerConfiguration transferConfig(nullptr);
+        Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
         transferConfig.s3Client = s3_client;
 
         transferConfig.transferStatusUpdatedCallback = &statusUpdate;
-
         transferConfig.uploadProgressCallback = &uploadProgress;
-
         transferConfig.downloadProgressCallback = &downloadProgress;
+        transferConfig.errorCallback = &errorHandler;
+
+
+        std::cout << "Downloading file from S3 bucket " <<
+            bucket_name << " key " << key_name <<
+            " to filename: " << file_name << std::endl;
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
         auto transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);

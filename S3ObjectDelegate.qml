@@ -58,8 +58,8 @@ Rectangle {
         }
 
         onDoubleClicked:  {
-            s3Model.getObjects(i_fileName.text)
-            path = s3Model.getS3Path()
+            s3Model.getObjectsQML(i_fileName.text)
+            path = s3Model.getS3PathQML()
         }
     }
 }

@@ -27,7 +27,8 @@
 #include <aws/s3/model/DeleteBucketRequest.h>
 
 #include <aws/core/utils/memory/stl/AWSString.h>
-
+#include <aws/core/utils/threading/Executor.h>
+//
 #include <aws/s3/S3Client.h>
 //
 #include <aws/transfer/TransferManager.h>
@@ -43,10 +44,12 @@ private:
 
     static const Aws::String ALLOCATION_TAG;
     static std::function<void(const std::string&)> m_func;
+    static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
 public:
     S3Client() : config(new Aws::Client::ClientConfiguration()) {
         init();
         Aws::InitAPI(options);
+        //executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
     }
 
     ~S3Client() {
@@ -54,15 +57,13 @@ public:
     }
 
     void init();
-
+    // LIST OBJECTS
     void listObjects(const Aws::String &bucket_name, const Aws::String &key,
                      std::function<void(const std::string&)> func);
     static void listObjectsHandler(const Aws::S3::S3Client* client,
                                    const Aws::S3::Model::ListObjectsRequest& request,
                                    const Aws::S3::Model::ListObjectsOutcome& outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-
-    void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
     // DELETE OBJECT
     void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
     static void deleteObjectHandler(const Aws::S3::S3Client* client,
@@ -75,12 +76,6 @@ public:
                                     const Aws::S3::Model::DeleteBucketRequest& request,
                                     const Aws::S3::Model::DeleteBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-
-    void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
-
-    void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
 
     // CREATE FOLDER
     void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
@@ -103,6 +98,16 @@ public:
     static void uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void statusUpdate(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    static void errorHandler(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
+                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
+
+    void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
+
+    void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
+
+    void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
 };
 
 

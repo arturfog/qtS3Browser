@@ -47,11 +47,11 @@ Window {
                 text: "Create"
                 onClicked: {
                     if (create_action === 0) {
-                        s3Model.createBucket(itemName.text)
+                        s3Model.createBucketQML(itemName.text)
                     } else {
-                        s3Model.createFolder(itemName.text)
+                        s3Model.createFolderQML(itemName.text)
                     }
-                    s3Model.refresh()
+                    s3Model.refreshQML()
                     close()
                 }
             }

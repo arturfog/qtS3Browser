@@ -34,8 +34,8 @@ Item {
                 icon.color: "transparent"
                 text: "Up"
                 onClicked: {
-                    s3Model.goBack()
-                    path = s3Model.getS3Path()
+                    s3Model.goBackQML()
+                    path = s3Model.getS3PathQML()
                 }
             }
 
@@ -44,7 +44,7 @@ Item {
                 icon.source: "icons/32_refresh_icon.png"
                 icon.color: "transparent"
                 text: "Refresh"
-                onClicked: s3Model.refresh()
+                onClicked: s3Model.refreshQML()
             }
 
             ToolButton {
@@ -52,6 +52,9 @@ Item {
                 icon.source: "icons/32_download_icon.png"
                 icon.color: "transparent"
                 text: "Download"
+                onClicked: {
+                    s3Model.downloadQML(view.currentIndex)
+                }
             }
 
             ToolButton {
@@ -60,7 +63,7 @@ Item {
                 icon.color: "transparent"
                 text: "Delete"
                 onClicked: {
-                    s3Model.remove(view.currentIndex)
+                    s3Model.removeQML(view.currentIndex)
                 }
             }
 
@@ -83,7 +86,7 @@ Item {
         clip: true
         ListView {
             id: view
-            property string path : s3Model.getS3Path()
+            property string path : s3Model.getS3PathQML()
 
             width: parent.width
             height: parent.height

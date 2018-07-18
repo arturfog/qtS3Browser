@@ -196,11 +196,12 @@ void S3Model::upload(const QString& file)
                   file.toStdString().c_str());
 }
 
-void S3Model::download(const QString& file)
+void S3Model::download(const QString &key)
 {
+    QString out_file = key.split("/").last();
     s3.downloadFile(getCurrentBucket().toStdString().c_str(),
-                    getPathWithoutBucket().toStdString().c_str(),
-                    file.toStdString().c_str());
+                    getPathWithoutBucket().append(out_file).toStdString().c_str(),
+                    QString("/tmp/").append(out_file).toStdString().c_str());
 }
 
 QVariant S3Model::data(const QModelIndex & index, int role) const {

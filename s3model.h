@@ -43,7 +43,7 @@ class S3Model : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum AnimalRoles {
+    enum S3Roles {
         NameRole = Qt::UserRole + 1,
         PathRole
     };
@@ -53,15 +53,22 @@ public:
         addS3Item(S3Item(item, path));
     }
 
-    Q_INVOKABLE QString getS3Path() const { return s3Path(); }
-    Q_INVOKABLE void getBuckets() const { getBuckets(); }
-    Q_INVOKABLE void goBack() const { goBack(); }
-    Q_INVOKABLE void getObjects(const QString &text) { getObjects(text.toStdString()); }
-    Q_INVOKABLE void createBucket(const QString &bucket) { createBucket(bucket.toStdString()); }
-    Q_INVOKABLE void createFolder(const QString &folder) { createFolder(folder.toStdString()); }
+    Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
+    Q_INVOKABLE void getBucketsQML() { getBuckets(); }
+    Q_INVOKABLE void goBackQML() { goBack(); }
+    Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
+    Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
+    Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder.toStdString()); }
     Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
-    Q_INVOKABLE void refresh() const { refresh(); }
-    Q_INVOKABLE void remove(const int idx) {
+    Q_INVOKABLE void downloadQML(const int idx) {
+        if (idx < m_s3items.count()) {
+            if(getCurrentPathDepth() >= 1) {
+                download(m_s3items.at(idx).fileName());
+            }
+        }
+    }
+    Q_INVOKABLE void refreshQML() { refresh(); }
+    Q_INVOKABLE void removeQML(const int idx) {
         if (idx < m_s3items.count()) {
             if(getCurrentPathDepth() <= 0) {
                 removeBucket(m_s3items.at(idx).fileName().toStdString());
@@ -107,7 +114,7 @@ public:
 
     void upload(const QString &file);
 
-    void download(const QString& file);
+    void download(const QString& key);
 
     void getObjects(const std::string &item, bool goBack = false);
 

@@ -42,7 +42,7 @@ ApplicationWindow {
             title: "S3"
             MenuItem {
                 text: "Connect..."
-                onTriggered: s3Model.getBuckets()
+                onTriggered: s3Model.getBucketsQML()
             }
             MenuSeparator { }
             MenuItem {
