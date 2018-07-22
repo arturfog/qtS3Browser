@@ -73,11 +73,29 @@ public:
             if(getCurrentPathDepth() <= 0) {
                 removeBucket(m_s3items.at(idx).fileName().toStdString());
             } else {
-                removeObject(m_s3items.at(idx).fileName().toStdString());
+                removeObject(getPathWithoutBucket().append(m_s3items.at(idx).fileName()).toStdString());
             }
 
             refresh();
         }
+    }
+
+    Q_INVOKABLE void getObjectInfoQML(const int idx) {
+        if (idx < m_s3items.count()) {
+          //getObjectInfo(m_s3items.at(idx).fileName());
+        }
+    }
+
+    Q_INVOKABLE QString getObjectSizeQML(const int idx) {
+        if (idx < m_s3items.count()) {
+            return "100";
+        }
+        return "0";
+    }
+
+    Q_INVOKABLE void clearItemsQML() {
+        clearItems();
+        m_s3Path.clear();
     }
 
     S3Model(QObject *parent = 0);
@@ -117,6 +135,8 @@ public:
     void download(const QString& key);
 
     void getObjects(const std::string &item, bool goBack = false);
+
+    void getObjectInfo(const QString &key);
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 

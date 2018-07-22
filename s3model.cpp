@@ -145,6 +145,15 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
     }
 }
 /**
+ * @brief S3Model::getObjectInfo
+ * @param key
+ */
+void S3Model::getObjectInfo(const QString &key)
+{
+    s3.getObjectInfo(getCurrentBucket().toStdString().c_str(),
+                     getPathWithoutBucket().append(key).toStdString().c_str());
+}
+/**
  * @brief S3Model::getBuckets
  */
 void S3Model::getBuckets() {

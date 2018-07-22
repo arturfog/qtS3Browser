@@ -13,5 +13,7 @@
         <file>icons/32_delete_icon.png</file>
         <file>icons/32_new_folder_icon.png</file>
         <file>CreateBookmarkWindow.qml</file>
+        <file>AboutWindow.qml</file>
+        <file>SettingsWindow.qml</file>
     </qresource>
 </RCC>

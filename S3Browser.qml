@@ -6,8 +6,9 @@ import Qt.labs.folderlistmodel 2.2
 import QtQuick.Layouts 1.3
 
 Item {
-    id: browser
+    id: s3_browser
     property alias path: view.path
+    property bool connected: false
     width: 300
     height: 400
 
@@ -16,16 +17,6 @@ Item {
         height: 48
         id: top_buttons_row
 
-//        Row {
-//            width: parent.width
-//            height: 2
-//            Rectangle {
-//                width: parent.width
-//                height: 1
-//                color: "black"
-//            }
-//        }
-
         Row {
             anchors.fill: parent
             ToolButton {
@@ -33,6 +24,7 @@ Item {
                 icon.source: "icons/32_up_icon.png"
                 icon.color: "transparent"
                 text: "Up"
+                enabled: connected
                 onClicked: {
                     s3Model.goBackQML()
                     path = s3Model.getS3PathQML()
@@ -40,18 +32,22 @@ Item {
             }
 
             ToolButton {
+                id: s3_refresh_btn
                 height: parent.height
                 icon.source: "icons/32_refresh_icon.png"
                 icon.color: "transparent"
                 text: "Refresh"
+                enabled: connected
                 onClicked: s3Model.refreshQML()
             }
 
             ToolButton {
+                id: s3_download_btn
                 height: parent.height
                 icon.source: "icons/32_download_icon.png"
                 icon.color: "transparent"
                 text: "Download"
+                enabled: connected
                 onClicked: {
                     s3Model.downloadQML(view.currentIndex)
                 }
@@ -62,6 +58,7 @@ Item {
                 icon.source: "icons/32_delete_icon.png"
                 icon.color: "transparent"
                 text: "Delete"
+                enabled: connected
                 onClicked: {
                     s3Model.removeQML(view.currentIndex)
                 }
@@ -72,6 +69,7 @@ Item {
                 icon.source: "icons/32_new_folder_icon.png"
                 icon.color: "transparent"
                 text: "New"
+                enabled: connected
                 onClicked: {
                     createFolderWindow.visible = true
                 }
@@ -98,7 +96,7 @@ Item {
             headerPositioning: ListView.OverlayHeader
 
             header: Column {
-                width: browser.width
+                width: s3_browser.width
                 height: 72
                 z:2
 
@@ -165,7 +163,7 @@ Item {
 
             footer: Rectangle {
                 id: s3_footer
-                width: browser.width
+                width: s3_browser.width
                 height: 34
                 color: app_window.color
                 z: 2

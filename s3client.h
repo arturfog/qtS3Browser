@@ -46,10 +46,17 @@ private:
     static std::function<void(const std::string&)> m_func;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
 public:
+    struct ObjectInfo_S {
+        int size;
+        Aws::String type;
+        Aws::String etag;
+        Aws::Utils::DateTime lastModified;
+
+    } objectInfo;
+
     S3Client() : config(new Aws::Client::ClientConfiguration()) {
         init();
         Aws::InitAPI(options);
-        //executor = Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
     }
 
     ~S3Client() {
@@ -94,20 +101,23 @@ public:
                                     const Aws::S3::Model::CreateBucketRequest& request,
                                     const Aws::S3::Model::CreateBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-    // DOWNLOAD/UPLOAD progress handlers
+    // DOWNLOAD/UPLOAD
+    void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
+    void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
+                     const Aws::String &file_name);
+    // DOWNLOAD/UPLOAD callbacks
     static void uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void statusUpdate(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void errorHandler(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
                              const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
-
-    void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
-
-    void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
-
+    // GET INFO
     void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
+    static void getObjectInfoHandler(const Aws::S3::S3Client* client,
+                                     const Aws::S3::Model::GetObjectRequest& request,
+                                     const Aws::S3::Model::GetObjectOutcome& outcome,
+                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 };
 
 

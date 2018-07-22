@@ -29,21 +29,20 @@ Rectangle {
                 if (filePath == "/") {
                     "DIR"
                 } else {
-                    "100 KB"
-//                    var size = folder.get(index, "fileSize")
-//                    var postfix = " B"
+                    var size = s3Model.getObjectSizeQML(index)
+                    var postfix = " B"
 
-//                    if (size > 1024) {
-//                        size = Math.floor(size / 1024)
-//                        postfix = " KB"
-//                    }
+                    if (size > 1024) {
+                        size = Math.floor(size / 1024)
+                        postfix = " KB"
+                    }
 
-//                    if (size > 1024) {
-//                        size = Math.floor(size / 1024)
-//                        return size + " MB"
-//                    }
+                    if (size > 1024) {
+                        size = Math.floor(size / 1024)
+                        return size + " MB"
+                    }
 
-//                    return size + postfix
+                    return size + postfix
                 }
             }
             anchors.verticalCenter: parent.verticalCenter

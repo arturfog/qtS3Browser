@@ -27,11 +27,24 @@ ApplicationWindow {
 
     }
 
+    property var aboutWindow: AboutWindow {
+
+    }
+
+    property var settingsWindow: SettingsWindow {
+
+    }
+
     menuBar: MenuBar {
         id: menu_bar
 
         Menu {
             title: "File"
+            MenuItem {
+                text: "Settings"
+                onTriggered: settingsWindow.visible = true
+            }
+            MenuSeparator { }
             MenuItem {
                 text: "Close"
                 onTriggered: Qt.quit();
@@ -42,7 +55,12 @@ ApplicationWindow {
             title: "S3"
             MenuItem {
                 text: "Connect..."
-                onTriggered: s3Model.getBucketsQML()
+                onTriggered: {
+                    s3Model.getBucketsQML()
+                    s3_panel.connected = true
+                    file_panel.connected = true
+                }
+
             }
             MenuSeparator { }
             MenuItem {
@@ -57,8 +75,16 @@ ApplicationWindow {
                     createFolderWindow.visible = true
                 }
             }
-            MenuItem { text: "Download" }
-            MenuItem { text: "Upload" }
+            MenuSeparator { }
+            MenuItem {
+                text: "Disconnect..."
+                onTriggered: {
+                    s3Model.clearItemsQML()
+                    s3_panel.connected = false
+                    file_panel.connected = false
+                }
+
+            }
         }
 
         Menu {
@@ -69,13 +95,24 @@ ApplicationWindow {
                     createBookmarkWindow.visible = true
                 }
             }
+            MenuItem {
+                text: "Manage bookmarks"
+                onTriggered: {
+                    createBookmarkWindow.visible = true
+                }
+            }
             MenuSeparator { }
             MenuItem { text: "Empty" }
         }
 
         Menu {
             title: "Help"
-            MenuItem { text: "About" }
+            MenuItem {
+                text: "About"
+                onTriggered: {
+                    aboutWindow.visible = true
+                }
+            }
         }
     }
 
@@ -89,6 +126,7 @@ ApplicationWindow {
             height: parent.height
 
             FileBrowser {
+                id: file_panel
                 height: parent.height
                 width: parent.width
                 path: "file:///home/" // let's start with the Home folder
@@ -111,6 +149,7 @@ ApplicationWindow {
             width: parent.width / 2
             height: parent.height
             S3Browser {
+                id: s3_panel
                 height: parent.height
                 width: parent.width
             }

@@ -10,6 +10,7 @@ Item {
     id: browser
     property alias path: view.path
     width: 300
+    property bool connected: false
     Keys.forwardTo: view
 
     ToolBar {
@@ -48,6 +49,7 @@ Item {
                 icon.source: "icons/32_upload_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Upload")
+                enabled: connected
                 onClicked: {
                     var filePath = folder.get(view.currentIndex, "filePath")
                     s3Model.uploadQML(filePath)

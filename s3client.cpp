@@ -131,25 +131,32 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
  */
 void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
 {
-    std::cout << "Object info in S3 bucket: " << bucket_name << std::endl;
+    std::cout << "Object info for: " << key_name << " from S3 bucket: " <<
+        bucket_name << std::endl;
 
     Aws::S3::Model::GetObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
+    s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
+}
 
-    auto get_object_outcome = s3_client->GetObject(object_request);
-
-    if (get_object_outcome.IsSuccess())
+void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
+                                    const Aws::S3::Model::GetObjectRequest &,
+                                    const Aws::S3::Model::GetObjectOutcome &outcome,
+                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    if (outcome.IsSuccess())
     {
-        auto result = get_object_outcome.GetResult().GetContentType();
-        //result.GetContentType();
-        //result.GetLastModified();
-        //result.GetContentLength();
+//        objectInfo.size = outcome.GetResult().GetContentLength();
+//        objectInfo.type = outcome.GetResult().GetContentType();
+//        // ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601) << std::endl;
+//        objectInfo.lastModified = outcome.GetResult().GetLastModified();
+//        objectInfo.etag = outcome.GetResult().GetETag();
     }
     else
     {
         std::cout << "GetObject error: " <<
-                     get_object_outcome.GetError().GetExceptionName() << " " <<
-                     get_object_outcome.GetError().GetMessage() << std::endl;
+                     outcome.GetError().GetExceptionName() << " " <<
+                     outcome.GetError().GetMessage() << std::endl;
     }
 }
 /**
@@ -258,7 +265,7 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
  */
 void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
     {
-        std::cout << "Deleting" << key_name << " from S3 bucket: " <<
+        std::cout << "Deleting " << key_name << " from S3 bucket: " <<
             bucket_name << std::endl;
 
         Aws::S3::Model::DeleteObjectRequest object_request;
@@ -278,7 +285,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
 {
     if (outcome.IsSuccess())
     {
-        std::cout << "Done!" << std::endl;
+        std::cout << "Deleting Done!" << std::endl;
     }
     else
     {
