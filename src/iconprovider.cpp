@@ -1,4 +1,4 @@
-#include "iconprovider.h"
+#include "inc/iconprovider.h"
 
 IconProvider::IconProvider():QQuickImageProvider(QQuickImageProvider::Pixmap)
 { }

@@ -16,7 +16,7 @@
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "s3model.h"
+#include "inc/s3model.h"
 
 #include <tuple>
 #include <QDebug>

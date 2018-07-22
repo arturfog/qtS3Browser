@@ -26,9 +26,9 @@
 #include <QObject>
 #include <QQuickView>
 
-#include "s3client.h"
-#include "s3model.h"
-#include "iconprovider.h"
+#include "inc/s3client.h"
+#include "inc/s3model.h"
+#include "inc/iconprovider.h"
 
 int main(int argc, char *argv[])
 {

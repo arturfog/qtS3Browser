@@ -16,7 +16,7 @@
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "s3client.h"
+#include "inc/s3client.h"
 
 #include <aws/core/auth/AWSCredentialsProvider.h>
 // Utils
