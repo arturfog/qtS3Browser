@@ -15,5 +15,7 @@
         <file>CreateBookmarkWindow.qml</file>
         <file>AboutWindow.qml</file>
         <file>SettingsWindow.qml</file>
+        <file>ManageBookmarksWindow.qml</file>
+        <file>OperationProgressWindow.qml</file>
     </qresource>
 </RCC>

@@ -23,17 +23,11 @@ ApplicationWindow {
         create_action: 1
     }
 
-    property var createBookmarkWindow: CreateBookmarkWindow {
-
-    }
-
-    property var aboutWindow: AboutWindow {
-
-    }
-
-    property var settingsWindow: SettingsWindow {
-
-    }
+    property var createBookmarkWindow: CreateBookmarkWindow {}
+    property var aboutWindow: AboutWindow {}
+    property var settingsWindow: SettingsWindow {}
+    property var manageBookmarksWindow: ManageBookmarksWindow {}
+    property var progressWindow: OperationProgressWindow {}
 
     menuBar: MenuBar {
         id: menu_bar
@@ -98,7 +92,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Manage bookmarks"
                 onTriggered: {
-                    createBookmarkWindow.visible = true
+                    manageBookmarksWindow.visible = true
                 }
             }
             MenuSeparator { }

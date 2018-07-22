@@ -112,18 +112,30 @@ Item {
                     height: 32
 
                     TextInput {
+                        id: file_browser_path_text
                         x:5
-                        width: parent.width
+                        width: parent.width - file_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path
                     }
+                    Button {
+                        id: file_browser_path_go
+                        y: 2
+                        x: file_browser_path_text.width
+                        height: 28
+                        icon.source: "icons/32_delete_icon.png"
+                        icon.color: "transparent"
+                        text: qsTr("Go")
+                    }
                 }
+
+
 
                 Row {
                     width: parent.width
                     height: 32
                     Rectangle {
-                        width: parent.width - 100
+                        width: parent.width - 102
                         height: 32
                         Text {
                             x: 30

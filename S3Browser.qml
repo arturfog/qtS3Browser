@@ -49,7 +49,8 @@ Item {
                 text: "Download"
                 enabled: connected
                 onClicked: {
-                    s3Model.downloadQML(view.currentIndex)
+                    //s3Model.downloadQML(view.currentIndex)
+                    app_window.progressWindow.visible = true
                 }
             }
 
@@ -108,10 +109,21 @@ Item {
                     color: "orange"
 
                     TextInput {
+                        id: s3_browser_path_text
                         x:5
-                        width: parent.width
+                        width: parent.width - s3_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
                         text: path
+                    }
+
+                    Button {
+                        id: s3_browser_path_go
+                        y: 2
+                        x: s3_browser_path_text.width
+                        height: 28
+                        icon.source: "icons/32_delete_icon.png"
+                        icon.color: "transparent"
+                        text: qsTr("Go")
                     }
                 }
 

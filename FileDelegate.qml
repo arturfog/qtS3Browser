@@ -21,7 +21,7 @@ Rectangle {
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
             text: fileName
-            width: parent.width - 135
+            width: parent.width - 130
             anchors.verticalCenter: parent.verticalCenter
         }
 
