@@ -34,6 +34,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    QCoreApplication::setOrganizationName("qtS3Browser");
+    QCoreApplication::setApplicationName("qtS3Browser");
+    QSettings settings;
+    settings.setValue("AccessKey", "123");
+    settings.setValue("SecretKey", "abc");
+
     S3Model model;
     QQmlApplicationEngine engine;
     QQuickView view(&engine, nullptr);
