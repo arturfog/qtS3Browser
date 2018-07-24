@@ -1,5 +1,6 @@
 import QtQuick 2.11
 import QtQuick.Window 2.3
+import QtQuick.Controls 2.2
 
 Window {
     id: about_win
@@ -8,4 +9,13 @@ Window {
     minimumWidth: 200
 
     title: "Manage bookmarks"
+
+    Row {
+       Text {
+           text: "abc"
+       }
+       Button {
+           text: "Remove"
+       }
+    }
 }

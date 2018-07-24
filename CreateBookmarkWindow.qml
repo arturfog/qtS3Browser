@@ -63,7 +63,7 @@ Window {
                 id: cw_cb
                 text: "Create"
                 onClicked: {
-                    s3Model.refresh()
+                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
                     close()
                 }
             }

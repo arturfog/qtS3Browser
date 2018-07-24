@@ -39,6 +39,7 @@ S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
+    loadBookmarks();
 }
 
 void S3Model::addS3Item(const S3Item &item)
@@ -152,6 +153,41 @@ void S3Model::getObjectInfo(const QString &key)
 {
     s3.getObjectInfo(getCurrentBucket().toStdString().c_str(),
                      getPathWithoutBucket().append(key).toStdString().c_str());
+}
+
+void S3Model::addBookmark(const QString &name, const QString &path)
+{
+    if(!bookmarks.contains(name)) {
+        bookmarks[name] = path;
+        saveBookmarks(bookmarks);
+    }
+}
+
+void S3Model::removeBookmark(const QString& name)
+{
+    if(bookmarks.contains(name)) {
+        bookmarks.remove(name);
+        saveBookmarks(bookmarks);
+    }
+}
+
+void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
+{
+    QFile file("bookmarks.dat");
+    file.open(QIODevice::WriteOnly);
+    QDataStream out(&file);
+    out << bookmarks;
+    file.close();
+}
+
+void S3Model::loadBookmarks()
+{
+    QFile file("bookmarks.dat");
+    if(file.exists()) {
+        file.open(QIODevice::ReadOnly);
+        QDataStream in(&file);
+        in >> bookmarks;
+    }
 }
 /**
  * @brief S3Model::getBuckets

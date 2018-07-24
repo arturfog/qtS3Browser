@@ -23,6 +23,7 @@
 #include <QVariant>
 #include <QAbstractListModel>
 #include <QStringList>
+#include <QSettings>
 
 #include "s3client.h"
 
@@ -98,6 +99,12 @@ public:
         m_s3Path.clear();
     }
 
+    Q_INVOKABLE QString getAccesKeyQML() {return getAccessKey();}
+    Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
+    Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
+    Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
+    Q_INVOKABLE void removeBookmarkQML(QString &name) {removeBookmark(name);}
+
     S3Model(QObject *parent = 0);
 
     void addS3Item(const S3Item &item);
@@ -138,14 +145,37 @@ public:
 
     void getObjectInfo(const QString &key);
 
+    void addBookmark(const QString& name, const QString& path);
+
+    void removeBookmark(const QString &name);
+
+    void saveBookmarks(QMap<QString, QString> &bookmarks);
+
+    void loadBookmarks();
+
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+
+    inline QString getAccessKey() const {
+        return settings.value("AccessKey").toString();
+    }
+
+    inline QString getSecretKey() const {
+        return settings.value("SecretKey").toString();
+    }
+
+    inline QString getStartPath() const {
+        return settings.value("StartPath").toString();
+    }
 
 protected:
     QHash<int, QByteArray> roleNames() const;
     S3Client s3;
 private:
+    QSettings settings;
     QList<S3Item> m_s3items;
     QStringList m_s3Path;
+    QMap<QString, QString> bookmarks;
 };
 
 #endif // S3MODEL_H

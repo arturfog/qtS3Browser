@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("qtS3Browser");
     QCoreApplication::setApplicationName("qtS3Browser");
     QSettings settings;
+    settings.setValue("StartPath", "s3://");
     settings.setValue("AccessKey", "123");
     settings.setValue("SecretKey", "abc");
 

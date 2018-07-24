@@ -75,7 +75,7 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Secret Key"
+                text: s3Model.getSecretKeyQML()
                 maximumLength: 128
             }
         }
@@ -107,7 +107,7 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Access Key"
+                text: s3Model.getAccesKeyQML()
                 maximumLength: 128
             }
         }

@@ -8,4 +8,15 @@ Window {
     minimumWidth: 200
 
     title: "About qtS3Browser"
+
+    Column {
+    Row {
+        Text {
+            text: "Author:"
+        }
+    }
+    Text {
+        text: "Copyright 2018"
+    }
+    }
 }
