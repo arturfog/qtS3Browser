@@ -1,6 +1,5 @@
 import QtQuick 2.11
 import QtQuick.Window 2.3
-import QtQuick.Controls 2.2
 
 Window {
     id: about_win
@@ -10,12 +9,23 @@ Window {
 
     title: "Manage bookmarks"
 
-    Row {
-       Text {
-           text: "abc"
-       }
-       Button {
-           text: "Remove"
-       }
+    function addBookmarks() {
+        var bookmarksLen = s3Model.getBookmarksNumQML();
+        if(bookmarksLen > 0) {
+            var keys = s3Model.getBookmarksQML()
+            for(var i = 0; i < bookmarksLen; i++){
+                var newObject = Qt.createQmlObject('
+import QtQuick 2.11;
+import QtQuick.Controls 2.2;
+Row {id: bookmarks_item; Text { width: 200; text: "' + keys[i] +'" }
+Button {text: "Remove"}}',
+                bookmarks_list, "dynamicSnippet1");
+            }
+        }
+    }
+
+    Column {
+        id: bookmarks_list
+        Component.onCompleted: addBookmarks()
     }
 }

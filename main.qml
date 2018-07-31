@@ -82,7 +82,10 @@ ApplicationWindow {
         }
 
         Menu {
+            id: bookmarks_menu
             title: "Bookmarks"
+            onOpened: addBookmarks()
+
             MenuItem {
                 text: "Create bookmark"
                 onTriggered: {
@@ -96,7 +99,27 @@ ApplicationWindow {
                 }
             }
             MenuSeparator { }
-            MenuItem { text: "Empty" }
+
+            function addBookmarks() {
+                var bookmarksLen = s3Model.getBookmarksNumQML();
+                if(bookmarksLen > 0) {
+                    var keys = s3Model.getBookmarksQML()
+                    for(var i = 0; i < bookmarksLen; i++){
+                        if(bookmarks_menu.count <= 3 + i) {
+                            bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: keys[i] }))
+                        }
+                    }
+                } else {
+                    bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: "Empty" }))
+                }
+            }
+
+            Component {
+                id: menuItem
+                MenuItem {
+
+                }
+            }
         }
 
         Menu {

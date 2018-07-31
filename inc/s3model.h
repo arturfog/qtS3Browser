@@ -24,7 +24,7 @@
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QSettings>
-
+#include <QDebug>
 #include "s3client.h"
 
 class S3Item
@@ -50,9 +50,8 @@ public:
     };
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
-    Q_SLOT void addItemSlot(const QString& item, const QString& path) {
-        addS3Item(S3Item(item, path));
-    }
+    Q_SLOT void addItemSlot(const QString& item, const QString& path) {addS3Item(S3Item(item, path));}
+    Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
 
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
     Q_INVOKABLE void getBucketsQML() { getBuckets(); }
@@ -104,51 +103,118 @@ public:
     Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
     Q_INVOKABLE void removeBookmarkQML(QString &name) {removeBookmark(name);}
+    Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
+    Q_INVOKABLE QList<QString> getBookmarksQML() {return bookmarks.keys();}
 
-    S3Model(QObject *parent = 0);
-
+    S3Model(QObject *parent = nullptr);
+    /**
+     * @brief addS3Item
+     * @param item
+     */
     void addS3Item(const S3Item &item);
-
+    /**
+     * @brief clearItems
+     */
     void clearItems();
-
+    /**
+     * @brief rowCount
+     * @param parent
+     * @return
+     */
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-
+    /**
+     * @brief s3Path
+     * @return
+     */
     QString s3Path() const;
-
+    /**
+     * @brief goTo
+     * @param path
+     */
     void goTo(const QString &path);
-
+    /**
+     * @brief goBack
+     */
     void goBack();
-
+    /**
+     * @brief getCurrentBucket
+     * @return
+     */
     QString getCurrentBucket() const;
-
+    /**
+     * @brief getPathWithoutBucket
+     * @return
+     */
     QString getPathWithoutBucket() const;
-
+    /**
+     * @brief getCurrentPathDepth
+     * @return
+     */
     inline int getCurrentPathDepth() const { return m_s3Path.count(); }
-
+    /**
+     * @brief getBuckets
+     */
     void getBuckets();
-
+    /**
+     * @brief refresh
+     */
     void refresh();
-
+    /**
+     * @brief createBucket
+     * @param bucket
+     */
     void createBucket(const std::string &bucket);
-
+    /**
+     * @brief createFolder
+     * @param folder
+     */
     void createFolder(const std::string &folder);
-
+    /**
+     * @brief removeBucket
+     * @param bucket
+     */
     void removeBucket(const std::string &bucket);
-
+    /**
+     * @brief removeObject
+     * @param key
+     */
     void removeObject(const std::string &key);
-
+    /**
+     * @brief upload
+     * @param file
+     */
     void upload(const QString &file);
-
+    /**
+     * @brief download
+     * @param key
+     */
     void download(const QString& key);
-
+    /**
+     * @brief getObjects
+     * @param item
+     * @param goBack
+     */
     void getObjects(const std::string &item, bool goBack = false);
-
+    /**
+     * @brief getObjectInfo
+     * @param key
+     */
     void getObjectInfo(const QString &key);
-
+    /**
+     * @brief addBookmark
+     * @param name
+     * @param path
+     */
     void addBookmark(const QString& name, const QString& path);
-
+    /**
+     * @brief removeBookmark
+     * @param name
+     */
     void removeBookmark(const QString &name);
-
+    /**
+     * @brief saveBookmarks
+     * @param bookmarks
+     */
     void saveBookmarks(QMap<QString, QString> &bookmarks);
 
     void loadBookmarks();
@@ -167,7 +233,6 @@ public:
     inline QString getStartPath() const {
         return settings.value("StartPath").toString();
     }
-
 protected:
     QHash<int, QByteArray> roleNames() const;
     S3Client s3;

@@ -37,6 +37,7 @@
 #include <regex>
 
 std::function<void(const std::string&)> S3Client::m_func;
+std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
 /**
@@ -197,13 +198,13 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
 void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    std::cout << "Upload Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
+    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
 
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    std::cout << "Download Progress: " << handle->GetBytesTransferred() << " of " << handle->GetBytesTotalSize() << " bytes\n";
+    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
 
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
@@ -371,8 +372,10 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
  * @param key_name
  * @param file_name
  */
-void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                           const Aws::String &file_name) {
+void S3Client::uploadFile(const Aws::String &bucket_name,
+                          const Aws::String &key_name,
+                          const Aws::String &file_name,
+                          std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc) {
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
         transferConfig.s3Client = s3_client;
@@ -381,6 +384,7 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
         transferConfig.uploadProgressCallback = &uploadProgress;
         transferConfig.downloadProgressCallback = &downloadProgress;
         transferConfig.errorCallback = &errorHandler;
+        m_progressFunc = progressFunc;
 
         std::cout << "Uploading file to S3 bucket " <<
             bucket_name << " at key " << key_name <<
@@ -399,8 +403,10 @@ void S3Client::uploadFile(const Aws::String &bucket_name, const Aws::String &key
  * @param key_name
  * @param file_name
  */
-void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                           const Aws::String &file_name) {
+void S3Client::downloadFile(const Aws::String &bucket_name,
+                            const Aws::String &key_name,
+                            const Aws::String &file_name,
+                            std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc) {
     {
         Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
         transferConfig.s3Client = s3_client;
@@ -409,7 +415,7 @@ void S3Client::downloadFile(const Aws::String &bucket_name, const Aws::String &k
         transferConfig.uploadProgressCallback = &uploadProgress;
         transferConfig.downloadProgressCallback = &downloadProgress;
         transferConfig.errorCallback = &errorHandler;
-
+        m_progressFunc = progressFunc;
 
         std::cout << "Downloading file from S3 bucket " <<
             bucket_name << " key " << key_name <<

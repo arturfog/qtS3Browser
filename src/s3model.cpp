@@ -20,51 +20,53 @@
 
 #include <tuple>
 #include <QDebug>
+
+// --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
 {
 }
-
+// --------------------------------------------------------------------------
 QString S3Item::fileName() const
 {
     return m_name;
 }
-
+// --------------------------------------------------------------------------
 QString S3Item::filePath() const
 {
     return m_path;
 }
-
+// --------------------------------------------------------------------------
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
     loadBookmarks();
 }
-
+// --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_s3items << item;
     endInsertRows();
 }
-
+// --------------------------------------------------------------------------
 void S3Model::clearItems() {
     beginRemoveRows(QModelIndex(), 0, rowCount());
     m_s3items.clear();
     endRemoveRows();
 }
-
+// --------------------------------------------------------------------------
 int S3Model::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return m_s3items.count();
 }
-
+// --------------------------------------------------------------------------
 void S3Model::goTo(const QString &path)
 {
     m_s3Path.push_back(path);
 }
-
+// --------------------------------------------------------------------------
 void S3Model::goBack()
 {
     if (m_s3Path.count() <= 1) {
@@ -76,7 +78,7 @@ void S3Model::goBack()
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
-
+// --------------------------------------------------------------------------
 QString S3Model::getCurrentBucket() const
 {
     if (m_s3Path.count() >= 1) {
@@ -85,7 +87,7 @@ QString S3Model::getCurrentBucket() const
 
     return "";
 }
-
+// --------------------------------------------------------------------------
 QString S3Model::getPathWithoutBucket() const
 {
     if (m_s3Path.count() >= 1) {
@@ -94,7 +96,7 @@ QString S3Model::getPathWithoutBucket() const
 
     return "";
 }
-
+// --------------------------------------------------------------------------
 QString S3Model::s3Path() const {
     QString path = QString("s3://").append(getCurrentBucket());
     if(m_s3Path.count() >= 1) {
@@ -102,7 +104,7 @@ QString S3Model::s3Path() const {
     }
     return path;
 }
-
+// --------------------------------------------------------------------------
 void S3Model::getObjects(const std::string &item, bool goBack) {
 
     QString qsBucket = getCurrentBucket();
@@ -145,16 +147,13 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
         s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), callback);
     }
 }
-/**
- * @brief S3Model::getObjectInfo
- * @param key
- */
+// --------------------------------------------------------------------------
 void S3Model::getObjectInfo(const QString &key)
 {
     s3.getObjectInfo(getCurrentBucket().toStdString().c_str(),
                      getPathWithoutBucket().append(key).toStdString().c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Model::addBookmark(const QString &name, const QString &path)
 {
     if(!bookmarks.contains(name)) {
@@ -162,7 +161,7 @@ void S3Model::addBookmark(const QString &name, const QString &path)
         saveBookmarks(bookmarks);
     }
 }
-
+// --------------------------------------------------------------------------
 void S3Model::removeBookmark(const QString& name)
 {
     if(bookmarks.contains(name)) {
@@ -170,7 +169,7 @@ void S3Model::removeBookmark(const QString& name)
         saveBookmarks(bookmarks);
     }
 }
-
+// --------------------------------------------------------------------------
 void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
 {
     QFile file("bookmarks.dat");
@@ -179,7 +178,7 @@ void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
     out << bookmarks;
     file.close();
 }
-
+// --------------------------------------------------------------------------
 void S3Model::loadBookmarks()
 {
     QFile file("bookmarks.dat");
@@ -189,9 +188,7 @@ void S3Model::loadBookmarks()
         in >> bookmarks;
     }
 }
-/**
- * @brief S3Model::getBuckets
- */
+// --------------------------------------------------------------------------
 void S3Model::getBuckets() {
     clearItems();
     std::function<void(const std::string&)> callback = [&](const std::string& item) {
@@ -199,9 +196,7 @@ void S3Model::getBuckets() {
     };
     s3.getBuckets(callback);
 }
-/**
- * @brief S3Model::refresh
- */
+// --------------------------------------------------------------------------
 void S3Model::refresh()
 {
     if(m_s3Path.count() <= 0) {
@@ -212,43 +207,51 @@ void S3Model::refresh()
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
-
+// --------------------------------------------------------------------------
 void S3Model::createBucket(const std::string &bucket)
 {
     s3.createBucket(bucket.c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Model::createFolder(const std::string &folder)
 {
     s3.createFolder(getCurrentBucket().toStdString().c_str(), folder.c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Model::removeBucket(const std::string &bucket)
 {
     s3.deleteBucket(bucket.c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Model::removeObject(const std::string &key)
 {
     s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Model::upload(const QString& file)
 {
+    std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
+        emit this->setProgressSignal(bytes, total);
+    };
+
     QString filename(file.split("/").last());
     s3.uploadFile(getCurrentBucket().toStdString().c_str(),
                   getPathWithoutBucket().append(filename).toStdString().c_str(),
-                  file.toStdString().c_str());
+                  file.toStdString().c_str(), callback);
 }
-
+// --------------------------------------------------------------------------
 void S3Model::download(const QString &key)
 {
+    std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
+        emit this->setProgressSignal(bytes, total);
+    };
+
     QString out_file = key.split("/").last();
     s3.downloadFile(getCurrentBucket().toStdString().c_str(),
                     getPathWithoutBucket().append(out_file).toStdString().c_str(),
-                    QString("/tmp/").append(out_file).toStdString().c_str());
+                    QString("/tmp/").append(out_file).toStdString().c_str(), callback);
 }
-
+// --------------------------------------------------------------------------
 QVariant S3Model::data(const QModelIndex & index, int role) const {
     if (index.row() < 0 || index.row() >= m_s3items.count())
         return QVariant();
@@ -260,7 +263,7 @@ QVariant S3Model::data(const QModelIndex & index, int role) const {
         return item.filePath();
     return QVariant();
 }
-
+// --------------------------------------------------------------------------
 QHash<int, QByteArray> S3Model::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "fileName";

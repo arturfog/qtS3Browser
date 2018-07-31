@@ -52,6 +52,7 @@ Item {
                 enabled: connected
                 onClicked: {
                     var filePath = folder.get(view.currentIndex, "filePath")
+                    app_window.progressWindow.visible = true
                     s3Model.uploadQML(filePath)
                 }
             }

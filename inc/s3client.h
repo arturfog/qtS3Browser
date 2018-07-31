@@ -44,6 +44,7 @@ private:
 
     static const Aws::String ALLOCATION_TAG;
     static std::function<void(const std::string&)> m_func;
+    static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
 public:
     struct ObjectInfo_S {
@@ -103,9 +104,11 @@ public:
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // DOWNLOAD/UPLOAD
     void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
+                     const Aws::String &file_name,
+                      std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
     void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name);
+                     const Aws::String &file_name,
+                    std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
     // DOWNLOAD/UPLOAD callbacks
     static void uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     static void downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
