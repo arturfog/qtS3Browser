@@ -17,6 +17,5 @@
         <file>SettingsWindow.qml</file>
         <file>ManageBookmarksWindow.qml</file>
         <file>OperationProgressWindow.qml</file>
-        <file>ProgressItem.qml</file>
     </qresource>
 </RCC>

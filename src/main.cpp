@@ -52,10 +52,5 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     engine.addImageProvider(QLatin1String("iconProvider"), new IconProvider());
 
-    QQuickView progressView(QUrl(QStringLiteral("qrc:/ProgressItem.qml")));
-    QObject *item = progressView.rootObject();
-    QObject::connect(&model, SIGNAL(setProgressSignal(const QVariant, const QVariant)),
-                     item, SLOT(setProgressQML(const QVariant, const QVariant)));
-
     return app.exec();
 }

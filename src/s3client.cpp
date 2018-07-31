@@ -393,8 +393,6 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
         auto transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
                                                           "text/plain", Aws::Map<Aws::String, Aws::String>());
-
-        transferHandle->WaitUntilFinished();
     }
 }
 /**
@@ -423,8 +421,6 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
         auto transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
-
-        transferHandle->WaitUntilFinished();
     }
 }
 
