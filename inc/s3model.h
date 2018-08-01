@@ -79,25 +79,21 @@ public:
             refresh();
         }
     }
-
     Q_INVOKABLE void getObjectInfoQML(const int idx) {
         if (idx < m_s3items.count()) {
           //getObjectInfo(m_s3items.at(idx).fileName());
         }
     }
-
     Q_INVOKABLE QString getObjectSizeQML(const int idx) {
         if (idx < m_s3items.count()) {
             return "100";
         }
         return "0";
     }
-
     Q_INVOKABLE void clearItemsQML() {
         clearItems();
         m_s3Path.clear();
     }
-
     Q_INVOKABLE QString getAccesKeyQML() {return getAccessKey();}
     Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
     Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
@@ -105,7 +101,12 @@ public:
     Q_INVOKABLE void removeBookmarkQML(QString &name) {removeBookmark(name);}
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
     Q_INVOKABLE QList<QString> getBookmarksQML() {return bookmarks.keys();}
-
+    Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
+    Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
+    /**
+     * @brief S3Model
+     * @param parent
+     */
     S3Model(QObject *parent = nullptr);
     /**
      * @brief addS3Item
@@ -190,6 +191,10 @@ public:
      */
     void download(const QString& key);
     /**
+     * @brief cancelDownloadUpload
+     */
+    inline void cancelDownloadUpload() { s3.cancelDownloadUpload(); }
+    /**
      * @brief getObjects
      * @param item
      * @param goBack
@@ -216,20 +221,30 @@ public:
      * @param bookmarks
      */
     void saveBookmarks(QMap<QString, QString> &bookmarks);
-
+    /**
+     * @brief loadBookmarks
+     */
     void loadBookmarks();
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-
+    /**
+     * @brief getAccessKey
+     * @return
+     */
     inline QString getAccessKey() const {
         return settings.value("AccessKey").toString();
     }
-
+    /**
+     * @brief getSecretKey
+     * @return
+     */
     inline QString getSecretKey() const {
         return settings.value("SecretKey").toString();
     }
-
+    /**
+     * @brief getStartPath
+     * @return
+     */
     inline QString getStartPath() const {
         return settings.value("StartPath").toString();
     }
@@ -238,6 +253,7 @@ protected:
     S3Client s3;
 private:
     QSettings settings;
+    QString currentFile;
     QList<S3Item> m_s3items;
     QStringList m_s3Path;
     QMap<QString, QString> bookmarks;

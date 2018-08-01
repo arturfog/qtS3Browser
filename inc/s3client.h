@@ -41,6 +41,7 @@ private:
     std::shared_ptr<Aws::S3::S3Client> s3_client;
     std::unique_ptr<Aws::Client::ClientConfiguration> config;
     Aws::SDKOptions options;
+    std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;
 
     static const Aws::String ALLOCATION_TAG;
     static std::function<void(const std::string&)> m_func;
@@ -54,10 +55,13 @@ public:
         Aws::Utils::DateTime lastModified;
 
     } objectInfo;
-
+    /**
+     * @brief S3Client
+     */
     S3Client() : config(new Aws::Client::ClientConfiguration()) {
         init();
         Aws::InitAPI(options);
+        transferHandle = nullptr;
     }
 
     ~S3Client() {
@@ -66,54 +70,151 @@ public:
 
     void init();
     // LIST OBJECTS
+    /**
+     * @brief listObjects
+     * @param bucket_name
+     * @param key
+     * @param func
+     */
     void listObjects(const Aws::String &bucket_name, const Aws::String &key,
                      std::function<void(const std::string&)> func);
+    /**
+     * @brief listObjectsHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
     static void listObjectsHandler(const Aws::S3::S3Client* client,
                                    const Aws::S3::Model::ListObjectsRequest& request,
                                    const Aws::S3::Model::ListObjectsOutcome& outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // DELETE OBJECT
+    /**
+     * @brief deleteObject
+     * @param bucket_name
+     * @param key_name
+     */
     void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
+    /**
+     * @brief deleteObjectHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
     static void deleteObjectHandler(const Aws::S3::S3Client* client,
                                     const Aws::S3::Model::DeleteObjectRequest& request,
                                     const Aws::S3::Model::DeleteObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // DELETE BUCKET
+    /**
+     * @brief deleteBucket
+     * @param bucket_name
+     */
     void deleteBucket(const Aws::String &bucket_name);
+    /**
+     * @brief deleteBucketHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
     static void deleteBucketHandler(const Aws::S3::S3Client* client,
                                     const Aws::S3::Model::DeleteBucketRequest& request,
                                     const Aws::S3::Model::DeleteBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 
     // CREATE FOLDER
+    /**
+     * @brief createFolder
+     * @param bucket_name
+     * @param key_name
+     */
     void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
+    /**
+     * @brief createFolderHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
     static void createFolderHandler(const Aws::S3::S3Client* client,
                                     const Aws::S3::Model::PutObjectRequest& request,
                                     const Aws::S3::Model::PutObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // GET BUCKETS
+    /**
+     * @brief getBuckets
+     * @param func
+     */
     void getBuckets(std::function<void(const std::string&)> func);
     static void getBucketsHandler(const Aws::S3::S3Client* client,
                            const Aws::S3::Model::ListBucketsOutcome& outcome,
                            const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // CREATE BUCKET
+    /**
+     * @brief createBucket
+     * @param bucket_name
+     */
     void createBucket(const Aws::String &bucket_name);
+    /**
+     * @brief createBucketHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
     static void createBucketHandler(const Aws::S3::S3Client* client,
                                     const Aws::S3::Model::CreateBucketRequest& request,
                                     const Aws::S3::Model::CreateBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     // DOWNLOAD/UPLOAD
-    void downloadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name,
+    /**
+     * @brief downloadFile
+     * @param bucket_name
+     * @param key_name
+     * @param file_name
+     * @param progressFunc
+     */
+    void downloadFile(const Aws::String &bucket_name,
+                      const Aws::String &key_name,
+                      const Aws::String &file_name,
                       std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
-    void uploadFile(const Aws::String &bucket_name, const Aws::String &key_name,
-                     const Aws::String &file_name,
+    /**
+     * @brief uploadFile
+     * @param bucket_name
+     * @param key_name
+     * @param file_name
+     * @param progressFunc
+     */
+    void uploadFile(const Aws::String &bucket_name,
+                    const Aws::String &key_name,
+                    const Aws::String &file_name,
                     std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+    /**
+     * @brief cancelDownloadUpload
+     */
+    void cancelDownloadUpload();
     // DOWNLOAD/UPLOAD callbacks
-    static void uploadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    static void downloadProgress(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    static void statusUpdate(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    static void errorHandler(const Aws::Transfer::TransferManager* manager, const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
+    /**
+     * @brief uploadProgress
+     * @param manager
+     * @param handle
+     */
+    static void uploadProgress(const Aws::Transfer::TransferManager* manager,
+                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    /**
+     * @brief downloadProgress
+     * @param manager
+     * @param handle
+     */
+    static void downloadProgress(const Aws::Transfer::TransferManager* manager,
+                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    static void statusUpdate(const Aws::Transfer::TransferManager* manager,
+                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    static void errorHandler(const Aws::Transfer::TransferManager* manager,
+                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
                              const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
     // GET INFO
     void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);

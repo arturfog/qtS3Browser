@@ -235,6 +235,7 @@ void S3Model::upload(const QString& file)
     };
 
     QString filename(file.split("/").last());
+    currentFile = filename;
     s3.uploadFile(getCurrentBucket().toStdString().c_str(),
                   getPathWithoutBucket().append(filename).toStdString().c_str(),
                   file.toStdString().c_str(), callback);
@@ -247,6 +248,7 @@ void S3Model::download(const QString &key)
     };
 
     QString out_file = key.split("/").last();
+    currentFile = out_file;
     s3.downloadFile(getCurrentBucket().toStdString().c_str(),
                     getPathWithoutBucket().append(out_file).toStdString().c_str(),
                     QString("/tmp/").append(out_file).toStdString().c_str(), callback);

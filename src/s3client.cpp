@@ -40,9 +40,7 @@ std::function<void(const std::string&)> S3Client::m_func;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
-/**
- * @brief S3Client::init
- */
+// --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
@@ -61,12 +59,7 @@ void S3Client::init() {
     }
     Aws::ShutdownAPI(options);
 }
-/**
- * @brief S3Client::listObjects
- * @param bucket_name
- * @param key
- * @param list
- */
+// --------------------------------------------------------------------------
 void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
                            std::function<void(const std::string&)> func) {
     std::cout << "Objects in S3 bucket: [" << bucket_name << "] key: [" << key << "]" << std::endl;
@@ -82,11 +75,7 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
     m_func = func;
     s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
 }
-/**
- * @brief S3Client::listObjectsHandler
- * @param request
- * @param outcome
- */
+// --------------------------------------------------------------------------
 void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
                                   const Aws::S3::Model::ListObjectsRequest &request,
                                   const Aws::S3::Model::ListObjectsOutcome &outcome,
@@ -125,11 +114,7 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
     }
     std::cout << "ListObjects done " << std::endl;
 }
-/**
- * @brief S3Client::getObjectInfo
- * @param bucket_name
- * @param key_name
- */
+// --------------------------------------------------------------------------
 void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
 {
     std::cout << "Object info for: " << key_name << " from S3 bucket: " <<
@@ -139,7 +124,7 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
 }
-
+// --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
                                     const Aws::S3::Model::GetObjectRequest &,
                                     const Aws::S3::Model::GetObjectOutcome &outcome,
@@ -160,23 +145,14 @@ void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
                      outcome.GetError().GetMessage() << std::endl;
     }
 }
-/**
- * @brief S3Client::createBucket
- * @param bucket_name
- */
+// --------------------------------------------------------------------------
 void S3Client::createBucket(const Aws::String &bucket_name)
 {
     Aws::S3::Model::CreateBucketRequest request;
     request.SetBucket(bucket_name);
     s3_client->CreateBucketAsync(request, &createBucketHandler);
 }
-/**
- * @brief S3Client::createBucketHandler
- * @param client
- * @param request
- * @param outcome
- * @param context
- */
+// --------------------------------------------------------------------------
 void S3Client::createBucketHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::CreateBucketRequest &,
                                    const Aws::S3::Model::CreateBucketOutcome &outcome,
@@ -194,46 +170,37 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
                   << outcome.GetError().GetMessage() << std::endl;
     }
 }
-
+// --------------------------------------------------------------------------
 void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
-
+// --------------------------------------------------------------------------
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
-
+// --------------------------------------------------------------------------
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
                             const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
     std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
 }
-
+// --------------------------------------------------------------------------
 void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
-                            const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle>&,
                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error)
 {
     std::cout << "Transfer Status = " << error.GetMessage() << "\n";
 }
-
-/**
- * @brief S3Client::getBuckets
- * @param list
- */
+// --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
     m_func = func;
     s3_client->ListBucketsAsync(&getBucketsHandler);
 }
-/**
- * @brief S3Client::getBucketsHandler
- * @param client
- * @param outcome
- * @param context
- */
+// --------------------------------------------------------------------------
 void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
                                  const Aws::S3::Model::ListBucketsOutcome &outcome,
                                  const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
@@ -259,11 +226,7 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
                   << outcome.GetError().GetMessage() << std::endl;
     }
 }
-/**
- * @brief S3Client::deleteObject
- * @param bucket_name
- * @param key_name
- */
+// --------------------------------------------------------------------------
 void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
     {
         std::cout << "Deleting " << key_name << " from S3 bucket: " <<
@@ -275,10 +238,7 @@ void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &k
         s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
     }
 }
-/**
- * @brief S3Client::deleteObjectHandler
- * @param outcome
- */
+// --------------------------------------------------------------------------
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteObjectRequest &,
                                    const Aws::S3::Model::DeleteObjectOutcome &outcome,
@@ -295,11 +255,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
             outcome.GetError().GetMessage() << std::endl;
     }
 }
-
-/**
- * @brief S3Client::deleteBucket
- * @param bucket_name
- */
+// --------------------------------------------------------------------------
 void S3Client::deleteBucket(const Aws::String &bucket_name)
 {
     std::cout << "DeleteBucket ["  << bucket_name << "]" << std::endl;
@@ -310,10 +266,7 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
 
     // TODO: Remove all objects inside
 }
-/**
- * @brief S3Client::deleteBucketHandler
- * @param outcome
- */
+// --------------------------------------------------------------------------
 void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteBucketRequest &,
                                    const Aws::S3::Model::DeleteBucketOutcome &outcome,
@@ -331,11 +284,7 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
                   << outcome.GetError().GetMessage() << std::endl;
     }
 }
-/**
- * @brief S3Client::createFolder
- * @param bucket_name
- * @param key_name
- */
+// --------------------------------------------------------------------------
 void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name) {
     Aws::S3::Model::PutObjectRequest object_request;
     std::cout << "Creating folder in S3 bucket " <<
@@ -346,10 +295,7 @@ void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &k
 
     s3_client->PutObjectAsync(object_request, &createFolderHandler);
 }
-/**
- * @brief S3Client::createFolderHandler
- * @param outcome
- */
+// --------------------------------------------------------------------------
 void S3Client::createFolderHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::PutObjectRequest &,
                                    const Aws::S3::Model::PutObjectOutcome &outcome,
@@ -366,12 +312,7 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
             outcome.GetError().GetMessage() << std::endl;
     }
 }
-/**
- * @brief S3Client::uploadFile
- * @param bucket_name
- * @param key_name
- * @param file_name
- */
+// --------------------------------------------------------------------------
 void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &key_name,
                           const Aws::String &file_name,
@@ -391,16 +332,18 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
             " with filename: " << file_name << std::endl;
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-        auto transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
+        transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
                                                           "text/plain", Aws::Map<Aws::String, Aws::String>());
     }
 }
-/**
- * @brief S3Client::downloadFile
- * @param bucket_name
- * @param key_name
- * @param file_name
- */
+// --------------------------------------------------------------------------
+void S3Client::cancelDownloadUpload()
+{
+    if(transferHandle != nullptr) {
+        transferHandle->Cancel();
+    }
+}
+// --------------------------------------------------------------------------
 void S3Client::downloadFile(const Aws::String &bucket_name,
                             const Aws::String &key_name,
                             const Aws::String &file_name,
@@ -420,8 +363,8 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
             " to filename: " << file_name << std::endl;
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-        auto transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
+        transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
     }
 }
-
+// --------------------------------------------------------------------------
 const Aws::String S3Client::ALLOCATION_TAG = "QTS3Client";

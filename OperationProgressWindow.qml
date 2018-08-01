@@ -12,13 +12,14 @@ Window {
 
     property double currentProgress: 0
     property double totalProgress: 0
+    property string currentFile: ""
 
     Connections {
         target: s3Model
         onSetProgressSignal: {
-            console.log("a is ", current, "b is ", total)
-            currentProgress = (current / total) * 100
-            totalProgress = (current / total) * 100
+            currentProgress = (((current / total) * 100) | 0)
+            totalProgress = (((current / total) * 100) | 0)
+            currentFile = s3Model.getCurrentFileQML()
         }
     }
 
@@ -34,7 +35,7 @@ Window {
             Text {
                 x: 10
                 height: 30
-                text: "Copying file: "
+                text: "Copying file: " + currentFile
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -93,6 +94,10 @@ Window {
                 x: 10
                 height: 40
                 text: "Cancel"
+                onClicked: {
+                    s3Model.cancelDownloadUploadQML()
+                    close()
+                }
             }
         }
     }
