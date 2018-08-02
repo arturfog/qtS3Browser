@@ -20,7 +20,7 @@
 
 #include <tuple>
 #include <QDebug>
-
+#include <QSysInfo>
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -213,9 +213,10 @@ void S3Model::createBucket(const std::string &bucket)
     s3.createBucket(bucket.c_str());
 }
 // --------------------------------------------------------------------------
-void S3Model::createFolder(const std::string &folder)
+void S3Model::createFolder(const QString &folder)
 {
-    s3.createFolder(getCurrentBucket().toStdString().c_str(), folder.c_str());
+    s3.createFolder(getCurrentBucket().toStdString().c_str(),
+                    QString(folder).append("/_empty_file_to_remove").toStdString().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Model::removeBucket(const std::string &bucket)
@@ -264,6 +265,16 @@ QVariant S3Model::data(const QModelIndex & index, int role) const {
     else if (role == PathRole)
         return item.filePath();
     return QVariant();
+}
+
+void S3Model::readCLIConfig()
+{
+    QString os = QSysInfo::productType();
+    if(os == "windows") {
+         // Windows location is "%UserProfile%\.aws"
+    } else {
+        // MacOS/Linux/BSD location is ~/.aws
+    }
 }
 // --------------------------------------------------------------------------
 QHash<int, QByteArray> S3Model::roleNames() const {

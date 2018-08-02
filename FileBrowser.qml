@@ -127,6 +127,9 @@ Item {
                         icon.source: "icons/32_delete_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
+                        onClicked: {
+                            path = file_browser_path_text.text
+                        }
                     }
                 }
 

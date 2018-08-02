@@ -48,8 +48,8 @@ private:
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
 public:
-    struct ObjectInfo_S {
-        int size;
+    static struct ObjectInfo_S {
+        long long size;
         Aws::String type;
         Aws::String etag;
         Aws::Utils::DateTime lastModified;

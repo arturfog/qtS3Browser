@@ -58,7 +58,7 @@ public:
     Q_INVOKABLE void goBackQML() { goBack(); }
     Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
     Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
-    Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder.toStdString()); }
+    Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
     Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
     Q_INVOKABLE void downloadQML(const int idx) {
         if (idx < m_s3items.count()) {
@@ -68,8 +68,11 @@ public:
         }
     }
     Q_INVOKABLE void refreshQML() { refresh(); }
+    Q_INVOKABLE int getCurrentPathDepthQML() {
+        return getCurrentPathDepth();
+    }
     Q_INVOKABLE void removeQML(const int idx) {
-        if (idx < m_s3items.count()) {
+        if (idx < m_s3items.count() && idx >= 0) {
             if(getCurrentPathDepth() <= 0) {
                 removeBucket(m_s3items.at(idx).fileName().toStdString());
             } else {
@@ -80,13 +83,14 @@ public:
         }
     }
     Q_INVOKABLE void getObjectInfoQML(const int idx) {
-        if (idx < m_s3items.count()) {
-          //getObjectInfo(m_s3items.at(idx).fileName());
+        if (idx < m_s3items.count() && idx >= 0) {
+          getObjectInfo(m_s3items.at(idx).fileName());
         }
     }
     Q_INVOKABLE QString getObjectSizeQML(const int idx) {
-        if (idx < m_s3items.count()) {
-            return "100";
+        if (idx < m_s3items.count() && idx >= 0) {
+            getObjectInfo(m_s3items.at(idx).fileName());
+            return QString::number(s3.objectInfo.size);
         }
         return "0";
     }
@@ -98,7 +102,7 @@ public:
     Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
     Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
-    Q_INVOKABLE void removeBookmarkQML(QString &name) {removeBookmark(name);}
+    Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
     Q_INVOKABLE QList<QString> getBookmarksQML() {return bookmarks.keys();}
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
@@ -169,7 +173,7 @@ public:
      * @brief createFolder
      * @param folder
      */
-    void createFolder(const std::string &folder);
+    void createFolder(const QString &folder);
     /**
      * @brief removeBucket
      * @param bucket
@@ -248,6 +252,8 @@ public:
     inline QString getStartPath() const {
         return settings.value("StartPath").toString();
     }
+
+    void readCLIConfig();
 protected:
     QHash<int, QByteArray> roleNames() const;
     S3Client s3;

@@ -40,17 +40,18 @@ std::function<void(const std::string&)> S3Client::m_func;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
+S3Client::ObjectInfo_S S3Client::objectInfo;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
         auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
-        config->connectTimeoutMs = 3000;
-        config->requestTimeoutMs = 3000;
+        config->connectTimeoutMs = 2000;
+        config->requestTimeoutMs = 2000;
         //config.region = region;
-        config->readRateLimiter = m_limiter;
-        config->writeRateLimiter = m_limiter;
+        //config->readRateLimiter = m_limiter;
+        //config->writeRateLimiter = m_limiter;
         config->endpointOverride = "s3.amazonaws.com:9444";
         config->scheme = Aws::Http::Scheme::HTTP;
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(*config));
@@ -132,11 +133,11 @@ void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
 {
     if (outcome.IsSuccess())
     {
-//        objectInfo.size = outcome.GetResult().GetContentLength();
-//        objectInfo.type = outcome.GetResult().GetContentType();
+        objectInfo.size = outcome.GetResult().GetContentLength();
+        objectInfo.type = outcome.GetResult().GetContentType();
 //        // ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601) << std::endl;
-//        objectInfo.lastModified = outcome.GetResult().GetLastModified();
-//        objectInfo.etag = outcome.GetResult().GetETag();
+        objectInfo.lastModified = outcome.GetResult().GetLastModified();
+        objectInfo.etag = outcome.GetResult().GetETag();
     }
     else
     {

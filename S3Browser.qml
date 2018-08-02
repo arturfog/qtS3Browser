@@ -66,11 +66,12 @@ Item {
             }
 
             ToolButton {
+                id: s3_create_dir_btn
                 height: parent.height
                 icon.source: "icons/32_new_folder_icon.png"
                 icon.color: "transparent"
                 text: "New"
-                enabled: connected
+                enabled: false
                 onClicked: {
                     createFolderWindow.visible = true
                 }

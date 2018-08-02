@@ -1,12 +1,27 @@
 import QtQuick 2.9
 
 Rectangle {
+    onFocusChanged: {
+        if(filePath == "/") {
+            s3_download_btn.enabled = false
+        } else {
+            s3_download_btn.enabled = true
+        }
+
+        if(s3Model.getCurrentPathDepthQML() <= 0) {
+            s3_create_dir_btn.enabled = false
+        } else {
+            s3_create_dir_btn.enabled = true
+        }
+    }
+
     id:delegate
     width: view.width
     height:34
     color: "transparent"
     Row {
         anchors.fill: parent
+
         Image {
             id: icon
             width: delegate.height - 2
@@ -54,11 +69,22 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             view.currentIndex = index
+            if(filePath == "/") {
+                s3_download_btn.enabled = false
+            } else {
+                s3_download_btn.enabled = true
+            }
         }
 
         onDoubleClicked:  {
             s3Model.getObjectsQML(i_fileName.text)
             path = s3Model.getS3PathQML()
+
+            if(s3Model.getCurrentPathDepthQML() <= 0) {
+                s3_create_dir_btn.enabled = false
+            } else {
+                s3_create_dir_btn.enabled = true
+            }
         }
     }
 }

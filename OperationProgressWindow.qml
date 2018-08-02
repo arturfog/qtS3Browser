@@ -20,6 +20,10 @@ Window {
             currentProgress = (((current / total) * 100) | 0)
             totalProgress = (((current / total) * 100) | 0)
             currentFile = s3Model.getCurrentFileQML()
+
+            if(currentProgress == 100 && totalProgress == 100) {
+                cancel_btn.text = "Close"
+            }
         }
     }
 
@@ -91,11 +95,14 @@ Window {
             }
 
             Button {
+                id: cancel_btn
                 x: 10
                 height: 40
                 text: "Cancel"
                 onClicked: {
-                    s3Model.cancelDownloadUploadQML()
+                    if(currentProgress < 100 || totalProgress < 100) {
+                        s3Model.cancelDownloadUploadQML()
+                    }
                     close()
                 }
             }

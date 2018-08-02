@@ -107,6 +107,7 @@ ApplicationWindow {
                     for(var i = 0; i < bookmarksLen; i++){
                         if(bookmarks_menu.count <= 3 + i) {
                             bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: keys[i] }))
+                            //bookmarks_menu.removeMenu()
                         }
                     }
                 } else {
