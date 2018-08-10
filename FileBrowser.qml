@@ -45,11 +45,12 @@ Item {
             }
 
             ToolButton {
+                id: file_upload_btn
                 height: parent.height
                 icon.source: "icons/32_upload_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Upload")
-                enabled: connected
+                enabled: connected && !folder.get(view.currentIndex, "fileIsDir")
                 onClicked: {
                     var filePath = folder.get(view.currentIndex, "filePath")
                     app_window.progressWindow.visible = true

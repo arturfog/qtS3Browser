@@ -43,7 +43,7 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: "s3://"
+                text: s3Model.getStartPathQML()
                 maximumLength: 128
             }
         }
@@ -135,7 +135,9 @@ Window {
             border.width: 1
 
             ComboBox {
+                id: s3region
                 width: parent.width
+                currentIndex: s3Model.getRegionIdxQML()
                 model: [ "Default",
                     "us-east-1 (N. Virginia)",
                     "us-east-2 (Ohio)",
@@ -159,6 +161,11 @@ Window {
                 Button {
                     text: "Save"
                     onClicked: {
+                        s3Model.saveSettingsQML(startPath.text,
+                                                accessKey.text,
+                                                secretKey.text,
+                                                s3region.currentIndex
+                                                )
                         close()
                     }
                 }

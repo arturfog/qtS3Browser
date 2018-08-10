@@ -62,12 +62,14 @@ ApplicationWindow {
                 onTriggered: {
                     createBucketWindow.visible = true
                 }
+                enabled: s3_panel.connected
             }
             MenuItem {
                 text: "Create directory"
                 onTriggered: {
                     createFolderWindow.visible = true
                 }
+                enabled: s3_panel.connected
             }
             MenuSeparator { }
             MenuItem {
@@ -76,7 +78,9 @@ ApplicationWindow {
                     s3Model.clearItemsQML()
                     s3_panel.connected = false
                     file_panel.connected = false
+                    s3_panel.path = s3Model.getStartPathQML()
                 }
+                enabled: s3_panel.connected
 
             }
         }

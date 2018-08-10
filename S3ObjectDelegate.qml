@@ -1,4 +1,4 @@
-import QtQuick 2.9
+import QtQuick 2.11
 
 Rectangle {
     onFocusChanged: {
@@ -13,8 +13,9 @@ Rectangle {
         } else {
             s3_create_dir_btn.enabled = true
         }
-    }
 
+        s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
+    }
     id:delegate
     width: view.width
     height:34

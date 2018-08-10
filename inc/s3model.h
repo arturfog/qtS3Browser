@@ -54,12 +54,23 @@ public:
     Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
 
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
+    //
+    Q_INVOKABLE int getItemsCountQML() const { return m_s3items.count(); }
+    //
     Q_INVOKABLE void getBucketsQML() { getBuckets(); }
+    //
     Q_INVOKABLE void goBackQML() { goBack(); }
+    //
+    Q_INVOKABLE void gotoQML(const QString &path) { goTo(path); }
+    //
     Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
+    //
     Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
+    //
     Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
+    //
     Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
+    //
     Q_INVOKABLE void downloadQML(const int idx) {
         if (idx < m_s3items.count()) {
             if(getCurrentPathDepth() >= 1) {
@@ -67,10 +78,12 @@ public:
             }
         }
     }
+    //
     Q_INVOKABLE void refreshQML() { refresh(); }
+    //
     Q_INVOKABLE int getCurrentPathDepthQML() {
-        return getCurrentPathDepth();
-    }
+        return getCurrentPathDepth(); }
+    //
     Q_INVOKABLE void removeQML(const int idx) {
         if (idx < m_s3items.count() && idx >= 0) {
             if(getCurrentPathDepth() <= 0) {
@@ -82,11 +95,13 @@ public:
             refresh();
         }
     }
+    //
     Q_INVOKABLE void getObjectInfoQML(const int idx) {
         if (idx < m_s3items.count() && idx >= 0) {
           getObjectInfo(m_s3items.at(idx).fileName());
         }
     }
+    //
     Q_INVOKABLE QString getObjectSizeQML(const int idx) {
         if (idx < m_s3items.count() && idx >= 0) {
             getObjectInfo(m_s3items.at(idx).fileName());
@@ -94,18 +109,46 @@ public:
         }
         return "0";
     }
+    //
     Q_INVOKABLE void clearItemsQML() {
         clearItems();
         m_s3Path.clear();
     }
+    //
     Q_INVOKABLE QString getAccesKeyQML() {return getAccessKey();}
+    //
     Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
+    //
     Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
+    //
+    Q_INVOKABLE void saveSettingsQML(const QString& startPath,
+                                     const QString& accessKey,
+                                     const QString& secretKey,
+                                     const int region) {
+        settings.setValue("StartPath", startPath);
+        settings.setValue("AccessKey", accessKey);
+        settings.setValue("SecretKey", secretKey);
+        settings.setValue("Region", region);
+        settings.sync();
+    }
+    //
+    Q_INVOKABLE int getRegionIdxQML() {
+        if(settings.contains("Region")) {
+            return settings.value("Region").toInt();
+        }
+        return 0;
+    }
+    //
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
+    //
     Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
+    //
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
+    //
     Q_INVOKABLE QList<QString> getBookmarksQML() {return bookmarks.keys();}
+    //
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
+    //
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
     /**
      * @brief S3Model
@@ -235,24 +278,20 @@ public:
      * @brief getAccessKey
      * @return
      */
-    inline QString getAccessKey() const {
-        return settings.value("AccessKey").toString();
-    }
+    QString getAccessKey() const;
     /**
      * @brief getSecretKey
      * @return
      */
-    inline QString getSecretKey() const {
-        return settings.value("SecretKey").toString();
-    }
+    QString getSecretKey() const;
     /**
      * @brief getStartPath
      * @return
      */
-    inline QString getStartPath() const {
-        return settings.value("StartPath").toString();
-    }
-
+    QString getStartPath() const;
+    /**
+     * @brief readCLIConfig
+     */
     void readCLIConfig();
 protected:
     QHash<int, QByteArray> roleNames() const;
@@ -263,6 +302,17 @@ private:
     QList<S3Item> m_s3items;
     QStringList m_s3Path;
     QMap<QString, QString> bookmarks;
+    /**
+     * @brief parseCLIConfig
+     * @param credentialsFilePath
+     */
+    void parseCLIConfig(const QString &credentialsFilePath);
+    /**
+     * @brief extractKey
+     * @param line
+     * @return
+     */
+    static QString extractKey(const QString& line);
 };
 
 #endif // S3MODEL_H

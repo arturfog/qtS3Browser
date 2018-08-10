@@ -9,6 +9,7 @@ Item {
     id: s3_browser
     property alias path: view.path
     property bool connected: false
+    property string footerText: ""
     width: 300
     height: 400
 
@@ -125,6 +126,19 @@ Item {
                         icon.source: "icons/32_delete_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
+                        onClicked: {
+                            if(s3_browser_path_text.text === "s3://") {
+                                s3Model.getBucketsQML()
+                                s3_panel.connected = true
+                                file_panel.connected = true
+                            } else {
+                                if(s3_browser_path_text.text.indexOf("s3://") >= 0) {
+                                    s3Model.gotoQML(s3_browser_path_text.text)
+                                    s3_panel.connected = true
+                                    file_panel.connected = true
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -183,7 +197,7 @@ Item {
                 Row {
                     anchors.fill: parent
                     Text {
-                        text: "["+s3Model.rowCount()+" Files]"
+                        text: footerText
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }

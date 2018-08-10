@@ -21,6 +21,7 @@
 #include <tuple>
 #include <QDebug>
 #include <QSysInfo>
+#include <QDir>
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -42,6 +43,7 @@ S3Model::S3Model(QObject *parent)
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
     loadBookmarks();
+    readCLIConfig();
 }
 // --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
@@ -70,7 +72,9 @@ void S3Model::goTo(const QString &path)
 void S3Model::goBack()
 {
     if (m_s3Path.count() <= 1) {
-        m_s3Path.removeLast();
+        if(m_s3Path.count() == 1) {
+            m_s3Path.removeLast();
+        }
         getBuckets();
     } else {
         m_s3Path.removeLast();
@@ -84,7 +88,6 @@ QString S3Model::getCurrentBucket() const
     if (m_s3Path.count() >= 1) {
         return m_s3Path[0];
     }
-
     return "";
 }
 // --------------------------------------------------------------------------
@@ -93,7 +96,6 @@ QString S3Model::getPathWithoutBucket() const
     if (m_s3Path.count() >= 1) {
         return m_s3Path.mid(1).join("");
     }
-
     return "";
 }
 // --------------------------------------------------------------------------
@@ -266,14 +268,77 @@ QVariant S3Model::data(const QModelIndex & index, int role) const {
         return item.filePath();
     return QVariant();
 }
-
+// ----------------------------------------------------------------------------
+QString S3Model::getAccessKey() const {
+    if(settings.contains("AccessKey")) {
+        return settings.value("AccessKey").toString();
+    }
+    return "Empty";
+}
+// ----------------------------------------------------------------------------
+QString S3Model::getSecretKey() const {
+    if(settings.contains("SecretKey")) {
+        return settings.value("SecretKey").toString();
+    }
+    return "Empty";
+}
+// ----------------------------------------------------------------------------
+QString S3Model::getStartPath() const {
+    if(settings.contains("StartPath")) {
+        return settings.value("StartPath").toString();
+    }
+    return "Empty";
+}
+// ----------------------------------------------------------------------------
+QString S3Model::extractKey(const QString& line) {
+    const int startIdx = line.indexOf('=');
+    if(startIdx > 0) {
+        const QString key = line.mid(startIdx + 1).trimmed();
+        return key;
+    }
+    return "Empty";
+}
+// ----------------------------------------------------------------------------
+void S3Model::parseCLIConfig(const QString& credentialsFilePath) {
+    QFile file(credentialsFilePath);
+    if(!file.exists()) { return; }
+    file.open(QIODevice::ReadOnly);
+    if(file.isReadable()) {
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if(!line.isEmpty() && line.contains("access_key_id")) {
+                settings.setValue("AccessKey", extractKey(line));
+            } else if(!line.isEmpty() && line.contains("secret_access_key")) {
+                settings.setValue("SecretKey", extractKey(line));
+            }
+        }
+    }
+}
+// ----------------------------------------------------------------------------
 void S3Model::readCLIConfig()
 {
+    // credentials sample contents
+    //
+    // [default]
+    // aws_access_key_id = abc
+    // aws_secret_access_key = 1234
+    //
+    static const QString winDefaultLocation = "%UserProfile%\\.aws\\credentials";
+    static const QString nixDefaultLocation = QDir::homePath() + "/.aws/credentials";
+
+    // don't overwrite custom access/secret key set in app with those set in awscli
+    if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
+        return;
+    }
+
     QString os = QSysInfo::productType();
     if(os == "windows") {
          // Windows location is "%UserProfile%\.aws"
+        parseCLIConfig(winDefaultLocation);
     } else {
-        // MacOS/Linux/BSD location is ~/.aws
+        // MacOS/Linux/BSD location is $HOME/.aws
+        parseCLIConfig(nixDefaultLocation);
     }
 }
 // --------------------------------------------------------------------------

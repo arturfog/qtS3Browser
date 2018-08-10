@@ -7,6 +7,14 @@ Rectangle {
     height:34
     color: "transparent"
 
+    onFocusChanged: {
+        if(connected && !folder.get(view.currentIndex, "fileIsDir")) {
+            file_upload_btn.enabled = true
+        } else {
+            file_upload_btn.enabled = false
+        }
+    }
+
     Row {
         anchors.fill: parent
 
