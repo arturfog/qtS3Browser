@@ -61,7 +61,18 @@ public:
     //
     Q_INVOKABLE void goBackQML() { goBack(); }
     //
-    Q_INVOKABLE void gotoQML(const QString &path) { goTo(path); }
+    Q_INVOKABLE void gotoQML(const QString &path) {
+        m_s3Path.clear();
+        QStringList pathItems = path.split("s3://");
+        if(pathItems.count() > 1) {
+            for(auto item: pathItems[1].split("/")) {
+                if(!item.isEmpty()) {
+                    m_s3Path.append(item + "/");
+                }
+            }
+            refresh();
+        }
+    }
     //
     Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
     //
@@ -145,7 +156,9 @@ public:
     //
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
     //
-    Q_INVOKABLE QList<QString> getBookmarksQML() {return bookmarks.keys();}
+    Q_INVOKABLE QList<QString> getBookmarksKeysQML() {return bookmarks.keys();}
+    //
+    Q_INVOKABLE QList<QString> getBookmarksLinksQML() { return bookmarks.values(); }
     //
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     //

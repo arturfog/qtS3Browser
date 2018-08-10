@@ -19,13 +19,13 @@ Window {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Author: Artur"
-            font.pointSize: 18
+            font.pointSize: 16
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
             onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
-            font.pointSize: 16
+            font.pointSize: 14
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter

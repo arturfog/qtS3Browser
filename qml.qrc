@@ -18,5 +18,7 @@
         <file>ManageBookmarksWindow.qml</file>
         <file>OperationProgressWindow.qml</file>
         <file>icons/256_app.png</file>
+        <file>icons/256_add_bookmark.png</file>
+        <file>icons/128_add_bookmark.png</file>
     </qresource>
 </RCC>

@@ -107,22 +107,23 @@ ApplicationWindow {
             function addBookmarks() {
                 var bookmarksLen = s3Model.getBookmarksNumQML();
                 if(bookmarksLen > 0) {
-                    var keys = s3Model.getBookmarksQML()
+                    var keys = s3Model.getBookmarksKeysQML()
                     for(var i = 0; i < bookmarksLen; i++){
                         if(bookmarks_menu.count <= 3 + i) {
                             bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: keys[i] }))
-                            //bookmarks_menu.removeMenu()
                         }
                     }
-                } else {
-                    bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: "Empty" }))
                 }
             }
 
             Component {
                 id: menuItem
                 MenuItem {
-
+                    onTriggered: {
+                        var links = s3Model.getBookmarksLinksQML()
+                        s3Model.gotoQML(links[bookmarks_menu.currentIndex - 3])
+                        s3_panel.path = s3Model.getS3PathQML()
+                    }
                 }
             }
         }
