@@ -150,6 +150,38 @@ Window {
 
         Rectangle {
             x: 10
+            y: 10
+            width: parent.width - 20
+            height: 34
+
+            Text {
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Endpoint URL"
+            }
+        }
+
+        Rectangle {
+            x: 10
+            y: 55
+            width: parent.width - 20
+            height: 34
+            border.color: "black"
+            color: "white"
+            border.width: 1
+
+            TextInput {
+                id: endpointURL
+                x: 5
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+                text: s3Model.getAccesKeyQML()
+                maximumLength: 128
+            }
+        }
+
+        Rectangle {
+            x: 10
             y: 55
             width: parent.width - 20
             height: 50

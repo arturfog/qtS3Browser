@@ -10,8 +10,10 @@ Rectangle {
 
         if(s3Model.getCurrentPathDepthQML() <= 0) {
             s3_create_dir_btn.enabled = false
+            menu_s3_create_dir.enabled = false
         } else {
             s3_create_dir_btn.enabled = true
+            menu_s3_create_dir.enabled = true
         }
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";

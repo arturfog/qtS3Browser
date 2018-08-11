@@ -54,6 +54,7 @@ ApplicationWindow {
                     s3_panel.connected = true
                     file_panel.connected = true
                 }
+                enabled: !s3_panel.connected
 
             }
             MenuSeparator { }
@@ -65,11 +66,12 @@ ApplicationWindow {
                 enabled: s3_panel.connected
             }
             MenuItem {
+                id: menu_s3_create_dir
                 text: "Create directory"
                 onTriggered: {
                     createFolderWindow.visible = true
                 }
-                enabled: s3_panel.connected
+                enabled: false
             }
             MenuSeparator { }
             MenuItem {
@@ -123,6 +125,8 @@ ApplicationWindow {
                         var links = s3Model.getBookmarksLinksQML()
                         s3Model.gotoQML(links[bookmarks_menu.currentIndex - 3])
                         s3_panel.path = s3Model.getS3PathQML()
+                        s3_panel.connected = true
+                        file_panel.connected = true
                     }
                 }
             }

@@ -24,7 +24,7 @@ Window {
         Text {
             x: 10
             text: "Bookmark name"
-            font.pointSize: 14
+            font.pointSize: 10
         }
 
         Rectangle {
@@ -58,7 +58,7 @@ Window {
         Text {
             x: 10
             text: "S3 URL"
-            font.pointSize: 14
+            font.pointSize: 10
         }
 
         Rectangle {
