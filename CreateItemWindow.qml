@@ -33,7 +33,7 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Bucket name"
+                text: qsTr("Name")
                 maximumLength: 128
             }
         }
@@ -44,7 +44,7 @@ Window {
 
             Button {
                 id: cw_cb
-                text: "Create"
+                text: qsTr("Create")
                 onClicked: {
                     if (create_action === 0) {
                         s3Model.createBucketQML(itemName.text)
@@ -63,7 +63,7 @@ Window {
 
 
             Button {
-                text: "Cancel"
+                text: qsTr("Cancel")
                 onClicked: {
                     close()
                 }

@@ -14,12 +14,12 @@ ApplicationWindow {
     title: qsTr("s3FileBrowser")
 
     property var createBucketWindow: CreateItemWindow {
-        win_title: "Create bucket"
+        win_title: qsTr("Create bucket")
         create_action: 0
     }
 
     property var createFolderWindow: CreateItemWindow {
-        win_title: "Create folder"
+        win_title: qsTr("Create folder")
         create_action: 1
     }
 
@@ -33,14 +33,14 @@ ApplicationWindow {
         id: menu_bar
 
         Menu {
-            title: "File"
+            title: qsTr("File")
             MenuItem {
-                text: "Settings"
+                text: qsTr("Settings")
                 onTriggered: settingsWindow.visible = true
             }
             MenuSeparator { }
             MenuItem {
-                text: "Close"
+                text: qsTr("Close")
                 onTriggered: Qt.quit();
             }
         }
@@ -48,9 +48,14 @@ ApplicationWindow {
         Menu {
             title: "S3"
             MenuItem {
-                text: "Connect..."
+                text: qsTr("Connect...")
                 onTriggered: {
-                    s3Model.getBucketsQML()
+                    if(s3Model.getStartPathQML() !== "s3://") {
+                        s3Model.gotoQML(s3Model.getStartPathQML())
+                        s3_panel.path = s3Model.getS3PathQML()
+                    } else {
+                        s3Model.getBucketsQML()
+                    }
                     s3_panel.connected = true
                     file_panel.connected = true
                 }
@@ -59,7 +64,7 @@ ApplicationWindow {
             }
             MenuSeparator { }
             MenuItem {
-                text: "Create bucket"
+                text: qsTr("Create bucket")
                 onTriggered: {
                     createBucketWindow.visible = true
                 }
@@ -67,7 +72,7 @@ ApplicationWindow {
             }
             MenuItem {
                 id: menu_s3_create_dir
-                text: "Create directory"
+                text: qsTr("Create directory")
                 onTriggered: {
                     createFolderWindow.visible = true
                 }
@@ -75,7 +80,7 @@ ApplicationWindow {
             }
             MenuSeparator { }
             MenuItem {
-                text: "Disconnect..."
+                text: qsTr("Disconnect...")
                 onTriggered: {
                     s3Model.clearItemsQML()
                     s3_panel.connected = false
@@ -89,17 +94,17 @@ ApplicationWindow {
 
         Menu {
             id: bookmarks_menu
-            title: "Bookmarks"
+            title: qsTr("Bookmarks")
             onOpened: addBookmarks()
 
             MenuItem {
-                text: "Create bookmark"
+                text: qsTr("Create bookmark")
                 onTriggered: {
                     createBookmarkWindow.visible = true
                 }
             }
             MenuItem {
-                text: "Manage bookmarks"
+                text: qsTr("Manage bookmarks")
                 onTriggered: {
                     manageBookmarksWindow.visible = true
                 }
@@ -133,9 +138,9 @@ ApplicationWindow {
         }
 
         Menu {
-            title: "Help"
+            title: qsTr("Help")
             MenuItem {
-                text: "About"
+                text: qsTr("About")
                 onTriggered: {
                     aboutWindow.visible = true
                 }

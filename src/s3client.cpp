@@ -41,7 +41,8 @@ std::function<void(const std::string&)> S3Client::m_func;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
-S3Client::ObjectInfo_S S3Client::objectInfo;
+std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
+Aws::String S3Client::currentPrefix;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -96,6 +97,7 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
         objects_request.SetPrefix(key);
     }
 
+    objectInfoVec.clear();
     m_func = func;
     s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
 }
@@ -114,16 +116,13 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
 
         for (auto const &s3_object : common_list)
         {
-
             std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
-            //list.emplace_back(item);
             m_func(item);
             std::cout << "* " << s3_object.GetPrefix() << std::endl;
         }
 
         for (auto const &s3_object : object_list)
         {
-            //list.emplace_back(s3_object.GetKey().c_str());
             m_func(s3_object.GetKey().c_str());
             std::cout << "** " << s3_object.GetKey() << std::endl;
         }
@@ -139,28 +138,33 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
     std::cout << "ListObjects done " << std::endl;
 }
 // --------------------------------------------------------------------------
-void S3Client::getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name)
+void S3Client::getObjectInfo(const Aws::String &bucket_name,
+                             const Aws::String &key_name)
 {
-    std::cout << "Object info for: " << key_name << " from S3 bucket: " <<
-        bucket_name << std::endl;
-
     Aws::S3::Model::GetObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
-                                    const Aws::S3::Model::GetObjectRequest &,
+                                    const Aws::S3::Model::GetObjectRequest &request,
                                     const Aws::S3::Model::GetObjectOutcome &outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     if (outcome.IsSuccess())
     {
+        ObjectInfo_S objectInfo;
+
         objectInfo.size = outcome.GetResult().GetContentLength();
         objectInfo.type = outcome.GetResult().GetContentType();
 //        // ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601) << std::endl;
         objectInfo.lastModified = outcome.GetResult().GetLastModified();
         objectInfo.etag = outcome.GetResult().GetETag();
+        Aws::String key = request.GetKey();
+        std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+        std::cout << "Object info for: " << item << " from S3 bucket: " << std::endl;
+
+        objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
     }
     else
     {
@@ -222,6 +226,7 @@ void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
 // --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
     m_func = func;
+    objectInfoVec.clear();
     s3_client->ListBucketsAsync(&getBucketsHandler);
 }
 // --------------------------------------------------------------------------

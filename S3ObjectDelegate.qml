@@ -1,6 +1,28 @@
 import QtQuick 2.11
 
 Rectangle {
+
+    function getSize() {
+        if (filePath == "/") {
+            return "DIR"
+        } else {
+            var size = s3Model.getObjectSizeQML(i_fileName.text)
+            var postfix = " B"
+
+            if (size > 1024) {
+                size = Math.floor(size / 1024)
+                postfix = " KB"
+            }
+
+            if (size > 1024) {
+                size = Math.floor(size / 1024)
+                return size + " MB"
+            }
+
+            return size + postfix
+        }
+    }
+
     onFocusChanged: {
         if(filePath == "/") {
             s3_download_btn.enabled = false
@@ -17,6 +39,8 @@ Rectangle {
         }
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
+
+        i_size.text = getSize();
     }
     id:delegate
     width: view.width
@@ -41,26 +65,16 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
         }
 
+
+
         Text {
+            id: i_size
             width: 100
             text: {
                 if (filePath == "/") {
-                    "DIR"
+                    return "DIR"
                 } else {
-                    var size = s3Model.getObjectSizeQML(index)
-                    var postfix = " B"
-
-                    if (size > 1024) {
-                        size = Math.floor(size / 1024)
-                        postfix = " KB"
-                    }
-
-                    if (size > 1024) {
-                        size = Math.floor(size / 1024)
-                        return size + " MB"
-                    }
-
-                    return size + postfix
+                    return "0"
                 }
             }
             anchors.verticalCenter: parent.verticalCenter

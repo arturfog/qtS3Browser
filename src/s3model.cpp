@@ -146,6 +146,7 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
         }
 
         qDebug() << "3 qsKey: [" << qsKey << "] bucket[" << qsBucket << "]";
+        s3.currentPrefix = getPathWithoutBucket().toStdString().c_str();
         s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), callback);
     }
 }

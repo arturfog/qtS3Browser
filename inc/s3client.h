@@ -147,13 +147,16 @@ private:
                                     const Aws::S3::Model::CreateBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 public:
-    static struct ObjectInfo_S {
+    struct ObjectInfo_S {
         long long size;
         Aws::String type;
         Aws::String etag;
         Aws::Utils::DateTime lastModified;
 
-    } objectInfo;
+    };
+    static Aws::String currentPrefix;
+
+    static std::map<Aws::String, ObjectInfo_S> objectInfoVec;
     /**
      * @brief S3Client
      */
@@ -240,7 +243,14 @@ public:
      */
     void cancelDownloadUpload();
     // GET INFO
-    void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
+    /**
+     * @brief getObjectInfo
+     * @param bucket_name
+     * @param key_name
+     * @param item_name
+     */
+    void getObjectInfo(const Aws::String &bucket_name,
+                       const Aws::String &key_name);
     static void getObjectInfoHandler(const Aws::S3::S3Client* client,
                                      const Aws::S3::Model::GetObjectRequest& request,
                                      const Aws::S3::Model::GetObjectOutcome& outcome,

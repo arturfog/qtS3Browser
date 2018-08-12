@@ -50,7 +50,12 @@ public:
     };
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
-    Q_SLOT void addItemSlot(const QString& item, const QString& path) {addS3Item(S3Item(item, path));}
+    Q_SLOT void addItemSlot(const QString& item, const QString& path) {
+        addS3Item(S3Item(item, path));
+        if(path.compare("/") != 0) {
+            getObjectInfo(item);
+        }
+    }
     Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
 
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
@@ -107,18 +112,14 @@ public:
         }
     }
     //
-    Q_INVOKABLE void getObjectInfoQML(const int idx) {
-        if (idx < m_s3items.count() && idx >= 0) {
-          getObjectInfo(m_s3items.at(idx).fileName());
+    Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
+
+        auto search = s3.objectInfoVec.find(name.toStdString().c_str());
+        if (search != s3.objectInfoVec.end()) {
+            return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
+        } else {
+            return "0";
         }
-    }
-    //
-    Q_INVOKABLE QString getObjectSizeQML(const int idx) {
-        if (idx < m_s3items.count() && idx >= 0) {
-            getObjectInfo(m_s3items.at(idx).fileName());
-            return QString::number(s3.objectInfo.size);
-        }
-        return "0";
     }
     //
     Q_INVOKABLE void clearItemsQML() {
