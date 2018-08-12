@@ -49,5 +49,7 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     engine.addImageProvider(QLatin1String("iconProvider"), new IconProvider());
 
+    app.setWindowIcon(QIcon(":/icons/256_app.png"));
+
     return app.exec();
 }

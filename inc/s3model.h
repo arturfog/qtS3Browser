@@ -135,20 +135,26 @@ public:
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
                                      const QString& accessKey,
                                      const QString& secretKey,
-                                     const int region) {
+                                     const int regionIdx,
+                                     const QString& region,
+                                     const QString& endpoint) {
         settings.setValue("StartPath", startPath);
         settings.setValue("AccessKey", accessKey);
         settings.setValue("SecretKey", secretKey);
+        settings.setValue("RegionIdx", regionIdx);
         settings.setValue("Region", region);
+        settings.setValue("Endpoint", endpoint);
         settings.sync();
     }
     //
     Q_INVOKABLE int getRegionIdxQML() {
-        if(settings.contains("Region")) {
-            return settings.value("Region").toInt();
+        if(settings.contains("RegionIdx")) {
+            return settings.value("RegionIdx").toInt();
         }
         return 0;
     }
+    //
+    Q_INVOKABLE QString getEndpointQML() { return settings.value("Endpoint").toString(); }
     //
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
     //

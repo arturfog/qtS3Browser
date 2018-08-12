@@ -35,6 +35,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <QSettings>
 
 std::function<void(const std::string&)> S3Client::m_func;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
@@ -47,14 +48,36 @@ void S3Client::init() {
     Aws::InitAPI(options);
     {
         auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
-        config->connectTimeoutMs = 2000;
-        config->requestTimeoutMs = 2000;
-        //config.region = region;
+        config.connectTimeoutMs = 2000;
+        config.requestTimeoutMs = 2000;
+        QSettings settings;
+        if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
+            const QString sk = settings.value("SecretKey").toString();
+            const QString ak = settings.value("AccessKey").toString();
+
+            credentials.SetAWSSecretKey(sk.toStdString().c_str());
+            credentials.SetAWSAccessKeyId(ak.toStdString().c_str());
+        }
+
+        if(settings.contains("Region")) {
+            const QString reg = settings.value("Region").toString();
+            if(!reg.isEmpty() && reg.compare("Default") != 0) {
+                config.region = reg.toStdString().c_str();
+            }
+        }
+
+        if(settings.contains("Endpoint")) {
+            const QString end = settings.value("Endpoint").toString();
+            if(!end.isEmpty()) {
+                config.endpointOverride = end.toStdString().c_str();
+            }
+        }
+
         //config->readRateLimiter = m_limiter;
         //config->writeRateLimiter = m_limiter;
-        config->endpointOverride = "s3.amazonaws.com:9444";
-        config->scheme = Aws::Http::Scheme::HTTP;
-        std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(*config));
+
+        config.scheme = Aws::Http::Scheme::HTTP;
+        std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
         this->s3_client = s3_client;
         std::cout << "S3Client::init" << std::endl;
     }

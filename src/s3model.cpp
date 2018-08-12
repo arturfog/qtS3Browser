@@ -269,26 +269,11 @@ QVariant S3Model::data(const QModelIndex & index, int role) const {
     return QVariant();
 }
 // ----------------------------------------------------------------------------
-QString S3Model::getAccessKey() const {
-    if(settings.contains("AccessKey")) {
-        return settings.value("AccessKey").toString();
-    }
-    return "Empty";
-}
+QString S3Model::getAccessKey() const { return settings.value("AccessKey").toString(); }
 // ----------------------------------------------------------------------------
-QString S3Model::getSecretKey() const {
-    if(settings.contains("SecretKey")) {
-        return settings.value("SecretKey").toString();
-    }
-    return "Empty";
-}
+QString S3Model::getSecretKey() const { return settings.value("SecretKey").toString(); }
 // ----------------------------------------------------------------------------
-QString S3Model::getStartPath() const {
-    if(settings.contains("StartPath")) {
-        return settings.value("StartPath").toString();
-    }
-    return "Empty";
-}
+QString S3Model::getStartPath() const { return settings.value("StartPath").toString(); }
 // ----------------------------------------------------------------------------
 QString S3Model::extractKey(const QString& line) {
     const int startIdx = line.indexOf('=');

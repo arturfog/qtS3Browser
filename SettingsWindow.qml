@@ -139,12 +139,12 @@ Window {
                 width: parent.width
                 currentIndex: s3Model.getRegionIdxQML()
                 model: [ "Default",
-                    "us-east-1 (N. Virginia)",
-                    "us-east-2 (Ohio)",
-                    "eu-central-1 (Frankfurt)",
-                    "eu-west-1 (Ireland)",
-                    "eu-west-2 (London)",
-                    "eu-west-3 (Paris)" ]
+                    "us-east-1",
+                    "us-east-2",
+                    "eu-central-1",
+                    "eu-west-1",
+                    "eu-west-2",
+                    "eu-west-3" ]
             }
         }
 
@@ -175,7 +175,7 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: s3Model.getAccesKeyQML()
+                text: s3Model.getEndpointQML()
                 maximumLength: 128
             }
         }
@@ -196,7 +196,9 @@ Window {
                         s3Model.saveSettingsQML(startPath.text,
                                                 accessKey.text,
                                                 secretKey.text,
-                                                s3region.currentIndex
+                                                s3region.currentIndex,
+                                                s3region.currentText,
+                                                endpointURL.text
                                                 )
                         close()
                     }

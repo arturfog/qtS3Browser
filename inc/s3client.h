@@ -34,12 +34,15 @@
 #include <aws/transfer/TransferManager.h>
 #include <aws/transfer/TransferHandle.h>
 
+#include <aws/core/auth/AWSCredentialsProvider.h>
+
 #include <string>
 
 class S3Client {
 private:
     std::shared_ptr<Aws::S3::S3Client> s3_client;
-    std::unique_ptr<Aws::Client::ClientConfiguration> config;
+    Aws::Client::ClientConfiguration config;
+    Aws::Auth::AWSCredentials credentials;
     Aws::SDKOptions options;
     std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;
 
@@ -47,37 +50,37 @@ private:
     static std::function<void(const std::string&)> m_func;
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
-public:
-    static struct ObjectInfo_S {
-        long long size;
-        Aws::String type;
-        Aws::String etag;
-        Aws::Utils::DateTime lastModified;
 
-    } objectInfo;
     /**
-     * @brief S3Client
+     * @brief downloadProgress
+     * @param manager
+     * @param handle
      */
-    S3Client() : config(new Aws::Client::ClientConfiguration()) {
-        init();
-        Aws::InitAPI(options);
-        transferHandle = nullptr;
-    }
-
-    ~S3Client() {
-        Aws::ShutdownAPI(options);
-    }
-
-    void init();
-    // LIST OBJECTS
+    static void downloadProgress(const Aws::Transfer::TransferManager* manager,
+                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     /**
-     * @brief listObjects
-     * @param bucket_name
-     * @param key
-     * @param func
+     * @brief uploadProgress
+     * @param manager
+     * @param handle
      */
-    void listObjects(const Aws::String &bucket_name, const Aws::String &key,
-                     std::function<void(const std::string&)> func);
+    static void uploadProgress(const Aws::Transfer::TransferManager* manager,
+                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    /**
+     * @brief statusUpdate
+     * @param manager
+     * @param handle
+     */
+    static void statusUpdate(const Aws::Transfer::TransferManager* manager,
+                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
+    /**
+     * @brief errorHandler
+     * @param manager
+     * @param handle
+     * @param error
+     */
+    static void errorHandler(const Aws::Transfer::TransferManager* manager,
+                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
+                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
     /**
      * @brief listObjectsHandler
      * @param client
@@ -89,13 +92,6 @@ public:
                                    const Aws::S3::Model::ListObjectsRequest& request,
                                    const Aws::S3::Model::ListObjectsOutcome& outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-    // DELETE OBJECT
-    /**
-     * @brief deleteObject
-     * @param bucket_name
-     * @param key_name
-     */
-    void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
     /**
      * @brief deleteObjectHandler
      * @param client
@@ -107,12 +103,6 @@ public:
                                     const Aws::S3::Model::DeleteObjectRequest& request,
                                     const Aws::S3::Model::DeleteObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-    // DELETE BUCKET
-    /**
-     * @brief deleteBucket
-     * @param bucket_name
-     */
-    void deleteBucket(const Aws::String &bucket_name);
     /**
      * @brief deleteBucketHandler
      * @param client
@@ -125,13 +115,6 @@ public:
                                     const Aws::S3::Model::DeleteBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 
-    // CREATE FOLDER
-    /**
-     * @brief createFolder
-     * @param bucket_name
-     * @param key_name
-     */
-    void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
     /**
      * @brief createFolderHandler
      * @param client
@@ -143,21 +126,15 @@ public:
                                     const Aws::S3::Model::PutObjectRequest& request,
                                     const Aws::S3::Model::PutObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-    // GET BUCKETS
     /**
-     * @brief getBuckets
-     * @param func
+     * @brief getBucketsHandler
+     * @param client
+     * @param outcome
+     * @param context
      */
-    void getBuckets(std::function<void(const std::string&)> func);
     static void getBucketsHandler(const Aws::S3::S3Client* client,
                            const Aws::S3::Model::ListBucketsOutcome& outcome,
                            const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
-    // CREATE BUCKET
-    /**
-     * @brief createBucket
-     * @param bucket_name
-     */
-    void createBucket(const Aws::String &bucket_name);
     /**
      * @brief createBucketHandler
      * @param client
@@ -169,6 +146,72 @@ public:
                                     const Aws::S3::Model::CreateBucketRequest& request,
                                     const Aws::S3::Model::CreateBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
+public:
+    static struct ObjectInfo_S {
+        long long size;
+        Aws::String type;
+        Aws::String etag;
+        Aws::Utils::DateTime lastModified;
+
+    } objectInfo;
+    /**
+     * @brief S3Client
+     */
+    S3Client() {
+        init();
+        Aws::InitAPI(options);
+        transferHandle = nullptr;
+    }
+
+    ~S3Client() {
+        Aws::ShutdownAPI(options);
+    }
+    /**
+     * @brief init
+     */
+    void init();
+    // LIST OBJECTS
+    /**
+     * @brief listObjects
+     * @param bucket_name
+     * @param key
+     * @param func
+     */
+    void listObjects(const Aws::String &bucket_name, const Aws::String &key,
+                     std::function<void(const std::string&)> func);
+
+    // DELETE OBJECT
+    /**
+     * @brief deleteObject
+     * @param bucket_name
+     * @param key_name
+     */
+    void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
+    // DELETE BUCKET
+    /**
+     * @brief deleteBucket
+     * @param bucket_name
+     */
+    void deleteBucket(const Aws::String &bucket_name);
+    // CREATE FOLDER
+    /**
+     * @brief createFolder
+     * @param bucket_name
+     * @param key_name
+     */
+    void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
+    // GET BUCKETS
+    /**
+     * @brief getBuckets
+     * @param func
+     */
+    void getBuckets(std::function<void(const std::string&)> func);
+    // CREATE BUCKET
+    /**
+     * @brief createBucket
+     * @param bucket_name
+     */
+    void createBucket(const Aws::String &bucket_name);
     // DOWNLOAD/UPLOAD
     /**
      * @brief downloadFile
@@ -196,26 +239,6 @@ public:
      * @brief cancelDownloadUpload
      */
     void cancelDownloadUpload();
-    // DOWNLOAD/UPLOAD callbacks
-    /**
-     * @brief uploadProgress
-     * @param manager
-     * @param handle
-     */
-    static void uploadProgress(const Aws::Transfer::TransferManager* manager,
-                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    /**
-     * @brief downloadProgress
-     * @param manager
-     * @param handle
-     */
-    static void downloadProgress(const Aws::Transfer::TransferManager* manager,
-                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    static void statusUpdate(const Aws::Transfer::TransferManager* manager,
-                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
-    static void errorHandler(const Aws::Transfer::TransferManager* manager,
-                             const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
-                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
     // GET INFO
     void getObjectInfo(const Aws::String &bucket_name, const Aws::String &key_name);
     static void getObjectInfoHandler(const Aws::S3::S3Client* client,
