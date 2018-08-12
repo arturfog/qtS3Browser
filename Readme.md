@@ -2,6 +2,8 @@
 
 Simple **Amazon S3** client written in C++/QT
 
+![alt text](https://github.com/arturfog/qtS3Browser/raw/master/assets/app_main.png)
+
 ## Testing:
 
 It's recommended to use S3rver (https://github.com/jamhall/s3rver)
