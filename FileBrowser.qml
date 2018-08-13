@@ -17,16 +17,6 @@ Item {
         width: parent.width
         height: 48
 
-//        Row {
-//            width: parent.width
-//            height: 2
-//            Rectangle {
-//                width: parent.width
-//                height: 1
-//                color: "black"
-//            }
-//        }
-
         Row {
             anchors.fill: parent
             ToolButton {
@@ -34,7 +24,11 @@ Item {
                 icon.source: "icons/32_up_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Up")
-                onClicked: view.path = folder.parentFolder
+                onClicked: {
+                    if(folder.parentFolder.toString().length > 0) {
+                        view.path = folder.parentFolder
+                    }
+                }
             }
 
             ToolButton {
@@ -125,7 +119,7 @@ Item {
                         y: 2
                         x: file_browser_path_text.width
                         height: 28
-                        icon.source: "icons/32_delete_icon.png"
+                        icon.source: "icons/32_go_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
                         onClicked: {

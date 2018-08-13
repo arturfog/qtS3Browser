@@ -7,6 +7,10 @@ Rectangle {
             return "DIR"
         } else {
             var size = s3Model.getObjectSizeQML(i_fileName.text)
+            if(size === "0") {
+                return "..."
+            }
+
             var postfix = " B"
 
             if (size > 1024) {
@@ -40,7 +44,7 @@ Rectangle {
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
 
-        i_size.text = getSize();
+        //i_size.text = getSize();
     }
     id:delegate
     width: view.width
@@ -74,7 +78,7 @@ Rectangle {
                 if (filePath == "/") {
                     return "DIR"
                 } else {
-                    return "0"
+                    return "..."
                 }
             }
             anchors.verticalCenter: parent.verticalCenter
@@ -91,6 +95,7 @@ Rectangle {
             } else {
                 s3_download_btn.enabled = true
             }
+            i_size.text = getSize();
         }
 
         onDoubleClicked:  {
@@ -102,6 +107,8 @@ Rectangle {
             } else {
                 s3_create_dir_btn.enabled = true
             }
+
+            i_size.text = getSize();
         }
     }
 }

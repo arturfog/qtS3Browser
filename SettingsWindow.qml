@@ -6,8 +6,8 @@ import QtQuick.Layouts 1.3
 
 Window {
     id: settings_win
-    x: 100; y: 100; width: 400; height: 400
-    minimumHeight: 300; maximumHeight: 400
+    x: 100; y: 100; width: 400; height: 440
+    minimumHeight: 300; maximumHeight: 440
     minimumWidth: 300
 
     title: "Settings"
@@ -16,16 +16,21 @@ Window {
         width: parent.width
         height: parent.height
 
-        Rectangle {
+        Row {
             x: 10
             y: 10
             width: parent.width - 20
             height: 34
 
+            Image {
+                source: "icons/32_home_icon.png"
+            }
+
             Text {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 text: "S3 Start Path"
+                font.pointSize: 12
             }
         }
 
@@ -49,15 +54,25 @@ Window {
         }
 
         Rectangle {
+            width: parent.width
+            height: 10
+        }
+
+        Row {
             x: 10
             y: 10
             width: parent.width - 20
             height: 34
 
+            Image {
+                source: "icons/32_secret_icon.png"
+            }
+
             Text {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Secret Key"
+                font.pointSize: 12
             }
         }
 
@@ -81,15 +96,26 @@ Window {
         }
 
         Rectangle {
+            width: parent.width
+            height: 10
+        }
+
+
+        Row {
             x: 10
             y: 10
             width: parent.width - 20
             height: 34
 
+            Image {
+                source: "icons/32_key_icon.png"
+            }
+
             Text {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Access Key"
+                font.pointSize: 12
             }
         }
 
@@ -113,15 +139,26 @@ Window {
         }
 
         Rectangle {
+            width: parent.width
+            height: 10
+        }
+
+
+        Row {
             x: 10
             y: 10
             width: parent.width - 20
             height: 34
 
+            Image {
+                source: "icons/32_region_icon.png"
+            }
+
             Text {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Region"
+                font.pointSize: 12
             }
         }
 
@@ -149,15 +186,26 @@ Window {
         }
 
         Rectangle {
+            width: parent.width
+            height: 10
+        }
+
+
+        Row {
             x: 10
             y: 10
             width: parent.width - 20
             height: 34
 
+            Image {
+                source: "icons/32_endpoint_icon.png"
+            }
+
             Text {
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
                 text: "Endpoint URL"
+                font.pointSize: 12
             }
         }
 

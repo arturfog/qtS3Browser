@@ -52,12 +52,15 @@ public:
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
     Q_SLOT void addItemSlot(const QString& item, const QString& path) {
         addS3Item(S3Item(item, path));
-        if(path.compare("/") != 0) {
-            getObjectInfo(item);
-        }
+        setConnectedQML(true);
+
     }
     Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
-
+    //
+    Q_INVOKABLE bool isConnectedQML() const { return isConnected; }
+    //
+    Q_INVOKABLE void setConnectedQML(const bool state) { isConnected = state; }
+    //
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
     //
     Q_INVOKABLE int getItemsCountQML() const { return m_s3items.count(); }
@@ -113,7 +116,7 @@ public:
     }
     //
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
-
+        getObjectInfo(name);
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
         if (search != s3.objectInfoVec.end()) {
             return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
@@ -322,6 +325,7 @@ private:
     QList<S3Item> m_s3items;
     QStringList m_s3Path;
     QMap<QString, QString> bookmarks;
+    bool isConnected;
     /**
      * @brief parseCLIConfig
      * @param credentialsFilePath

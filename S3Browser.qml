@@ -123,21 +123,17 @@ Item {
                         y: 2
                         x: s3_browser_path_text.width
                         height: 28
-                        icon.source: "icons/32_delete_icon.png"
+                        icon.source: "icons/32_go_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
                         onClicked: {
                             if(s3_browser_path_text.text === "s3://") {
                                 s3Model.getBucketsQML()
-                                s3_panel.connected = true
-                                file_panel.connected = true
-                            } else {
-                                if(s3_browser_path_text.text.indexOf("s3://") >= 0) {
-                                    s3Model.gotoQML(s3_browser_path_text.text)
-                                    s3_panel.connected = true
-                                    file_panel.connected = true
-                                }
+                            } else if(s3_browser_path_text.text.indexOf("s3://") >= 0) {
+                                s3Model.gotoQML(s3_browser_path_text.text)
                             }
+                            s3_panel.connected = s3Model.isConnectedQML()
+                            file_panel.connected = s3Model.isConnectedQML()
                         }
                     }
                 }

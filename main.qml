@@ -10,7 +10,7 @@ ApplicationWindow {
     visible: true
     width: 840
     height: 480
-    minimumWidth: 800
+    minimumWidth: 840
     title: qsTr("s3FileBrowser")
 
     property var createBucketWindow: CreateItemWindow {
@@ -29,6 +29,11 @@ ApplicationWindow {
     property var manageBookmarksWindow: ManageBookmarksWindow {}
     property var progressWindow: OperationProgressWindow {}
 
+    onAfterRendering: {
+        s3_panel.connected = s3Model.isConnectedQML()
+        file_panel.connected = s3Model.isConnectedQML()
+    }
+
     menuBar: MenuBar {
         id: menu_bar
 
@@ -36,11 +41,13 @@ ApplicationWindow {
             title: qsTr("File")
             MenuItem {
                 text: qsTr("Settings")
+                icon.source: "icons/32_settings_icon.png"
                 onTriggered: settingsWindow.visible = true
             }
             MenuSeparator { }
             MenuItem {
                 text: qsTr("Close")
+                icon.source: "icons/32_close_icon.png"
                 onTriggered: Qt.quit();
             }
         }
@@ -49,6 +56,7 @@ ApplicationWindow {
             title: "S3"
             MenuItem {
                 text: qsTr("Connect...")
+                icon.source: "icons/32_connect_icon.png"
                 onTriggered: {
                     if(s3Model.getStartPathQML() !== "s3://") {
                         s3Model.gotoQML(s3Model.getStartPathQML())
@@ -56,8 +64,7 @@ ApplicationWindow {
                     } else {
                         s3Model.getBucketsQML()
                     }
-                    s3_panel.connected = true
-                    file_panel.connected = true
+
                 }
                 enabled: !s3_panel.connected
 
@@ -65,6 +72,7 @@ ApplicationWindow {
             MenuSeparator { }
             MenuItem {
                 text: qsTr("Create bucket")
+                icon.source: "icons/32_bucket_icon.png"
                 onTriggered: {
                     createBucketWindow.visible = true
                 }
@@ -76,15 +84,18 @@ ApplicationWindow {
                 onTriggered: {
                     createFolderWindow.visible = true
                 }
+                icon.source: "icons/32_new_folder_icon.png"
                 enabled: false
             }
             MenuSeparator { }
             MenuItem {
                 text: qsTr("Disconnect...")
+                icon.source: "icons/32_disconnect_icon.png"
                 onTriggered: {
                     s3Model.clearItemsQML()
-                    s3_panel.connected = false
-                    file_panel.connected = false
+                    s3Model.setConnectedQML(false)
+                    s3_panel.connected = s3Model.isConnectedQML()
+                    file_panel.connected = s3Model.isConnectedQML()
                     s3_panel.path = s3Model.getStartPathQML()
                 }
                 enabled: s3_panel.connected
@@ -99,12 +110,14 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("Create bookmark")
+                icon.source: "icons/32_bookmark2.png"
                 onTriggered: {
                     createBookmarkWindow.visible = true
                 }
             }
             MenuItem {
                 text: qsTr("Manage bookmarks")
+                icon.source: "icons/32_edit_icon.png"
                 onTriggered: {
                     manageBookmarksWindow.visible = true
                 }
@@ -126,12 +139,14 @@ ApplicationWindow {
             Component {
                 id: menuItem
                 MenuItem {
+                    icon.source: "icons/32_bookmark.png"
+                    icon.color: "transparent"
                     onTriggered: {
                         var links = s3Model.getBookmarksLinksQML()
                         s3Model.gotoQML(links[bookmarks_menu.currentIndex - 3])
                         s3_panel.path = s3Model.getS3PathQML()
-                        s3_panel.connected = true
-                        file_panel.connected = true
+                        s3_panel.connected = s3Model.isConnectedQML()
+                        file_panel.connected = s3Model.isConnectedQML()
                     }
                 }
             }
@@ -141,6 +156,7 @@ ApplicationWindow {
             title: qsTr("Help")
             MenuItem {
                 text: qsTr("About")
+                icon.source: "icons/32_about_icon.png"
                 onTriggered: {
                     aboutWindow.visible = true
                 }

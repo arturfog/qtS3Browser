@@ -21,5 +21,19 @@
         <file>icons/256_add_bookmark.png</file>
         <file>icons/128_add_bookmark.png</file>
         <file>icons/32_bookmark.png</file>
+        <file>icons/32_go_icon.png</file>
+        <file>icons/32_home_icon.png</file>
+        <file>icons/32_secret_icon.png</file>
+        <file>icons/32_key_icon.png</file>
+        <file>icons/32_endpoint_icon.png</file>
+        <file>icons/32_region_icon.png</file>
+        <file>icons/32_settings_icon.png</file>
+        <file>icons/32_close_icon.png</file>
+        <file>icons/32_bookmark2.png</file>
+        <file>icons/32_about_icon.png</file>
+        <file>icons/32_edit_icon.png</file>
+        <file>icons/32_bucket_icon.png</file>
+        <file>icons/32_connect_icon.png</file>
+        <file>icons/32_disconnect_icon.png</file>
     </qresource>
 </RCC>

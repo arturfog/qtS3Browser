@@ -40,7 +40,7 @@ Row {
    width: 200;
 
    Text {
-     font.pointSize: 12
+     font.pointSize: 14
      text: "' + keys[i] +'"
    }
 
@@ -52,6 +52,7 @@ Row {
 
  Button {
   text: "Remove";
+  icon.source: "icons/32_delete_icon.png"
   onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
  }
 }
