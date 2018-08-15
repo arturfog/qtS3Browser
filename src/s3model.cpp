@@ -202,6 +202,7 @@ void S3Model::getBuckets() {
 // --------------------------------------------------------------------------
 void S3Model::refresh()
 {
+    clearItems();
     if(m_s3Path.count() <= 0) {
         qDebug() << "1 refresh: [" << getPathWithoutBucket() << "]";
         getBuckets();

@@ -103,7 +103,9 @@ Window {
                     if(currentProgress < 100 || totalProgress < 100) {
                         s3Model.cancelDownloadUploadQML()
                     }
+
                     close()
+                    s3Model.refreshQML()
                 }
             }
         }

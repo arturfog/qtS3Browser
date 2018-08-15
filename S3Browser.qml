@@ -7,11 +7,21 @@ import QtQuick.Layouts 1.3
 
 Item {
     id: s3_browser
-    property alias path: view.path
-    property bool connected: false
-    property string footerText: ""
+
     width: 300
     height: 400
+
+    property alias path: view.path
+
+    property bool connected: false
+    property string footerText: ""
+    property CustomMessageDialog msgDialog: CustomMessageDialog {
+        win_title: "Remove?"
+        yesAction: function() {
+            s3Model.removeQML(view.currentIndex);
+            s3Model.refreshQML()
+        }
+    }
 
     ToolBar {
         width: parent.width
@@ -55,6 +65,8 @@ Item {
                 }
             }
 
+
+
             ToolButton {
                 height: parent.height
                 icon.source: "icons/32_delete_icon.png"
@@ -62,7 +74,9 @@ Item {
                 text: "Delete"
                 enabled: connected
                 onClicked: {
-                    s3Model.removeQML(view.currentIndex)
+                    var fileName = s3Model.getItemNameQML(view.currentIndex)
+                    msgDialog.msg = "Remove " + fileName + " ?"
+                    msgDialog.open()
                 }
             }
 
@@ -104,7 +118,7 @@ Item {
                 z:2
 
                 Rectangle {
-                    width: parent.width - 2
+                    width: parent.width
                     border.width: 2
                     border.color: "black"
                     height: 32
@@ -142,7 +156,7 @@ Item {
                     width: parent.width
                     height: 32
                     Rectangle {
-                        width: parent.width - 100
+                        width: parent.width - 102
                         height: 32
                         Text {
                             x: 30

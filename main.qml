@@ -13,21 +13,21 @@ ApplicationWindow {
     minimumWidth: 840
     title: qsTr("s3FileBrowser")
 
-    property var createBucketWindow: CreateItemWindow {
+    property CreateItemWindow createBucketWindow: CreateItemWindow {
         win_title: qsTr("Create bucket")
         create_action: 0
     }
 
-    property var createFolderWindow: CreateItemWindow {
+    property CreateItemWindow createFolderWindow: CreateItemWindow {
         win_title: qsTr("Create folder")
         create_action: 1
     }
 
-    property var createBookmarkWindow: CreateBookmarkWindow {}
-    property var aboutWindow: AboutWindow {}
-    property var settingsWindow: SettingsWindow {}
-    property var manageBookmarksWindow: ManageBookmarksWindow {}
-    property var progressWindow: OperationProgressWindow {}
+    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {}
+    property AboutWindow aboutWindow: AboutWindow {}
+    property SettingsWindow settingsWindow: SettingsWindow {}
+    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {}
+    property OperationProgressWindow progressWindow: OperationProgressWindow {}
 
     onAfterRendering: {
         s3_panel.connected = s3Model.isConnectedQML()

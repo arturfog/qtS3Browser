@@ -8,9 +8,18 @@ import QtQuick.Layouts 1.3
 
 Item {
     id: browser
-    property alias path: view.path
     width: 300
+    property alias path: view.path
+
     property bool connected: false
+    property CustomMessageDialog msgDialog: CustomMessageDialog {
+        win_title: "Remove?"
+        msg: {
+            var fileName = folder.get(view.currentIndex, "fileName")
+            "Remove " + fileName + " ?"
+        }
+    }
+
     Keys.forwardTo: view
 
     ToolBar {
@@ -57,6 +66,9 @@ Item {
                 icon.source: "icons/32_delete_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Delete")
+                onClicked: {
+                    msgDialog.open()
+                }
             }
 
             ToolButton {

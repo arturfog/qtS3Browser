@@ -12,6 +12,13 @@ Window {
 
     title: "Settings"
 
+    onVisibilityChanged: {
+        startPath.text = s3Model.getStartPathQML()
+        secretKey.text = s3Model.getSecretKeyQML()
+        accessKey.text = s3Model.getAccesKeyQML()
+        endpointURL.text = s3Model.getEndpointQML()
+    }
+
     Column {
         width: parent.width
         height: parent.height
@@ -48,8 +55,8 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: s3Model.getStartPathQML()
-                maximumLength: 128
+                //text: s3Model.getStartPathQML()
+                maximumLength: 48
             }
         }
 
@@ -90,8 +97,8 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: s3Model.getSecretKeyQML()
-                maximumLength: 128
+                //text: s3Model.getSecretKeyQML()
+                maximumLength: 48
             }
         }
 
@@ -133,8 +140,8 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: s3Model.getAccesKeyQML()
-                maximumLength: 128
+                //text: s3Model.getAccesKeyQML()
+                maximumLength: 48
             }
         }
 
@@ -223,8 +230,8 @@ Window {
                 x: 5
                 width: parent.width
                 anchors.verticalCenter: parent.verticalCenter
-                text: s3Model.getEndpointQML()
-                maximumLength: 128
+                //text: s3Model.getEndpointQML()
+                maximumLength: 48
             }
         }
 

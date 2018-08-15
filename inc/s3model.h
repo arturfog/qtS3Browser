@@ -173,6 +173,13 @@ public:
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     //
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
+    //
+    Q_INVOKABLE QString getItemNameQML(const int index) {
+        if(index < m_s3items.count()) {
+            return m_s3items.at(index).fileName();
+        }
+        return "";
+    }
     /**
      * @brief S3Model
      * @param parent

@@ -6,8 +6,8 @@ import QtQuick.Layouts 1.3
 
 Window {
     id: create_item_win
-    x: 100; y: 100; width: 300; height: 100
-    minimumHeight: 100; maximumHeight: 100
+    x: 100; y: 100; width: 300; height: 130
+    minimumHeight: 130; maximumHeight: 130
     minimumWidth: 250
 
     property var win_title: String
@@ -15,33 +15,72 @@ Window {
 
     title: win_title
 
-    Rectangle {
+    onVisibilityChanged: {
+        itemName.text = ""
+    }
+
+    Column {
+        x:5
+        y:5
         width: parent.width
         height: parent.height
+        Row {
+            width: parent.width
+            Image {
+                source: {
+                    if(create_action === 0) {
+                        "icons/32_bucket_icon.png"
+                    } else {
+                        "icons/32_new_folder_icon.png"
+                    }
+                }
+            }
 
-        Rectangle {
-            x: 10
-            y: 10
-            width: parent.width - x - 10
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: itemName
-                x: 5
-                width: parent.width
+            Text {
+                text: {
+                    if(create_action === 0) {
+                        "Bucket name"
+                    } else {
+                        "Folder name"
+                    }
+                }
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Name")
-                maximumLength: 128
+                font.pointSize: 12
             }
         }
 
-        Row {
-            y: 55
-            anchors.horizontalCenter: parent.horizontalCenter
+        Rectangle {
+            width: parent.width
+            height: 5
+        }
 
+        Row {
+            width: parent.width
+
+            Rectangle {
+                width: parent.width - x - 10
+                height: 34
+                border.color: "black"
+                color: "white"
+                border.width: 1
+
+                TextInput {
+                    id: itemName
+                    x: 5
+                    width: parent.width - x - 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    maximumLength: 128
+                }
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 5
+        }
+
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 id: cw_cb
                 text: qsTr("Create")
@@ -71,3 +110,4 @@ Window {
         }
     }
 }
+
