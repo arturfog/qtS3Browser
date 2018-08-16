@@ -110,8 +110,6 @@ public:
             } else {
                 removeObject(getPathWithoutBucket().append(m_s3items.at(idx).fileName()).toStdString());
             }
-
-            refresh();
         }
     }
     //

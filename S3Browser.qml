@@ -19,7 +19,6 @@ Item {
         win_title: "Remove?"
         yesAction: function() {
             s3Model.removeQML(view.currentIndex);
-            s3Model.refreshQML()
         }
     }
 

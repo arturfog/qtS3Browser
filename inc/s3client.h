@@ -48,6 +48,7 @@ private:
 
     static const Aws::String ALLOCATION_TAG;
     static std::function<void(const std::string&)> m_func;
+    static std::function<void()> m_emptyFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
 
@@ -189,7 +190,9 @@ public:
      * @param bucket_name
      * @param key_name
      */
-    void deleteObject(const Aws::String &bucket_name, const Aws::String &key_name);
+    void deleteObject(const Aws::String &bucket_name,
+                      const Aws::String &key_name,
+                      std::function<void()> callback);
     // DELETE BUCKET
     /**
      * @brief deleteBucket

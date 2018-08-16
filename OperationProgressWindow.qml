@@ -14,6 +14,12 @@ Window {
     property double totalProgress: 0
     property string currentFile: ""
 
+    onVisibleChanged: {
+        if(visible === false) {
+            s3Model.refreshQML()
+        }
+    }
+
     Connections {
         target: s3Model
         onSetProgressSignal: {
@@ -105,7 +111,6 @@ Window {
                     }
 
                     close()
-                    s3Model.refreshQML()
                 }
             }
         }

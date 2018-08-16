@@ -108,7 +108,7 @@ QString S3Model::s3Path() const {
 }
 // --------------------------------------------------------------------------
 void S3Model::getObjects(const std::string &item, bool goBack) {
-
+    clearItems();
     QString qsBucket = getCurrentBucket();
 
     if(qsBucket.isEmpty()) {
@@ -202,7 +202,6 @@ void S3Model::getBuckets() {
 // --------------------------------------------------------------------------
 void S3Model::refresh()
 {
-    clearItems();
     if(m_s3Path.count() <= 0) {
         qDebug() << "1 refresh: [" << getPathWithoutBucket() << "]";
         getBuckets();
@@ -230,7 +229,11 @@ void S3Model::removeBucket(const std::string &bucket)
 // --------------------------------------------------------------------------
 void S3Model::removeObject(const std::string &key)
 {
-    s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str());
+    clearItems();
+    std::function<void()> callback = [&]() {
+        refresh();
+    };
+    s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str(), callback);
 }
 // --------------------------------------------------------------------------
 void S3Model::upload(const QString& file)

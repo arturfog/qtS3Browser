@@ -38,6 +38,7 @@
 #include <QSettings>
 
 std::function<void(const std::string&)> S3Client::m_func;
+std::function<void()> S3Client::m_emptyFunc;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
@@ -256,14 +257,16 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
     }
 }
 // --------------------------------------------------------------------------
-void S3Client::deleteObject(const Aws::String &bucket_name, const Aws::String &key_name) {
+void S3Client::deleteObject(const Aws::String &bucket_name,
+                            const Aws::String &key_name,
+                            std::function<void()>callback) {
     {
         std::cout << "Deleting " << key_name << " from S3 bucket: " <<
             bucket_name << std::endl;
 
         Aws::S3::Model::DeleteObjectRequest object_request;
         object_request.WithBucket(bucket_name).WithKey(key_name);
-
+        m_emptyFunc = callback;
         s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
     }
 }
@@ -276,6 +279,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
     if (outcome.IsSuccess())
     {
         std::cout << "Deleting Done!" << std::endl;
+        m_emptyFunc();
     }
     else
     {
