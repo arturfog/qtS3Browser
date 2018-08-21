@@ -35,6 +35,7 @@
 #include <aws/transfer/TransferHandle.h>
 
 #include <aws/core/auth/AWSCredentialsProvider.h>
+#include <aws/core/client/DefaultRetryStrategy.h>
 
 #include <string>
 
@@ -45,9 +46,11 @@ private:
     Aws::Auth::AWSCredentials credentials;
     Aws::SDKOptions options;
     std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;
+    std::shared_ptr<Aws::Client::DefaultRetryStrategy> retryStrategy;
 
     static const Aws::String ALLOCATION_TAG;
-    static std::function<void(const std::string&)> m_func;
+    static std::function<void(const std::string&)> m_stringFunc;
+    static std::function<void(const std::string&)> m_errorFunc;
     static std::function<void()> m_emptyFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
@@ -245,6 +248,13 @@ public:
      * @brief cancelDownloadUpload
      */
     void cancelDownloadUpload();
+
+    /**
+     * @brief setErrorHandler
+     * @param errorFunc
+     */
+    void setErrorHandler(std::function<void(const std::string&)> errorFunc);
+
     // GET INFO
     /**
      * @brief getObjectInfo

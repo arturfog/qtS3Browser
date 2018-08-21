@@ -55,6 +55,9 @@ public:
         setConnectedQML(true);
 
     }
+
+    Q_SIGNAL void showErrorSignal(const QString& msg);
+
     Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
     //
     Q_INVOKABLE bool isConnectedQML() const { return isConnected; }

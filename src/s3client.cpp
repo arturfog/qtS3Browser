@@ -37,9 +37,11 @@
 #include <regex>
 #include <QSettings>
 
-std::function<void(const std::string&)> S3Client::m_func;
+std::function<void(const std::string&)> S3Client::m_stringFunc;
+std::function<void(const std::string&)> S3Client::m_errorFunc;
 std::function<void()> S3Client::m_emptyFunc;
 std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
+
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
 std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
@@ -49,9 +51,10 @@ void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
-        auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
-        config.connectTimeoutMs = 2000;
-        config.requestTimeoutMs = 2000;
+
+        //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
+        retryStrategy = std::shared_ptr<Aws::Client::DefaultRetryStrategy>(new Aws::Client::DefaultRetryStrategy(5));
+        config.retryStrategy = retryStrategy;
         QSettings settings;
         if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
             const QString sk = settings.value("SecretKey").toString();
@@ -99,7 +102,7 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
     }
 
     objectInfoVec.clear();
-    m_func = func;
+    m_stringFunc = func;
     s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
 }
 // --------------------------------------------------------------------------
@@ -118,13 +121,13 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
         for (auto const &s3_object : common_list)
         {
             std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
-            m_func(item);
+            m_stringFunc(item);
             std::cout << "* " << s3_object.GetPrefix() << std::endl;
         }
 
         for (auto const &s3_object : object_list)
         {
-            m_func(s3_object.GetKey().c_str());
+            m_stringFunc(s3_object.GetKey().c_str());
             std::cout << "** " << s3_object.GetKey() << std::endl;
         }
 
@@ -132,9 +135,7 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "ListObjects error: " <<
-                     outcome.GetError().GetExceptionName() << " " <<
-                     outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
     std::cout << "ListObjects done " << std::endl;
 }
@@ -169,9 +170,7 @@ void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "GetObject error: " <<
-                     outcome.GetError().GetExceptionName() << " " <<
-                     outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -194,9 +193,7 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "CreateBucket error: "
-                  << outcome.GetError().GetExceptionName() << std::endl
-                  << outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -222,11 +219,11 @@ void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
                             const std::shared_ptr<const Aws::Transfer::TransferHandle>&,
                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error)
 {
-    std::cout << "Transfer Status = " << error.GetMessage() << "\n";
+    m_errorFunc(error.GetMessage().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
-    m_func = func;
+    m_stringFunc = func;
     objectInfoVec.clear();
     s3_client->ListBucketsAsync(&getBucketsHandler);
 }
@@ -243,7 +240,7 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
 
         for (auto const &bucket : bucket_list)
         {
-            m_func(bucket.GetName().c_str());
+            m_stringFunc(bucket.GetName().c_str());
             std::cout << "  * " << bucket.GetName() << std::endl;
         }
 
@@ -251,9 +248,7 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "ListBuckets error: "
-                  << outcome.GetError().GetExceptionName() << " - "
-                  << outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -283,9 +278,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "DeleteObject error: " <<
-            outcome.GetError().GetExceptionName() << " " <<
-            outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -312,9 +305,7 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "DeleteBucket error: "
-                  << outcome.GetError().GetExceptionName() << " - "
-                  << outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -340,9 +331,7 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        std::cout << "PutObject error: " <<
-            outcome.GetError().GetExceptionName() << " " <<
-            outcome.GetError().GetMessage() << std::endl;
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -375,6 +364,11 @@ void S3Client::cancelDownloadUpload()
     if(transferHandle != nullptr) {
         transferHandle->Cancel();
     }
+}
+// --------------------------------------------------------------------------
+void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc)
+{
+    m_errorFunc = errorFunc;
 }
 // --------------------------------------------------------------------------
 void S3Client::downloadFile(const Aws::String &bucket_name,

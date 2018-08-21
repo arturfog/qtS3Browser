@@ -7,10 +7,11 @@ MessageDialog {
     property int buttons: StandardButton.Yes | StandardButton.No
     property var yesAction: function(){ }
     property var noAction: function(){ }
+    property var ico: StandardIcon.Question
 
     id: msg_dialog
     title: win_title
-    icon: StandardIcon.Question
+    icon: ico
     text: msg
     standardButtons: buttons
     onYes: yesAction()

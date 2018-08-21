@@ -42,6 +42,13 @@ S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent)
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
+
+    std::function<void(const std::string&)> callback = [&](const std::string& msg) {
+        emit this->showErrorSignal(msg.c_str());
+    };
+
+    s3.setErrorHandler(callback);
+
     loadBookmarks();
     readCLIConfig();
 }
@@ -278,7 +285,7 @@ QString S3Model::getAccessKey() const { return settings.value("AccessKey").toStr
 // ----------------------------------------------------------------------------
 QString S3Model::getSecretKey() const { return settings.value("SecretKey").toString(); }
 // ----------------------------------------------------------------------------
-QString S3Model::getStartPath() const { return settings.value("StartPath").toString(); }
+QString S3Model::getStartPath() const { return settings.value("StartPath", "s3://").toString(); }
 // ----------------------------------------------------------------------------
 QString S3Model::extractKey(const QString& line) {
     const int startIdx = line.indexOf('=');

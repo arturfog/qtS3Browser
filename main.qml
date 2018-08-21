@@ -4,6 +4,7 @@ import QtQml.Models 2.3
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
 import QtQuick.Controls.Material 2.2
+import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     id: app_window
@@ -29,9 +30,31 @@ ApplicationWindow {
     property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {}
     property OperationProgressWindow progressWindow: OperationProgressWindow {}
 
+    property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
+        win_title: "Missing credentials"
+        msg: "Before connecting, please configure access and secret keys in settings"
+        buttons: StandardButton.Ok
+        ico: StandardIcon.Warning
+    }
+
+    property CustomMessageDialog s3Error: CustomMessageDialog {
+        win_title: "S3 Error"
+        msg: ""
+        buttons: StandardButton.Ok
+        ico: StandardIcon.Warning
+    }
+
     onAfterRendering: {
         s3_panel.connected = s3Model.isConnectedQML()
         file_panel.connected = s3Model.isConnectedQML()
+    }
+
+    Connections {
+        target: s3Model
+        onShowErrorSignal: {
+            s3Error.msg = msg
+            s3Error.open()
+        }
     }
 
     menuBar: MenuBar {
@@ -58,11 +81,13 @@ ApplicationWindow {
                 text: qsTr("Connect...")
                 icon.source: "icons/32_connect_icon.png"
                 onTriggered: {
-                    if(s3Model.getStartPathQML() !== "s3://") {
+                    if(s3Model.getStartPathQML() !== "s3://" && s3Model.getAccesKeyQML() !== "") {
                         s3Model.gotoQML(s3Model.getStartPathQML())
                         s3_panel.path = s3Model.getS3PathQML()
-                    } else {
+                    } else if (s3Model.getAccesKeyQML() !== ""){
                         s3Model.getBucketsQML()
+                    } else {
+                        invalidCredentialsDialog.open()
                     }
 
                 }
