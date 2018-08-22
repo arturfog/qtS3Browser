@@ -1,0 +1,32 @@
+name: qtS3Browser
+version: '1.0' 
+summary: Amazon S3 client written in QT
+description: |
+          Amazon S3 client written in QT.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps:
+  qtS3Browser:
+    command: desktop-launch $SNAP/bin/qtS3Browser
+    plugs: [home, network, x11, opengl]
+
+parts:
+  prepare:
+    source: .
+    plugin: qmake
+    qt-version: qt5
+  application:
+    plugin: copy
+    files:
+      icons: icons
+      qtS3Browser: qtS3Browser
+      libaws-cpp-sdk-transfer.so: libaws-cpp-sdk-transfer.so
+      libaws-cpp-sdk-core.so: libaws-cpp-sdk-core.so
+      libaws-cpp-sdk-s3.so: libaws-cpp-sdk-s3.so
+    stage-packages:
+      - libgl1-mesa-glx
+      - libnss3
+    after: [desktop-gtk3, prepare]
+
