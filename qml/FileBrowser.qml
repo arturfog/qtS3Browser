@@ -30,7 +30,7 @@ Item {
             anchors.fill: parent
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_up_icon.png"
+                icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Up")
                 onClicked: {
@@ -42,7 +42,7 @@ Item {
 
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_refresh_icon.png"
+                icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Refresh")
             }
@@ -50,7 +50,7 @@ Item {
             ToolButton {
                 id: file_upload_btn
                 height: parent.height
-                icon.source: "icons/32_upload_icon.png"
+                icon.source: "qrc:icons/32_upload_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Upload")
                 enabled: connected && !folder.get(view.currentIndex, "fileIsDir")
@@ -63,7 +63,7 @@ Item {
 
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_delete_icon.png"
+                icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Delete")
                 onClicked: {
@@ -73,7 +73,7 @@ Item {
 
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_new_folder_icon.png"
+                icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
                 text: "New"
                 onClicked: {
@@ -131,7 +131,7 @@ Item {
                         y: 2
                         x: file_browser_path_text.width
                         height: 28
-                        icon.source: "icons/32_go_icon.png"
+                        icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
                         onClicked: {

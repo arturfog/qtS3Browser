@@ -29,9 +29,9 @@ Window {
             Image {
                 source: {
                     if(create_action === 0) {
-                        "icons/32_bucket_icon.png"
+                        "qrc:icons/32_bucket_icon.png"
                     } else {
-                        "icons/32_new_folder_icon.png"
+                        "qrc:icons/32_new_folder_icon.png"
                     }
                 }
             }

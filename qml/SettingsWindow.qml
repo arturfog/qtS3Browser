@@ -30,7 +30,7 @@ Window {
             height: 34
 
             Image {
-                source: "icons/32_home_icon.png"
+                source: "qrc:icons/32_home_icon.png"
             }
 
             Text {
@@ -72,7 +72,7 @@ Window {
             height: 34
 
             Image {
-                source: "icons/32_secret_icon.png"
+                source: "qrc:icons/32_secret_icon.png"
             }
 
             Text {
@@ -115,7 +115,7 @@ Window {
             height: 34
 
             Image {
-                source: "icons/32_key_icon.png"
+                source: "qrc:icons/32_key_icon.png"
             }
 
             Text {
@@ -158,7 +158,7 @@ Window {
             height: 34
 
             Image {
-                source: "icons/32_region_icon.png"
+                source: "qrc:icons/32_region_icon.png"
             }
 
             Text {
@@ -205,7 +205,7 @@ Window {
             height: 34
 
             Image {
-                source: "icons/32_endpoint_icon.png"
+                source: "qrc:icons/32_endpoint_icon.png"
             }
 
             Text {

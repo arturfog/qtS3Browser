@@ -28,7 +28,7 @@ Row {
  id: bookmarks_item
  x: 10
  Image {
-     source: "icons/32_bookmark.png"
+     source: "qrc:icons/32_bookmark.png"
  }
 
  Rectangle {
@@ -52,7 +52,7 @@ Row {
 
  Button {
   text: "Remove";
-  icon.source: "icons/32_delete_icon.png"
+  icon.source: "qrc:icons/32_delete_icon.png"
   onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
  }
 }
@@ -86,7 +86,7 @@ Column {
 width: about_win.width
 
 Image {
-source: "icons/128_add_bookmark.png"
+source: "qrc:icons/128_add_bookmark.png"
 anchors.horizontalCenter: parent.horizontalCenter
 }
 

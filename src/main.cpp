@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
     QQmlContext *ctxt = view.rootContext();
     ctxt->setContextProperty("s3Model", &model);
 
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     engine.addImageProvider(QLatin1String("iconProvider"), new IconProvider());
 
-    app.setWindowIcon(QIcon(":/icons/256_app.png"));
+    app.setWindowIcon(QIcon(":icons/256_app.png"));
 
     return app.exec();
 }

@@ -21,10 +21,17 @@ Window {
             height: 10
         }
 
-        Text {
-            x: 10
-            text: "Bookmark name"
-            font.pointSize: 10
+        Row {
+            width: parent.width
+            Image {
+                source: "qrc:icons/32_home_icon.png"
+            }
+
+            Text {
+                x: 10
+                text: "Bookmark name"
+                font.pointSize: 10
+            }
         }
 
         Rectangle {
@@ -55,10 +62,17 @@ Window {
             height: 10
         }
 
-        Text {
-            x: 10
-            text: "S3 URL"
-            font.pointSize: 10
+        Row {
+            width: parent.width
+            Image {
+                source: "qrc:icons/32_home_icon.png"
+            }
+
+            Text {
+                x: 10
+                text: "S3 URL"
+                font.pointSize: 10
+            }
         }
 
         Rectangle {

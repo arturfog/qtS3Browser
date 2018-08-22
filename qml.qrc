@@ -1,22 +1,22 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>FileBrowser.qml</file>
-        <file>FileDelegate.qml</file>
-        <file>S3Browser.qml</file>
-        <file>S3ObjectDelegate.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/FileBrowser.qml</file>
+        <file>qml/FileDelegate.qml</file>
+        <file>qml/S3Browser.qml</file>
+        <file>qml/S3ObjectDelegate.qml</file>
         <file>icons/32_download_icon.png</file>
         <file>icons/32_refresh_icon.png</file>
         <file>icons/32_up_icon.png</file>
         <file>icons/32_upload_icon.png</file>
-        <file>CreateItemWindow.qml</file>
+        <file>qml/CreateItemWindow.qml</file>
         <file>icons/32_delete_icon.png</file>
         <file>icons/32_new_folder_icon.png</file>
-        <file>CreateBookmarkWindow.qml</file>
-        <file>AboutWindow.qml</file>
-        <file>SettingsWindow.qml</file>
-        <file>ManageBookmarksWindow.qml</file>
-        <file>OperationProgressWindow.qml</file>
+        <file>qml/CreateBookmarkWindow.qml</file>
+        <file>qml/AboutWindow.qml</file>
+        <file>qml/SettingsWindow.qml</file>
+        <file>qml/ManageBookmarksWindow.qml</file>
+        <file>qml/OperationProgressWindow.qml</file>
         <file>icons/256_app.png</file>
         <file>icons/256_add_bookmark.png</file>
         <file>icons/128_add_bookmark.png</file>
@@ -35,6 +35,6 @@
         <file>icons/32_bucket_icon.png</file>
         <file>icons/32_connect_icon.png</file>
         <file>icons/32_disconnect_icon.png</file>
-        <file>CustomMessageDialog.qml</file>
+        <file>qml/CustomMessageDialog.qml</file>
     </qresource>
 </RCC>

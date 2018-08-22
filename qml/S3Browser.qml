@@ -31,7 +31,7 @@ Item {
             anchors.fill: parent
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_up_icon.png"
+                icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
                 text: "Up"
                 enabled: connected
@@ -44,7 +44,7 @@ Item {
             ToolButton {
                 id: s3_refresh_btn
                 height: parent.height
-                icon.source: "icons/32_refresh_icon.png"
+                icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
                 text: "Refresh"
                 enabled: connected
@@ -54,7 +54,7 @@ Item {
             ToolButton {
                 id: s3_download_btn
                 height: parent.height
-                icon.source: "icons/32_download_icon.png"
+                icon.source: "qrc:icons/32_download_icon.png"
                 icon.color: "transparent"
                 text: "Download"
                 enabled: connected
@@ -68,7 +68,7 @@ Item {
 
             ToolButton {
                 height: parent.height
-                icon.source: "icons/32_delete_icon.png"
+                icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
                 text: "Delete"
                 enabled: connected
@@ -82,7 +82,7 @@ Item {
             ToolButton {
                 id: s3_create_dir_btn
                 height: parent.height
-                icon.source: "icons/32_new_folder_icon.png"
+                icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
                 text: "New"
                 enabled: false
@@ -136,7 +136,7 @@ Item {
                         y: 2
                         x: s3_browser_path_text.width
                         height: 28
-                        icon.source: "icons/32_go_icon.png"
+                        icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         text: qsTr("Go")
                         onClicked: {

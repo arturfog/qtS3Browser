@@ -13,7 +13,7 @@ Window {
         width: parent.width
         Image {
             id: app_icon_256
-            source: "icons/256_app.png"
+            source: "qrc:icons/256_app.png"
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Text {
