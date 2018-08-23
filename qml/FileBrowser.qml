@@ -37,7 +37,26 @@ Item {
         }
     }
 
-    Keys.forwardTo: view
+
+
+    Keys.onUpPressed: {
+        var newIndex = view.currentIndex - 1;
+        if (newIndex < 0) {
+            newIndex = 0
+        }
+        view.currentIndex = newIndex
+    }
+
+    Keys.onDownPressed: {
+        var newIndex = view.currentIndex + 1;
+        if (newIndex >= view.count) {
+            newIndex = view.count - 1;
+        } else {
+            view.currentIndex = newIndex
+        }
+    }
+
+    focus: true
 
     ToolBar {
         width: parent.width
@@ -202,23 +221,6 @@ Item {
             highlightFollowsCurrentItem: true
             highlightMoveDuration:1
             smooth: true
-
-            Keys.onUpPressed: {
-                var newIndex = currentIndex - 1;
-                if (newIndex < 0)
-                    newIndex = 0;
-                //                if (currentIndex != newIndex)
-                //                    selectionManager.toggleIndex(newIndex);
-                view.currentIndex = newIndex
-            }
-            Keys.onDownPressed: {
-                var newIndex = currentIndex + 1;
-                view.currentIndex = newIndex
-//                if (newIndex > count - 1)
-//                    newIndex = count - 1;
-//                if (currentIndex != newIndex)
-//                    selectionManager.toggleIndex(newIndex);
-            }
 
             footerPositioning: ListView.OverlayFooter
             footer: Rectangle {

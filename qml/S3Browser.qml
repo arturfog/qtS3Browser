@@ -39,6 +39,25 @@ Item {
         }
     }
 
+    Keys.onUpPressed: {
+        var newIndex = view.currentIndex - 1;
+        if (newIndex < 0) {
+            newIndex = 0
+        }
+        view.currentIndex = newIndex
+    }
+
+    Keys.onDownPressed: {
+        var newIndex = view.currentIndex + 1;
+        if (newIndex >= view.count) {
+            newIndex = view.count - 1;
+        } else {
+            view.currentIndex = newIndex
+        }
+    }
+
+    focus: true
+
     ToolBar {
         width: parent.width
         height: 48
@@ -80,8 +99,6 @@ Item {
                     s3Model.downloadQML(view.currentIndex)
                 }
             }
-
-
 
             ToolButton {
                 height: parent.height

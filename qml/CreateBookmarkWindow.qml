@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.3
 Window {
     id: create_bookmark_win
     x: 100; y: 100; width: 300; height: 220
-    minimumHeight: 200; maximumHeight: 220
+    minimumHeight: 230; maximumHeight: 230
     minimumWidth: 200
 
     title: "Create bookmark"
@@ -41,11 +41,12 @@ Window {
         Row {
             width: parent.width
             Image {
-                source: "qrc:icons/32_home_icon.png"
+                source: "qrc:icons/32_bookmark.png"
             }
 
             Text {
                 x: 10
+                anchors.verticalCenter: parent.verticalCenter
                 text: "Bookmark name"
                 font.pointSize: 10
             }
@@ -82,11 +83,12 @@ Window {
         Row {
             width: parent.width
             Image {
-                source: "qrc:icons/32_home_icon.png"
+                source: "qrc:icons/32_region_icon.png"
             }
 
             Text {
                 x: 10
+                anchors.verticalCenter: parent.verticalCenter
                 text: "S3 URL"
                 font.pointSize: 10
             }

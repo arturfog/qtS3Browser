@@ -61,6 +61,14 @@ ApplicationWindow {
         ico: StandardIcon.Warning
     }
 
+    property CustomMessageDialog createBucketsDialog: CustomMessageDialog {
+        win_title: "Create bucket ?"
+        msg: "There are no buckets. Do you want to create one ?"
+        yesAction: function() {
+            createBucketWindow.visible = true
+        }
+    }
+
     onAfterRendering: {
         s3_panel.connected = s3Model.isConnectedQML()
         file_panel.connected = s3Model.isConnectedQML()
@@ -71,6 +79,15 @@ ApplicationWindow {
         onShowErrorSignal: {
             s3Error.msg = msg
             s3Error.open()
+        }
+    }
+
+    Connections {
+        target: s3Model
+        onNoBucketsSignal: {
+            if(s3Model.getItemsCountQML() === 0) {
+                createBucketsDialog.open()
+            }
         }
     }
 
@@ -208,6 +225,9 @@ ApplicationWindow {
 
 
     Row {
+        focus: true
+        Keys.forwardTo: [file_panel, s3_panel]
+
         anchors.top: parent.top
         anchors.fill: parent
 

@@ -17,6 +17,7 @@
 */
 import QtQuick 2.11
 import QtQuick.Window 2.3
+import QtQuick.Controls 2.4
 
 Window {
     id: about_win
@@ -37,15 +38,17 @@ import QtQuick 2.11;
 import QtQuick.Controls 2.2;
 
 Column {
-Rectangle {
-  width: parent.width;
-  height: 3;
-}
-Row {
- id: bookmarks_item
- x: 10
- Image {
-     source: "qrc:icons/32_bookmark.png"
+
+ Rectangle {
+   width: parent.width;
+   height: 3;
+ }
+
+ Row {
+  id: bookmarks_item
+  x: 10
+  Image {
+      source: "qrc:icons/32_bookmark.png"
  }
 
  Rectangle {
@@ -72,6 +75,7 @@ Row {
   icon.source: "qrc:icons/32_delete_icon.png"
   onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
  }
+
 }
 
 Rectangle {
@@ -125,8 +129,14 @@ onClicked: { createBookmarkWindow.visible = true; close() } }
         }
     }
 
-    Column {
-        id: bookmarks_list
-        Component.onCompleted: addBookmarks()
+    ScrollView {
+        width: parent.width
+        height: parent.height
+
+        clip: true
+        Column {
+            id: bookmarks_list
+            Component.onCompleted: addBookmarks()
+        }
     }
 }

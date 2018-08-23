@@ -135,6 +135,7 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
     }
     else
     {
+        std::cout << "ListObjects err " << std::endl;
         m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
     std::cout << "ListObjects done " << std::endl;
@@ -170,6 +171,7 @@ void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
     }
     else
     {
+        std::cout << "getObjectInfoHandler err " << std::endl;
         m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
@@ -242,6 +244,10 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
         {
             m_stringFunc(bucket.GetName().c_str());
             std::cout << "  * " << bucket.GetName() << std::endl;
+        }
+
+        if(bucket_list.size() == 0) {
+            m_stringFunc("");
         }
 
         std::cout << "ListBuckets done " << std::endl;

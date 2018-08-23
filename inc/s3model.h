@@ -50,28 +50,34 @@ public:
     };
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
+    // --------------------------------------------------------------------------
     Q_SLOT void addItemSlot(const QString& item, const QString& path) {
-        addS3Item(S3Item(item, path));
         setConnectedQML(true);
-
+        if(!item.isEmpty()) {
+            addS3Item(S3Item(item, path));
+        } else {
+            emit noBucketsSignal();
+        }
     }
-
+    // --------------------------------------------------------------------------
     Q_SIGNAL void showErrorSignal(const QString& msg);
-
+    // --------------------------------------------------------------------------
     Q_SIGNAL void setProgressSignal(const QVariant current, const QVariant total);
-    //
+    // --------------------------------------------------------------------------
+    Q_SIGNAL void noBucketsSignal();
+    // --------------------------------------------------------------------------
     Q_INVOKABLE bool isConnectedQML() const { return isConnected; }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void setConnectedQML(const bool state) { isConnected = state; }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE int getItemsCountQML() const { return m_s3items.count(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void getBucketsQML() { getBuckets(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void goBackQML() { goBack(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void gotoQML(const QString &path) {
         m_s3Path.clear();
         QStringList pathItems = path.split("s3://");
@@ -84,15 +90,15 @@ public:
             refresh();
         }
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void downloadQML(const int idx) {
         if (idx < m_s3items.count()) {
             if(getCurrentPathDepth() >= 1) {
@@ -100,12 +106,12 @@ public:
             }
         }
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void refreshQML() { refresh(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE int getCurrentPathDepthQML() {
         return getCurrentPathDepth(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void removeQML(const int idx) {
         if (idx < m_s3items.count() && idx >= 0) {
             if(getCurrentPathDepth() <= 0) {
@@ -115,7 +121,7 @@ public:
             }
         }
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
         getObjectInfo(name);
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
@@ -125,18 +131,18 @@ public:
             return "0";
         }
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void clearItemsQML() {
         clearItems();
         m_s3Path.clear();
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getAccesKeyQML() {return getAccessKey();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
                                      const QString& accessKey,
                                      const QString& secretKey,
@@ -151,30 +157,30 @@ public:
         settings.setValue("Endpoint", endpoint);
         settings.sync();
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE int getRegionIdxQML() {
         if(settings.contains("RegionIdx")) {
             return settings.value("RegionIdx").toInt();
         }
         return 0;
     }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getEndpointQML() { return settings.value("Endpoint").toString(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QList<QString> getBookmarksKeysQML() {return bookmarks.keys();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QList<QString> getBookmarksLinksQML() { return bookmarks.values(); }
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
-    //
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getItemNameQML(const int index) {
         if(index < m_s3items.count()) {
             return m_s3items.at(index).fileName();
