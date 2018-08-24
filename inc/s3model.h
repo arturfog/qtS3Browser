@@ -97,7 +97,9 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void uploadQML(const QString &file) { upload(file); }
+    Q_INVOKABLE void uploadFileQML(const QString &file) { upload(file, false); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void uploadDirQML(const QString &file) { upload(file, true); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void downloadQML(const int idx) {
         if (idx < m_s3items.count()) {
@@ -267,8 +269,9 @@ public:
     /**
      * @brief upload
      * @param file
+     * @param isDir
      */
-    void upload(const QString &file);
+    void upload(const QString &file, bool isDir = false);
     /**
      * @brief download
      * @param key

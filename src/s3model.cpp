@@ -243,17 +243,29 @@ void S3Model::removeObject(const std::string &key)
     s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str(), callback);
 }
 // --------------------------------------------------------------------------
-void S3Model::upload(const QString& file)
+void S3Model::upload(const QString& file, bool isDir)
 {
     std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
         emit this->setProgressSignal(bytes, total);
     };
 
     QString filename(file.split("/").last());
+    const std::string bucket = getCurrentBucket().toStdString();
+    const std::string key = getPathWithoutBucket().append(filename).toStdString();
+
     currentFile = filename;
-    s3.uploadFile(getCurrentBucket().toStdString().c_str(),
-                  getPathWithoutBucket().append(filename).toStdString().c_str(),
-                  file.toStdString().c_str(), callback);
+
+    if(isDir) {
+        s3.uploadDirectory(bucket.c_str(),
+                           key.c_str(),
+                           file.toStdString().c_str(),
+                           callback);
+    } else {
+        s3.uploadFile(bucket.c_str(),
+                      key.c_str(),
+                      file.toStdString().c_str(),
+                      callback);
+    }
 }
 // --------------------------------------------------------------------------
 void S3Model::download(const QString &key)

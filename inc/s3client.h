@@ -54,6 +54,7 @@ private:
     static std::function<void()> m_emptyFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
+    static std::vector<std::string> items;
 
     /**
      * @brief downloadProgress
@@ -150,6 +151,11 @@ private:
                                     const Aws::S3::Model::CreateBucketRequest& request,
                                     const Aws::S3::Model::CreateBucketOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
+
+    static void getObjectInfoHandler(const Aws::S3::S3Client* client,
+                                     const Aws::S3::Model::GetObjectRequest& request,
+                                     const Aws::S3::Model::GetObjectOutcome& outcome,
+                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 public:
     struct ObjectInfo_S {
         long long size;
@@ -196,6 +202,16 @@ public:
     void deleteObject(const Aws::String &bucket_name,
                       const Aws::String &key_name,
                       std::function<void()> callback);
+
+    /**
+     * @brief deleteDirectory
+     * @param bucket_name
+     * @param key_name
+     * @param callback
+     */
+    void deleteDirectory(const Aws::String &bucket_name,
+                         const Aws::String &key_name,
+                         std::function<void()> callback);
     // DELETE BUCKET
     /**
      * @brief deleteBucket
@@ -234,6 +250,15 @@ public:
                       const Aws::String &file_name,
                       std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
     /**
+     * @brief downloadDirectory
+     * @param bucket_name
+     * @param key_name
+     * @param progressFunc
+     */
+    void downloadDirectory(const Aws::String &bucket_name,
+                           const Aws::String &key_name,
+                           std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+    /**
      * @brief uploadFile
      * @param bucket_name
      * @param key_name
@@ -244,6 +269,16 @@ public:
                     const Aws::String &key_name,
                     const Aws::String &file_name,
                     std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+    /**
+     * @brief uploadDirectory
+     * @param bucket_name
+     * @param key_name
+     * @param progressFunc
+     */
+    void uploadDirectory(const Aws::String &bucket_name,
+                         const Aws::String &key_name,
+                         const Aws::String &dir_name,
+                         std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
     /**
      * @brief cancelDownloadUpload
      */
@@ -264,10 +299,6 @@ public:
      */
     void getObjectInfo(const Aws::String &bucket_name,
                        const Aws::String &key_name);
-    static void getObjectInfoHandler(const Aws::S3::S3Client* client,
-                                     const Aws::S3::Model::GetObjectRequest& request,
-                                     const Aws::S3::Model::GetObjectOutcome& outcome,
-                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
 };
 
 

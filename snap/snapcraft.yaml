@@ -1,4 +1,4 @@
-name: qtS3Browser
+name: qts3browser
 version: '1.0' 
 summary: Amazon S3 client written in QT
 description: |
@@ -14,17 +14,16 @@ apps:
 
 parts:
   prepare:
-    source: .
+    source: ../
     plugin: qmake
     qt-version: qt5
   application:
-    plugin: copy
-    files:
-      icons: icons
+    plugin: dump
+    organize:
       qtS3Browser: qtS3Browser
-      libaws-cpp-sdk-transfer.so: libaws-cpp-sdk-transfer.so
-      libaws-cpp-sdk-core.so: libaws-cpp-sdk-core.so
-      libaws-cpp-sdk-s3.so: libaws-cpp-sdk-s3.so
+      libaws-cpp-sdk-transfer.so: /lib
+      libaws-cpp-sdk-core.so: /lib
+      libaws-cpp-sdk-s3.so: /lib
     stage-packages:
       - libgl1-mesa-glx
       - libnss3

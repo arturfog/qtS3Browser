@@ -36,6 +36,7 @@
 #include <fstream>
 #include <regex>
 #include <QSettings>
+#include <QDir>
 
 std::function<void(const std::string&)> S3Client::m_stringFunc;
 std::function<void(const std::string&)> S3Client::m_errorFunc;
@@ -46,6 +47,7 @@ std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor 
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
 std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
 Aws::String S3Client::currentPrefix;
+std::vector<std::string> S3Client::items;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -271,6 +273,20 @@ void S3Client::deleteObject(const Aws::String &bucket_name,
         s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
     }
 }
+
+void S3Client::deleteDirectory(const Aws::String &bucket_name,
+                               const Aws::String &key_name,
+                               std::function<void ()> callback)
+{
+    std::function<void(const std::string&)> func = [&](const std::string& item)
+    {
+        items.emplace_back(item);
+    };
+    listObjects(bucket_name, key_name, func);
+    for(std::string item : items) {
+        deleteObject(bucket_name, key_name, callback);
+    }
+}
 // --------------------------------------------------------------------------
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteObjectRequest &,
@@ -365,6 +381,37 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
     }
 }
 // --------------------------------------------------------------------------
+void S3Client::uploadDirectory(const Aws::String &bucket_name,
+                               const Aws::String &key_name,
+                               const Aws::String &dir_name,
+                               std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
+{
+    QDir directory(dir_name.c_str());
+    const QStringList files = directory.entryList(QStringList(), QDir::NoDotAndDotDot | QDir::Files);
+    foreach(QString file, files) {
+        //uploadFile(bucket_name, key_name, file.toStdString().c_str(), progressFunc);
+    }
+
+    std::cout << "Uploading file to S3 bucket " <<
+        bucket_name << " at key " << key_name <<
+        " with dir: " << dir_name << std::endl;
+
+    const QStringList dirs = directory.entryList(QStringList(),QDir::NoDotAndDotDot | QDir::Dirs);
+    foreach(QString dir, dirs) {
+        directory.cd(dir);
+        const QString abs_dir_name = directory.absolutePath();
+        const QString key =
+                QString(key_name.c_str()).append(QDir::separator()).append(directory.dirName());
+
+        directory.cdUp();
+        uploadDirectory(bucket_name,
+                        key.toStdString().c_str(),
+                        abs_dir_name.toStdString().c_str(),
+                        progressFunc);
+
+    }
+}
+// --------------------------------------------------------------------------
 void S3Client::cancelDownloadUpload()
 {
     if(transferHandle != nullptr) {
@@ -397,6 +444,20 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
 
         auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
         transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
+    }
+}
+
+void S3Client::downloadDirectory(const Aws::String &bucket_name,
+                                 const Aws::String &key_name,
+                                 std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
+{
+    std::function<void(const std::string&)> func = [&](const std::string& item)
+    {
+        items.emplace_back(item);
+    };
+    listObjects(bucket_name, key_name, func);
+    for(std::string item : items) {
+        downloadFile(bucket_name, key_name, "",  progressFunc);
     }
 }
 // --------------------------------------------------------------------------

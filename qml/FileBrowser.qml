@@ -89,11 +89,15 @@ Item {
                 icon.source: "qrc:icons/32_upload_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Upload")
-                enabled: connected && !folder.get(view.currentIndex, "fileIsDir")
+                enabled: connected
                 onClicked: {
                     var filePath = folder.get(view.currentIndex, "filePath")
                     app_window.progressWindow.visible = true
-                    s3Model.uploadQML(filePath)
+                    if(!folder.get(view.currentIndex, "fileIsDir")) {
+                        s3Model.uploadFileQML(filePath)
+                    } else {
+                        s3Model.uploadDirQML(filePath)
+                    }
                 }
             }
 
