@@ -56,6 +56,17 @@ Item {
         }
     }
 
+    Keys.onReturnPressed: {
+        var url = folder.get(view.currentIndex, "fileURL")
+        folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+    }
+
+    Keys.onDeletePressed: {
+        if(folder.parentFolder.toString().length > 0) {
+            view.path = folder.parentFolder
+        }
+    }
+
     focus: true
 
     ToolBar {

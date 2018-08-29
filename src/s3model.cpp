@@ -268,17 +268,34 @@ void S3Model::upload(const QString& file, bool isDir)
     }
 }
 // --------------------------------------------------------------------------
-void S3Model::download(const QString &key)
+void S3Model::download(const QString &key, bool isDir)
 {
     std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
         emit this->setProgressSignal(bytes, total);
     };
 
-    QString out_file = key.split("/").last();
+    std::cout << "download: " << key.toStdString() << std::endl;
+
+    QString out_file;
+    if(isDir) {
+        out_file = key;
+    } else {
+        out_file = key.split("/").last();
+    }
+
+    // for progress window
     currentFile = out_file;
-    s3.downloadFile(getCurrentBucket().toStdString().c_str(),
-                    getPathWithoutBucket().append(out_file).toStdString().c_str(),
-                    QString("/tmp/").append(out_file).toStdString().c_str(), callback);
+
+    if(isDir) {
+        s3.downloadDirectory(getCurrentBucket().toStdString().c_str(),
+                             getPathWithoutBucket().append(out_file).toStdString().c_str(),
+                             QString("/tmp/").append(out_file).toStdString().c_str(),
+                             callback);
+    } else {
+        s3.downloadFile(getCurrentBucket().toStdString().c_str(),
+                        getPathWithoutBucket().append(out_file).toStdString().c_str(),
+                        QString("/tmp/").append(out_file).toStdString().c_str(), callback);
+    }
 }
 // --------------------------------------------------------------------------
 QVariant S3Model::data(const QModelIndex & index, int role) const {

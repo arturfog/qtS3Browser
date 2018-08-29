@@ -95,8 +95,8 @@ Item {
                 text: "Download"
                 enabled: connected
                 onClicked: {
-                    app_window.progressWindow.visible = true
                     s3Model.downloadQML(view.currentIndex)
+
                 }
             }
 

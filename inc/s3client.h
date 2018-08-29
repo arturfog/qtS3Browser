@@ -47,6 +47,7 @@ private:
     Aws::SDKOptions options;
     std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;
     std::shared_ptr<Aws::Client::DefaultRetryStrategy> retryStrategy;
+    Aws::Map<Aws::String, Aws::String> metadata;
 
     static const Aws::String ALLOCATION_TAG;
     static std::function<void(const std::string&)> m_stringFunc;
@@ -54,8 +55,8 @@ private:
     static std::function<void()> m_emptyFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
+    static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;
-
     /**
      * @brief downloadProgress
      * @param manager
@@ -86,6 +87,9 @@ private:
     static void errorHandler(const Aws::Transfer::TransferManager* manager,
                              const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
                              const Aws::Client::AWSError<Aws::S3::S3Errors>& error);
+
+    static void transferInitiatedHandler(const Aws::Transfer::TransferManager* manager,
+                                         const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle);
     /**
      * @brief listObjectsHandler
      * @param client
@@ -257,6 +261,7 @@ public:
      */
     void downloadDirectory(const Aws::String &bucket_name,
                            const Aws::String &key_name,
+                           const Aws::String &dir_name,
                            std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
     /**
      * @brief uploadFile

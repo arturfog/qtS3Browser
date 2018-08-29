@@ -45,18 +45,14 @@ Rectangle {
     }
 
     onFocusChanged: {
-        if(filePath == "/") {
-            s3_download_btn.enabled = false
-        } else {
-            s3_download_btn.enabled = true
-        }
-
         if(s3Model.getCurrentPathDepthQML() <= 0) {
             s3_create_dir_btn.enabled = false
             menu_s3_create_dir.enabled = false
+            s3_download_btn.enabled = false
         } else {
             s3_create_dir_btn.enabled = true
             menu_s3_create_dir.enabled = true
+            s3_download_btn.enabled = true
         }
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
@@ -107,12 +103,7 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             view.currentIndex = index
-            if(filePath == "/") {
-                s3_download_btn.enabled = false
-            } else {
-                s3_download_btn.enabled = true
-            }
-            i_size.text = getSize();
+            //i_size.text = getSize();
         }
 
         onDoubleClicked:  {

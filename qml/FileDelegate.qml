@@ -68,6 +68,7 @@ Rectangle {
         }
 
     }
+
     MouseArea {
         id:mouseArea
         anchors.fill: parent

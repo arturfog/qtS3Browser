@@ -25,6 +25,7 @@
 #include <aws/s3/model/Object.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/DeleteObjectRequest.h>
+#include <aws/s3/model/DeleteObjectsRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
 #include <aws/s3/model/ListObjectsRequest.h>
 // Buckets
@@ -48,6 +49,7 @@ std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor 
 std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
 Aws::String S3Client::currentPrefix;
 std::vector<std::string> S3Client::items;
+Aws::Transfer::TransferManagerConfiguration S3Client::transferConfig(S3Client::executor.get());
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -87,6 +89,13 @@ void S3Client::init() {
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
         this->s3_client = s3_client;
         std::cout << "S3Client::init" << std::endl;
+
+        //
+        transferConfig.s3Client = s3_client;
+        transferConfig.transferInitiatedCallback = &transferInitiatedHandler;
+        transferConfig.transferStatusUpdatedCallback = &statusUpdate;
+        transferConfig.uploadProgressCallback = &uploadProgress;
+        transferConfig.errorCallback = &errorHandler;
     }
     Aws::ShutdownAPI(options);
 }
@@ -126,9 +135,17 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
             m_stringFunc(item);
             std::cout << "* " << s3_object.GetPrefix() << std::endl;
         }
-
         for (auto const &s3_object : object_list)
         {
+            ObjectInfo_S objectInfo;
+            objectInfo.size = s3_object.GetSize();
+            objectInfo.lastModified = s3_object.GetLastModified();
+            objectInfo.etag = s3_object.GetETag();
+
+            //Aws::String key = request.GetPrefix();
+            //std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+            //objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
+
             m_stringFunc(s3_object.GetKey().c_str());
             std::cout << "** " << s3_object.GetKey() << std::endl;
         }
@@ -216,14 +233,21 @@ void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
                             const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
-    std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
+    //std::cout << "Transfer Status = " << static_cast<int>(handle->GetStatus()) << "\n";
 }
 // --------------------------------------------------------------------------
 void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
-                            const std::shared_ptr<const Aws::Transfer::TransferHandle>&,
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle,
                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error)
 {
-    m_errorFunc(error.GetMessage().c_str());
+    std::cout << "errorHandler = " << static_cast<int>(handle->GetStatus()) << "\n";
+    //m_errorFunc(error.GetMessage().c_str());
+}
+
+void S3Client::transferInitiatedHandler(const Aws::Transfer::TransferManager *manager,
+                                        const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
+{
+    std::cout << "transferInitiatedHandler = " << static_cast<int>(handle->GetStatus()) << "\n";
 }
 // --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
@@ -263,29 +287,38 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
 void S3Client::deleteObject(const Aws::String &bucket_name,
                             const Aws::String &key_name,
                             std::function<void()>callback) {
-    {
-        std::cout << "Deleting " << key_name << " from S3 bucket: " <<
-            bucket_name << std::endl;
 
-        Aws::S3::Model::DeleteObjectRequest object_request;
-        object_request.WithBucket(bucket_name).WithKey(key_name);
-        m_emptyFunc = callback;
-        s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
-    }
+    std::cout << "Deleting " << key_name << " from S3 bucket: " <<
+                 bucket_name << std::endl;
+
+    Aws::S3::Model::DeleteObjectRequest object_request;
+    object_request.WithBucket(bucket_name).WithKey(key_name);
+    m_emptyFunc = callback;
+    s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
+
 }
-
+// --------------------------------------------------------------------------
 void S3Client::deleteDirectory(const Aws::String &bucket_name,
                                const Aws::String &key_name,
                                std::function<void ()> callback)
 {
-    std::function<void(const std::string&)> func = [&](const std::string& item)
-    {
-        items.emplace_back(item);
-    };
-    listObjects(bucket_name, key_name, func);
-    for(std::string item : items) {
-        deleteObject(bucket_name, key_name, callback);
-    }
+    std::cout << "Deleting " << key_name << " from S3 bucket: " <<
+                 bucket_name << std::endl;
+
+    Aws::S3::Model::DeleteObjectsRequest objects_request;
+    Aws::S3::Model::Delete del;
+    Aws::Vector<Aws::S3::Model::ObjectIdentifier> list;
+    Aws::S3::Model::ObjectIdentifier id;
+    id.SetKey(key_name);
+    list.emplace_back(id);
+    del.SetObjects(list);
+
+    objects_request.SetBucket(bucket_name);
+    objects_request.SetDelete(del);
+
+    m_emptyFunc = callback;
+
+    //s3_client->DeleteObjectsAsync(objects_request, &deleteObjectHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
@@ -361,24 +394,15 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &key_name,
                           const Aws::String &file_name,
                           std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc) {
-    {
-        Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
-        transferConfig.s3Client = s3_client;
+    m_progressFunc = progressFunc;
 
-        transferConfig.transferStatusUpdatedCallback = &statusUpdate;
-        transferConfig.uploadProgressCallback = &uploadProgress;
-        transferConfig.downloadProgressCallback = &downloadProgress;
-        transferConfig.errorCallback = &errorHandler;
-        m_progressFunc = progressFunc;
+    std::cout << "Uploading file to S3 bucket " <<
+                 bucket_name << " at key " << key_name <<
+                 " with filename: " << file_name << std::endl;
 
-        std::cout << "Uploading file to S3 bucket " <<
-            bucket_name << " at key " << key_name <<
-            " with filename: " << file_name << std::endl;
-
-        auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-        transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
-                                                          "text/plain", Aws::Map<Aws::String, Aws::String>());
-    }
+    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
+                                                 "text/plain", metadata);
 }
 // --------------------------------------------------------------------------
 void S3Client::uploadDirectory(const Aws::String &bucket_name,
@@ -386,29 +410,10 @@ void S3Client::uploadDirectory(const Aws::String &bucket_name,
                                const Aws::String &dir_name,
                                std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
 {
-    QDir directory(dir_name.c_str());
-    const QStringList files = directory.entryList(QStringList(), QDir::NoDotAndDotDot | QDir::Files);
-    foreach(QString file, files) {
-        //uploadFile(bucket_name, key_name, file.toStdString().c_str(), progressFunc);
-    }
-
-    std::cout << "Uploading file to S3 bucket " <<
-        bucket_name << " at key " << key_name <<
-        " with dir: " << dir_name << std::endl;
-
-    const QStringList dirs = directory.entryList(QStringList(),QDir::NoDotAndDotDot | QDir::Dirs);
-    foreach(QString dir, dirs) {
-        directory.cd(dir);
-        const QString abs_dir_name = directory.absolutePath();
-        const QString key =
-                QString(key_name.c_str()).append(QDir::separator()).append(directory.dirName());
-
-        directory.cdUp();
-        uploadDirectory(bucket_name,
-                        key.toStdString().c_str(),
-                        abs_dir_name.toStdString().c_str(),
-                        progressFunc);
-
+    m_progressFunc = progressFunc;
+    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    if(transferManager != nullptr) {
+        transferManager->UploadDirectory(dir_name, bucket_name, key_name, metadata);
     }
 }
 // --------------------------------------------------------------------------
@@ -428,36 +433,31 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
                             const Aws::String &key_name,
                             const Aws::String &file_name,
                             std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc) {
-    {
-        Aws::Transfer::TransferManagerConfiguration transferConfig(executor.get());
-        transferConfig.s3Client = s3_client;
 
-        transferConfig.transferStatusUpdatedCallback = &statusUpdate;
-        transferConfig.uploadProgressCallback = &uploadProgress;
-        transferConfig.downloadProgressCallback = &downloadProgress;
-        transferConfig.errorCallback = &errorHandler;
-        m_progressFunc = progressFunc;
+    m_progressFunc = progressFunc;
 
-        std::cout << "Downloading file from S3 bucket " <<
-            bucket_name << " key " << key_name <<
-            " to filename: " << file_name << std::endl;
+    std::cout << "Downloading file from S3 bucket " <<
+                 bucket_name << " key " << key_name <<
+                 " to filename: " << file_name << std::endl;
 
-        auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-        transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
-    }
+    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
+
 }
-
+// --------------------------------------------------------------------------
 void S3Client::downloadDirectory(const Aws::String &bucket_name,
                                  const Aws::String &key_name,
+                                 const Aws::String &dir_name,
                                  std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
 {
-    std::function<void(const std::string&)> func = [&](const std::string& item)
-    {
-        items.emplace_back(item);
-    };
-    listObjects(bucket_name, key_name, func);
-    for(std::string item : items) {
-        downloadFile(bucket_name, key_name, "",  progressFunc);
+    m_progressFunc = progressFunc;
+    std::cout << "Downloading dir from S3 bucket " <<
+                 bucket_name << " key " << key_name <<
+                 " to dir: " << dir_name << std::endl;
+
+    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    if(transferManager != nullptr) {
+        transferManager->DownloadToDirectory(dir_name, bucket_name, key_name);
     }
 }
 // --------------------------------------------------------------------------

@@ -104,7 +104,11 @@ public:
     Q_INVOKABLE void downloadQML(const int idx) {
         if (idx < m_s3items.count()) {
             if(getCurrentPathDepth() >= 1) {
-                download(m_s3items.at(idx).fileName());
+                bool isDir = false;
+                if(m_s3items.at(idx).filePath().compare("/") == 0) {
+                    isDir = true;
+                }
+                download(m_s3items.at(idx).fileName(), isDir);
             }
         }
     }
@@ -276,7 +280,7 @@ public:
      * @brief download
      * @param key
      */
-    void download(const QString& key);
+    void download(const QString& key, bool isDir);
     /**
      * @brief cancelDownloadUpload
      */
