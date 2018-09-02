@@ -4,14 +4,15 @@ summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
 
-grade: stable # must be 'stable' to release into candidate/stable channels
-confinement: strict # use 'strict' once you have the right plugs and slots
+#grade: 'stable' # must be 'stable' to release into candidate/stable channels
+#confinement: 'strict' # use 'strict' once you have the right plugs and slots
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
 
 apps:
   s3browser:
     command: desktop-launch $SNAP/opt/s3browser/bin/s3browser
-    plugs: [home, network, x11]
-
+    plugs: [home, network, x11, opengl]
 parts:
   aws:
     source: https://github.com/aws/aws-sdk-cpp.git
@@ -21,32 +22,57 @@ parts:
             - libssl-dev
             - libcurl4-openssl-dev
     stage-packages:
-            - libssl1.1
+            - libssl1.0.0
+            - zlib1g
+            - libcurl3
+            - libkrb5-3
+            - libgssapi3-heimdal
+            - libroken18-heimdal
+            - libgnutls30
+            - libp11-kit0
+            - libstdc++6
+            - libgcc1
+            - libdb5.3
     plugin: cmake
-    stage: 
-            - include/*
-            - usr/*
-            - lib/*
-            - -lib/pkgconfig
     configflags:
             - -DCMAKE_BUILD_TYPE=Release
             - -DBUILD_SHARED_LIBS=ON
             - -DENABLE_TESTING=OFF
             - -DBUILD_ONLY=s3;transfer
-  desktop-qt5:
-    stage:
-            - bin/*
-            - etc/*
-            - usr/*
-            - lib/*
-            - var/*
-            - -usr/share/pkgconfig
   application:
     source: https://github.com/arturfog/qtS3Browser.git
     build-packages:
-            - qtdeclarative5-dev
+      - qtdeclarative5-dev
     stage-packages:
-            - libc6
+      - libqt5core5a
+      - libqt5gui5
+      - libqt5network5
+      - libqt5qml5
+      - libqt5quick5
+      - libqt5widgets5
+      - libx11-xcb1
+      - libx11-6
+      - libxau6
+      - libxdamage1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxxf86vm1
+      - libdouble-conversion1v5
+      - libdrm2
+      - libglapi-mesa
+      - libgraphite2-3
+      - libharfbuzz0b
+      - libicu55
+      - libpcre16-3
+      - libproxy1v5
+      - libxcb-dri2-0
+      - libxcb-dri3-0
+      - libxcb-glx0
+      - libxcb-present0
+      - libxcb-sync1
+      - libxcb1
+      - libxshmfence1
     plugin: qmake
     qt-version: qt5
     after: [aws, desktop-qt5]
