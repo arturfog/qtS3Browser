@@ -4,28 +4,49 @@ summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
-  qtS3Browser:
-    command: desktop-launch $SNAP/bin/qtS3Browser
-    plugs: [home, network, x11, opengl]
+  s3browser:
+    command: desktop-launch $SNAP/opt/s3browser/bin/s3browser
+    plugs: [home, network, x11]
 
 parts:
-  prepare:
-    source: ../
+  aws:
+    source: https://github.com/aws/aws-sdk-cpp.git
+    source-depth: 1
+    build-packages:
+            - zlib1g-dev
+            - libssl-dev
+            - libcurl4-openssl-dev
+    stage-packages:
+            - libssl1.1
+    plugin: cmake
+    stage: 
+            - include/*
+            - usr/*
+            - lib/*
+            - -lib/pkgconfig
+    configflags:
+            - -DCMAKE_BUILD_TYPE=Release
+            - -DBUILD_SHARED_LIBS=ON
+            - -DENABLE_TESTING=OFF
+            - -DBUILD_ONLY=s3;transfer
+  desktop-qt5:
+    stage:
+            - bin/*
+            - etc/*
+            - usr/*
+            - lib/*
+            - var/*
+            - -usr/share/pkgconfig
+  application:
+    source: https://github.com/arturfog/qtS3Browser.git
+    build-packages:
+            - qtdeclarative5-dev
+    stage-packages:
+            - libc6
     plugin: qmake
     qt-version: qt5
-  application:
-    plugin: dump
-    organize:
-      qtS3Browser: qtS3Browser
-      libaws-cpp-sdk-transfer.so: /lib
-      libaws-cpp-sdk-core.so: /lib
-      libaws-cpp-sdk-s3.so: /lib
-    stage-packages:
-      - libgl1-mesa-glx
-      - libnss3
-    after: [desktop-gtk3, prepare]
-
+    after: [aws, desktop-qt5]

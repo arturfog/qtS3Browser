@@ -22,6 +22,9 @@
 #include <QDebug>
 #include <QSysInfo>
 #include <QDir>
+#include <QTextStream>
+#include <QFile>
+#include <QDataStream>
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
