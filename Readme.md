@@ -1,5 +1,7 @@
 # qtS3Browser
 
+[![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser)
+
 Simple **Amazon S3** client written in C++/QT
 
 ![alt text](https://github.com/arturfog/qtS3Browser/raw/master/assets/app_main.png)
@@ -12,7 +14,7 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 `unfortunately this process is not yet ready`
 
-- download (and extract sources)
+- pull sources
 - install conan.io
 - add my conan repo 
 ```sh
@@ -20,9 +22,14 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 ```
 - invoke conan install
 ```sh
-  conan install . 
+  conan install aws-sdk-cpp/1.4.64@arturfog/release -o aws-sdk-cpp:build_s3=True -o aws-sdk-cpp:build_transfer=True -o min_size=False -o aws-sdk-cpp:shared=True -s os=Linux -s arch=x86_64 -s build_type=Release
 ```
+- open project in QtCreator and build (or use qmake)
 
 ## Installation
+
+Application is released as snap package
+
+snap install qts3browser
 
 **TODO**
