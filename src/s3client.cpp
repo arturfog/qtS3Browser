@@ -142,12 +142,12 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
             objectInfo.lastModified = s3_object.GetLastModified();
             objectInfo.etag = s3_object.GetETag();
 
-            //Aws::String key = request.GetPrefix();
-            //std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
-            //objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
+            Aws::String key = s3_object.GetKey();
+            std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+            objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
 
             m_stringFunc(s3_object.GetKey().c_str());
-            std::cout << "** " << s3_object.GetKey() << std::endl;
+            std::cout << "** " << s3_object.GetKey() << " [" << item << "] " << std::endl;
         }
 
         std::cout << "size: " << common_list.size() << std::endl;

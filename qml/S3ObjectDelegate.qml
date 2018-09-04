@@ -57,7 +57,7 @@ Rectangle {
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
 
-        //i_size.text = getSize();
+        i_size.text = getSize();
     }
     id:delegate
     width: view.width
@@ -103,7 +103,6 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             view.currentIndex = index
-            //i_size.text = getSize();
         }
 
         onDoubleClicked:  {
@@ -115,8 +114,6 @@ Rectangle {
             } else {
                 s3_create_dir_btn.enabled = true
             }
-
-            i_size.text = getSize();
         }
     }
 }

@@ -129,7 +129,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
-        getObjectInfo(name);
+        //getObjectInfo(name);
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
         if (search != s3.objectInfoVec.end()) {
             return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
