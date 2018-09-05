@@ -55,10 +55,9 @@ void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
-
-        //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 200000);
         retryStrategy = std::shared_ptr<Aws::Client::DefaultRetryStrategy>(new Aws::Client::DefaultRetryStrategy(5));
         config.retryStrategy = retryStrategy;
+
         QSettings settings;
         if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
             const QString sk = settings.value("SecretKey").toString();
@@ -67,14 +66,12 @@ void S3Client::init() {
             credentials.SetAWSSecretKey(sk.toStdString().c_str());
             credentials.SetAWSAccessKeyId(ak.toStdString().c_str());
         }
-
         if(settings.contains("Region")) {
             const QString reg = settings.value("Region").toString();
             if(!reg.isEmpty() && reg.compare("Default") != 0) {
                 config.region = reg.toStdString().c_str();
             }
         }
-
         if(settings.contains("Endpoint")) {
             const QString end = settings.value("Endpoint").toString();
             if(!end.isEmpty()) {
@@ -82,10 +79,8 @@ void S3Client::init() {
             }
         }
 
-        //config->readRateLimiter = m_limiter;
-        //config->writeRateLimiter = m_limiter;
-
         config.scheme = Aws::Http::Scheme::HTTP;
+
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
         this->s3_client = s3_client;
         std::cout << "S3Client::init" << std::endl;

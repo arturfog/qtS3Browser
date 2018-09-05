@@ -240,13 +240,40 @@ Item {
             footerPositioning: ListView.OverlayFooter
             footer: Rectangle {
                 width: browser.width
-                height: 34
+                height: 40
                 z:2
-                Row {
-                    anchors.fill: parent
+                color: "#ededed"
+
+                Column {
+                    height: parent.height
+                    Row {
+                        Rectangle {
+                            width: browser.width - file_search_btn.width
+                            height: 20
+                            border.color: "orange"
+                            border.width: 1
+                            radius: 10
+                            TextInput {
+                                x:10
+                                text: ""
+                                width: parent.width
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+                        RoundButton {
+                            id: file_search_btn
+                            height: 20
+                            icon.source: "qrc:icons/32_go_icon.png"
+                            icon.color: "transparent"
+                            flat: true
+                        }
+                    }
+
                     Text {
+                        width: parent.width
+                        height: 20
                         text: "["+folder.count+" Items]"
-                        anchors.verticalCenter: parent.verticalCenter
+                        //anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }

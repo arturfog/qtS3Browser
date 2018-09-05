@@ -16,7 +16,8 @@
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
 import QtQuick 2.11
-
+import QtQuick.Controls.Material 2.2
+import QtQuick.Controls 2.4
 Rectangle {
 
     function getSize() {
@@ -56,8 +57,6 @@ Rectangle {
         }
 
         s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
-
-        i_size.text = getSize();
     }
     id:delegate
     width: view.width
@@ -91,18 +90,36 @@ Rectangle {
                 if (filePath == "/") {
                     return "DIR"
                 } else {
-                    return "..."
+                    return getSize()
                 }
             }
             anchors.verticalCenter: parent.verticalCenter
         }
 
     }
+
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: qsTr('Download')
+        }
+        MenuItem {
+            text: qsTr('Delete')
+        }
+    }
+
     MouseArea {
         id:mouseArea
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
+
+            if (mouse.button === Qt.RightButton)
+            {
+                contextMenu.popup()
+                console.log("Right")
+            }
         }
 
         onDoubleClicked:  {

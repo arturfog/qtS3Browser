@@ -28,23 +28,64 @@ Window {
     title: "Progress"
 
     property double currentProgress: 0
-    property double totalProgress: 0
+    property double currentBytes: 0
+    property double totalBytes: 0
     property string currentFile: ""
+
+    property var lastDate: new Date()
+    property double lastTotalBytes: 0
+    property double transferSpeedBytes: 0
 
     onVisibleChanged: {
         if(visible === false) {
+            lastTotalBytes = 0
+            totalBytes = 0
+            transferSpeedBytes = 0
             s3Model.refreshQML()
+        } else {
+            lastDate = new Date()
+        }
+    }
+
+    function getSizeString(bytes) {
+        if(bytes > 1048576) {
+            return Number(bytes / 1048576).toFixed(1)  + " MB"
+        } else if(bytes >= 1024) {
+            return Number(bytes / 1024).toFixed(1)  + " KB"
+        } else {
+            return Number(bytes)  + " B"
         }
     }
 
     Connections {
         target: s3Model
         onSetProgressSignal: {
+            currentBytes = current
+            totalBytes = total
+
+            var currentDate = new Date()
+            var miliseconds = currentDate.getMilliseconds() - lastDate.getMilliseconds()
+
+            if(totalBytes > 0 && miliseconds > 0 && lastTotalBytes < totalBytes) {
+                console.log("miliseconds: " + miliseconds)
+
+                var bytesdiff = totalBytes - lastTotalBytes
+
+                if(bytesdiff > 0) {
+                    transferSpeedBytes = (bytesdiff / (miliseconds / 1000))
+                    console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
+                }
+
+
+            }
+
+            lastTotalBytes = totalBytes
+            lastDate = currentDate
+
             currentProgress = (((current / total) * 100) | 0)
-            totalProgress = (((current / total) * 100) | 0)
             currentFile = s3Model.getCurrentFileQML()
 
-            if(currentProgress == 100 && totalProgress == 100) {
+            if(currentProgress == 100) {
                 cancel_btn.text = "Close"
             }
         }
@@ -92,7 +133,7 @@ Window {
             Text {
                 x: 10
                 height: 30
-                text: "Total progress: "
+                text: "Details: "
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -100,22 +141,38 @@ Window {
                 height: 30
                 width: parent.width
                 x: 10
-                ProgressBar {
-                    id: total_pb
+
+                Text {
                     height: parent.height
-                    width: parent.width - 70
-                    value: totalProgress
-                    to: 100.0
+                    width: 50
+                    text: getSizeString(currentBytes)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
                 }
 
                 Text {
                     height: parent.height
                     width: 50
-                    text: Number(totalProgress) + " %"
+                    text: getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
+
+            Row {
+                height: 30
+                width: parent.width
+                x: 10
+
+                Text {
+                    height: parent.height
+                    width: 50
+                    text: getSizeString(transferSpeedBytes)
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+
 
             Button {
                 id: cancel_btn
@@ -123,7 +180,7 @@ Window {
                 height: 40
                 text: "Cancel"
                 onClicked: {
-                    if(currentProgress < 100 || totalProgress < 100) {
+                    if(currentProgress < 100) {
                         s3Model.cancelDownloadUploadQML()
                     }
 

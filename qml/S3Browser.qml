@@ -234,14 +234,40 @@ Item {
             footer: Rectangle {
                 id: s3_footer
                 width: s3_browser.width
-                height: 34
-                color: app_window.color
+                height: 40
+                color: "#ededed"
                 z: 2
-                Row {
+
+                Column {
                     anchors.fill: parent
+                    Row {
+                        Rectangle {
+                            width: s3_browser.width - s3_search_btn.width
+                            height: 20
+                            border.color: "orange"
+                            border.width: 1
+                            radius: 10
+                            TextInput {
+                                x:10
+                                text: ""
+                                width: parent.width
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+                        RoundButton {
+                            id: s3_search_btn
+                            height: 20
+                            icon.source: "qrc:icons/32_go_icon.png"
+                            icon.color: "transparent"
+                            flat: true
+                        }
+                    }
+
                     Text {
+                        width: parent.width
+                        height: 20
                         text: footerText
-                        anchors.verticalCenter: parent.verticalCenter
+                        //anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
