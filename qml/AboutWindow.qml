@@ -17,47 +17,162 @@
 */
 import QtQuick 2.11
 import QtQuick.Window 2.3
+import QtGraphicalEffects 1.0
 
 Window {
     id: about_win
     x: 100; y: 100;
-    minimumHeight: 360; maximumHeight: 360
+    minimumHeight: 350; maximumHeight: 350
     minimumWidth: 440; maximumWidth: 440
+    color: "#f8f9fa"
 
     title: "About qtS3Browser"
 
-    Column {
+    Rectangle {
+        color: "#3367d6"
+        //color: "#f8f9fa"
         width: parent.width
+        height: 128
         Image {
             id: app_icon_256
+            width: 128
+            height: 128
             source: "qrc:icons/256_app.png"
             anchors.horizontalCenter: parent.horizontalCenter
         }
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "qtS3Browser v1.0"
-            font.pointSize: 16
-        }
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
 
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Author: Artur Fogiel"
-            font.pointSize: 14
+    }
+
+    DropShadow {
+        anchors.fill: app_name_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: app_name_rect
+    }
+
+    Rectangle {
+        id: app_name_rect
+        y: app_icon_256.y + app_icon_256.height + 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 80
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Text {
+                x: 20
+                y: 10
+                width: parent.width
+                text: "qtS3Browser"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: 16
+                height: 40
+            }
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Text {
+                x: 20
+                y: 10
+                text: "Version: 1.0.1"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: 10
+                height: 40
+            }
         }
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
-            onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
-            font.pointSize: 12
-        }
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "Copyright© 2018"
-            font.pointSize: 10
+    }
+
+    DropShadow {
+        anchors.fill: rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: rect
+    }
+
+    Rectangle {
+        y: app_name_rect.y + app_name_rect.height + 20
+        id: rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 80
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_author_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Artur Fogiel"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_endpoint_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
+                    verticalAlignment: Text.AlignVCenter
+                    onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
+                    font.pointSize: 12
+
+                }
+            }
         }
     }
 }

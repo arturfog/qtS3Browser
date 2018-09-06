@@ -20,13 +20,13 @@ import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
-
+import QtGraphicalEffects 1.0
 Window {
     id: settings_win
-    x: 100; y: 100; width: 400; height: 440
-    minimumHeight: 300; maximumHeight: 440
+    x: 100; y: 100; width: 400; height: 640
+    minimumHeight: 350; maximumHeight: 640
     minimumWidth: 300
-
+    color: "#f8f9fa"
     title: "Settings"
 
     onVisibilityChanged: {
@@ -36,257 +36,552 @@ Window {
         endpointURL.text = s3Model.getEndpointQML()
     }
 
-    Column {
+    Rectangle {
+        color: "#3367d6"
         width: parent.width
-        height: parent.height
+        height: 50
 
         Row {
-            x: 10
-            y: 10
-            width: parent.width - 20
-            height: 34
-
-            Image {
-                source: "qrc:icons/32_home_icon.png"
-            }
-
-            Text {
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "S3 Start Path"
-                font.pointSize: 12
-            }
-        }
-
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: startPath
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                //text: s3Model.getStartPathQML()
-                maximumLength: 48
-            }
-        }
-
-        Rectangle {
+            height: parent.height
             width: parent.width
-            height: 10
-        }
-
-        Row {
-            x: 10
-            y: 10
-            width: parent.width - 20
-            height: 34
 
             Image {
-                source: "qrc:icons/32_secret_icon.png"
+                source: "qrc:icons/32_settings_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             Text {
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Secret Key"
-                font.pointSize: 12
+                color: "white"
+                text: "Settings"
+                font.pointSize: 14
+                height: parent.height
+                verticalAlignment: Text.AlignVCenter
             }
         }
 
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
 
-            TextInput {
-                id: secretKey
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                //text: s3Model.getSecretKeyQML()
-                maximumLength: 48
-            }
-        }
 
-        Rectangle {
+    }
+
+    // --------------------------------------------------------------------------
+    DropShadow {
+        anchors.fill: start_path_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: start_path_rect
+    }
+
+    Rectangle {
+        y: 60
+        id: start_path_rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
             width: parent.width
-            height: 10
-        }
+            height: parent.height
 
-
-        Row {
-            x: 10
-            y: 10
-            width: parent.width - 20
-            height: 34
-
-            Image {
-                source: "qrc:icons/32_key_icon.png"
-            }
-
-            Text {
+            Rectangle {
                 width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Access Key"
-                font.pointSize: 12
+                color: "#dbdbdb"
+                height: 1
             }
-        }
-
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: accessKey
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                //text: s3Model.getAccesKeyQML()
-                maximumLength: 48
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-
-        Row {
-            x: 10
-            y: 10
-            width: parent.width - 20
-            height: 34
-
-            Image {
-                source: "qrc:icons/32_region_icon.png"
-            }
-
-            Text {
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Region"
-                font.pointSize: 12
-            }
-        }
-
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 40
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            ComboBox {
-                id: s3region
-                width: parent.width
-                currentIndex: s3Model.getRegionIdxQML()
-                model: [ "Default",
-                    "us-east-1",
-                    "us-east-2",
-                    "eu-central-1",
-                    "eu-west-1",
-                    "eu-west-2",
-                    "eu-west-3" ]
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-
-        Row {
-            x: 10
-            y: 10
-            width: parent.width - 20
-            height: 34
-
-            Image {
-                source: "qrc:icons/32_endpoint_icon.png"
-            }
-
-            Text {
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Endpoint URL"
-                font.pointSize: 12
-            }
-        }
-
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: endpointURL
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                //text: s3Model.getEndpointQML()
-                maximumLength: 48
-            }
-        }
-
-        Rectangle {
-            x: 10
-            y: 55
-            width: parent.width - 20
-            height: 50
 
             Row {
+                x: 10
                 y: 10
-                height: parent.height
-                anchors.horizontalCenter: parent.horizontalCenter
-                Button {
-                    text: "Save"
-                    onClicked: {
-                        s3Model.saveSettingsQML(startPath.text,
-                                                accessKey.text,
-                                                secretKey.text,
-                                                s3region.currentIndex,
-                                                s3region.currentText,
-                                                endpointURL.text
-                                                )
-                        close()
-                    }
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_home_icon.png"
                 }
 
-                Rectangle {
-                    width: 5
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "S3 Start Path"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+
+            Rectangle {
+                id: start_path_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "lightgray"
+
+                TextInput {
+                    id: startPath
+                    x: 10
+                    width: parent.width
                     height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                    maximumLength: 48
+
+                    onActiveFocusChanged: {
+                        if(startPath.focus) {
+                            start_path_input_rect.color = "white"
+                            start_path_input_rect.border.color = "orange"
+                        } else {
+                            start_path_input_rect.color = "lightgray"
+                            start_path_input_rect.border.color = "gray"
+                        }
+                    }
                 }
 
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    DropShadow {
+        anchors.fill: secret_key_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: secret_key_rect
+    }
 
-                Button {
-                    text: "Cancel"
-                    onClicked: {
-                        close()
+
+    Rectangle {
+        y: start_path_rect.y + start_path_rect.height + 20
+        id: secret_key_rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_secret_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Secret Key"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+
+            Rectangle {
+                id: secret_key_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "lightgray"
+
+                TextInput {
+                    id: secretKey
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                    maximumLength: 48
+
+                    onActiveFocusChanged: {
+                        if(secretKey.focus) {
+                            secret_key_input_rect.color = "white"
+                            secret_key_input_rect.border.color = "orange"
+                        } else {
+                            secret_key_input_rect.color = "lightgray"
+                            secret_key_input_rect.border.color = "gray"
+                        }
                     }
+                }
+
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    DropShadow {
+        anchors.fill: access_key_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: access_key_rect
+    }
+
+
+    Rectangle {
+        y: secret_key_rect.y + secret_key_rect.height + 20
+        id: access_key_rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_key_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Access Key"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+
+            Rectangle {
+                id: access_key_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "lightgray"
+
+                TextInput {
+                    id: accessKey
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                    maximumLength: 48
+
+                    onActiveFocusChanged: {
+                        if(accessKey.focus) {
+                            access_key_input_rect.color = "white"
+                            access_key_input_rect.border.color = "orange"
+                        } else {
+                            access_key_input_rect.color = "lightgray"
+                            access_key_input_rect.border.color = "gray"
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    DropShadow {
+        anchors.fill: region_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: region_rect
+    }
+
+
+    Rectangle {
+        y: access_key_rect.y + access_key_rect.height + 20
+        id: region_rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_region_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Region"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+
+            Rectangle {
+                id: region_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "lightgray"
+
+                ComboBox {
+                    id: s3region
+                    width: parent.width
+                    height: parent.height
+                    currentIndex: s3Model.getRegionIdxQML()
+                    model: [ "Default",
+                        "us-east-1",
+                        "us-east-2",
+                        "eu-central-1",
+                        "eu-west-1",
+                        "eu-west-2",
+                        "eu-west-3" ]
+                }
+
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    DropShadow {
+        anchors.fill: endpoint_url_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: endpoint_url_rect
+    }
+
+
+    Rectangle {
+        y: region_rect.y + region_rect.height + 20
+        id: endpoint_url_rect
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_endpoint_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Endpoint URL"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+
+            Rectangle {
+                id: endpoint_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "lightgray"
+
+                TextInput {
+                    id: endpointURL
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                    maximumLength: 48
+
+                    onActiveFocusChanged: {
+                        if(accessKey.focus) {
+                            endpoint_input_rect.color = "white"
+                            endpoint_input_rect.border.color = "orange"
+                        } else {
+                            endpoint_input_rect.color = "lightgray"
+                            endpoint_input_rect.border.color = "gray"
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    Rectangle {
+        x: 10
+        y: endpoint_url_rect.y + endpoint_url_rect.height + 10
+        width: parent.width - 20
+        height: 50
+
+        Row {
+            y: 10
+            height: parent.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            Button {
+                text: "Save"
+
+                onClicked: {
+                    s3Model.saveSettingsQML(startPath.text,
+                                            accessKey.text,
+                                            secretKey.text,
+                                            s3region.currentIndex,
+                                            s3region.currentText,
+                                            endpointURL.text
+                                            )
+                    close()
+                }
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+            }
+
+
+            Button {
+                text: "Cancel"
+                onClicked: {
+                    close()
                 }
             }
         }

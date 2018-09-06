@@ -36,5 +36,8 @@
         <file>icons/32_connect_icon.png</file>
         <file>icons/32_disconnect_icon.png</file>
         <file>qml/CustomMessageDialog.qml</file>
+        <file>icons/32_author_icon.png</file>
+        <file>icons/32_dl_speed_icon.png</file>
+        <file>icons/32_total_bytes_icon.png</file>
     </qresource>
 </RCC>
