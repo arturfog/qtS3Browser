@@ -18,7 +18,6 @@
         <file>qml/ManageBookmarksWindow.qml</file>
         <file>qml/OperationProgressWindow.qml</file>
         <file>icons/256_app.png</file>
-        <file>icons/256_add_bookmark.png</file>
         <file>icons/128_add_bookmark.png</file>
         <file>icons/32_bookmark.png</file>
         <file>icons/32_go_icon.png</file>
@@ -39,5 +38,9 @@
         <file>icons/32_author_icon.png</file>
         <file>icons/32_dl_speed_icon.png</file>
         <file>icons/32_total_bytes_icon.png</file>
+        <file>icons/32_cancel_icon.png</file>
+        <file>icons/32_save_icon.png</file>
+        <file>icons/32_github_icon.png</file>
+        <file>icons/32_add_bookmark.png</file>
     </qresource>
 </RCC>

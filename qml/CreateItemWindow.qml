@@ -20,12 +20,14 @@ import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
-
+import QtGraphicalEffects 1.0
 Window {
     id: create_item_win
-    x: 100; y: 100; width: 300; height: 130
-    minimumHeight: 130; maximumHeight: 130
-    minimumWidth: 250
+    x: app_window.x
+    y: app_window.y
+    width: 400; height: 200
+    minimumHeight: 200; maximumHeight: 130
+    minimumWidth: 400
 
     property var win_title: String
     property var create_action: Number
@@ -36,13 +38,16 @@ Window {
         itemName.text = ""
     }
 
-    Column {
-        x:5
-        y:5
+    Rectangle {
+        color: "#3367d6"
         width: parent.width
-        height: parent.height
+        height: 50
+
         Row {
+            x: 10
+            height: parent.height
             width: parent.width
+
             Image {
                 source: {
                     if(create_action === 0) {
@@ -51,50 +56,137 @@ Window {
                         "qrc:icons/32_new_folder_icon.png"
                     }
                 }
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
             }
 
             Text {
+                color: "white"
                 text: {
                     if(create_action === 0) {
-                        "Bucket name"
+                        qsTr("Create bucket")
                     } else {
-                        "Folder name"
+                        qsTr("Create directory")
                     }
                 }
-                anchors.verticalCenter: parent.verticalCenter
-                font.pointSize: 12
+                font.bold: true
+                font.pointSize: 14
+                height: parent.height
+                verticalAlignment: Text.AlignVCenter
             }
         }
+    }
 
-        Rectangle {
-            width: parent.width
-            height: 5
-        }
+    DropShadow {
+        anchors.fill: create_item_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: create_item_rect
+    }
 
-        Row {
+    Rectangle {
+        id: create_item_rect
+        y: 60
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 85
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
             width: parent.width
+            height: parent.height
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+//                Image {
+//                    source: {
+//                        if(create_action === 0) {
+//                            "qrc:icons/32_bucket_icon.png"
+//                        } else {
+//                            "qrc:icons/32_new_folder_icon.png"
+//                        }
+//                    }
+//                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: {
+                        if(create_action === 0) {
+                            "Bucket name"
+                        } else {
+                            "Directory name"
+                        }
+                    }
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
 
             Rectangle {
-                width: parent.width - x - 10
-                height: 34
-                border.color: "black"
-                color: "white"
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+            Rectangle {
+                id: item_name_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
                 border.width: 1
+                radius: 10
+                color: "#efefef"
 
                 TextInput {
                     id: itemName
-                    x: 5
-                    width: parent.width - x - 10
-                    anchors.verticalCenter: parent.verticalCenter
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 10
                     maximumLength: 128
+
+                    onActiveFocusChanged: {
+                        if(itemName.focus) {
+                            item_name_input_rect.color = "white"
+                            item_name_input_rect.border.color = "orange"
+                        } else {
+                            item_name_input_rect.color = "#efefef"
+                            item_name_input_rect.border.color = "gray"
+                        }
+                    }
                 }
             }
         }
+    }
 
-        Rectangle {
-            width: parent.width
-            height: 5
-        }
+    Column {
+        x:5
+        y:create_item_rect.y + create_item_rect.height + 10
+        width: parent.width
+        height: parent.height
 
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -120,6 +212,8 @@ Window {
 
             Button {
                 text: qsTr("Cancel")
+                icon.source: "qrc:icons/32_cancel_icon.png"
+                icon.color: "transparent"
                 onClicked: {
                     close()
                 }

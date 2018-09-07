@@ -99,12 +99,14 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Settings")
                 icon.source: "qrc:icons/32_settings_icon.png"
+                icon.color: "transparent"
                 onTriggered: settingsWindow.visible = true
             }
             MenuSeparator { }
             MenuItem {
                 text: qsTr("Close")
                 icon.source: "qrc:icons/32_close_icon.png"
+                icon.color: "transparent"
                 onTriggered: Qt.quit();
             }
         }
@@ -114,6 +116,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Connect...")
                 icon.source: "qrc:icons/32_connect_icon.png"
+                icon.color: "transparent"
                 onTriggered: {
                     if(s3Model.getStartPathQML() !== "s3://" && s3Model.getAccesKeyQML() !== "") {
                         s3Model.gotoQML(s3Model.getStartPathQML())
@@ -132,7 +135,10 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Create bucket")
                 icon.source: "qrc:icons/32_bucket_icon.png"
+                icon.color: "transparent"
                 onTriggered: {
+                    createBucketWindow.x = app_window.x + (app_window.width / 2) - (createBucketWindow.width / 2)
+                    createBucketWindow.y = app_window.y + (app_window.height / 2) - (createBucketWindow.height / 2)
                     createBucketWindow.visible = true
                 }
                 enabled: s3_panel.connected
@@ -144,12 +150,14 @@ ApplicationWindow {
                     createFolderWindow.visible = true
                 }
                 icon.source: "qrc:icons/32_new_folder_icon.png"
+                icon.color: "transparent"
                 enabled: false
             }
             MenuSeparator { }
             MenuItem {
                 text: qsTr("Disconnect...")
                 icon.source: "qrc:icons/32_disconnect_icon.png"
+                icon.color: "transparent"
                 onTriggered: {
                     s3Model.clearItemsQML()
                     s3Model.setConnectedQML(false)
@@ -170,6 +178,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Create bookmark")
                 icon.source: "qrc:icons/32_bookmark2.png"
+                icon.color: "transparent"
                 onTriggered: {
                     createBookmarkWindow.visible = true
                 }
@@ -177,6 +186,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Manage bookmarks")
                 icon.source: "qrc:icons/32_edit_icon.png"
+                icon.color: "transparent"
                 onTriggered: {
                     manageBookmarksWindow.visible = true
                 }
@@ -216,6 +226,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("About")
                 icon.source: "qrc:icons/32_about_icon.png"
+                icon.color: "transparent"
                 onTriggered: {
                     aboutWindow.visible = true
                 }

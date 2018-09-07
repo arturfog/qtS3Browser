@@ -21,8 +21,8 @@ import QtQuick.Controls 2.2
 
 Window {
     id: progress_win
-    x: 100; y: 100; width: 500; height: 200
-    minimumHeight: 200; maximumHeight: 200
+    x: 100; y: 100; width: 500; height: 250
+    minimumHeight: 250; maximumHeight: 250
     minimumWidth: 300; maximumWidth: 500
 
     title: "Progress"
@@ -91,10 +91,43 @@ Window {
         }
     }
 
+    Rectangle {
+        color: "#3367d6"
+        width: parent.width
+        height: 50
+
+        Row {
+            x:10
+            height: parent.height
+            width: parent.width
+
+            Image {
+                source: "qrc:icons/32_bookmark2.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Text {
+                color: "white"
+                text: qsTr("Create bookmark")
+                font.bold: true
+                font.pointSize: 14
+                height: parent.height
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+    }
+
     Item {
         id: progress_item
         height: parent.height
         width: parent.width
+        y: 50
 
         Column {
             y: 10

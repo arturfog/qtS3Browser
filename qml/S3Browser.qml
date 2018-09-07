@@ -121,6 +121,8 @@ Item {
                 text: "New"
                 enabled: false
                 onClicked: {
+                    createFolderWindow.x = app_window.x + (app_window.width / 2) - (createFolderWindow.width / 2)
+                    createFolderWindow.y = app_window.y + (app_window.height / 2) - (createFolderWindow.height / 2)
                     createFolderWindow.visible = true
                 }
             }

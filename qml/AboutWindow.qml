@@ -160,7 +160,7 @@ Window {
                 width: parent.width
                 height: 40
                 Image {
-                    source: "qrc:icons/32_endpoint_icon.png"
+                    source: "qrc:icons/32_github_icon.png"
                 }
 
                 Text {

@@ -20,131 +20,243 @@ import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
-
+import QtGraphicalEffects 1.0
 Window {
     id: create_bookmark_win
-    x: 100; y: 100; width: 300; height: 220
-    minimumHeight: 230; maximumHeight: 230
-    minimumWidth: 200
+    x: 100; y: 100; width: 450; height: 260
+    minimumHeight: 290; maximumHeight: 290
+    minimumWidth: 450
+    color: "#f8f9fa"
+    title: qsTr("Create bookmark")
 
-    title: "Create bookmark"
-
-    Column {
+    Rectangle {
+        color: "#3367d6"
         width: parent.width
-        height: parent.height
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
+        height: 50
 
         Row {
+            x:10
+            height: parent.height
             width: parent.width
+
             Image {
-                source: "qrc:icons/32_bookmark.png"
-            }
-
-            Text {
-                x: 10
+                source: "qrc:icons/32_bookmark2.png"
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Bookmark name"
-                font.pointSize: 10
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-        Rectangle {
-            x: 10
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: bookmarkName
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "Name"
-                maximumLength: 128
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-        Row {
-            width: parent.width
-            Image {
-                source: "qrc:icons/32_region_icon.png"
-            }
-
-            Text {
-                x: 10
-                anchors.verticalCenter: parent.verticalCenter
-                text: "S3 URL"
-                font.pointSize: 10
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-        Rectangle {
-            x: 10
-            width: parent.width - 20
-            height: 34
-            border.color: "black"
-            color: "white"
-            border.width: 1
-
-            TextInput {
-                id: bookmarkPath
-                x: 5
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                text: "s3://"
-                maximumLength: 128
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 10
-        }
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            Button {
-                id: cw_cb
-                text: "Create"
-                onClicked: {
-                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
-                    close()
-                }
             }
 
             Rectangle {
                 width: 5
                 height: parent.height
+                color: "transparent"
+            }
+
+            Text {
+                color: "white"
+                text: qsTr("Create bookmark")
+                font.bold: true
+                font.pointSize: 14
+                height: parent.height
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+    }
+
+    DropShadow {
+        anchors.fill: create_bookmark_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: create_bookmark_rect
+    }
+
+    Rectangle {
+        id: create_bookmark_rect
+        y: 60
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 165
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
+
+        Column {
+            width: parent.width
+            height: parent.height
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_bookmark.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: qsTr("Bookmark name")
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
             }
 
 
-            Button {
-                text: "Cancel"
-                onClicked: {
-                    close()
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+            Rectangle {
+                id: bookmark_name_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "#efefef"
+
+                TextInput {
+                    id: bookmarkName
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 10
+                    maximumLength: 128
+
+                    onActiveFocusChanged: {
+                        if(bookmarkName.focus) {
+                            bookmark_name_input_rect.color = "white"
+                            bookmark_name_input_rect.border.color = "orange"
+                        } else {
+                            bookmark_name_input_rect.color = "#efefef"
+                            bookmark_name_input_rect.border.color = "gray"
+                        }
+                    }
                 }
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_endpoint_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: qsTr("S3 URL")
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+            Rectangle {
+                id: bookmark_url_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 10
+                color: "#efefef"
+
+                TextInput {
+                    id: bookmarkPath
+                    x: 10
+                    width: parent.width
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 10
+                    maximumLength: 128
+                    text: "s3://"
+
+                    onActiveFocusChanged: {
+                        if(bookmarkPath.focus) {
+                            bookmark_url_input_rect.color = "white"
+                            bookmark_url_input_rect.border.color = "orange"
+                        } else {
+                            bookmark_url_input_rect.color = "#efefef"
+                            bookmark_url_input_rect.border.color = "gray"
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+        }
+    }
+
+    Row {
+        height: 30
+        y: 240
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Button {
+            id: create_btn
+            text: qsTr("Create")
+            icon.source: "qrc:icons/32_save_icon.png"
+            icon.color: "transparent"
+            enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
+            onClicked: {
+                s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                close()
+            }
+        }
+
+        Rectangle {
+            width: 5
+            height: parent.height
+        }
+
+        Button {
+            text: qsTr("Cancel")
+            icon.source: "qrc:icons/32_cancel_icon.png"
+            icon.color: "transparent"
+            onClicked: {
+                bookmarkName.text = ""
+                bookmarkPath.text = "s3://"
+
+                close()
             }
         }
     }

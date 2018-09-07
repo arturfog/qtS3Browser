@@ -18,13 +18,13 @@
 import QtQuick 2.11
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.4
-
+import QtGraphicalEffects 1.0
 Window {
     id: about_win
-    x: 100; y: 100; width: 360; height: 250
-    minimumHeight: 250; maximumHeight: 200
-    minimumWidth: 360
-
+    x: 100; y: 100; width: 440; height: 290
+    minimumHeight: 290; maximumHeight: 800
+    minimumWidth: 440
+    color: "#f8f9fa"
     title: "Manage bookmarks"
 
     function addBookmarks() {
@@ -38,11 +38,6 @@ import QtQuick 2.11;
 import QtQuick.Controls 2.2;
 
 Column {
-
- Rectangle {
-   width: parent.width;
-   height: 3;
- }
 
  Row {
   id: bookmarks_item
@@ -73,25 +68,25 @@ Column {
  Button {
   text: "Remove";
   icon.source: "qrc:icons/32_delete_icon.png"
+  icon.color: "transparent"
   onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
  }
-
 }
 
 Rectangle {
-  width: about_win.width;
-  height: 3;
+    width: parent.width
+    height: 5
 }
 
 Rectangle {
-  width: about_win.width;
-  height: 1;
-  color: "black"
+    width: parent.width
+    color: "#dbdbdb"
+    height: 1
 }
 
 Rectangle {
-  width: about_win.width;
-  height: 1;
+    width: parent.width
+    height: 5
 }
 
 }
@@ -113,15 +108,17 @@ anchors.horizontalCenter: parent.horizontalCenter
 
 Text {
 x:10
-width: 300;
-height: 60;
+width: parent.width;
+height: 40;
 wrapMode: Text.Wrap
-text: "There are no bookmarks, click below to create one"
+text: qsTr("There are no bookmarks, click below to create one")
 font.pointSize: 12
 }
 
 Button {
-text: "Add bookmark";
+text: qsTr("Add bookmark");
+icon.source: "qrc:icons/32_add_bookmark.png"
+icon.color: "transparent"
 anchors.horizontalCenter: parent.horizontalCenter
 onClicked: { createBookmarkWindow.visible = true; close() } }
 }',
@@ -134,9 +131,65 @@ onClicked: { createBookmarkWindow.visible = true; close() } }
         height: parent.height
 
         clip: true
-        Column {
-            id: bookmarks_list
-            Component.onCompleted: addBookmarks()
+
+        DropShadow {
+            anchors.fill: manage_bookmark_rect
+            horizontalOffset: 1
+            verticalOffset: 2
+            radius: 8.0
+            samples: 17
+            color: "#aa000000"
+            source: manage_bookmark_rect
+        }
+
+        Rectangle {
+            color: "#3367d6"
+            width: parent.width
+            height: 50
+
+            Row {
+                x:10
+                height: parent.height
+                width: parent.width
+
+                Image {
+                    source: "qrc:icons/32_edit_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Rectangle {
+                    width: 5
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Text {
+                    color: "white"
+                    text: qsTr("Manage bookmarks")
+                    font.bold: true
+                    font.pointSize: 14
+                    height: parent.height
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
+
+        Rectangle {
+            id: manage_bookmark_rect
+            y: 60
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
+            width: parent.width - 50
+            height: parent.height - 80
+            border.color: "#efefef"
+            border.width: 1
+            radius: 5
+
+            Column {
+                y: 50
+                id: bookmarks_list
+                Component.onCompleted: addBookmarks()
+            }
         }
     }
 }

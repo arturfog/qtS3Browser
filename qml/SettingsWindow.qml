@@ -23,9 +23,9 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 Window {
     id: settings_win
-    x: 100; y: 100; width: 400; height: 640
+    x: 100; y: 100; width: 480; height: 640
     minimumHeight: 350; maximumHeight: 640
-    minimumWidth: 300
+    minimumWidth: 400
     color: "#f8f9fa"
     title: "Settings"
 
@@ -42,6 +42,7 @@ Window {
         height: 50
 
         Row {
+            x:10
             height: parent.height
             width: parent.width
 
@@ -50,17 +51,21 @@ Window {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
             Text {
                 color: "white"
                 text: "Settings"
+                font.bold: true
                 font.pointSize: 14
                 height: parent.height
                 verticalAlignment: Text.AlignVCenter
             }
         }
-
-
-
     }
 
     // --------------------------------------------------------------------------
@@ -135,7 +140,7 @@ Window {
                 border.color: "gray"
                 border.width: 1
                 radius: 10
-                color: "lightgray"
+                color: "#efefef"
 
                 TextInput {
                     id: startPath
@@ -143,7 +148,7 @@ Window {
                     width: parent.width
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 10
                     maximumLength: 48
 
                     onActiveFocusChanged: {
@@ -151,7 +156,7 @@ Window {
                             start_path_input_rect.color = "white"
                             start_path_input_rect.border.color = "orange"
                         } else {
-                            start_path_input_rect.color = "lightgray"
+                            start_path_input_rect.color = "#efefef"
                             start_path_input_rect.border.color = "gray"
                         }
                     }
@@ -233,7 +238,7 @@ Window {
                 border.color: "gray"
                 border.width: 1
                 radius: 10
-                color: "lightgray"
+                color: "#efefef"
 
                 TextInput {
                     id: secretKey
@@ -241,7 +246,7 @@ Window {
                     width: parent.width
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 10
                     maximumLength: 48
 
                     onActiveFocusChanged: {
@@ -249,7 +254,7 @@ Window {
                             secret_key_input_rect.color = "white"
                             secret_key_input_rect.border.color = "orange"
                         } else {
-                            secret_key_input_rect.color = "lightgray"
+                            secret_key_input_rect.color = "#efefef"
                             secret_key_input_rect.border.color = "gray"
                         }
                     }
@@ -331,7 +336,7 @@ Window {
                 border.color: "gray"
                 border.width: 1
                 radius: 10
-                color: "lightgray"
+                color: "#efefef"
 
                 TextInput {
                     id: accessKey
@@ -339,7 +344,7 @@ Window {
                     width: parent.width
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 10
                     maximumLength: 48
 
                     onActiveFocusChanged: {
@@ -347,7 +352,7 @@ Window {
                             access_key_input_rect.color = "white"
                             access_key_input_rect.border.color = "orange"
                         } else {
-                            access_key_input_rect.color = "lightgray"
+                            access_key_input_rect.color = "#efefef"
                             access_key_input_rect.border.color = "gray"
                         }
                     }
@@ -429,7 +434,7 @@ Window {
                 border.color: "gray"
                 border.width: 1
                 radius: 10
-                color: "lightgray"
+                color: "#f8f9fa"
 
                 ComboBox {
                     id: s3region
@@ -521,7 +526,7 @@ Window {
                 border.color: "gray"
                 border.width: 1
                 radius: 10
-                color: "lightgray"
+                color: "#efefef"
 
                 TextInput {
                     id: endpointURL
@@ -529,15 +534,15 @@ Window {
                     width: parent.width
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 10
                     maximumLength: 48
 
                     onActiveFocusChanged: {
-                        if(accessKey.focus) {
+                        if(endpointURL.focus) {
                             endpoint_input_rect.color = "white"
                             endpoint_input_rect.border.color = "orange"
                         } else {
-                            endpoint_input_rect.color = "lightgray"
+                            endpoint_input_rect.color = "#efefef"
                             endpoint_input_rect.border.color = "gray"
                         }
                     }
@@ -559,7 +564,8 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 text: "Save"
-
+                icon.source: "qrc:icons/32_save_icon.png"
+                icon.color: "transparent"
                 onClicked: {
                     s3Model.saveSettingsQML(startPath.text,
                                             accessKey.text,
@@ -580,6 +586,8 @@ Window {
 
             Button {
                 text: "Cancel"
+                icon.source: "qrc:icons/32_cancel_icon.png"
+                icon.color: "transparent"
                 onClicked: {
                     close()
                 }
