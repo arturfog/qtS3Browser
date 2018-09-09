@@ -167,24 +167,33 @@ Item {
                 Rectangle {
                     width: parent.width
                     border.width: 2
-                    border.color: "black"
-                    height: 32
+                    border.color: "#dbdbdb"
+                    height: 35
+                    radius: 20
+
+                    Image {
+                        x:10
+                        source: "qrc:icons/32_hdd_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: parent.height
+                    }
 
                     TextInput {
                         id: file_browser_path_text
-                        x:5
+                        x:50
                         width: parent.width - file_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path
                     }
-                    Button {
+                    RoundButton {
                         id: file_browser_path_go
                         y: 2
                         x: file_browser_path_text.width
-                        height: 28
+                        radius: 20
+                        height: parent.height
+                        flat: true
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
-                        text: qsTr("Go")
                         onClicked: {
                             path = file_browser_path_text.text
                         }

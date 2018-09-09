@@ -42,5 +42,7 @@
         <file>icons/32_save_icon.png</file>
         <file>icons/32_github_icon.png</file>
         <file>icons/32_add_bookmark.png</file>
+        <file>icons/32_amazon_icon.png</file>
+        <file>icons/32_hdd_icon.png</file>
     </qresource>
 </RCC>

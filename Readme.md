@@ -16,6 +16,9 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 - pull sources
 - install conan.io
+```sh
+  sudo pip3 install conan
+```
 - add my conan repo 
 ```sh
   conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan 
@@ -29,7 +32,7 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 ## Installation
 
 Application is released as snap package
-
+```sh
 snap install qts3browser
-
+```
 **TODO**

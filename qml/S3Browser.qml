@@ -95,6 +95,7 @@ Item {
                 text: "Download"
                 enabled: connected
                 onClicked: {
+                    app_window.progressWindow.visible = true
                     s3Model.downloadQML(view.currentIndex)
 
                 }
@@ -153,28 +154,36 @@ Item {
                 z:2
 
                 Rectangle {
-                    width: parent.width
+                    width: parent.width - 2
                     border.width: 2
-                    border.color: "black"
-                    height: 32
-                    color: "orange"
+                    border.color: "#dfdfdf"
+                    height: 38
+                    color: "#FFE13C"
+                    radius: 20
+
+                    Image {
+                        x:10
+                        source: "qrc:icons/32_amazon_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: parent.height
+                    }
 
                     TextInput {
                         id: s3_browser_path_text
-                        x:5
+                        x:50
                         width: parent.width - s3_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
                         text: path
                     }
 
-                    Button {
+                    RoundButton {
                         id: s3_browser_path_go
                         y: 2
                         x: s3_browser_path_text.width
-                        height: 28
+                        height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
-                        text: qsTr("Go")
+                        flat: true
                         onClicked: {
                             if(s3_browser_path_text.text === "s3://") {
                                 s3Model.getBucketsQML()
@@ -186,6 +195,8 @@ Item {
                         }
                     }
                 }
+
+
 
                 Row {
                     width: parent.width

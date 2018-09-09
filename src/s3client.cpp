@@ -79,7 +79,10 @@ void S3Client::init() {
             }
         }
 
+#ifdef QT_DEBUG
         config.scheme = Aws::Http::Scheme::HTTP;
+#endif
+
 
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
         this->s3_client = s3_client;
@@ -222,6 +225,7 @@ void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
+    std::cout << "Transfer Status = " << static_cast<int>(handle->GetBytesTransferred()) << "\n";
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
 // --------------------------------------------------------------------------

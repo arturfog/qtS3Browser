@@ -18,12 +18,12 @@
 import QtQuick 2.11
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
-
+import QtGraphicalEffects 1.0
 Window {
     id: progress_win
-    x: 100; y: 100; width: 500; height: 250
-    minimumHeight: 250; maximumHeight: 250
-    minimumWidth: 300; maximumWidth: 500
+    x: 100; y: 100; width: 500; height: 310
+    minimumHeight: 310; maximumHeight: 310
+    minimumWidth: 400; maximumWidth: 500
 
     title: "Progress"
 
@@ -86,6 +86,7 @@ Window {
             currentFile = s3Model.getCurrentFileQML()
 
             if(currentProgress == 100) {
+                cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
                 cancel_btn.text = "Close"
             }
         }
@@ -114,7 +115,7 @@ Window {
 
             Text {
                 color: "white"
-                text: qsTr("Create bookmark")
+                text: qsTr("Progress")
                 font.bold: true
                 font.pointSize: 14
                 height: parent.height
@@ -123,103 +124,215 @@ Window {
         }
     }
 
-    Item {
-        id: progress_item
-        height: parent.height
-        width: parent.width
-        y: 50
+    // ------------------------------------------------------------
+    DropShadow {
+        anchors.fill: operation_progress_rect
+        horizontalOffset: 1
+        verticalOffset: 2
+        radius: 8.0
+        samples: 17
+        color: "#aa000000"
+        source: operation_progress_rect
+    }
+
+    Rectangle {
+        id: operation_progress_rect
+        y: 60
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 50
+        height: 175
+        border.color: "#efefef"
+        border.width: 1
+        radius: 5
 
         Column {
-            y: 10
-            height: parent.height
             width: parent.width
-            Text {
+            height: parent.height
+
+            Row {
                 x: 10
-                height: 30
-                text: "Copying file: " + currentFile
-                verticalAlignment: Text.AlignVCenter
+                y: 10
+                width: parent.width
+                height: 40
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: currentFile
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
             }
 
             Row {
-                id: file_progress_row
-                height: 30
-                width: parent.width
                 x: 10
+                y: 10
+                width: parent.width
+                height: 40
+
                 ProgressBar {
                     id: current_pb
                     height: parent.height
-                    width: parent.width - 70
+                    width: parent.width - 80
                     value: currentProgress
                     to: 100.0
                 }
 
-                Text {
-                    id: current_txt
+                Rectangle {
+                    width: 5
                     height: parent.height
-                    width: 50
+                    color: "transparent"
+                }
+
+                Rectangle {
+                    width: 1
+                    color: "#dbdbdb"
+                    height: parent.height - 5
+                }
+
+                Rectangle {
+                    width: 5
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Text {
+                    height: 40
                     text: Number(currentProgress)  + " %"
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 12
                 }
             }
 
-            Text {
-                x: 10
-                height: 30
-                text: "Details: "
-                verticalAlignment: Text.AlignVCenter
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
             }
 
             Row {
-                height: 30
-                width: parent.width
                 x: 10
+                y: 10
+                width: parent.width
+                height: 40
 
                 Text {
-                    height: parent.height
-                    width: 50
+                    height: 40
                     text: getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 12
+                }
+
+                Rectangle {
+                    width: 30
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Rectangle {
+                    width: 1
+                    color: "#dbdbdb"
+                    height: parent.height - 5
+                }
+
+                Rectangle {
+                    width: 30
+                    height: parent.height
+                    color: "transparent"
                 }
 
                 Text {
-                    height: parent.height
-                    width: 50
+                    height: 40
                     text: getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 12
                 }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Rectangle {
+                width: parent.width
+                height: 5
             }
 
             Row {
-                height: 30
-                width: parent.width
                 x: 10
+                y: 10
+                width: parent.width
+                height: 40
 
                 Text {
-                    height: parent.height
-                    width: 50
+                    height: 40
                     text: getSizeString(transferSpeedBytes)
                     verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 12
                 }
-            }
 
+                Rectangle {
+                    width: 30
+                    height: parent.height
+                    color: "transparent"
+                }
 
-            Button {
-                id: cancel_btn
-                x: 10
-                height: 40
-                text: "Cancel"
-                onClicked: {
-                    if(currentProgress < 100) {
-                        s3Model.cancelDownloadUploadQML()
-                    }
+                Rectangle {
+                    width: 1
+                    color: "#dbdbdb"
+                    height: parent.height - 5
+                }
 
-                    close()
+                Rectangle {
+                    width: 30
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Text {
+                    height: 40
+                    text: "ETA:"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 12
                 }
             }
         }
     }
+
+    Button {
+        id: cancel_btn
+        x: operation_progress_rect.width / 2 + 100
+        y: operation_progress_rect.y + operation_progress_rect.height + 10
+        height: 40
+        text: qsTr("Cancel")
+        icon.source: "qrc:icons/32_cancel_icon.png"
+        icon.color: "transparent"
+        onClicked: {
+            if(currentProgress < 100) {
+                s3Model.cancelDownloadUploadQML()
+            }
+
+            close()
+        }
+    }
+    // ------------------------------------------------------------
 }

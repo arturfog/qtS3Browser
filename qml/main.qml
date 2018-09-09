@@ -29,6 +29,7 @@ ApplicationWindow {
     width: 840
     height: 480
     minimumWidth: 840
+    minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
     property CreateItemWindow createBucketWindow: CreateItemWindow {

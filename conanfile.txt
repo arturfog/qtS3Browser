@@ -1,0 +1,14 @@
+[requires]
+aws-sdk-cpp/1.4.64@arturfog/release
+
+[generators]
+qmake
+
+[settings]
+arch=x86_64
+build_type=Release
+
+[options]
+aws-sdk-cpp:shared=True
+aws-sdk-cpp:build_transfer=True
+aws-sdk-cpp:build_s3=True
