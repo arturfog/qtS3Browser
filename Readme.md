@@ -12,7 +12,14 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 ## Build:
 
-`unfortunately this process is not yet ready`
+`unfortunately this process is not yet fully ready`
+
+- use build.sh script
+```sh
+  ./build.sh
+```
+
+OR follow steps below
 
 - pull sources
 - install conan.io
@@ -31,7 +38,7 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 ## Installation
 
-Application is released as snap package
+Application will be released as snap package
 ```sh
 snap install qts3browser
 ```

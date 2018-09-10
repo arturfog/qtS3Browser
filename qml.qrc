@@ -44,5 +44,10 @@
         <file>icons/32_add_bookmark.png</file>
         <file>icons/32_amazon_icon.png</file>
         <file>icons/32_hdd_icon.png</file>
+        <file>icons/32_find_icon.png</file>
+        <file>icons/32_file_icon.png</file>
+        <file>icons/32_clock_icon.png</file>
+        <file>icons/32_server_icon.png</file>
+        <file>icons/32_hdd_icon2.png</file>
     </qresource>
 </RCC>

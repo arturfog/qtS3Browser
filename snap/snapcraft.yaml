@@ -13,7 +13,6 @@ apps:
   s3browser:
     command: desktop-launch $SNAP/opt/s3browser/bin/s3browser
     plugs: [home, network, x11, opengl]
-    desktop: gui/s3browser.desktop
 parts:
   aws:
     source: https://github.com/aws/aws-sdk-cpp.git

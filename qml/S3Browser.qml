@@ -183,7 +183,7 @@ Item {
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
-                        flat: true
+                        //flat: true
                         onClicked: {
                             if(s3_browser_path_text.text === "s3://") {
                                 s3Model.getBucketsQML()
@@ -270,7 +270,7 @@ Item {
                         RoundButton {
                             id: s3_search_btn
                             height: 20
-                            icon.source: "qrc:icons/32_go_icon.png"
+                            icon.source: "qrc:icons/32_find_icon.png"
                             icon.color: "transparent"
                             flat: true
                         }

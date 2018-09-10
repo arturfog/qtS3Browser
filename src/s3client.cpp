@@ -93,6 +93,7 @@ void S3Client::init() {
         transferConfig.transferInitiatedCallback = &transferInitiatedHandler;
         transferConfig.transferStatusUpdatedCallback = &statusUpdate;
         transferConfig.uploadProgressCallback = &uploadProgress;
+        transferConfig.downloadProgressCallback = &downloadProgress;
         transferConfig.errorCallback = &errorHandler;
     }
     Aws::ShutdownAPI(options);
@@ -225,7 +226,6 @@ void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    std::cout << "Transfer Status = " << static_cast<int>(handle->GetBytesTransferred()) << "\n";
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
 }
 // --------------------------------------------------------------------------

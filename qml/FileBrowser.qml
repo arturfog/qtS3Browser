@@ -191,7 +191,7 @@ Item {
                         x: file_browser_path_text.width
                         radius: 20
                         height: parent.height
-                        flat: true
+                        //flat: true
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         onClicked: {
@@ -272,7 +272,7 @@ Item {
                         RoundButton {
                             id: file_search_btn
                             height: 20
-                            icon.source: "qrc:icons/32_go_icon.png"
+                            icon.source: "qrc:icons/32_find_icon.png"
                             icon.color: "transparent"
                             flat: true
                         }

@@ -103,7 +103,7 @@ Window {
             width: parent.width
 
             Image {
-                source: "qrc:icons/32_bookmark2.png"
+                source: "qrc:icons/32_upload_icon.png"
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -155,6 +155,11 @@ Window {
                 y: 10
                 width: parent.width
                 height: 40
+
+                Image {
+                    source: "qrc:icons/32_file_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
 
                 Text {
                     width: parent.width
@@ -233,15 +238,21 @@ Window {
                 width: parent.width
                 height: 40
 
+                Image {
+                    source: "qrc:icons/32_server_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
                 Text {
                     height: 40
+                    width: 100
                     text: getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 90
                     height: parent.height
                     color: "transparent"
                 }
@@ -253,9 +264,14 @@ Window {
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 90
                     height: parent.height
                     color: "transparent"
+                }
+
+                Image {
+                    source: "qrc:icons/32_hdd_icon2.png"
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Text {
@@ -283,15 +299,21 @@ Window {
                 width: parent.width
                 height: 40
 
+                Image {
+                    source: "qrc:icons/32_dl_speed_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
                 Text {
                     height: 40
-                    text: getSizeString(transferSpeedBytes)
+                    width: 100
+                    text: getSizeString(transferSpeedBytes) + "/s"
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 90
                     height: parent.height
                     color: "transparent"
                 }
@@ -303,14 +325,25 @@ Window {
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 90
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Image {
+                    source: "qrc:icons/32_clock_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Rectangle {
+                    width: 5
                     height: parent.height
                     color: "transparent"
                 }
 
                 Text {
                     height: 40
-                    text: "ETA:"
+                    text: "00:01:30"
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
