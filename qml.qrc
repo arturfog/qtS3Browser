@@ -49,5 +49,7 @@
         <file>icons/32_clock_icon.png</file>
         <file>icons/32_server_icon.png</file>
         <file>icons/32_hdd_icon2.png</file>
+        <file>icons/24_find_icon.png</file>
+        <file>icons/32_clear_icon.png</file>
     </qresource>
 </RCC>

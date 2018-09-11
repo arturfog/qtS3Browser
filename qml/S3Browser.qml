@@ -169,11 +169,27 @@ Item {
                     }
 
                     TextInput {
-                        id: s3_browser_path_text
                         x:50
+                        width: 50
+                        font.bold: true
+                        font.pointSize: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "s3://"
+                    }
+
+                    Rectangle {
+                        width: 2
+                        x: 90
+                        height: parent.height
+                        color: "#dfdfdf"
+                    }
+
+                    TextInput {
+                        id: s3_browser_path_text
+                        x:95
                         width: parent.width - s3_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
-                        text: path
+                        text: path.replace("s3://","")
                     }
 
                     RoundButton {
@@ -260,8 +276,16 @@ Item {
                             border.color: "orange"
                             border.width: 1
                             radius: 10
+
+                            Image {
+                                x: 5
+                                y: 2
+                                source: "qrc:icons/24_find_icon.png"
+                            }
+
                             TextInput {
-                                x:10
+                                id: s3_search_txt
+                                x:30
                                 text: ""
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
@@ -269,19 +293,20 @@ Item {
                         }
                         RoundButton {
                             id: s3_search_btn
-                            height: 20
-                            icon.source: "qrc:icons/32_find_icon.png"
+                            icon.source: "qrc:icons/32_clear_icon.png"
                             icon.color: "transparent"
-                            flat: true
+                            onClicked: {
+                                s3_search_txt.clear()
+                            }
                         }
                     }
+                }
 
-                    Text {
-                        width: parent.width
-                        height: 20
-                        text: footerText
-                        //anchors.verticalCenter: parent.verticalCenter
-                    }
+                Text {
+                    y: 22
+                    width: parent.width
+                    height: 20
+                    text: footerText
                 }
             }
         }

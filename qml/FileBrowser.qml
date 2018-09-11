@@ -179,11 +179,27 @@ Item {
                     }
 
                     TextInput {
-                        id: file_browser_path_text
                         x:50
+                        width: 50
+                        font.bold: true
+                        font.pointSize: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "file://"
+                    }
+
+                    Rectangle {
+                        width: 2
+                        x: 90
+                        height: parent.height
+                        color: "#dfdfdf"
+                    }
+
+                    TextInput {
+                        id: file_browser_path_text
+                        x:95
                         width: parent.width - file_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
-                        text: view.path
+                        text: view.path.replace("file://", "")
                     }
                     RoundButton {
                         id: file_browser_path_go
@@ -262,28 +278,38 @@ Item {
                             border.color: "orange"
                             border.width: 1
                             radius: 10
+
+                            Image {
+                                x: 5
+                                y: 2
+                                source: "qrc:icons/24_find_icon.png"
+                            }
+
                             TextInput {
-                                x:10
+                                id: file_search_txt
+                                x:30
                                 text: ""
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
+
                         RoundButton {
                             id: file_search_btn
-                            height: 20
-                            icon.source: "qrc:icons/32_find_icon.png"
+                            icon.source: "qrc:icons/32_clear_icon.png"
                             icon.color: "transparent"
-                            flat: true
+                            onClicked: {
+                                file_search_txt.clear()
+                            }
                         }
                     }
+                }
 
-                    Text {
-                        width: parent.width
-                        height: 20
-                        text: "["+folder.count+" Items]"
-                        //anchors.verticalCenter: parent.verticalCenter
-                    }
+                Text {
+                    y: 22
+                    width: parent.width
+                    height: 20
+                    text: "["+folder.count+" Items]"
                 }
             }
         }

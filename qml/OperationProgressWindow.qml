@@ -141,7 +141,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 175
+        height: 180
         border.color: "#efefef"
         border.width: 1
         radius: 5
@@ -264,7 +264,7 @@ Window {
                 }
 
                 Rectangle {
-                    width: 90
+                    width: 60
                     height: parent.height
                     color: "transparent"
                 }
@@ -276,7 +276,7 @@ Window {
 
                 Text {
                     height: 40
-                    text: getSizeString(totalBytes)
+                    text: "Total: " + getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
@@ -325,7 +325,7 @@ Window {
                 }
 
                 Rectangle {
-                    width: 90
+                    width: 60
                     height: parent.height
                     color: "transparent"
                 }
@@ -343,7 +343,7 @@ Window {
 
                 Text {
                     height: 40
-                    text: "00:01:30"
+                    text: "ETA: 00:01:30"
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
