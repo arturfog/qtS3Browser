@@ -75,6 +75,9 @@ Rectangle {
         onClicked: {
             view.currentIndex = index
         }
-        onDoubleClicked: fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
+        onDoubleClicked: {
+            fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
+            s3Model.setFileBrowserPath(view.path)
+        }
     }
 }

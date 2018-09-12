@@ -23,7 +23,7 @@ Window {
     id: progress_win
     x: 100; y: 100; width: 500; height: 310
     minimumHeight: 310; maximumHeight: 310
-    minimumWidth: 400; maximumWidth: 500
+    minimumWidth: 500; maximumWidth: 500
 
     title: "Progress"
 
@@ -31,10 +31,12 @@ Window {
     property double currentBytes: 0
     property double totalBytes: 0
     property string currentFile: ""
+    property string icon: "qrc:icons/32_upload_icon.png"
 
     property var lastDate: new Date()
     property double lastTotalBytes: 0
     property double transferSpeedBytes: 0
+    property int secondsLeft: 0
 
     onVisibleChanged: {
         if(visible === false) {
@@ -57,6 +59,22 @@ Window {
         }
     }
 
+    function pad(number) {
+        if(number < 10) {
+            return "0" + number
+        }
+
+        return number
+    }
+
+    function secondsToEta(seconds) {
+        var s = (seconds % 60)
+        var m = ( Number( (seconds - s) / 60 ) % 60 )
+        var h = Number( ( s - (m * 60) ) / 3600 );
+
+        return pad(h) + ":" + pad(m) + ":" + pad(s)
+    }
+
     Connections {
         target: s3Model
         onSetProgressSignal: {
@@ -75,8 +93,6 @@ Window {
                     transferSpeedBytes = (bytesdiff / (miliseconds / 1000))
                     console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
                 }
-
-
             }
 
             lastTotalBytes = totalBytes
@@ -84,6 +100,8 @@ Window {
 
             currentProgress = (((current / total) * 100) | 0)
             currentFile = s3Model.getCurrentFileQML()
+
+            secondsLeft = (totalBytes - currentBytes) / transferSpeedBytes
 
             if(currentProgress == 100) {
                 cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
@@ -103,7 +121,7 @@ Window {
             width: parent.width
 
             Image {
-                source: "qrc:icons/32_upload_icon.png"
+                source: icon
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -115,7 +133,7 @@ Window {
 
             Text {
                 color: "white"
-                text: qsTr("Progress")
+                text: title
                 font.bold: true
                 font.pointSize: 14
                 height: parent.height
@@ -233,7 +251,7 @@ Window {
             }
 
             Row {
-                x: 10
+                x: 20
                 y: 10
                 width: parent.width
                 height: 40
@@ -246,13 +264,13 @@ Window {
                 Text {
                     height: 40
                     width: 100
-                    text: getSizeString(currentBytes)
+                    text: "Copied: " + getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
 
                 Rectangle {
-                    width: 90
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -264,7 +282,7 @@ Window {
                 }
 
                 Rectangle {
-                    width: 60
+                    width: 30
                     height: parent.height
                     color: "transparent"
                 }
@@ -294,7 +312,7 @@ Window {
             }
 
             Row {
-                x: 10
+                x: 20
                 y: 10
                 width: parent.width
                 height: 40
@@ -307,13 +325,13 @@ Window {
                 Text {
                     height: 40
                     width: 100
-                    text: getSizeString(transferSpeedBytes) + "/s"
+                    text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
 
                 Rectangle {
-                    width: 90
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -325,7 +343,7 @@ Window {
                 }
 
                 Rectangle {
-                    width: 60
+                    width: 30
                     height: parent.height
                     color: "transparent"
                 }
@@ -343,7 +361,7 @@ Window {
 
                 Text {
                     height: 40
-                    text: "ETA: 00:01:30"
+                    text: "ETA: " + secondsToEta(secondsLeft)
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 12
                 }
@@ -353,7 +371,7 @@ Window {
 
     Button {
         id: cancel_btn
-        x: operation_progress_rect.width / 2 + 100
+        x: operation_progress_rect.width - cancel_btn.width
         y: operation_progress_rect.y + operation_progress_rect.height + 10
         height: 40
         text: qsTr("Cancel")

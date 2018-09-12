@@ -103,6 +103,9 @@ Item {
                 enabled: connected
                 onClicked: {
                     var filePath = folder.get(view.currentIndex, "filePath")
+
+                    app_window.progressWindow.title = qsTr("Upload progress ...")
+                    app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
                     app_window.progressWindow.visible = true
                     if(!folder.get(view.currentIndex, "fileIsDir")) {
                         s3Model.uploadFileQML(filePath)
@@ -126,7 +129,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
-                text: "New"
+                text: qsTr("New")
                 onClicked: {
                     createFolderWindow.x = app_window.x + (app_window.width / 2) - (createFolderWindow.width / 2)
                     createFolderWindow.y = app_window.y + (app_window.height / 2) - (createFolderWindow.height / 2)
@@ -207,7 +210,6 @@ Item {
                         x: file_browser_path_text.width
                         radius: 20
                         height: parent.height
-                        //flat: true
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         onClicked: {
@@ -232,6 +234,7 @@ Item {
 
                         }
                     }
+
                     Rectangle {
                         width: 1
                         height: 32

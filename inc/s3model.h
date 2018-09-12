@@ -76,6 +76,15 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void getBucketsQML() { getBuckets(); }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE void setFileBrowserPath(const QString& path) {
+        mFileBrowserPath = path;
+        mFileBrowserPath = mFileBrowserPath.replace("file://", "").append("/");
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getFileBrowserPath() {
+        return mFileBrowserPath;
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void goBackQML() { goBack(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void gotoQML(const QString &path) {
@@ -347,6 +356,7 @@ private:
     QStringList m_s3Path;
     QMap<QString, QString> bookmarks;
     bool isConnected;
+    QString mFileBrowserPath;
     /**
      * @brief parseCLIConfig
      * @param credentialsFilePath

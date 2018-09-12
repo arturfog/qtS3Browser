@@ -52,6 +52,8 @@ S3Model::S3Model(QObject *parent)
 
     s3.setErrorHandler(callback);
 
+    mFileBrowserPath = "";
+
     loadBookmarks();
     readCLIConfig();
 }
@@ -292,12 +294,12 @@ void S3Model::download(const QString &key, bool isDir)
     if(isDir) {
         s3.downloadDirectory(getCurrentBucket().toStdString().c_str(),
                              getPathWithoutBucket().append(out_file).toStdString().c_str(),
-                             QString("/tmp/").append(out_file).toStdString().c_str(),
+                             getFileBrowserPath().append(out_file).toStdString().c_str(),
                              callback);
     } else {
         s3.downloadFile(getCurrentBucket().toStdString().c_str(),
                         getPathWithoutBucket().append(out_file).toStdString().c_str(),
-                        QString("/tmp/").append(out_file).toStdString().c_str(), callback);
+                        getFileBrowserPath().append(out_file).toStdString().c_str(), callback);
     }
 }
 // --------------------------------------------------------------------------

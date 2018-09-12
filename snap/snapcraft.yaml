@@ -55,6 +55,11 @@ parts:
       - libqt5qml5
       - libqt5quick5
       - libqt5widgets5
+      - qml-module-qtquick-dialogs
+      - qml-module-qtquick-layouts
+      - qml-module-qtquick2
+      - qml-module-qtquick-controls2
+      - qml-module-qtquick-window2
       - libx11-xcb1
       - libx11-6
       - libxau6

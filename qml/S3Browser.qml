@@ -95,6 +95,8 @@ Item {
                 text: "Download"
                 enabled: connected
                 onClicked: {
+                    app_window.progressWindow.title = qsTr("Download progress ...")
+                    app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
                     app_window.progressWindow.visible = true
                     s3Model.downloadQML(view.currentIndex)
 
@@ -158,7 +160,7 @@ Item {
                     border.width: 2
                     border.color: "#dfdfdf"
                     height: 38
-                    color: "#FFE13C"
+                    color: "#ffebcc"
                     radius: 20
 
                     Image {
