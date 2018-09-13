@@ -291,6 +291,14 @@ Item {
                                 text: ""
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
+
+                                onTextChanged: {
+                                    if(text.length > 0) {
+                                        s3Model.search(text)
+                                    } else {
+                                        s3Model.searchReset();
+                                    }
+                                }
                             }
                         }
                         RoundButton {
@@ -298,6 +306,7 @@ Item {
                             icon.source: "qrc:icons/32_clear_icon.png"
                             icon.color: "transparent"
                             onClicked: {
+                                s3Model.searchReset()
                                 s3_search_txt.clear()
                             }
                         }

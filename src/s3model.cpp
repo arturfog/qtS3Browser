@@ -42,7 +42,13 @@ QString S3Item::filePath() const
 }
 // --------------------------------------------------------------------------
 S3Model::S3Model(QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent),
+      currentFile(),
+      m_s3items(),
+      bookmarks(),
+      isConnected(false),
+      mFileBrowserPath(),
+      m_s3itemsBackup()
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
 
@@ -51,8 +57,6 @@ S3Model::S3Model(QObject *parent)
     };
 
     s3.setErrorHandler(callback);
-
-    mFileBrowserPath = "";
 
     loadBookmarks();
     readCLIConfig();

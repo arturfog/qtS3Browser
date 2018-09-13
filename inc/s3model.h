@@ -138,7 +138,6 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
-        //getObjectInfo(name);
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
         if (search != s3.objectInfoVec.end()) {
             return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
@@ -195,6 +194,34 @@ public:
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void search(const QString& txt) {
+        if(m_s3itemsBackup.size() == 0) {
+            m_s3itemsBackup.append(m_s3items);
+        }
+        if(m_s3itemsBackup.size() > 0) {
+            clearItems();
+            for(auto item : m_s3itemsBackup) {
+                if(item.fileName().contains(txt)) {
+                    emit addItemSignal(item.fileName(), item.filePath());
+                }
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void searchReset() {
+        if(m_s3itemsBackup.size() > 0) {
+            clearItems();
+
+            beginInsertRows(QModelIndex(), 0, m_s3itemsBackup.size() - 1);
+            m_s3items.append(m_s3itemsBackup);
+            endInsertRows();
+
+            qDebug() << "search reset";
+
+            m_s3itemsBackup.clear();
+        }
+    }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getItemNameQML(const int index) {
         if(index < m_s3items.count()) {
@@ -357,6 +384,7 @@ private:
     QMap<QString, QString> bookmarks;
     bool isConnected;
     QString mFileBrowserPath;
+    QList<S3Item> m_s3itemsBackup;
     /**
      * @brief parseCLIConfig
      * @param credentialsFilePath
