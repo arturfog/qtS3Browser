@@ -29,6 +29,8 @@ Window {
     color: "#f8f9fa"
     title: qsTr("Create bookmark")
 
+    property string borderColor: "gray"
+
     Rectangle {
         color: "#3367d6"
         width: parent.width
@@ -121,9 +123,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -141,7 +143,7 @@ Window {
                             bookmark_name_input_rect.border.color = "orange"
                         } else {
                             bookmark_name_input_rect.color = "#efefef"
-                            bookmark_name_input_rect.border.color = "gray"
+                            bookmark_name_input_rect.border.color = borderColor
                         }
                     }
                 }
@@ -192,9 +194,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -213,7 +215,7 @@ Window {
                             bookmark_url_input_rect.border.color = "orange"
                         } else {
                             bookmark_url_input_rect.color = "#efefef"
-                            bookmark_url_input_rect.border.color = "gray"
+                            bookmark_url_input_rect.border.color = borderColor
                         }
                     }
                 }

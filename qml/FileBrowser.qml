@@ -83,6 +83,7 @@ Item {
                 onClicked: {
                     if(folder.parentFolder.toString().length > 0) {
                         view.path = folder.parentFolder
+                        s3Model.setFileBrowserPath(view.path)
                     }
                 }
             }
@@ -171,6 +172,7 @@ Item {
                     width: parent.width
                     border.width: 2
                     border.color: "lightblue"
+                    color: "#e6f9ff"
                     height: 35
                     radius: 20
 

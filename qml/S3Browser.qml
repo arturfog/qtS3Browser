@@ -93,7 +93,7 @@ Item {
                 icon.source: "qrc:icons/32_download_icon.png"
                 icon.color: "transparent"
                 text: "Download"
-                enabled: connected
+                enabled: connected && s3Model.canDownload()
                 onClicked: {
                     app_window.progressWindow.title = qsTr("Download progress ...")
                     app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"

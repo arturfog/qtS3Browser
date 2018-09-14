@@ -101,9 +101,15 @@ Rectangle {
     Menu {
         id: contextMenu
         MenuItem {
+            icon.source: "qrc:icons/32_download_icon.png"
+            icon.color: "transparent"
+            enabled: connected
             text: qsTr('Download')
         }
         MenuItem {
+            icon.source: "qrc:icons/32_delete_icon.png"
+            icon.color: "transparent"
+            enabled: connected
             text: qsTr('Delete')
         }
     }

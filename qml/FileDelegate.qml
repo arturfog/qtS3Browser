@@ -17,7 +17,8 @@
 */
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
-
+import QtQuick.Controls.Material 2.2
+import QtQuick.Controls 2.4
 Rectangle {
     id:delegate
     width: view.width
@@ -69,12 +70,35 @@ Rectangle {
 
     }
 
+    Menu {
+        id: contextMenu
+        MenuItem {
+            icon.source: "qrc:icons/32_upload_icon.png"
+            icon.color: "transparent"
+            enabled: connected
+            text: qsTr('Upload')
+        }
+        MenuItem {
+            icon.source: "qrc:icons/32_delete_icon.png"
+            icon.color: "transparent"
+            text: qsTr('Delete')
+        }
+    }
+
     MouseArea {
         id:mouseArea
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
+
+            if (mouse.button === Qt.RightButton)
+            {
+                contextMenu.popup()
+                console.log("Right")
+            }
         }
+
         onDoubleClicked: {
             fileIsDir ? view.path = fileURL : Qt.openUrlExternally(fileURL)
             s3Model.setFileBrowserPath(view.path)

@@ -76,14 +76,11 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void getBucketsQML() { getBuckets(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void setFileBrowserPath(const QString& path) {
-        mFileBrowserPath = path;
-        mFileBrowserPath = mFileBrowserPath.replace("file://", "").append("/");
-    }
+    Q_INVOKABLE void setFileBrowserPath(const QString& path);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getFileBrowserPath() {
-        return mFileBrowserPath;
-    }
+    Q_INVOKABLE bool canDownload() const;
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getFileBrowserPath() const;
     // --------------------------------------------------------------------------
     Q_INVOKABLE void goBackQML() { goBack(); }
     // --------------------------------------------------------------------------

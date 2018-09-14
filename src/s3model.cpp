@@ -62,6 +62,24 @@ S3Model::S3Model(QObject *parent)
     readCLIConfig();
 }
 // --------------------------------------------------------------------------
+Q_INVOKABLE QString S3Model::getFileBrowserPath() const {
+    return mFileBrowserPath;
+}
+// --------------------------------------------------------------------------
+Q_INVOKABLE bool S3Model::canDownload() const {
+    const QFileInfo fileInfo = QFileInfo(getFileBrowserPath());
+    if(fileInfo.isDir() && fileInfo.isWritable()) {
+        qDebug() << "canDownload: " << getFileBrowserPath() << " true";
+        return true;
+    }
+    return false;
+}
+// --------------------------------------------------------------------------
+Q_INVOKABLE void S3Model::setFileBrowserPath(const QString& path) {
+    mFileBrowserPath = path;
+    mFileBrowserPath = mFileBrowserPath.replace("file://", "").append("/");
+}
+// --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
