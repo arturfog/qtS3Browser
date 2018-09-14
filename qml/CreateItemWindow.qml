@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.11
+import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
@@ -112,15 +112,15 @@ Window {
                 y: 10
                 width: parent.width
                 height: 40
-//                Image {
-//                    source: {
-//                        if(create_action === 0) {
-//                            "qrc:icons/32_bucket_icon.png"
-//                        } else {
-//                            "qrc:icons/32_new_folder_icon.png"
-//                        }
-//                    }
-//                }
+                Image {
+                    source: {
+                        if(create_action === 0) {
+                            "qrc:icons/32_bucket_icon.png"
+                        } else {
+                            "qrc:icons/32_new_folder_icon.png"
+                        }
+                    }
+                }
 
                 Text {
                     width: parent.width
@@ -155,8 +155,8 @@ Window {
                 width: parent.width - 20
                 height: 30
                 border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {

@@ -304,7 +304,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
     std::cout << "Deleting " << key_name << " from S3 bucket: " <<
                  bucket_name << std::endl;
 
-    Aws::S3::Model::DeleteObjectsRequest objects_request;
+    Aws::S3::Model::DeleteObjectsRequest objects_request;        
     Aws::S3::Model::Delete del;
     Aws::Vector<Aws::S3::Model::ObjectIdentifier> list;
     Aws::S3::Model::ObjectIdentifier id;
@@ -320,6 +320,8 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
     //s3_client->DeleteObjectsAsync(objects_request, &deleteObjectHandler);
 }
 // --------------------------------------------------------------------------
+
+
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteObjectRequest &,
                                    const Aws::S3::Model::DeleteObjectOutcome &outcome,

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.11
+import QtQuick 2.9
 import QtQuick.Controls 2.4
 import QtQuick.Controls.Material 2.3
 import QtQuick.Dialogs 1.2
@@ -170,7 +170,7 @@ Item {
                 Rectangle {
                     width: parent.width
                     border.width: 2
-                    border.color: "#dbdbdb"
+                    border.color: "lightblue"
                     height: 35
                     radius: 20
 
@@ -194,7 +194,7 @@ Item {
                         width: 2
                         x: 90
                         height: parent.height
-                        color: "#dfdfdf"
+                        color: "lightblue"
                     }
 
                     TextInput {
@@ -204,9 +204,9 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
                     }
+
                     RoundButton {
                         id: file_browser_path_go
-                        y: 2
                         x: file_browser_path_text.width
                         radius: 20
                         height: parent.height
@@ -278,9 +278,9 @@ Item {
                         Rectangle {
                             width: browser.width - file_search_btn.width
                             height: 20
-                            border.color: "orange"
-                            border.width: 1
-                            radius: 10
+                            border.color: "gray"
+                            border.width: 2
+                            radius: 20
 
                             Image {
                                 x: 5
@@ -294,6 +294,9 @@ Item {
                                 text: ""
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
+                                onTextChanged: {
+                                    //folder.nameFilters = ["*" + text + "*"]
+                                }
                             }
                         }
 

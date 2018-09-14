@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.11
+import QtQuick 2.9
 import QtQuick.Layouts 1.3
 
 Rectangle {

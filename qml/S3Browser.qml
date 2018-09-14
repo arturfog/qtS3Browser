@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.11
+import QtQuick 2.9
 import QtQuick.Controls 2.4
 import QtQuick.Dialogs 1.2
 import Qt.labs.folderlistmodel 2.2
@@ -158,7 +158,7 @@ Item {
                 Rectangle {
                     width: parent.width - 2
                     border.width: 2
-                    border.color: "#dfdfdf"
+                    border.color: "orange"
                     height: 38
                     color: "#ffebcc"
                     radius: 20
@@ -183,7 +183,7 @@ Item {
                         width: 2
                         x: 90
                         height: parent.height
-                        color: "#dfdfdf"
+                        color: "orange"
                     }
 
                     TextInput {
@@ -196,7 +196,6 @@ Item {
 
                     RoundButton {
                         id: s3_browser_path_go
-                        y: 2
                         x: s3_browser_path_text.width
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
@@ -275,9 +274,9 @@ Item {
                         Rectangle {
                             width: s3_browser.width - s3_search_btn.width
                             height: 20
-                            border.color: "orange"
-                            border.width: 1
-                            radius: 10
+                            border.color: "gray"
+                            border.width: 2
+                            radius: 20
 
                             Image {
                                 x: 5

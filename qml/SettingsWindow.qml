@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.11
+import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
@@ -28,6 +28,8 @@ Window {
     minimumWidth: 400
     color: "#f8f9fa"
     title: "Settings"
+
+    property string borderColor: "lightBlue"
 
     onVisibilityChanged: {
         startPath.text = s3Model.getStartPathQML()
@@ -137,9 +139,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -157,7 +159,7 @@ Window {
                             start_path_input_rect.border.color = "orange"
                         } else {
                             start_path_input_rect.color = "#efefef"
-                            start_path_input_rect.border.color = "gray"
+                            start_path_input_rect.border.color = borderColor
                         }
                     }
                 }
@@ -235,9 +237,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -255,7 +257,7 @@ Window {
                             secret_key_input_rect.border.color = "orange"
                         } else {
                             secret_key_input_rect.color = "#efefef"
-                            secret_key_input_rect.border.color = "gray"
+                            secret_key_input_rect.border.color = borderColor
                         }
                     }
                 }
@@ -333,9 +335,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -353,7 +355,7 @@ Window {
                             access_key_input_rect.border.color = "orange"
                         } else {
                             access_key_input_rect.color = "#efefef"
-                            access_key_input_rect.border.color = "gray"
+                            access_key_input_rect.border.color = borderColor
                         }
                     }
                 }
@@ -432,8 +434,8 @@ Window {
                 width: parent.width - 20
                 height: 30
                 border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.width: 2
+                radius: 20
                 color: "#f8f9fa"
 
                 ComboBox {
@@ -523,9 +525,9 @@ Window {
                 x: 10
                 width: parent.width - 20
                 height: 30
-                border.color: "gray"
-                border.width: 1
-                radius: 10
+                border.color: borderColor
+                border.width: 2
+                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -543,7 +545,7 @@ Window {
                             endpoint_input_rect.border.color = "orange"
                         } else {
                             endpoint_input_rect.color = "#efefef"
-                            endpoint_input_rect.border.color = "gray"
+                            endpoint_input_rect.border.color = borderColor
                         }
                     }
                 }
