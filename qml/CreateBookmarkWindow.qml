@@ -236,7 +236,7 @@ Window {
         Button {
             id: create_btn
             text: qsTr("Create")
-            icon.source: "qrc:icons/32_save_icon.png"
+            icon.source: "qrc:icons/32_add_icon.png"
             icon.color: "transparent"
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
             onClicked: {

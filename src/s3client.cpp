@@ -301,8 +301,6 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
                                const Aws::String &key_name,
                                std::function<void ()> callback)
 {
-
-
     Aws::S3::Model::ListObjectsRequest list_request;
     list_request.SetBucket(bucket_name);
 
@@ -311,15 +309,20 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
     }
 
     auto outcome = s3_client->ListObjects(list_request);
+    std::function<void()> cb = [&]() { };
     if(outcome.IsSuccess()) {
         Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
-        std::function<void()> cb = [&]() {  };
+        unsigned long items = object_list.size();
         for (auto const &s3_object : object_list)
         {
-            deleteObject(bucket_name, s3_object.GetKey(), cb);
+            --items;
+            if(items <= 1) {
+                deleteObject(bucket_name, s3_object.GetKey(), callback);
+            } else {
+                deleteObject(bucket_name, s3_object.GetKey(), cb);
+            }
         }
-        callback();
     }
 }
 // --------------------------------------------------------------------------
@@ -333,22 +336,6 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
     {
         std::cout << "Deleting Done!" << std::endl;
         m_emptyFunc();
-    }
-    else
-    {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
-    }
-}
-// --------------------------------------------------------------------------
-void S3Client::deleteObjectsHandler(const Aws::S3::S3Client *,
-                                const Aws::S3::Model::DeleteObjectsRequest &,
-                                const Aws::S3::Model::DeleteObjectsOutcome &outcome,
-                                const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
-{
-    std::cout << "deleteDirHandler !" << std::endl;
-    if (outcome.IsSuccess())
-    {
-        std::cout << "Done!" << std::endl;
     }
     else
     {

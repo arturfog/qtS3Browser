@@ -34,7 +34,7 @@ Window {
             var values = s3Model.getBookmarksLinksQML()
             for(var i = 0; i < bookmarksLen; i++){
                 var newObject = Qt.createQmlObject('
-import QtQuick 2.11;
+import QtQuick 2.5;
 import QtQuick.Controls 2.2;
 
 Column {
@@ -52,7 +52,7 @@ Column {
  }
 
  Column {
-   width: 200;
+   width: 230;
 
    Text {
      font.pointSize: 14
@@ -95,7 +95,7 @@ Rectangle {
             }
         } else {
             var emptyObject = Qt.createQmlObject('
-import QtQuick 2.11;
+import QtQuick 2.5;
 import QtQuick.Controls 2.2;
 
 Column {
@@ -186,7 +186,7 @@ onClicked: { createBookmarkWindow.visible = true; close() } }
             radius: 5
 
             Column {
-                y: 50
+                y: 10
                 id: bookmarks_list
                 Component.onCompleted: addBookmarks()
             }

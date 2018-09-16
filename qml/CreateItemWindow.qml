@@ -112,15 +112,6 @@ Window {
                 y: 10
                 width: parent.width
                 height: 40
-                Image {
-                    source: {
-                        if(create_action === 0) {
-                            "qrc:icons/32_edit_icon.png"
-                        } else {
-                            "qrc:icons/32_edit_icon.png"
-                        }
-                    }
-                }
 
                 Text {
                     width: parent.width
@@ -193,6 +184,8 @@ Window {
             Button {
                 id: cw_cb
                 text: qsTr("Create")
+                icon.source: "qrc:icons/32_add_icon.png"
+                icon.color: "transparent"
                 onClicked: {
                     if (create_action === 0) {
                         s3Model.createBucketQML(itemName.text)
