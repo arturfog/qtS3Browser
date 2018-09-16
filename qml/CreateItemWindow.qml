@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.9
+import QtQuick 2.6
 import QtQuick.Window 2.3
 import QtQml.Models 2.3
 import QtQuick.Controls 2.4
@@ -115,9 +115,9 @@ Window {
                 Image {
                     source: {
                         if(create_action === 0) {
-                            "qrc:icons/32_bucket_icon.png"
+                            "qrc:icons/32_edit_icon.png"
                         } else {
-                            "qrc:icons/32_new_folder_icon.png"
+                            "qrc:icons/32_edit_icon.png"
                         }
                     }
                 }

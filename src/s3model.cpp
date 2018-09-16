@@ -80,6 +80,48 @@ Q_INVOKABLE void S3Model::setFileBrowserPath(const QString& path) {
     mFileBrowserPath = mFileBrowserPath.replace("file://", "").append("/");
 }
 // --------------------------------------------------------------------------
+Q_INVOKABLE void S3Model::downloadQML(const int idx) {
+    if (idx < m_s3items.count()) {
+        if(getCurrentPathDepth() >= 1) {
+            bool isDir = false;
+            if(m_s3items.at(idx).filePath().compare("/") == 0) {
+                isDir = true;
+            }
+            download(m_s3items.at(idx).fileName(), isDir);
+        }
+    }
+}
+// --------------------------------------------------------------------------
+Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
+    m_s3Path.clear();
+    QStringList pathItems = path.split("s3://");
+    if(pathItems.count() > 1) {
+        for(auto item: pathItems[1].split("/")) {
+            if(!item.isEmpty()) {
+                m_s3Path.append(item + "/");
+            }
+        }
+        refresh();
+    }
+}
+// --------------------------------------------------------------------------
+Q_INVOKABLE void S3Model::removeQML(const int idx) {
+    if (idx < m_s3items.count() && idx >= 0) {
+        if(getCurrentPathDepth() <= 0) {
+            removeBucket(m_s3items.at(idx).fileName().toStdString());
+        } else {
+
+            bool isDir = false;
+            if(m_s3items.at(idx).filePath().compare("/") == 0) {
+                isDir = true;
+            }
+
+            const QString filename = m_s3items.at(idx).fileName();
+            removeObject(getPathWithoutBucket().append(filename), isDir);
+        }
+    }
+}
+// --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
@@ -261,13 +303,18 @@ void S3Model::removeBucket(const std::string &bucket)
     s3.deleteBucket(bucket.c_str());
 }
 // --------------------------------------------------------------------------
-void S3Model::removeObject(const std::string &key)
+void S3Model::removeObject(const QString &key, bool isDir)
 {
     clearItems();
-    std::function<void()> callback = [&]() {
-        refresh();
-    };
-    s3.deleteObject(getCurrentBucket().toStdString().c_str(), key.c_str(), callback);
+    std::function<void()> callbackObj = [&]() { refresh(); };
+    std::function<void()> callbackDir = [&]() { refresh(); };
+    if(isDir) {
+        s3.deleteDirectory(getCurrentBucket().toStdString().c_str(),
+                           key.toStdString().c_str(), callbackObj);
+    } else {
+        s3.deleteObject(getCurrentBucket().toStdString().c_str(),
+                        key.toStdString().c_str(), callbackDir);
+    }
 }
 // --------------------------------------------------------------------------
 void S3Model::upload(const QString& file, bool isDir)

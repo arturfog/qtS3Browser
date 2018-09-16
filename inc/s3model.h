@@ -84,18 +84,7 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void goBackQML() { goBack(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void gotoQML(const QString &path) {
-        m_s3Path.clear();
-        QStringList pathItems = path.split("s3://");
-        if(pathItems.count() > 1) {
-            for(auto item: pathItems[1].split("/")) {
-                if(!item.isEmpty()) {
-                    m_s3Path.append(item + "/");
-                }
-            }
-            refresh();
-        }
-    }
+    Q_INVOKABLE void gotoQML(const QString &path);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
     // --------------------------------------------------------------------------
@@ -107,32 +96,14 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadDirQML(const QString &file) { upload(file, true); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void downloadQML(const int idx) {
-        if (idx < m_s3items.count()) {
-            if(getCurrentPathDepth() >= 1) {
-                bool isDir = false;
-                if(m_s3items.at(idx).filePath().compare("/") == 0) {
-                    isDir = true;
-                }
-                download(m_s3items.at(idx).fileName(), isDir);
-            }
-        }
-    }
+    Q_INVOKABLE void downloadQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void refreshQML() { refresh(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getCurrentPathDepthQML() {
         return getCurrentPathDepth(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void removeQML(const int idx) {
-        if (idx < m_s3items.count() && idx >= 0) {
-            if(getCurrentPathDepth() <= 0) {
-                removeBucket(m_s3items.at(idx).fileName().toStdString());
-            } else {
-                removeObject(getPathWithoutBucket().append(m_s3items.at(idx).fileName()).toStdString());
-            }
-        }
-    }
+    Q_INVOKABLE void removeQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
@@ -302,7 +273,7 @@ public:
      * @brief removeObject
      * @param key
      */
-    void removeObject(const std::string &key);
+    void removeObject(const QString &key, bool isDir);
     /**
      * @brief upload
      * @param file

@@ -25,6 +25,7 @@
 #include <aws/core/client/AWSClient.h>
 
 #include <aws/s3/model/DeleteBucketRequest.h>
+#include <aws/s3/model/DeleteObjectsRequest.h>
 
 #include <aws/core/utils/memory/stl/AWSString.h>
 #include <aws/core/utils/threading/Executor.h>
@@ -112,6 +113,17 @@ private:
                                     const Aws::S3::Model::DeleteObjectRequest& request,
                                     const Aws::S3::Model::DeleteObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
+    /**
+     * @brief deleteObjectsHandler
+     * @param client
+     * @param request
+     * @param outcome
+     * @param context
+     */
+    static void deleteObjectsHandler(const Aws::S3::S3Client* client,
+                                 const Aws::S3::Model::DeleteObjectsRequest& request,
+                                 const Aws::S3::Model::DeleteObjectsOutcome& outcome,
+                                 const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
     /**
      * @brief deleteBucketHandler
      * @param client

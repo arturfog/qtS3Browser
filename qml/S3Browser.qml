@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.9
+import QtQuick 2.6
 import QtQuick.Controls 2.4
 import QtQuick.Dialogs 1.2
 import Qt.labs.folderlistmodel 2.2

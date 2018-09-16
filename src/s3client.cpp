@@ -301,36 +301,54 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
                                const Aws::String &key_name,
                                std::function<void ()> callback)
 {
-    std::cout << "Deleting " << key_name << " from S3 bucket: " <<
-                 bucket_name << std::endl;
 
-    Aws::S3::Model::DeleteObjectsRequest objects_request;        
-    Aws::S3::Model::Delete del;
-    Aws::Vector<Aws::S3::Model::ObjectIdentifier> list;
-    Aws::S3::Model::ObjectIdentifier id;
-    id.SetKey(key_name);
-    list.emplace_back(id);
-    del.SetObjects(list);
 
-    objects_request.SetBucket(bucket_name);
-    objects_request.SetDelete(del);
+    Aws::S3::Model::ListObjectsRequest list_request;
+    list_request.SetBucket(bucket_name);
 
-    m_emptyFunc = callback;
+    if(key_name != "") {
+        list_request.SetPrefix(key_name);
+    }
 
-    //s3_client->DeleteObjectsAsync(objects_request, &deleteObjectHandler);
+    auto outcome = s3_client->ListObjects(list_request);
+    if(outcome.IsSuccess()) {
+        Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
+
+        std::function<void()> cb = [&]() {  };
+        for (auto const &s3_object : object_list)
+        {
+            deleteObject(bucket_name, s3_object.GetKey(), cb);
+        }
+        callback();
+    }
 }
 // --------------------------------------------------------------------------
-
-
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
                                    const Aws::S3::Model::DeleteObjectRequest &,
                                    const Aws::S3::Model::DeleteObjectOutcome &outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
+    std::cout << "deleteObjectHandler" << std::endl;
     if (outcome.IsSuccess())
     {
         std::cout << "Deleting Done!" << std::endl;
         m_emptyFunc();
+    }
+    else
+    {
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
+    }
+}
+// --------------------------------------------------------------------------
+void S3Client::deleteObjectsHandler(const Aws::S3::S3Client *,
+                                const Aws::S3::Model::DeleteObjectsRequest &,
+                                const Aws::S3::Model::DeleteObjectsOutcome &outcome,
+                                const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+    std::cout << "deleteDirHandler !" << std::endl;
+    if (outcome.IsSuccess())
+    {
+        std::cout << "Done!" << std::endl;
     }
     else
     {
