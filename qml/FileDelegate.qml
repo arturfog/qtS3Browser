@@ -73,6 +73,11 @@ Rectangle {
     Menu {
         id: contextMenu
         MenuItem {
+            icon.source: "qrc:icons/32_about_icon.png"
+            icon.color: "transparent"
+            text: qsTr('Info')
+        }
+        MenuItem {
             icon.source: "qrc:icons/32_upload_icon.png"
             icon.color: "transparent"
             enabled: connected

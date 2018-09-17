@@ -214,7 +214,7 @@ Item {
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         onClicked: {
-                            path = file_browser_path_text.text
+                            path = "file://" + file_browser_path_text.text
                         }
                     }
                 }
@@ -293,6 +293,7 @@ Item {
                                 id: file_search_txt
                                 x:30
                                 text: ""
+                                selectByMouse: true
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: {

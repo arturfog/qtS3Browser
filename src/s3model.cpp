@@ -176,7 +176,7 @@ QString S3Model::getPathWithoutBucket() const
 }
 // --------------------------------------------------------------------------
 QString S3Model::s3Path() const {
-    QString path = QString("s3://").append(getCurrentBucket());
+    QString path = getCurrentBucket();
     if(m_s3Path.count() >= 1) {
         path = path.append("/").append(getPathWithoutBucket());
     }

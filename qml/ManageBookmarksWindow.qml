@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.9
-import QtQuick.Window 2.3
-import QtQuick.Controls 2.4
+import QtQuick 2.5
+import QtQuick.Window 2.0
+import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 Window {
     id: about_win
@@ -38,39 +38,39 @@ import QtQuick 2.5;
 import QtQuick.Controls 2.2;
 
 Column {
-
+ width: parent.width;
  Row {
+  width: parent.width;
   id: bookmarks_item
   x: 10
   Image {
-      source: "qrc:icons/32_bookmark.png"
- }
+    source: "qrc:icons/32_bookmark.png"
+  }
 
- Rectangle {
-   width: 10
-   height: 10
- }
+  Rectangle {
+    width: 10
+    height: 10
+  }
 
- Column {
-   width: 230;
+  Column {
+    width: parent.width - 160;
+    Text {
+      font.pointSize: 14
+      text: "' + keys[i] +'"
+     }
 
-   Text {
-     font.pointSize: 14
-     text: "' + keys[i] +'"
-   }
+     Text {
+       font.pointSize: 8
+       text: \'<a href="' + values[i] +'">' + values[i] + '</a>\'
+     }
+  }
 
-   Text {
-     font.pointSize: 8
-     text: \'<a href="' + values[i] +'">' + values[i] + '</a>\'
-   }
- }
-
- Button {
-  text: "Remove";
-  icon.source: "qrc:icons/32_delete_icon.png"
-  icon.color: "transparent"
-  onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
- }
+  Button {
+    text: "Remove";
+    icon.source: "qrc:icons/32_delete_icon.png"
+    icon.color: "transparent"
+    onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
+  }
 }
 
 Rectangle {
@@ -188,6 +188,7 @@ onClicked: { createBookmarkWindow.visible = true; close() } }
             Column {
                 y: 10
                 id: bookmarks_list
+                width: parent.width
                 Component.onCompleted: addBookmarks()
             }
         }

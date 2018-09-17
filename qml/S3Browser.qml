@@ -199,12 +199,11 @@ Item {
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
-                        //flat: true
                         onClicked: {
-                            if(s3_browser_path_text.text === "s3://") {
+                            if(s3_browser_path_text.text === "") {
                                 s3Model.getBucketsQML()
-                            } else if(s3_browser_path_text.text.indexOf("s3://") >= 0) {
-                                s3Model.gotoQML(s3_browser_path_text.text)
+                            } else {
+                                s3Model.gotoQML("s3://" + s3_browser_path_text.text)
                             }
                             s3_panel.connected = s3Model.isConnectedQML()
                             file_panel.connected = s3Model.isConnectedQML()
@@ -287,6 +286,7 @@ Item {
                                 id: s3_search_txt
                                 x:30
                                 text: ""
+                                selectByMouse: true
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
 
