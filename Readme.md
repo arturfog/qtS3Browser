@@ -2,9 +2,11 @@
 
 [![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser)
 
+![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)
+
 Simple **Amazon S3** client written in C++/QT
 
-![alt text](https://github.com/arturfog/qtS3Browser/raw/master/assets/app_main.png)
+![Main Window](https://github.com/arturfog/qtS3Browser/raw/master/assets/app_main.png)
 
 ## Testing:
 
