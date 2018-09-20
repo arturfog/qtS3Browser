@@ -44,22 +44,60 @@ parts:
             - -DBUILD_SHARED_LIBS=ON
             - -DENABLE_TESTING=OFF
             - -DBUILD_ONLY=s3;transfer
+  qt:
+    plugin: qtbuilder
+    qt-version: 5.11.1
+    qt-source-git: https://code.qt.io/qt/qt5.git
+    qt-submodules: ['qtbase', 'qtimageformats']
+    environment:
+      - CC: gcc-7
+      - CXX: g++-7
+      - QMAKE_CC: gcc-7
+      - QMAKE_CXX: g++-7
+    build-packages:
+      - libasound2-dev
+      - libdbusmenu-glib-dev
+      - libffi-dev
+      - liblzma-dev
+      - libpulse-dev
+      - libssl-dev
+      - libx11-xcb-dev
+      - libxcb-icccm4-dev
+      - libxcb-image0-dev
+      - libxcb-keysyms1-dev
+      - libxcb-randr0-dev
+      - libxcb-render-util0-dev
+      - libxcb-sync-dev
+      - libxcb-util0-dev
+      - libxcb-xfixes0-dev
+      - libxcb1-dev
+      - libxrender-dev
+    configflags:
+      - -prefix
+      - $SNAPCRAFT_STAGE
+      - -release
+      - -force-debug-info
+      - -opensource
+      - -confirm-license
+      - -qt-zlib
+      - -qt-libpng
+      - -qt-libjpeg
+      - -qt-freetype
+      - -qt-harfbuzz
+      - -qt-pcre
+      - -qt-xcb
+      - -qt-xkbcommon-x11
+      - -nomake
+      - examples
+      - -nomake
+      - tests
+    after:
+      - libxkbcommon
+      - gcc7
+    prime: [-./*]
   application:
     source: https://github.com/arturfog/qtS3Browser.git
-    build-packages:
-      - qtdeclarative5-dev
     stage-packages:
-      - libqt5core5a
-      - libqt5gui5
-      - libqt5network5
-      - libqt5qml5
-      - libqt5quick5
-      - libqt5widgets5
-      - qml-module-qtquick-dialogs
-      - qml-module-qtquick-layouts
-      - qml-module-qtquick2
-      - qml-module-qtquick-controls
-      - qml-module-qtquick-window2
       - libcanberra-gtk-module
       - libx11-xcb1
       - libx11-6
@@ -86,4 +124,4 @@ parts:
       - libxshmfence1
     plugin: qmake
     qt-version: qt5
-    after: [aws, desktop-qt5]
+    after: [aws, qt]
