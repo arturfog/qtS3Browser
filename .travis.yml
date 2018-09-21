@@ -1,10 +1,13 @@
 language: cpp
 
 install:
-        - sudo apt-get update -qq
         - sudo apt-get install -y python3-pip
+        - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        - sudo apt-get update -qq
+        - sudo apt install gcc-7
 script:
-        sudo pip3 -U install conan
-        conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan
+        - sudo pip3 install -U conan
+        - conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan
+        - conan install . -s os=Linux -s arch=x86_64 -s build_type=Release -s compiler.version=7
 notifications:
         email: false

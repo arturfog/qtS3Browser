@@ -11,7 +11,7 @@ conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-
 echo "[ OK ]"
 
 echo -n "Generating conanbuildinfo.pri ..."
-conan install .
+conan install . -s os=Linux -s arch=x86_64 -s build_type=Release -s compiler.version=7
 echo "[ OK ]"
 
 echo -n "Creating build directory ..."
