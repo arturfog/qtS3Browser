@@ -1,0 +1,14 @@
+language: cpp
+compiler:
+- gcc
+install:
+        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+        - sudo add-apt-repository -y ppa:jonathonf/python-3.6
+        - sudo apt-get update -qq
+        - sudo apt install -y gcc-7
+script:
+        - sudo pip install conan
+        - conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan
+        - conan install . -s os=Linux -s arch=x86_64 -s build_type=Release -s compiler.version=7
+notifications:
+        email: false
