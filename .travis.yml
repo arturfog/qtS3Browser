@@ -8,7 +8,7 @@ install:
         - sudo apt-get install python3.6
         - sudo apt-get install -y python3-pip
 script:
-        - sudo pip3 install -U conan
+        - sudo python3.6 -m pip install -U conan
         - conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan
         - conan install . -s os=Linux -s arch=x86_64 -s build_type=Release -s compiler.version=7
 notifications:
