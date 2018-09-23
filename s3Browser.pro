@@ -20,7 +20,7 @@ SOURCES += src/main.cpp \
 
 RESOURCES += qml.qrc
 
-# Additional import path used to resolve QML modules in Qt Creator's code model
+# Additional import path used to resolve QML modules in Qt Creators code model
 QML_IMPORT_PATH =
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
@@ -39,5 +39,7 @@ HEADERS += \
     inc/s3client.h \
     inc/iconprovider.h
 
-CONFIG += conan_basic_setup
-include(conanbuildinfo.pri)
+LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core -L"$$(HOME)/.local/usr/local/lib"
+INCLUDEPATH += "$$(HOME)/.local/usr/local/include"
+#CONFIG += conan_basic_setup
+#include(conanbuildinfo.pri)

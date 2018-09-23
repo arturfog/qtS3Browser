@@ -174,7 +174,8 @@ parts:
         - -skip
         - qtwebview
     stage-packages:
-        - etc1tool # minimal package for depending on libpng regardless of Ubuntu version
+        - libpng12-0
+        - libpng12-dev
         - fontconfig
         - icu-devtools
         - libc6
