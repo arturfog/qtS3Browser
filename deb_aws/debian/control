@@ -1,0 +1,31 @@
+Source: amazon-s3-cpp-sdk
+Section: misc
+Priority: optional
+Maintainer: Artur Fogiel <arturprojekty1988@gmail.com>
+Build-Depends:
+ debhelper (>= 7.0.50),
+ g++,
+ make,
+ pkg-config,
+ zlib1g-dev, 
+ libssl-dev, 
+ libcurl4-openssl-dev
+Homepage: https://aws.amazon.com/sdk-for-cpp/
+
+Package: amazon-s3-cpp-sdk
+Section: misc
+Architecture: any
+Depends:
+ libssl1.0.0,
+ zlib1g,
+ libcurl3,
+ libkrb5-3,
+ libgssapi3-heimdal,
+ libroken18-heimdal,
+ libgnutls30,
+ libp11-kit0,
+ libstdc++6,
+ libgcc1,
+ libdb5.3
+Description: Amazon S3 C++ SDK 
+
