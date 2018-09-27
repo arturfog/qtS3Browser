@@ -1,7 +1,7 @@
 #!/bin/bash
 # download
-#wget http://download.qt.io/official_releases/qt/5.10/5.10.1/single/qt-everywhere-src-5.10.1.tar.xz
+#wget https://download.qt.io/archive/qt/5.9/5.9.6/single/qt-everywhere-opensource-src-5.9.6.tar.xz
 # unpack
-tar -xf  qt-everywhere-src-5.10.1.tar.xz
+tar -xf qt-everywhere-opensource-src-5.9.6.tar.xz
 
-mv qt-everywhere-src-5.10.1 qt-everywhere-5.10.1
+mv qt-everywhere-opensource-src-5.9.6 qt-everywhere-5.9.6

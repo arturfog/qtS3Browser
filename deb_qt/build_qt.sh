@@ -12,11 +12,7 @@ apt-get install libx11-dev libxcb1-dev libxkbcommon-x11-dev libx11-xcb-dev libxe
 mkdir build
 cd build
 #
-../qt-everywhere-src-5.10.1/configure -v -opengl es2 -eglfs -no-gtk \
--opensource -confirm-license -release -reduce-exports \
--force-pkg-config -no-kms -nomake examples -no-compile-examples -no-pch \
--skip qtwayland -skip qtwebengine -no-feature-geoservices_mapboxgl \
--qt-pcre -ssl -evdev -system-freetype -fontconfig -glib -prefix /opt/Qt5.10
+../qt-everywhere-src-5.10.1/configure -opensource -confirm-license -release -nomake examples -no-compile-examples -prefix /opt/Qt5.10
 #
 make -j4
 #
