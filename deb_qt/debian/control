@@ -1,0 +1,34 @@
+Source: qt-everywhere
+Section: misc
+Priority: optional
+Maintainer: Artur Fogiel <arturprojekty1988@gmail.com>
+Build-Depends:
+ debhelper (>= 7.0.50),
+ build-essential,
+ libfontconfig1-dev,
+ libdbus-1-dev,
+ libfreetype6-dev,
+ libicu-dev,
+ libinput-dev,
+ libxkbcommon-dev,
+ libsqlite3-dev,
+ libssl-dev,
+ libpng-dev,
+ libjpeg-dev,
+ libglib2.0-dev,
+ python,
+ perl,
+ git,
+ libx11-dev,
+ libxcb1-dev,
+ libxkbcommon-x11-dev,
+ libx11-xcb-dev,
+ libxext-dev
+Homepage: https://www.qt.io/
+
+Package: qt-everywhere
+Section: misc
+Architecture: any
+Depends:
+ libssl1.0.0
+Description: Complete software development framework. QT. Easily create connected devices, UIs and applications with native C++ performance. It's powerful, yet compact, has intuitive tools and libraries and will blow your mind!

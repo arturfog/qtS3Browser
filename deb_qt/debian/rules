@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+%:
+	dh  $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -v -opengl es2 -eglfs -no-gtk \
+-opensource -confirm-license -release -reduce-exports \
+-force-pkg-config -no-kms -nomake examples -no-compile-examples -no-pch \
+-skip qtwayland -skip qtwebengine -no-feature-geoservices_mapboxgl \
+-qt-pcre -ssl -evdev -system-freetype -fontconfig -glib
+
+override_dh_auto_build:
+	dh_auto_build -- -j 8
+
+override_dh_install:
+	dh_install

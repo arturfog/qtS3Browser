@@ -1,0 +1,9 @@
+qt-everywhere (5.10.1) stable; urgency=low
+
+  [ Breaking changes in QT SDK for C++ ]
+  * New features
+
+ -- Jone Doe <john.doe@unknown_domain.org>  Sun, 12 Sep 2018 15:47:44 +0200
+
+
+
