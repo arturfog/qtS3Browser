@@ -2,22 +2,20 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
-#echo -n "Installing conan ..."
-#sudo pip3 -U install conan
-#echo "[ OK ]"
+# add gpg key
+wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | sudo apt-key add -
 
-#echo -n "Adding repository with aws ..."
-#conan remote add arturfog-conan-repo https://api.bintray.com/conan/arturfog/oss-conan
-#echo "[ OK ]"
+# add repo
+echo "deb https://dl.bintray.com/arturfog/deb xenial main" | sudo tee -a /etc/apt/sources.list 
 
-#echo -n "Generating conanbuildinfo.pri ..."
-#conan install . -s os=Linux -s arch=x86_64 -s build_type=Release -s compiler.version=7
-#echo "[ OK ]"
+# update
+sudo apt-get update
 
 # Installing generated AWS deb
-sudo dpkg -i aws.deb
+sudo apt-get install amazon-s3-cpp-sdk
+
 # Installing genereated QT deb
-sudo dpkg -i qt510.deb
+sudo apt-get install qt-everywhere
 
 echo -n "Creating build directory ..."
 mkdir ../qts3browser_build
