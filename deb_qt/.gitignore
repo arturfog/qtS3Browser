@@ -1,1 +1,7 @@
 *.xz
+*.tar.gz
+*.xz
+*.deb
+*.changes
+*.dsc
+qt-everywhere-5.9.6

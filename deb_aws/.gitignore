@@ -1,0 +1,5 @@
+amazon-s3-cpp-sdk-1.6.0
+*.tar.gz
+*.deb
+*.dsc
+*.changes
