@@ -27,7 +27,7 @@ parts:
   
   qt59:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb
+    source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.9.6_amd64.deb
     source-type: deb
 
   application:
@@ -57,6 +57,9 @@ parts:
       - libxcb-sync1
       - libxcb1
       - libxshmfence1
+    configflags:
+      - export QTDIR=/opt/Qt5.9
+      - export QT_SELECT=qt5
     plugin: qmake
     qt-version: qt5
     after: [aws, qt59]
