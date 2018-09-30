@@ -58,7 +58,7 @@ parts:
       - libxcb1
       - libxshmfence1
     prepare: |
-      export QTDIR=/opt/Qt5.9
+      export QTDIR=/opt/Qt5.10
       export QT_SELECT=qt5
     plugin: qmake
     qt-version: qt5
