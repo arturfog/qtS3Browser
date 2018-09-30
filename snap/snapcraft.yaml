@@ -57,9 +57,9 @@ parts:
       - libxcb-sync1
       - libxcb1
       - libxshmfence1
-    configflags:
-      - export QTDIR=/opt/Qt5.9
-      - export QT_SELECT=qt5
+    prepare: |
+      export QTDIR=/opt/Qt5.9
+      export QT_SELECT=qt5
     plugin: qmake
     qt-version: qt5
     after: [aws, qt59]

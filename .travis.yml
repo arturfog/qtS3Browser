@@ -12,8 +12,8 @@ script:
         - wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | sudo apt-key add -
         - echo "deb https://dl.bintray.com/arturfog/oss-arturfog xenial main" | sudo tee -a /etc/apt/sources.list 
         - sudo apt-get update
-        - sudo apt-get install amazon-s3-cpp-sdk
-        - sudo apt-get install qt-everywhere
+        - sudo apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk
+        - sudo apt-get install -y --allow-unauthenticated qt-everywhere
 
         # qtS3Browser
         - git clone --depth 1 https://github.com/arturfog/qtS3Browser.git

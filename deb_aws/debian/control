@@ -22,7 +22,7 @@ Depends:
  libkrb5-3,
  libgssapi3-heimdal,
  libroken18-heimdal,
- libgnutls30,
+ libgnutls28,
  libp11-kit0,
  libstdc++6,
  libgcc1,
