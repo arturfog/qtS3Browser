@@ -12,14 +12,21 @@ echo "deb https://dl.bintray.com/arturfog/deb xenial main" | sudo tee -a /etc/ap
 sudo apt-get update
 
 # Installing generated AWS deb
-sudo apt-get install amazon-s3-cpp-sdk
+sudo apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk
 
 # Installing genereated QT deb
-sudo apt-get install qt-everywhere
+sudo apt-get install -y --allow-unauthenticated qt-everywhere
+
+sudo apt-get install -y build-essential
+
+sudo apt-get install -y libcanberra-gtk-module libx11-xcb1 libx11-6 libxau6 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxxf86vm1 libdouble-conversion1v5 libdrm2 libglapi-mesa libgraphite2-3 libharfbuzz0b libicu55 libpcre16-3 libproxy1v5 libxcb-dri2-0 libxcb-dri3-0  libxcb-glx0 libxcb-present0  libxcb-sync1 libxcb1 libxshmfence1
+
 
 echo -n "Creating build directory ..."
-mkdir ../qts3browser_build
-cd ../qts3browser_build
+mkdir qts3browser_build
+cd qts3browser_build
 echo "[ OK ]"
 
-qmake -o Makefile ../qtS3Browser/s3Browser.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
+#qmake -o Makefile ../s3Browser.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
+qmake -o Makefile ../s3Browser.pro -spec linux-g++ CONFIG+=release
+make -j2

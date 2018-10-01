@@ -1,29 +1,30 @@
 language: cpp
-compiler:
-- gcc
-install:
-        - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-        # sudo add-apt-repository -y ppa:jonathonf/python-3.6
-        #- sudo add-apt-repository -y ppa:beineri/opt-qt595-trusty
-        - sudo apt-get update
-        - sudo apt-get install gcc-5 g++-5 libicu-dev libicu52
-        #- sudo apt-get install -y qt59-meta-full
-script:
-        # AWS
-        - wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | sudo apt-key add -
-        - echo "deb https://dl.bintray.com/arturfog/oss-arturfog xenial main" | sudo tee -a /etc/apt/sources.list 
-        - sudo apt-get update
-        - sudo apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk
-        - sudo apt-get install -y --allow-unauthenticated qt-everywhere
+services: docker
 
-        # qtS3Browser
-        - git clone --depth 1 https://github.com/arturfog/qtS3Browser.git
-        - mkdir build
-        - cd build
-        - alias g++="/usr/bin/g++-5"
-        - export QTDIR=/opt/Qt5.10
-        - /opt/Qt5.10/bin/qmake QMAKE_CXX="/usr/bin/g++-5" QMAKE_CC="/usr/bin/gcc-5" -o Makefile ../qtS3Browser/s3Browser.pro -spec linux-g++ CONFIG+=release
-        - make CC="/usr/bin/gcc-5" CXX="/usr/bin/g++-5"
-        - make CC="/usr/bin/gcc-5" CXX="/usr/bin/g++-5" install
+os: linux
+
+compiler:
+  - gcc
+
+env:
+  matrix:
+    - TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
+
+before_script:
+  - docker pull ubuntu:$UBUNTU
+
+script:
+  - >-
+    docker run -it \
+      -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR \
+      -v $HOME/.ccache:$HOME/.ccache \
+      -w $TRAVIS_BUILD_DIR \
+      --env CC \
+      --env CXX \
+      --env TRAVIS_BUILD_DIR \
+      --env TRAVIS_BUILD_TYPE \
+      ubuntu:$UBUNTU \
+      sh ./build.sh
+
 notifications:
         email: false
