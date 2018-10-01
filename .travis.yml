@@ -21,8 +21,8 @@ script:
         - mkdir build
         - cd build
         - export QTDIR=/opt/Qt5.10
-        - QMAKE_CXX=g++-5 QMAKE_CC=gcc-5 /opt/Qt5.10/bin/qmake -o Makefile ../qtS3Browser/s3Browser.pro -spec linux-g++ CONFIG+=release
-        - CC=gcc-5 CXX=g++-5 make
+        - /opt/Qt5.10/bin/qmake QMAKE_CXX="/usr/bin/g++-5" QMAKE_CC="/usr/bin/gcc-5" -o Makefile ../qtS3Browser/s3Browser.pro -spec linux-g++ CONFIG+=release
+        - make CC="/usr/bin/gcc-5" CXX="/usr/bin/g++-5"
         - make install
 notifications:
         email: false
