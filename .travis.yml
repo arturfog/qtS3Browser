@@ -6,7 +6,7 @@ install:
         # sudo add-apt-repository -y ppa:jonathonf/python-3.6
         #- sudo add-apt-repository -y ppa:beineri/opt-qt595-trusty
         - sudo apt-get update
-        - sudo apt-get install gcc-5 g++-5
+        - sudo apt-get install gcc-5 g++-5 libicu-dev libicu52
         #- sudo apt-get install -y qt59-meta-full
 script:
         # AWS
@@ -20,9 +20,10 @@ script:
         - git clone --depth 1 https://github.com/arturfog/qtS3Browser.git
         - mkdir build
         - cd build
+        - alias g++="/usr/bin/g++-5"
         - export QTDIR=/opt/Qt5.10
         - /opt/Qt5.10/bin/qmake QMAKE_CXX="/usr/bin/g++-5" QMAKE_CC="/usr/bin/gcc-5" -o Makefile ../qtS3Browser/s3Browser.pro -spec linux-g++ CONFIG+=release
         - make CC="/usr/bin/gcc-5" CXX="/usr/bin/g++-5"
-        - make install
+        - make CC="/usr/bin/gcc-5" CXX="/usr/bin/g++-5" install
 notifications:
         email: false
