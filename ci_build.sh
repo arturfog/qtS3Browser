@@ -12,7 +12,7 @@ echo "deb https://dl.bintray.com/arturfog/deb xenial main" | tee -a /etc/apt/sou
 
 # Installing generated AWS deb
 
-apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk && apt-get install -y --allow-unauthenticated qt-everywhere
+apt-get update && apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk && apt-get install -y --allow-unauthenticated qt-everywhere
 
 apt-get install -y build-essential
 
@@ -24,5 +24,5 @@ cd qts3browser_build
 echo "[ OK ]"
 
 #qmake -o Makefile ../s3Browser.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
-qmake -o Makefile ../s3Browser.pro -spec linux-g++ CONFIG+=release
+/opt/Qt5.10/bin/qmake -o Makefile ../s3Browser.pro -spec linux-g++ CONFIG+=release
 make -j2
