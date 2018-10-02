@@ -2,17 +2,17 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
-apt-get update && apt-get install -y apt-transport-https wget
+apt-get update
 
 # add gpg key
 apt-key add gpg/arturfog.key
 
-# add repo
-echo "deb https://dl.bintray.com/arturfog/deb xenial main" | tee -a /etc/apt/sources.list 
+# Installing generated debs
+wget 'https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb'
+wget 'https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb'
 
-# Installing generated AWS deb
-
-apt-get update && apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk && apt-get install -y --allow-unauthenticated qt-everywhere
+dpkg -i amazon-s3-cpp-sdk_1.6.0_amd64.deb
+dpkg -i qt-everywhere_5.10.0_amd64.deb
 
 apt-get install -y build-essential
 
