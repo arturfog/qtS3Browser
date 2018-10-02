@@ -2,6 +2,12 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
+if [ "$?" == "0" ]; then
+  apt-get install -y wget
+else
+  exit
+fi
+
 # add gpg key
 wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | apt-key add -
 

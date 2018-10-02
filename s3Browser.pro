@@ -26,10 +26,16 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
+desktop.path = /usr/share/applications
+desktop.files += desktop-file/s3browser.desktop
+
+icon.path = /usr/share/icons
+icon.files += desktop-file/s3browser.png
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+!isEmpty(target.path): INSTALLS += target icon desktop
 
 # INCLUDEPATH += $$PWD/inc
 # DEPENDPATH += $$PWD/inc

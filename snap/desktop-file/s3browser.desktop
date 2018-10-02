@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Encoding=UTF-8
-Name=qtS3Browser
-Comment=Amazon S3 browser written in QT
-Icon=s3browser.png
-Exec=desktop-launch $SNAP/opt/s3browser/bin/s3browser
-Terminal=false
