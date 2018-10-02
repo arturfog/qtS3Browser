@@ -9,8 +9,12 @@ confinement: 'strict' # use 'strict' once you have the right plugs and slots
 
 apps:
   s3browser:
-    command: desktop-launch $SNAP/opt/s3browser/bin/s3browser
-    plugs: [home, network, x11, opengl]
+    command: bin/desktop-launch $SNAP/opt/s3browser/bin/s3browser
+    plugs: 
+        - home
+        - network
+        - x11
+        - opengl
     desktop: usr/share/applications/s3browser.desktop
 parts:
  # desktop-file:
@@ -27,6 +31,22 @@ parts:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
     source-type: deb
+
+  desktopqt5:
+    build-packages:
+    - qtbase5-dev
+    - dpkg-dev
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: qt
+    stage-packages:
+      - light-themes
+      - shared-mime-info
+      - dmz-cursor-theme
+      - appmenu-qt5
+      - ttf-ubuntu-font-family
+      - libxkbcommon0
+      - libgdk-pixbuf2.0-0
 
   application:
     plugin: dump
@@ -57,4 +77,4 @@ parts:
       - libxcb-sync1
       - libxcb1
       - libxshmfence1
-    after: [aws, qt510]
+    after: [aws, qt510, desktopqt5]

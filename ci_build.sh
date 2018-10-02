@@ -2,20 +2,17 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
-apt-get install -y wget
+apt-get update && apt-get install -y apt-transport-https wget
 
 # add gpg key
-wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | apt-key add -
+apt-key add gpg/arturfog.key
 
 # add repo
 echo "deb https://dl.bintray.com/arturfog/deb xenial main" | tee -a /etc/apt/sources.list 
 
-apt-get update
-
 # Installing generated AWS deb
-apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk
 
-apt-get install -y --allow-unauthenticated qt-everywhere
+apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk && apt-get install -y --allow-unauthenticated qt-everywhere
 
 apt-get install -y build-essential
 
