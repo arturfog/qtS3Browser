@@ -24,7 +24,7 @@ script:
       --env TRAVIS_BUILD_DIR \
       --env TRAVIS_BUILD_TYPE \
       ubuntu:$UBUNTU \
-      sh ./build.sh
+      sh ./ci_build.sh
 
 notifications:
         email: false

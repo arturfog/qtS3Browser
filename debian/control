@@ -3,20 +3,14 @@ Section: misc
 Priority: optional
 Maintainer: Artur Fogiel <arturprojekty1988@gmail.com>
 Build-Depends:
- debhelper (>= 7.0.50),
- g++,
- make,
- pkg-config,
- zlib1g-dev, 
- libssl-dev, 
- libcurl4-openssl-dev
+ qt-everywhere,
+ amazon-s3-cpp-sdk
 Homepage: https://github.com/arturfog/qtS3Browser
 
 Package: qts3browser
 Section: misc
 Architecture: any
 Depends:
- ${shlibs:Depends},
- ${misc:Depends},
-Description: qts3browser - Amazon S3 client written in QT
-
+ qt-everywhere,
+ amazon-s3-cpp-sdk
+Description: Amazon S3 client, writen in C++/QT
