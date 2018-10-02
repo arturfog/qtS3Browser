@@ -2,7 +2,7 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
-apt-get update && apt-get install wget
+apt-get update && apt-get install -y wget
 
 # add gpg key
 apt-key add gpg/arturfog.key
