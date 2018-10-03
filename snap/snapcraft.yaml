@@ -90,6 +90,7 @@ parts:
         - libxrender1
         - zlib1g
         - libdouble-conversion1v5
+        - libxcb-xinerama0
         - libpulse0
 
   desktopqt5:
