@@ -17,15 +17,22 @@ apps:
         - opengl
     desktop: usr/share/applications/s3browser.desktop
 parts:
- # desktop-file:
- #   source: desktop-file
- #   source-type: local
- #   plugin: dump
-  
   aws:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb
     source-type: deb
+    stage-packages:
+       - libssl1.0.0
+       - zlib1g
+       - libcurl3
+       - libkrb5-3
+       - libgssapi3-heimdal
+       - libroken18-heimdal
+       - libgnutls30
+       - libp11-kit0
+       - libstdc++6
+       - libgcc1
+       - libdb5.3
   
   qt510:
     plugin: dump
