@@ -16,6 +16,8 @@ apps:
         - x11
         - opengl
     desktop: usr/share/applications/s3browser.desktop
+    environment:
+        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.10/lib
 parts:
   aws:
     plugin: dump
@@ -38,6 +40,17 @@ parts:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
     source-type: deb
+    stage-packages:
+       - icu-devtools
+       - libharfbuzz0b
+       - libgl1-mesa-glx
+       - libegl1-mesa
+       - libx11-6
+       - libice6
+       - libicu55
+       - libx11-xcb1
+       - libxcb-glx0
+       - libxcb-randr0
 
   desktopqt5:
     build-packages:
