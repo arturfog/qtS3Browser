@@ -17,7 +17,7 @@ apps:
         - opengl
     desktop: usr/share/applications/s3browser.desktop
     environment:
-        LD_LIBRARY_PATH: $SNAP/lib:$SNAP/lib/x86_64-linux-gnu:$SNAP/opt/Qt5.10/lib:$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/mesa/:$SNAP/opt/Qt5.10/plugins/platforms
+        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.10/lib:$SNAP/opt/Qt5.10/plugins/platforms
 parts:
   aws:
     plugin: dump
@@ -43,7 +43,6 @@ parts:
     stage-packages:
         - fontconfig
         - icu-devtools
-        - libc6
         - libcups2
         - libdbus-1-3
         - libdrm2
@@ -93,18 +92,16 @@ parts:
         - libxcb-xinerama0
         - libpulse0
 
-  desktopqt5:
+  desktopglib:
     build-packages:
-    - qtbase5-dev
     - dpkg-dev
     plugin: make
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: qt
+    source-subdir: glib-only
     stage-packages:
       - light-themes
       - shared-mime-info
       - dmz-cursor-theme
-      - appmenu-qt5
       - ttf-ubuntu-font-family
       - libxkbcommon0
       - libgdk-pixbuf2.0-0
@@ -138,4 +135,4 @@ parts:
       - libxcb-sync1
       - libxcb1
       - libxshmfence1
-    after: [aws, qt510, desktopqt5]
+    after: [aws, qt510, desktopglib]
