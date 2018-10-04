@@ -40,6 +40,8 @@ parts:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
     source-type: deb
+    organize:
+      opt/Qt5.10/plugins/platforms: opt/s3browser/bin/platforms
     stage-packages:
         - fontconfig
         - icu-devtools
