@@ -20,6 +20,7 @@ apps:
         LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.10/lib:$SNAP/opt/Qt5.10/plugins/platforms
         QML_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
         QML2_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
+        QT_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins
 parts:
   aws:
     plugin: dump
@@ -56,6 +57,7 @@ parts:
         - libgbm1
         - libgcc1
         - libgl1-mesa-dev
+        - libgl1-mesa-dri
         - libgl1-mesa-glx
         - libgles2-mesa-dev
         - libglib2.0-0
@@ -114,6 +116,9 @@ parts:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/qts3browser_1.0.1_amd64.deb
     source-type: deb
+    override-build: |
+      snapcraftctl build
+      sed -i 's|Icon=.*|Icon=/usr/share/icons/s3browser.png|g' $SNAPCRAFT_PART_INSTALL/usr/share/applications/s3browser.desktop
     stage-packages:
       - libcanberra-gtk-module
       - libx11-xcb1
