@@ -18,6 +18,8 @@ apps:
     desktop: usr/share/applications/s3browser.desktop
     environment:
         LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.10/lib:$SNAP/opt/Qt5.10/plugins/platforms
+        QML_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
+        QML2_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
 parts:
   aws:
     plugin: dump
