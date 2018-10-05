@@ -51,6 +51,11 @@ parts:
         - libcups2
         - libdbus-1-3
         - libdrm2
+        - libdrm-common
+        - libdrm-amdgpu1
+        - libdrm-nouveau2
+        - libdrm-radeon1
+        - libdrm-intel1
         - libegl1-mesa
         - libfontconfig1
         - libfreetype6
