@@ -67,6 +67,7 @@ parts:
         - libgles2-mesa-dev
         - libglib2.0-0
         - libglu1-mesa-dev
+        - libglu1-mesa
         - libharfbuzz0b
         - libice6
         - libinput10
