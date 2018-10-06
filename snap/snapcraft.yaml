@@ -4,23 +4,32 @@ summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
 
-grade: 'stable' # must be 'stable' to release into candidate/stable channels
-confinement: 'strict' # use 'strict' once you have the right plugs and slots
+grade: 'stable' 
+confinement: 'strict' 
 
 apps:
   s3browser:
     command: bin/desktop-launch $SNAP/opt/s3browser/bin/s3browser
     plugs: 
-        - home
-        - network
-        - x11
-        - opengl
+    - desktop
+    - desktop-legacy
+    - home
+    - mount-observe
+    - network
+    - opengl
+    - pulseaudio
+    - unity7
+    - x11
+    - hardware-observe
     desktop: usr/share/applications/s3browser.desktop
     environment:
         LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.10/lib:$SNAP/opt/Qt5.10/plugins/platforms
         QML_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
         QML2_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
         QT_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins
+        QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins/platforms
+        QT_XCB_GL_INTEGRATION: xcb_egl
+        #QT_LOGGING_RULES: "*.debug=false"
 parts:
   aws:
     plugin: dump
@@ -43,8 +52,6 @@ parts:
     plugin: dump
     source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
     source-type: deb
-    organize:
-      opt/Qt5.10/plugins/platforms: opt/s3browser/bin/platforms
     stage-packages:
         - fontconfig
         - icu-devtools
@@ -56,7 +63,6 @@ parts:
         - libdrm-nouveau2
         - libdrm-radeon1
         - libdrm-intel1
-        - libegl1-mesa
         - libfontconfig1
         - libfreetype6
         - libgbm1
@@ -64,9 +70,7 @@ parts:
         - libgl1-mesa-dev
         - libgl1-mesa-dri
         - libgl1-mesa-glx
-        - libgles2-mesa-dev
         - libglib2.0-0
-        - libglu1-mesa-dev
         - libglu1-mesa
         - libharfbuzz0b
         - libice6
@@ -81,7 +85,6 @@ parts:
         - libudev1
         - libx11-6
         - libx11-xcb1
-        - libxcb1
         - libxcb-glx0
         - libxcb-icccm4
         - libxcb-image0
@@ -103,6 +106,20 @@ parts:
         - libdouble-conversion1v5
         - libxcb-xinerama0
         - libpulse0
+        - vdpau-va-driver
+        - i965-va-driver
+        - mesa-utils
+        - mesa-vdpau-drivers
+        - fonts-freefont-ttf
+        - dbus-x11
+        - libegl1-mesa
+        - libva-drm1
+        - libva-x11-1
+        - libva1
+        - libvdpau1
+        - libxcb-composite0
+        - libxcb-xv0
+        - libxcb1
 
   desktopglib:
     build-packages:
