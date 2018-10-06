@@ -27,7 +27,6 @@ script:
       sh ./ci_build.sh
 
 deploy:
-  deploy:
   provider: bintray
   file: ".travis_desc"
   user: "arturfog"
