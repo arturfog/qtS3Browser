@@ -3,10 +3,10 @@
 # TODO: add colors to printed statuses
 
 # add gpg key
-wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=arturfog' | sudo apt-key add -
+wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray' | sudo apt-key add -
 
 # add repo
-echo "deb https://dl.bintray.com/arturfog/deb xenial main" | tee -a /etc/apt/sources.list 
+echo "deb https://dl.bintray.com/arturfog/deb stretch main" | tee -a /etc/apt/sources.list 
 
 if [ "$?" == "0" ]; then
 # update

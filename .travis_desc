@@ -1,0 +1,32 @@
+{
+    "package": {
+        "name": "qts3browser",
+        "repo": "oss-arturfog",
+        "subject": "arturfog",
+        "desc": "Amazon S3 client with UI written in QT/QML",
+        "website_url": "https://github.com/arturfog/",
+        "vcs_url": "https://github.com/arturfog/qtS3Browser",
+        "licenses": ["GPL-3.0"],
+        "public_download_numbers": false,
+        "public_stats": false
+    },
+
+    "version": {
+        "name": "1.0.1",
+        "desc": "",
+        "released": "2018-10-06",
+        "gpgSign": true
+    },
+
+    "files":
+    [{"includePattern": "deb_qts3browser/(.*\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
+          "matrixParams": {
+            "override": 1,
+            "deb_distribution": "stretch",
+            "deb_component": "main",
+            "deb_architecture": "amd64"
+          }
+        }
+    ],
+    "publish": true
+}
