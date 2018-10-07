@@ -19,7 +19,7 @@
     },
 
     "files":
-    [{"includePattern": "deb_qts3browser/(.*\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
+    [{"includePattern": "deb_qts3browser/(qts3browser.*\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
           "matrixParams": {
             "override": 1,
             "deb_distribution": "stretch",
