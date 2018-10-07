@@ -3,7 +3,7 @@ version: '1.0.1'
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
-
+architectures: [amd64, i386]
 grade: 'stable' 
 confinement: 'strict' 
 
