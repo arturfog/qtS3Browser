@@ -1,0 +1,26 @@
+# clone directory
+clone_folder: c:\projects\qts3browser
+
+matrix:
+  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
+  allow_failures:
+    - platform: x86
+      configuration: Debug
+    - platform: x64
+      configuration: Debug
+
+configuration: Release
+
+build_script:
+  - cd .\deb_aws
+  - build.bat
+  - cd ..\
+  - mkdir .\build
+  - cd .\build
+  - cp ..\deb_aws\aws-cpp-sdk\build\aws-cpp-sdk-core\*.dll .
+  - cp ..\deb_aws\aws-cpp-sdk\build\aws-cpp-sdk-transfer\*.dll .
+  - cp ..\deb_aws\aws-cpp-sdk\build\aws-cpp-sdk-s3\*.dll .
+  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw64-make
+
+# to disable deployment
+#deploy: off

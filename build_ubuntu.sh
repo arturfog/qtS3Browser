@@ -1,9 +1,23 @@
 #!/bin/bash
-# TODO: add return value checking
 # TODO: add colors to printed statuses
 
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+echo ${machine}
+
+if [ "${machine}" != "Linux" ]; then
+  echo "Error. Please run script on Linux !"
+  exit 1
+fi
+
 # add gpg key
-wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray' | sudo apt-key add -
+sudo apt-key add gpg/bintray.key
 
 # add repo
 echo "deb https://dl.bintray.com/arturfog/deb stretch main" | tee -a /etc/apt/sources.list 
@@ -17,14 +31,14 @@ fi
 
 if [ "$?" == "0" ]; then
   # Installing generated AWS deb
-  sudo apt-get install -y --allow-unauthenticated amazon-s3-cpp-sdk
+  sudo apt-get install -y amazon-s3-cpp-sdk
 else
   exit
 fi
 
 if [ "$?" == "0" ]; then
   # Installing genereated QT deb
-  sudo apt-get install -y --allow-unauthenticated qt-everywhere
+  sudo apt-get install -y qt-everywhere
 else
   exit
 fi

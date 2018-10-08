@@ -1,20 +1,27 @@
 language: cpp
 services: docker
 
-os: linux
+os: 
+  - linux
+  - osx
 
 compiler:
   - gcc
 
-env:
-  matrix:
-    - TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode7.2
+    - os: linux
+      dist: trusty
+      env:  TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
 
 before_script:
-  - docker pull ubuntu:$UBUNTU
+  - if [[ ${TRAVIS_OS_NAME} == linux ]]; then docker pull ubuntu:$UBUNTU; fi
 
 script:
-  - >-
+  # Linux
+  - if [[ ${TRAVIS_OS_NAME} == linux ]]; then >-
     docker run -it \
       -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR \
       -v $HOME/.ccache:$HOME/.ccache \
@@ -24,7 +31,11 @@ script:
       --env TRAVIS_BUILD_DIR \
       --env TRAVIS_BUILD_TYPE \
       ubuntu:$UBUNTU \
-      sh ./ci_build.sh
+      sh ./ci_build.sh;
+    fi
+
+    # OSX
+    - if [[ ${TRAVIS_OS_NAME} == osx ]]; then ./ci_macos.sh ; fi
 
 deploy:
   provider: bintray
@@ -34,7 +45,8 @@ deploy:
     - secure: "RQ0uErGhXAMwNImMHk4ZIOwiazOXGiFGlEEfPHtZpH9p5FzcRFYdL9ClcwRscbArW1xzLbTYOMs4fkiExZp9h4fZ/Qc8lwM+Z2YYmNwKSgh5MVKgPfsGaeI8bcW4l4ZBxNZ4ZrUAfJeQZDVsZNAxc/Fy3B7h69Px2WDaWdXq/RDFK0CmkfKWfmI6pIxbmwsE14ehniA/fwXpaD+sOpXby2PbGDmv+wvsZASYYttBiz4/RZAU/2oDB+oAF3NApLzC8p4xC7pJ/MRJ9XHcHVDjaD1gmGZKbfWKIWSJPicXlw2YS5/3QyqF573Y9iCTLq37kL4HMmgqxtj0pk1nEnz8osDWZaIf4VjL0Oi7gW2kwSs8TWtJ2shbKC0tezdAqTnBaMSP0NpV6Slp2fOGl+2TIF1zSTdQaA2FHtQgZ7fHC4PkVoctc7x3r6wos/vWhueWSXLhR0576hm0uYLkiBxNU/JtTs5uqJaEacbKfy9RwxOzmjRbw6oducwhhG0aWvd386u5xlxkZqTEd9szKX4XNuuoTUHfCrDmZ1Q2q3gfnBNPJeKLnZUKQ6PCyhn4TyH7FEJ0WLV9PMtVUIfGt5jycH5egQ+e7dmdzzAOtoOkVioZ/EelxN7nE2CdHXKF7ackVqvWpQYQYAMuPZZR/09fWNr/TFHkniG+pxm7fo8w3Yo="
   skip_cleanup: true
   dry_run: false
-  on: develop
+  on: production
+  condition: $TRAVIS_OS_NAME = linux
 
 notifications:
         email: false
