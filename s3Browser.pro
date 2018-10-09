@@ -56,6 +56,6 @@ unix {
 }
 
 win32 {
-  LIBS += -L"."
-  INCLUDEPATH += "."
+  LIBS += -L"$$PWD/../aws"
+  INCLUDEPATH += "$$PWD/../aws"
 }

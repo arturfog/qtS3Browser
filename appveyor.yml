@@ -19,19 +19,20 @@ install:
   - choco install InnoSetup
 
 build_script:
+  - mkdir c:\projects\aws
   - cd .\deb_aws
   - build.bat
   - cd ..\
   - mkdir .\build
   - cd .\build
 
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll .
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll .
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll .
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll c:\projects\aws
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
   
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\aws .
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\aws .
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\aws .
+  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\aws c:\projects\aws
+  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\aws c:\projects\aws
+  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\aws c:\projects\aws
 
   - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw32-make -j 2
 
