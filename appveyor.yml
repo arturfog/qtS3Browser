@@ -11,8 +11,7 @@ configuration: Release
 install:
   - set MINGW_PATH=C:\Qt\Tools\mingw530_32
   - set QTDIR=C:\Qt\5.11.1\mingw53_32
-  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
-  - set PATH=%PATH:C:\Program Files (x86)\Git\bin;=%
+  - set PATH="C:\Program Files (x86)\MSBuild\12.0\bin";%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
   # Install Inno Setup
   - choco install InnoSetup
 
@@ -25,7 +24,7 @@ build_script:
   - cd aws-sdk-cpp
   - mkdir build && cd build
   - cmake -G "MinGW Makefiles" -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
-  - mingw32-make -j8
+  - cmake --build . -j 4
 
   - cd ..\..\
 
@@ -41,7 +40,7 @@ build_script:
   - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
   - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
 
-  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw32-make -j 2
+  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release -spec win32-msvc && nmake /f Makefile.Release
 
   # Bundle all dependencies
   - ps: |
