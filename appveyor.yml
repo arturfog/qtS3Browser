@@ -15,6 +15,9 @@ install:
   # Install Inno Setup
   - choco install InnoSetup
 
+before_build:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64_x86
+
 build_script:
   - mkdir c:\projects\aws
   - cd .\deb_aws
