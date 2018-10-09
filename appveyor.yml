@@ -46,5 +46,10 @@ build_script:
   - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
   - ISCC /Q qts3browser.iss
 
+after_build:
+- ps: |
+    appveyor PushArtifact distrib.zip
+    appveyor PushArtifact C:\qts3browser_win_setup.exe
+
 # to disable deployment
 #deploy: off
