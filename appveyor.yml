@@ -30,16 +30,16 @@ build_script:
   - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
   - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
   
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\aws c:\projects\aws
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\aws c:\projects\aws
-  - xcopy /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\aws c:\projects\aws
+  - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
+  - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
+  - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
 
   - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw32-make -j 2
 
   # Bundle all dependencies
   - ps: |
       windeployqt --qmldir qml release\s3browser.exe --dir distrib
-      cp aws-cpp-sdk-*.dll distrib
+      cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
       7z a -y distrib.zip distrib
 
   # Build the installer
