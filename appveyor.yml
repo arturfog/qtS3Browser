@@ -11,6 +11,11 @@ matrix:
 
 configuration: Release
 
+install:
+  - set MINGW_PATH=C:\Qt\Tools\mingw530_32
+  - set QTDIR=C:\Qt\5.11.1\mingw53_32
+  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
+
 build_script:
   - cd .\deb_aws
   - build.bat
@@ -20,7 +25,7 @@ build_script:
   - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll .
   - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll .
   - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll .
-  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw64-make
+  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release && mingw32-make
 
 # to disable deployment
 #deploy: off
