@@ -12,7 +12,9 @@ install:
   - set MINGW_PATH=C:\Qt\Tools\mingw530_32
   - set QTDIR=C:\Qt\5.11.1\mingw53_32
   - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
-
+  - set CMAKE_C_COMPILER=gcc
+  - set CMAKE_CXX_COMPILER=g++
+  - set CMAKE_MAKE_PROGRAM=mingw32-make.exe
   # Install Inno Setup
   - choco install InnoSetup
 
