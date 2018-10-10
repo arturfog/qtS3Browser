@@ -1,7 +1,6 @@
 language: cpp
 services: docker
-
-os: 
+os:
   - linux
   - osx
 
@@ -14,29 +13,14 @@ matrix:
       osx_image: xcode7.2
     - os: linux
       dist: trusty
-      env:  TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
+      env: TRAVIS_BUILD_TYPE="Release" UBUNTU="xenial"
 
 before_script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker pull ubuntu:$UBUNTU; fi
 
 script:
-  # Linux
-  if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then 
-    docker run -it \
-      -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR \
-      -v $HOME/.ccache:$HOME/.ccache \
-      -w $TRAVIS_BUILD_DIR \
-      --env CC \
-      --env CXX \
-      --env TRAVIS_BUILD_DIR \
-      --env TRAVIS_BUILD_TYPE \
-      ubuntu:$UBUNTU \
-      sh ./ci_build.sh;
-  fi
-
-   # OSX
-   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then ./ci_macos.sh ; fi
-
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR -v $HOME/.ccache:$HOME/.ccache -w $TRAVIS_BUILD_DIR --env CC --env CXX --env TRAVIS_BUILD_DIR --env TRAVIS_BUILD_TYPE ubuntu:$UBUNTU sh ./ci_build.sh; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then ./ci_macos.sh; fi
 deploy:
   provider: bintray
   file: ".travis_desc.json"
@@ -49,4 +33,4 @@ deploy:
   condition: $TRAVIS_OS_NAME = linux
 
 notifications:
-        email: false
+  email: false
