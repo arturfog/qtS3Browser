@@ -5,7 +5,7 @@
 #define AppExeName "s3browser.exe"
 
 [Setup]
-AppId={{258C031E-98C7-4609-9122-65A4D36274AF}
+AppId={{49cadf9a-c7ed-4b2e-96ea-055ab6fc640e}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
@@ -24,8 +24,8 @@ SolidCompression=yes
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "c:\projects\qts3browser\release\s3browser.exe"; DestDir: "{app}"
-Source: "c:\projects\aws\*.dll"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: "c:\projects\qts3browser\build\release\s3browser.exe"; DestDir: "{app}"
+Source: "c:\projects\qts3browser\build\distrib\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
