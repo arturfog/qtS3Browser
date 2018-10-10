@@ -36,9 +36,9 @@ build_script:
   - mkdir .\build
   - cd .\build
 
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll c:\projects\aws
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
-  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.lib c:\projects\aws
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.lib c:\projects\aws
+  - cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.lib c:\projects\aws
   
   - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
   - xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
