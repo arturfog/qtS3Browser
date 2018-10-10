@@ -22,30 +22,30 @@ before_build:
   # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 build_script:
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" mkdir c:\projects\aws
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" cd .\deb_aws
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" mkdir c:\projects\aws
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd .\deb_aws
   
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/aws/aws-sdk-cpp.git 
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/aws/aws-sdk-cpp.git 
   
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . -j 4
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . -j 4
   
-  - if not exists "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.lib c:\projects\aws
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll c:\projects\aws
  
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.lib c:\projects\aws
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
  
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.lib c:\projects\aws
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
   
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
-  - if exists "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
   
   - mkdir .\build && cd .\build
   - qmake -v && qmake ..\s3Browser.pro CONFIG+=release -spec win32-msvc && nmake /f Makefile.Release
