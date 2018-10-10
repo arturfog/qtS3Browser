@@ -1,0 +1,76 @@
+# clone directory
+clone_folder: c:\projects\qts3browser
+
+platform:
+ - x86
+image: Visual Studio 2015
+
+configuration: Release
+
+branches:
+  only:
+    - master
+
+install:
+  - set MINGW_PATH=C:\Qt\Tools\mingw530_32
+  # - set QTDIR=C:\Qt\5.11.1\mingw53_32
+  # - set QTDIR=C:\Qt\5.11.1\msvc2017_64
+  - set QTDIR=C:\Qt\5.11.1\msvc2015
+  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
+  # Install Inno Setup
+  - choco install InnoSetup
+
+before_build:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+  # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+build_script:
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" mkdir c:\projects\aws
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd .\deb_aws
+  
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/aws/aws-sdk-cpp.git 
+  
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
+  
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . -j 4
+  
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
+
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Debug\aws-cpp-sdk-core.dll c:\projects\aws
+ 
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Debug\aws-cpp-sdk-s3.dll c:\projects\aws
+ 
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Debug\aws-cpp-sdk-transfer.dll c:\projects\aws
+  
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
+  
+  - mkdir .\build && cd .\build
+  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release -spec win32-msvc && nmake /f Makefile.Release
+
+  # Bundle all dependencies
+  - ps: |
+      windeployqt --qmldir ..\qml release\s3browser.exe --dir distrib
+      cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
+      cp c:\projects\aws\aws-cpp-sdk-*.lib distrib
+      7z a -y distrib.zip distrib
+
+  # Build the installer
+  - set PATH=%PATH%;"C:\Program Files (x86)\Inno Setup 5"
+  - ISCC /Q ..\qts3browser.iss
+
+after_build:
+- ps: |
+    appveyor PushArtifact distrib.zip
+    appveyor PushArtifact C:\qts3browser_win_setup.exe
+
+cache:
+- c:\projects\aws -> appveyor.yml
+# to disable deployment
+#deploy: off
