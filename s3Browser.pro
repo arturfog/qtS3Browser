@@ -51,7 +51,7 @@ HEADERS += \
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core
 
 macx {
- LIBS += -L"$$PWD/."
+ LIBS += -L"$$PWD/build/."
 }
 
 unix {
