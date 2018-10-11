@@ -50,6 +50,10 @@ HEADERS += \
 
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core
 
+macx {
+ LIBS += -L"$$PWD/."
+}
+
 unix {
   LIBS += -L"$$(HOME)/.local/usr/local/lib"
   INCLUDEPATH += "$$(HOME)/.local/usr/local/include"
