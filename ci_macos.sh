@@ -31,8 +31,9 @@ cp -vfr ../deb_aws/aws-sdk-cpp/aws-cpp-sdk-s3/include/* ./
 
 
 /usr/local/opt/qt5/bin/qmake ../s3Browser.pro CONFIG+=release && make
-/usr/local/opt/qt5/bin/macdeployqt qts3browser.app -always-overwrite -verbose=2 -qmldir=qml
+/usr/local/opt/qt5/bin/macdeployqt s3browser.app -always-overwrite -verbose=2 -qmldir=../qml
 
 curl -o /tmp/macdeployqtfix.py https://raw.githubusercontent.com/aurelien-rainone/macdeployqtfix/master/macdeployqtfix.py
-python /tmp/macdeployqtfix.py ./qts3browser.app/Contents/MacOS/qts3browser /usr/local/Cellar/qt5/5.11.2/
-/usr/local/opt/qt5/bin/macdeployqt qts3browser.app -dmg -no-plugins
+
+python /tmp/macdeployqtfix.py ./s3browser.app/Contents/MacOS/qts3browser /usr/local/Cellar/qt5/5.11.2/
+/usr/local/opt/qt5/bin/macdeployqt s3browser.app -dmg -no-plugins
