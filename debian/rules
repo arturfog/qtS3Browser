@@ -13,7 +13,7 @@ override_dh_auto_configure:
 	/opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
 
 override_dh_auto_build:
-	dh_auto_build -- -j2
+	make -j2
 
 override_dh_install:
 	dh_install

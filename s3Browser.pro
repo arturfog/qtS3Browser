@@ -26,11 +26,13 @@ QML_IMPORT_PATH =
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
-desktop.path = /usr/share/applications
-desktop.files += desktop-file/s3browser.desktop
+unix {
+  desktop.path = /usr/share/applications
+  desktop.files += desktop-file/s3browser.desktop
 
-icon.path = /usr/share/icons
-icon.files += desktop-file/s3browser.png
+  icon.path = /usr/share/icons
+  icon.files += desktop-file/s3browser.png
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -45,7 +47,19 @@ HEADERS += \
     inc/s3client.h \
     inc/iconprovider.h
 
-LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core -L"$$(HOME)/.local/usr/local/lib"
-INCLUDEPATH += "$$(HOME)/.local/usr/local/include"
-#CONFIG += conan_basic_setup
-#include(conanbuildinfo.pri)
+
+LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core
+
+macx {
+ LIBS += -L"$$PWD/build/."
+}
+
+unix {
+  LIBS += -L"$$(HOME)/.local/usr/local/lib"
+  INCLUDEPATH += "$$(HOME)/.local/usr/local/include"
+}
+
+win32 {
+  LIBS += -L"$$PWD/../aws"
+  INCLUDEPATH += "$$PWD/../aws"
+}

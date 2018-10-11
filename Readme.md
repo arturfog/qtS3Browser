@@ -1,8 +1,9 @@
 # qtS3Browser
-
-[![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser)
-
-[![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#)
+| Service | Status                                         |
+| ------- | ---------------------------------------------- |
+| Snap | [![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser) |
+| Travis CI | [![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#) |
+| Appveyor | [![Build status](https://ci.appveyor.com/api/projects/status/niv2eo6816w73tp9?svg=true)](https://ci.appveyor.com/project/arturfog/qts3browser) |
 
 Simple **Amazon S3** client written in C++/QT
 
@@ -16,15 +17,28 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 `unfortunately this process is not yet fully ready`
 
-- use build.sh script
+### Ubuntu
+- use build_ubuntu.sh script
 ```sh
-  ./build.sh
+  ./build_ubuntu.sh
 ```
-- open project in QtCreator and build (or use qmake)
+
+### MacOS X 
+- use build_osx.sh script
+
+### Windows 10
+- use build_win10.bat script
 
 ## Installation
 
+### Linux (snap)
 Application will be released as snap package
 ```sh
 snap install qts3browser
 ```
+
+### MacOS X (dmg)
+Application will be released as .dmg file
+
+### Windows (installer)
+Application will be relased as installer file
