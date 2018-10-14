@@ -21,7 +21,7 @@ import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 Window {
     id: about_win
-    x: 100; y: 100; width: 440; height: 290
+    x: app_window.x; y: app_window.y; width: 440; height: 290
     minimumHeight: 290; maximumHeight: 800
     minimumWidth: 440
     color: "#f8f9fa"

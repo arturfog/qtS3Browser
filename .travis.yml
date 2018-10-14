@@ -27,5 +27,14 @@ deploy:
   on: production
   condition: $TRAVIS_OS_NAME = linux
 
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: 
+    - "./build/deploy/*.dmg"
+  skip_cleanup: true
+  condition: $TRAVIS_OS_NAME = osx
+  on.tags: true
+
 notifications:
   email: false

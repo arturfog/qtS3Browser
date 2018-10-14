@@ -21,7 +21,7 @@ import QtGraphicalEffects 1.0
 
 Window {
     id: about_win
-    x: 100; y: 100;
+    x: app_window.x; y: app_window.y;
     minimumHeight: 350; maximumHeight: 350
     minimumWidth: 440; maximumWidth: 440
     color: "#f8f9fa"

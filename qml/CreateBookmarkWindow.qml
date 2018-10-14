@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 Window {
     id: create_bookmark_win
-    x: 100; y: 100; width: 450; height: 260
+    x: app_window.x; y: app_window.y; width: 450; height: 260
     minimumHeight: 290; maximumHeight: 290
     minimumWidth: 450
     color: "#f8f9fa"

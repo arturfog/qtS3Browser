@@ -21,7 +21,7 @@ import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 Window {
     id: progress_win
-    x: 100; y: 100; width: 500; height: 310
+    x: app_window.x; y: app_window.y; width: 500; height: 310
     minimumHeight: 310; maximumHeight: 310
     minimumWidth: 500; maximumWidth: 500
 

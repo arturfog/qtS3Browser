@@ -4,7 +4,8 @@ Priority: optional
 Maintainer: Artur Fogiel <arturprojekty1988@gmail.com>
 Build-Depends:
  qt-everywhere,
- amazon-s3-cpp-sdk
+ amazon-s3-cpp-sdk,
+ fonts-dejavu-core
 Homepage: https://github.com/arturfog/qtS3Browser
 
 Package: qts3browser
@@ -12,5 +13,6 @@ Section: misc
 Architecture: any
 Depends:
  qt-everywhere,
- amazon-s3-cpp-sdk
+ amazon-s3-cpp-sdk,
+ fonts-dejavu-core
 Description: Amazon S3 client, writen in C++/QT
