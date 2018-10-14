@@ -39,6 +39,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("qtS3Browser");
     QSettings settings;
 
+    QFont font("DejaVu Sans");
+    QApplication::setFont(font);
+
     S3Model model;
     QQmlApplicationEngine engine;
     QQuickView view(&engine, nullptr);

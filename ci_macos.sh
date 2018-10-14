@@ -52,4 +52,4 @@ install_name_tool -change @rpath/libaws-cpp-sdk-transfer.dylib @executable_path/
 ls -l
 
 mkdir deploy
-#cp ./s3browser.dmg deploy
+cp ./s3browser.dmg deploy

@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 Window {
     id: settings_win
-    x: 100; y: 100; width: 480; height: 640
+    x: app_window.x; y: app_window.y; width: 480; height: 640
     minimumHeight: 350; maximumHeight: 640
     minimumWidth: 400
     color: "#f8f9fa"
@@ -38,6 +38,7 @@ Window {
         endpointURL.text = s3Model.getEndpointQML()
     }
 
+    // --------------------------------------------------------------------------
     Rectangle {
         color: "#3367d6"
         width: parent.width

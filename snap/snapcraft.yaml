@@ -28,7 +28,8 @@ apps:
         QML2_IMPORT_PATH: $SNAP/opt/Qt5.10/qml
         QT_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins
         QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins/platforms
-        QT_XCB_GL_INTEGRATION: xcb_egl
+        QT_XCB_GL_INTEGRATION: none
+        #QT_XCB_GL_INTEGRATION: xcb_egl
         #QT_LOGGING_RULES: "*.debug=false"
 parts:
   aws:
@@ -167,4 +168,5 @@ parts:
       - libxcb-sync1
       - libxcb1
       - libxshmfence1
+      - fonts-dejavu
     after: [aws, qt510, desktopglib]
