@@ -34,7 +34,7 @@ deploy:
       - "./deb_qts3browser/*.deb"
     skip_cleanup: true
     on:
-      - tags: true
+      tags: true
 
 notifications:
   email: false
