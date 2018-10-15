@@ -29,12 +29,14 @@ deploy:
 
 deploy:
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
+  api_key:
+   - secure: "UImREZGf0CVpMJzQ4t2fRKT6uEeooBoM+oScazwdnkU1Bp3pV5JHgn3/U8knHgqQLIIwoEQYhCPWcikuMZhCIWuDWJ5b8T6NU7QfKD4HZBRymkhksFH5kQDLq8O7DvO4wHWI3NrXhGSIqrbMl/w/t65YnfQHD48E9UVw3jMHbI9IAlfSFiSl/ppeS3F32cH1H7CaW1mlnbpBmgyR5B5cWG814rQBE8ouHqpEeDJvIF+U1kXT5nwJhPk/hPEwT7EIdlbaobmsCsDDPoPygZFJDNDvcl366irOcwL69Ro8cNyKZY4GMZ+H/A1n3MoKRfHHosBxO6mrtfxpuM9diqPyA4xUckKMi1LWzB+sQGpy2mHa3K5+3cmpDZiMBHTe6UXRLWME3+Pv8bRp2JBUChK/wzgB28Gxh0pzRnV8K/Dg68RLCB1iywYcWAdU3S2Z/YGyLE3/bqiWAHV85OxmDjrJGUOmIOHumayMMvci5GpE4rOkYD1vCf3/GxcZubV1fRhGoO8m8JjiSn1+XBuAbpJA6SgscRknrH7IWpM4Pn4URHum/9aiEh7fa3JCMH1GffeLHoB+dUJPwKv/yh5oyvP4P7DbMgQVJl++VuSwsuupcK4x5pLSYKMkekHrMgY+nCX4sXgM+mz2DYVkYrmuo6JH8b+cm2bGjexEny5Q/+6uMKo="
   file: 
     - "./build/deploy/*.dmg"
+    - "./deb_qts3browser/*.deb"
   skip_cleanup: true
-  condition: $TRAVIS_OS_NAME = osx
-  on.tags: true
+  on:
+    - tags: true
 
 notifications:
   email: false

@@ -124,7 +124,7 @@ Window {
                 width: parent.width - 20
                 height: 30
                 border.color: borderColor
-                border.width: 2
+                border.width: 1
                 radius: 20
                 color: "#efefef"
 
@@ -195,7 +195,7 @@ Window {
                 width: parent.width - 20
                 height: 30
                 border.color: borderColor
-                border.width: 2
+                border.width: 1
                 radius: 20
                 color: "#efefef"
 
