@@ -30,6 +30,7 @@
 #include "inc/s3client.h"
 #include "inc/s3model.h"
 #include "inc/iconprovider.h"
+#include "inc/filesystemmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,12 +43,14 @@ int main(int argc, char *argv[])
     QFont font("DejaVu Sans");
     QApplication::setFont(font);
 
-    S3Model model;
+    S3Model s3Model;
+    FilesystemModel fsModel;
     QQmlApplicationEngine engine;
     QQuickView view(&engine, nullptr);
 
     QQmlContext *ctxt = view.rootContext();
-    ctxt->setContextProperty("s3Model", &model);
+    ctxt->setContextProperty("s3Model", &s3Model);
+    ctxt->setContextProperty("fsModel", &fsModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     engine.addImageProvider(QLatin1String("iconProvider"), new IconProvider());

@@ -56,7 +56,7 @@ Rectangle {
             s3_download_btn.enabled = true
         }
 
-        s3_browser.footerText = "["+s3Model.getItemsCountQML()+" Items]";
+        s3_browser.footerText = s3Model.getItemsCountQML()+" Items";
     }
     id:delegate
     width: view.width

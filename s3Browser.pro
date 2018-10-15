@@ -16,7 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += src/main.cpp \
     src/s3model.cpp \
     src/s3client.cpp \
-    src/iconprovider.cpp
+    src/iconprovider.cpp \
+    src/filesystemmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -45,7 +46,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     inc/s3model.h \
     inc/s3client.h \
-    inc/iconprovider.h
+    inc/iconprovider.h \
+    inc/filesystemmodel.h
 
 
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core
