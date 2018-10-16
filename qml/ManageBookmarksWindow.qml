@@ -21,9 +21,9 @@ import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 Window {
     id: about_win
-    x: app_window.x; y: app_window.y; width: 440; height: 290
-    minimumHeight: 290; maximumHeight: 800
-    minimumWidth: 440
+    x: app_window.x; y: app_window.y; width: 480; height: 320
+    minimumHeight: 320; maximumHeight: 800
+    minimumWidth: 480
     color: "#f8f9fa"
     title: "Manage bookmarks"
 
@@ -94,6 +94,8 @@ Rectangle {
                 bookmarks_list, "dynamicBookmarks");
             }
         } else {
+            about_win.maximumHeight = about_win.height
+            about_win.maximumWidth = about_win.width
             var emptyObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;

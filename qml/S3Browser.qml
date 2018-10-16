@@ -170,7 +170,7 @@ Item {
                         height: parent.height
                     }
 
-                    TextInput {
+                    Text {
                         x:50
                         width: 50
                         font.bold: true
@@ -189,6 +189,8 @@ Item {
                     TextInput {
                         id: s3_browser_path_text
                         x:95
+                        font.pointSize: 10
+                        selectByMouse: true
                         width: parent.width - s3_browser_path_go.width - 2
                         anchors.verticalCenter: parent.verticalCenter
                         text: path.replace("s3://","")
