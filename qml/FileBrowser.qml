@@ -30,9 +30,10 @@ Item {
     property bool connected: false
     property CustomMessageDialog msgDialog: CustomMessageDialog {
         win_title: "Remove?"
-        msg: {
-            var fileName = folder.get(view.currentIndex, "fileName")
-            "Remove " + fileName + " ?"
+        yesAction: function() {
+            console.log("blabla: " + view.currentIndex)
+            var filePath = folder.get(view.currentIndex, "filePath")
+            fsModel.removeQML(filePath);
         }
     }
 
@@ -123,6 +124,8 @@ Item {
                 icon.color: "transparent"
                 text: qsTr("Delete")
                 onClicked: {
+                    var fileName = folder.get(view.currentIndex, "fileName")
+                    msgDialog.msg = "Remove " + fileName + " ?"
                     msgDialog.open()
                 }
             }
@@ -286,7 +289,7 @@ Item {
                             width: browser.width - file_search_btn.width
                             height: 20
                             border.color: "gray"
-                            border.width: 2
+                            border.width: 1
                             radius: 20
 
                             Image {
@@ -323,7 +326,7 @@ Item {
                     y: 22
                     width: parent.width
                     height: 20
-                    text: "["+folder.count+" Items]"
+                    text: folder.count+" Items"
                 }
             }
         }

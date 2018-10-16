@@ -274,7 +274,7 @@ Item {
                             width: s3_browser.width - s3_search_btn.width
                             height: 20
                             border.color: "gray"
-                            border.width: 2
+                            border.width: 1
                             radius: 20
 
                             Image {
