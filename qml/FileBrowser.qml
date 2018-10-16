@@ -36,7 +36,9 @@ Item {
         }
     }
 
-
+    property CreateItemWindow createFolderWindow: CreateItemWindow {
+        win_title: qsTr("Create folder")
+    }
 
     Keys.onUpPressed: {
         var newIndex = view.currentIndex - 1;
@@ -133,6 +135,7 @@ Item {
                 onClicked: {
                     createFolderWindow.x = app_window.x + (app_window.width / 2) - (createFolderWindow.width / 2)
                     createFolderWindow.y = app_window.y + (app_window.height / 2) - (createFolderWindow.height / 2)
+                    createFolderWindow.create_action = createFolderWindow.createLocalFolder
                     createFolderWindow.visible = true
                 }
             }
@@ -182,7 +185,7 @@ Item {
                         height: parent.height
                     }
 
-                    TextInput {
+                    Text {
                         x:50
                         width: 50
                         font.bold: true
@@ -201,14 +204,17 @@ Item {
                     TextInput {
                         id: file_browser_path_text
                         x:95
-                        width: parent.width - file_browser_path_go.width - 2
+                        width: view.width - file_browser_path_go.width - 2
+                        maximumLength: 130
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
+                        wrapMode: Text.Wrap
+                        selectByMouse: true
                     }
 
                     RoundButton {
                         id: file_browser_path_go
-                        x: file_browser_path_text.width
+                        x: file_browser_path_text.width + file_browser_path_text.x - 90
                         radius: 20
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"

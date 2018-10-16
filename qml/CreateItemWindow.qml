@@ -21,24 +21,38 @@ import QtQml.Models 2.1
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
+import QtQuick.Dialogs 1.2
 
 Window {
+    // ------------- configuration -------------
     id: create_item_win
     x: app_window.x
     y: app_window.y
-    width: 400; height: 200
-    minimumHeight: 200; maximumHeight: 130
+    width: 400
+    height: 200
+    minimumHeight: 200
     minimumWidth: 400
-
-    property var win_title: String
-    property var create_action: Number
-
+    maximumHeight: 130
     title: win_title
-
+    // ------------- windows modes -------------
+    readonly property int createBucket: 0
+    readonly property int createS3Folder: 1
+    readonly property int createLocalFolder: 2
+    // ------------- properties -------------
+    property string win_title: ""
+    property int create_action: 0
+    // ------------- event handlers -------------
     onVisibilityChanged: {
         itemName.text = ""
     }
 
+    property CustomMessageDialog msgDialog: CustomMessageDialog {
+        win_title: "Error"
+        msg: "Directory already exists"
+        ico: StandardIcon.Warning
+        yesAction: function() { close() }
+    }
+    // ------------- header rectangle -------------
     Rectangle {
         color: "#3367d6"
         width: parent.width
@@ -51,7 +65,7 @@ Window {
 
             Image {
                 source: {
-                    if(create_action === 0) {
+                    if(create_action === createBucket) {
                         "qrc:icons/32_bucket_icon.png"
                     } else {
                         "qrc:icons/32_new_folder_icon.png"
@@ -69,10 +83,12 @@ Window {
             Text {
                 color: "white"
                 text: {
-                    if(create_action === 0) {
+                    if(create_action === createBucket) {
                         qsTr("Create bucket")
+                    } else if(create_action === createS3Folder) {
+                        qsTr("Create S3 directory")
                     } else {
-                        qsTr("Create directory")
+                        qsTr("Create local directory")
                     }
                 }
                 font.bold: true
@@ -82,7 +98,7 @@ Window {
             }
         }
     }
-
+    // ------------- content frame shadow -------------
     DropShadow {
         anchors.fill: create_item_rect
         horizontalOffset: 1
@@ -92,7 +108,7 @@ Window {
         color: "#aa000000"
         source: create_item_rect
     }
-
+    // ------------- content frame -------------
     Rectangle {
         id: create_item_rect
         y: 60
@@ -107,7 +123,7 @@ Window {
         Column {
             width: parent.width
             height: parent.height
-
+            // ------------- input property title -------------
             Row {
                 x: 10
                 y: 10
@@ -118,7 +134,7 @@ Window {
                     width: parent.width
                     height: 40
                     text: {
-                        if(create_action === 0) {
+                        if(create_action === createBucket) {
                             "Bucket name"
                         } else {
                             "Directory name"
@@ -140,7 +156,7 @@ Window {
                 width: parent.width
                 height: 5
             }
-
+            // ------------- input text -------------
             Rectangle {
                 id: item_name_input_rect
                 x: 10
@@ -173,7 +189,7 @@ Window {
             }
         }
     }
-
+    // ------------- bottom buttons frame -------------
     Column {
         x:5
         y:create_item_rect.y + create_item_rect.height + 10
@@ -188,13 +204,20 @@ Window {
                 icon.source: "qrc:icons/32_add_icon.png"
                 icon.color: "transparent"
                 onClicked: {
-                    if (create_action === 0) {
+                    if (create_action === createBucket) {
                         s3Model.createBucketQML(itemName.text)
-                    } else {
+                    } else if (create_action === createS3Folder) {
                         s3Model.createFolderQML(itemName.text)
+                    } else {
+                        if(!fsModel.createFolderQML(itemName.text)) {
+                            msgDialog.visible = true
+                        }
                     }
-                    s3Model.refreshQML()
-                    close()
+
+                    if(create_action !== createLocalFolder) {
+                        s3Model.refreshQML()
+                        close()
+                    }
                 }
             }
 

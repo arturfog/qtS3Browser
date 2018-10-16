@@ -123,9 +123,10 @@ Item {
                 text: "New"
                 enabled: false
                 onClicked: {
-                    createFolderWindow.x = app_window.x + (app_window.width / 2) - (createFolderWindow.width / 2)
-                    createFolderWindow.y = app_window.y + (app_window.height / 2) - (createFolderWindow.height / 2)
-                    createFolderWindow.visible = true
+                    createS3FolderWindow.x = app_window.x + (app_window.width / 2) - (createS3FolderWindow.width / 2)
+                    createS3FolderWindow.y = app_window.y + (app_window.height / 2) - (createS3FolderWindow.height / 2)
+                    createS3FolderWindow.create_action = createS3FolderWindow.createS3Folder
+                    createS3FolderWindow.visible = true
                 }
             }
         }
