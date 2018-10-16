@@ -32,16 +32,6 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
-    property CreateItemWindow createBucketWindow: CreateItemWindow {
-        win_title: qsTr("Create bucket")
-        create_action: 0
-    }
-
-    property CreateItemWindow createFolderWindow: CreateItemWindow {
-        win_title: qsTr("Create folder")
-        create_action: 1
-    }
-
     property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {}
     property AboutWindow aboutWindow: AboutWindow {}
     property SettingsWindow settingsWindow: SettingsWindow {}
@@ -68,6 +58,14 @@ ApplicationWindow {
         yesAction: function() {
             createBucketWindow.visible = true
         }
+    }
+
+    property CreateItemWindow createBucketWindow: CreateItemWindow {
+        win_title: qsTr("Create S3 bucket")
+    }
+
+    property CreateItemWindow createS3FolderWindow: CreateItemWindow {
+        win_title: qsTr("Create S3 folder")
     }
 
     onAfterRendering: {
@@ -140,6 +138,7 @@ ApplicationWindow {
                 onTriggered: {
                     createBucketWindow.x = app_window.x + (app_window.width / 2) - (createBucketWindow.width / 2)
                     createBucketWindow.y = app_window.y + (app_window.height / 2) - (createBucketWindow.height / 2)
+                    createBucketWindow.create_action = createBucketWindow.createBucket
                     createBucketWindow.visible = true
                 }
                 enabled: s3_panel.connected
@@ -148,7 +147,10 @@ ApplicationWindow {
                 id: menu_s3_create_dir
                 text: qsTr("Create directory")
                 onTriggered: {
-                    createFolderWindow.visible = true
+                    createS3FolderWindow.x = app_window.x + (app_window.width / 2) - (createS3FolderWindow.width / 2)
+                    createS3FolderWindow.y = app_window.y + (app_window.height / 2) - (createS3FolderWindow.height / 2)
+                    createS3FolderWindow.create_action = createS3FolderWindow.createS3Folder
+                    createS3FolderWindow.visible = true
                 }
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"

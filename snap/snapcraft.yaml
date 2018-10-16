@@ -1,5 +1,5 @@
 name: qts3browser
-version: '1.0.1' 
+version: '1.0.2' 
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
@@ -29,6 +29,7 @@ apps:
         QT_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins
         QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.10/plugins/platforms
         QT_XCB_GL_INTEGRATION: none
+        QT_QPA_PLATFORMTHEME: gtk3
         #QT_XCB_GL_INTEGRATION: xcb_egl
         #QT_LOGGING_RULES: "*.debug=false"
 parts:
@@ -138,7 +139,7 @@ parts:
 
   application:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/qts3browser_1.0.1_amd64.deb
+    source: https://dl.bintray.com/arturfog/oss-arturfog/qts3browser_1.0.2_amd64.deb
     source-type: deb
     override-build: |
       snapcraftctl build
