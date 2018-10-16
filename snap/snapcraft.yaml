@@ -139,7 +139,7 @@ parts:
 
   application:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/qts3browser_1.0.2_amd64.deb
+    source: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.2_amd64.deb
     source-type: deb
     override-build: |
       snapcraftctl build

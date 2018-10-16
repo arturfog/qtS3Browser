@@ -32,6 +32,8 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
+    property int uiFontSize: 10
+
     property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {}
     property AboutWindow aboutWindow: AboutWindow {}
     property SettingsWindow settingsWindow: SettingsWindow {}
@@ -92,9 +94,10 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         id: menu_bar
-
+        font.pointSize: uiFontSize
         Menu {
             title: qsTr("File")
+            font.pointSize: uiFontSize
             MenuItem {
                 text: qsTr("Settings")
                 icon.source: "qrc:icons/32_settings_icon.png"
@@ -112,6 +115,7 @@ ApplicationWindow {
 
         Menu {
             title: "S3"
+            font.pointSize: uiFontSize
             MenuItem {
                 text: qsTr("Connect...")
                 icon.source: "qrc:icons/32_connect_icon.png"
@@ -177,7 +181,7 @@ ApplicationWindow {
             id: bookmarks_menu
             title: qsTr("Bookmarks")
             onOpened: addBookmarks()
-
+            font.pointSize: uiFontSize
             MenuItem {
                 text: qsTr("Create bookmark")
                 icon.source: "qrc:icons/32_bookmark2.png"
@@ -226,6 +230,7 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("Help")
+            font.pointSize: uiFontSize
             MenuItem {
                 text: qsTr("About")
                 icon.source: "qrc:icons/32_about_icon.png"

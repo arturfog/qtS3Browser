@@ -212,6 +212,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
                         wrapMode: Text.Wrap
+                        font.pointSize: 10
                         selectByMouse: true
                     }
 
