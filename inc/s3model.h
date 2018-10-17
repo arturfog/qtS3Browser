@@ -138,6 +138,8 @@ public:
         settings.setValue("Region", region);
         settings.setValue("Endpoint", endpoint);
         settings.sync();
+
+        s3.reloadCredentials();
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getRegionIdxQML() {

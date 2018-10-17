@@ -187,6 +187,8 @@ public:
      * @brief init
      */
     void init();
+
+    void reloadCredentials();
     // LIST OBJECTS
     /**
      * @brief listObjects

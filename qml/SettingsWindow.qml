@@ -23,13 +23,15 @@ import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 Window {
     id: settings_win
-    x: app_window.x; y: app_window.y; width: 480; height: 640
+    x: app_window.x; y: app_window.y; width: 640; height: 640
     minimumHeight: 350; maximumHeight: 640
-    minimumWidth: 400
+    minimumWidth: 640
     color: "#f8f9fa"
     title: "Settings"
 
     property string borderColor: "gray"
+    readonly property int labelFontSize: 11
+    readonly property int inputFontSize: 10
 
     onVisibilityChanged: {
         startPath.text = s3Model.getStartPathQML()
@@ -38,7 +40,32 @@ Window {
         endpointURL.text = s3Model.getEndpointQML()
     }
 
-    // --------------------------------------------------------------------------
+    function extendInputText(input, input_field, input_field_rect) {
+        let sizeInc = 40;
+        if(input.text.length > 40 && input_field.height === 30) {
+            input_field_rect.height += sizeInc
+            input_field.height += sizeInc
+            settings_win.height += sizeInc
+            settings_win.maximumHeight += sizeInc
+        } else if(input.text.length <= 40 && input_field.height > 30) {
+            input_field_rect.height -= sizeInc
+            input_field.height -= sizeInc
+            settings_win.height -= sizeInc
+            settings_win.maximumHeight -= sizeInc
+        }
+    }
+
+    function focusChangedHandler(input_field, input_rect) {
+        if(input_field.focus) {
+            input_rect.color = "white"
+            input_rect.border.color = "orange"
+        } else {
+            input_rect.color = "#efefef"
+            input_rect.border.color = borderColor
+        }
+    }
+
+    // ------------- header -------------
     Rectangle {
         color: "#3367d6"
         width: parent.width
@@ -71,7 +98,7 @@ Window {
         }
     }
 
-    // --------------------------------------------------------------------------
+    // ------------- S3 start path -------------
     DropShadow {
         anchors.fill: start_path_rect
         horizontalOffset: 1
@@ -102,7 +129,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- icon | title row -------------
             Row {
                 x: 10
                 y: 10
@@ -117,23 +144,20 @@ Window {
                     height: 40
                     text: "S3 Start Path"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: labelFontSize
                 }
             }
-
-
 
             Rectangle {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- input field top gap -------------
             Rectangle {
                 width: parent.width
                 height: 5
             }
-
 
             Rectangle {
                 id: start_path_input_rect
@@ -148,27 +172,20 @@ Window {
                 TextInput {
                     id: startPath
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
-                    maximumLength: 48
-
-                    onActiveFocusChanged: {
-                        if(startPath.focus) {
-                            start_path_input_rect.color = "white"
-                            start_path_input_rect.border.color = "orange"
-                        } else {
-                            start_path_input_rect.color = "#efefef"
-                            start_path_input_rect.border.color = borderColor
-                        }
-                    }
+                    font.pointSize: inputFontSize
+                    maximumLength: 128
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(startPath, start_path_input_rect, start_path_rect)
+                    onActiveFocusChanged: focusChangedHandler(startPath, start_path_input_rect)
                 }
 
             }
         }
     }
-    // --------------------------------------------------------------------------
+    // ------------- secret key -------------
     DropShadow {
         anchors.fill: secret_key_rect
         horizontalOffset: 1
@@ -200,7 +217,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- icon | title row -------------
             Row {
                 x: 10
                 y: 10
@@ -215,7 +232,7 @@ Window {
                     height: 40
                     text: "Secret Key"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: labelFontSize
                 }
             }
 
@@ -226,7 +243,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- input field top gap -------------
             Rectangle {
                 width: parent.width
                 height: 5
@@ -246,27 +263,20 @@ Window {
                 TextInput {
                     id: secretKey
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
-                    maximumLength: 48
-
-                    onActiveFocusChanged: {
-                        if(secretKey.focus) {
-                            secret_key_input_rect.color = "white"
-                            secret_key_input_rect.border.color = "orange"
-                        } else {
-                            secret_key_input_rect.color = "#efefef"
-                            secret_key_input_rect.border.color = borderColor
-                        }
-                    }
+                    font.pointSize: inputFontSize
+                    maximumLength: 128
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(secretKey, secret_key_input_rect, secret_key_rect)
+                    onActiveFocusChanged: focusChangedHandler(secretKey, secret_key_input_rect)
                 }
 
             }
         }
     }
-    // --------------------------------------------------------------------------
+    // ------------- access key -------------
     DropShadow {
         anchors.fill: access_key_rect
         horizontalOffset: 1
@@ -279,8 +289,8 @@ Window {
 
 
     Rectangle {
-        y: secret_key_rect.y + secret_key_rect.height + 20
         id: access_key_rect
+        y: secret_key_rect.y + secret_key_rect.height + 20
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
@@ -298,7 +308,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- icon | title row -------------
             Row {
                 x: 10
                 y: 10
@@ -313,7 +323,7 @@ Window {
                     height: 40
                     text: "Access Key"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: labelFontSize
                 }
             }
 
@@ -324,7 +334,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- input field top gap -------------
             Rectangle {
                 width: parent.width
                 height: 5
@@ -344,27 +354,20 @@ Window {
                 TextInput {
                     id: accessKey
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
-                    maximumLength: 48
-
-                    onActiveFocusChanged: {
-                        if(accessKey.focus) {
-                            access_key_input_rect.color = "white"
-                            access_key_input_rect.border.color = "orange"
-                        } else {
-                            access_key_input_rect.color = "#efefef"
-                            access_key_input_rect.border.color = borderColor
-                        }
-                    }
+                    font.pointSize: inputFontSize
+                    maximumLength: 128
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(accessKey, access_key_input_rect, access_key_rect)
+                    onActiveFocusChanged: focusChangedHandler(accessKey, access_key_input_rect)
                 }
 
             }
         }
     }
-    // --------------------------------------------------------------------------
+    // ------------- region -------------
     DropShadow {
         anchors.fill: region_rect
         horizontalOffset: 1
@@ -396,7 +399,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- icon | title row -------------
             Row {
                 x: 10
                 y: 10
@@ -411,23 +414,20 @@ Window {
                     height: 40
                     text: "Region"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: labelFontSize
                 }
             }
-
-
 
             Rectangle {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- combo box top gap -------------
             Rectangle {
                 width: parent.width
                 height: 5
             }
-
 
             Rectangle {
                 id: region_input_rect
@@ -443,6 +443,7 @@ Window {
                     id: s3region
                     width: parent.width
                     height: parent.height
+                    font.pointSize: inputFontSize
                     currentIndex: s3Model.getRegionIdxQML()
                     model: [ "Default",
                         "us-east-1",
@@ -456,7 +457,7 @@ Window {
             }
         }
     }
-    // --------------------------------------------------------------------------
+    // ------------- endpoint url -------------
     DropShadow {
         anchors.fill: endpoint_url_rect
         horizontalOffset: 1
@@ -488,7 +489,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- icon | title row -------------
             Row {
                 x: 10
                 y: 10
@@ -503,18 +504,16 @@ Window {
                     height: 40
                     text: "Endpoint URL"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: labelFontSize
                 }
             }
-
-
 
             Rectangle {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- input field top gap -------------
             Rectangle {
                 width: parent.width
                 height: 5
@@ -534,38 +533,31 @@ Window {
                 TextInput {
                     id: endpointURL
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
-                    maximumLength: 48
-
-                    onActiveFocusChanged: {
-                        if(endpointURL.focus) {
-                            endpoint_input_rect.color = "white"
-                            endpoint_input_rect.border.color = "orange"
-                        } else {
-                            endpoint_input_rect.color = "#efefef"
-                            endpoint_input_rect.border.color = borderColor
-                        }
-                    }
+                    font.pointSize: inputFontSize
+                    maximumLength: 128
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(endpointURL, endpoint_input_rect, endpoint_url_rect)
+                    onActiveFocusChanged: focusChangedHandler(endpointURL, endpoint_input_rect)
                 }
-
             }
         }
     }
-    // --------------------------------------------------------------------------
+    // ------------- save/cancel buttons -------------
     Rectangle {
         x: 10
         y: endpoint_url_rect.y + endpoint_url_rect.height + 10
         width: parent.width - 20
         height: 50
-
         Row {
             y: 10
             height: parent.height
             anchors.horizontalCenter: parent.horizontalCenter
+            // ------------- save -------------
             Button {
+                font.pointSize: labelFontSize
                 text: "Save"
                 icon.source: "qrc:icons/32_save_icon.png"
                 icon.color: "transparent"
@@ -580,14 +572,14 @@ Window {
                     close()
                 }
             }
-
+            // ------------- buttons gap -------------
             Rectangle {
                 width: 5
                 height: parent.height
             }
-
-
+            // ------------- cancel -------------
             Button {
+                font.pointSize: labelFontSize
                 text: "Cancel"
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
