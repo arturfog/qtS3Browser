@@ -39,14 +39,12 @@ Window {
     property int secondsLeft: 0
 
     onVisibleChanged: {
-        if(visible === false) {
-            lastTotalBytes = 0
-            totalBytes = 0
-            transferSpeedBytes = 0
-            s3Model.refreshQML()
-        } else {
-            lastDate = new Date()
-        }
+        lastTotalBytes = 0
+        totalBytes = 0
+        transferSpeedBytes = 0
+        secondsLeft = 0
+        s3Model.refreshQML()
+        lastDate = new Date()
     }
 
     function getSizeString(bytes) {
@@ -68,10 +66,21 @@ Window {
     }
 
     function secondsToEta(seconds) {
-        var s = (seconds % 60)
-        var m = ( Number( (seconds - s) / 60 ) % 60 )
-        var h = Number( ( s - (m * 60) ) / 3600 );
+        var s = 0
+        var m = 0
+        var h = 0
 
+        if(seconds > 0) {
+            s = (seconds % 60)
+
+            if(seconds >= 60) {
+                m = ( Number( (seconds - s) / 60 ) % 60 )
+            }
+
+            if(seconds >= 3600) {
+                h = Number( ( s - (m * 60) ) / 3600 );
+            }
+        }
         return pad(h) + ":" + pad(m) + ":" + pad(s)
     }
 
@@ -82,20 +91,18 @@ Window {
             totalBytes = total
 
             var currentDate = new Date()
-            var miliseconds = currentDate.getMilliseconds() - lastDate.getMilliseconds()
+            var seconds = currentDate.getSeconds() - lastDate.getSeconds()
 
-            if(totalBytes > 0 && miliseconds > 0 && lastTotalBytes < totalBytes) {
-                console.log("miliseconds: " + miliseconds)
-
-                var bytesdiff = totalBytes - lastTotalBytes
-
+            if(totalBytes > 0 && seconds > 0) {
+                //console.log("seconds: " + seconds)
+                var bytesdiff = current - lastTotalBytes
                 if(bytesdiff > 0) {
-                    transferSpeedBytes = (bytesdiff / (miliseconds / 1000))
-                    console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
+                    transferSpeedBytes = (bytesdiff / seconds)
+                    //console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
                 }
             }
 
-            lastTotalBytes = totalBytes
+            lastTotalBytes = current
             lastDate = currentDate
 
             currentProgress = (((current / total) * 100) | 0)
@@ -266,7 +273,7 @@ Window {
                     width: 100
                     text: "Copied: " + getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 11
                 }
 
                 Rectangle {
@@ -296,7 +303,7 @@ Window {
                     height: 40
                     text: "Total: " + getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 11
                 }
             }
 
@@ -327,7 +334,7 @@ Window {
                     width: 100
                     text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 11
                 }
 
                 Rectangle {
@@ -363,7 +370,7 @@ Window {
                     height: 40
                     text: "ETA: " + secondsToEta(secondsLeft)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 11
                 }
             }
         }

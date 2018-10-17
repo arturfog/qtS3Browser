@@ -78,6 +78,7 @@ Item {
         Row {
             anchors.fill: parent
             ToolButton {
+                font.pointSize: uiFontSize
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
@@ -91,6 +92,7 @@ Item {
             }
 
             ToolButton {
+                font.pointSize: uiFontSize
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
@@ -99,6 +101,7 @@ Item {
 
             ToolButton {
                 id: file_upload_btn
+                font.pointSize: uiFontSize
                 height: parent.height
                 icon.source: "qrc:icons/32_upload_icon.png"
                 icon.color: "transparent"
@@ -119,6 +122,7 @@ Item {
             }
 
             ToolButton {
+                font.pointSize: uiFontSize
                 height: parent.height
                 icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
@@ -131,6 +135,7 @@ Item {
             }
 
             ToolButton {
+                font.pointSize: uiFontSize
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
@@ -211,7 +216,7 @@ Item {
                         maximumLength: 130
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
-                        wrapMode: Text.Wrap
+                        wrapMode: Text.WrapAnywhere
                         font.pointSize: 10
                         selectByMouse: true
                     }

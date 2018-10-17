@@ -74,7 +74,7 @@ Window {
                 width: parent.width
                 text: "qtS3Browser"
                 verticalAlignment: Text.AlignVCenter
-                font.pointSize: 16
+                font.pointSize: 14
                 height: 40
             }
 
@@ -169,7 +169,7 @@ Window {
                     text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
                     verticalAlignment: Text.AlignVCenter
                     onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
-                    font.pointSize: 12
+                    font.pointSize: 11
 
                 }
             }
