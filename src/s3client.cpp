@@ -82,9 +82,9 @@ void S3Client::init() {
 
 #ifdef QT_DEBUG
         config.scheme = Aws::Http::Scheme::HTTP;
-        auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 20000);
-        config.readRateLimiter = m_limiter;
-        config.writeRateLimiter = m_limiter;
+        //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 20000);
+        //config.readRateLimiter = m_limiter;
+        //config.writeRateLimiter = m_limiter;
 #endif
 
 

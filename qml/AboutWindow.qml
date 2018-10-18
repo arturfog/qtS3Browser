@@ -30,7 +30,6 @@ Window {
 
     Rectangle {
         color: "#3367d6"
-        //color: "#f8f9fa"
         width: parent.width
         height: 128
         Image {
@@ -126,7 +125,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- author row -------------
             Row {
                 x: 10
                 y: 10
@@ -153,7 +152,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------- github link row -------------
             Row {
                 x: 10
                 y: 10
@@ -169,8 +168,7 @@ Window {
                     text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
                     verticalAlignment: Text.AlignVCenter
                     onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
-                    font.pointSize: 11
-
+                    font.pointSize: 10
                 }
             }
         }

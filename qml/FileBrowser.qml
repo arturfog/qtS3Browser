@@ -183,7 +183,7 @@ Item {
                     border.width: 2
                     border.color: "lightblue"
                     color: "#e6f9ff"
-                    height: 35
+                    height: 38
                     radius: 20
 
                     Image {
@@ -212,7 +212,7 @@ Item {
                     TextInput {
                         id: file_browser_path_text
                         x:95
-                        width: view.width - file_browser_path_go.width - 2
+                        width: view.width - 135
                         maximumLength: 130
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
@@ -223,7 +223,7 @@ Item {
 
                     RoundButton {
                         id: file_browser_path_go
-                        x: file_browser_path_text.width + file_browser_path_text.x - 90
+                        x: file_browser_path_text.width + file_browser_path_text.x
                         radius: 20
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
@@ -247,6 +247,7 @@ Item {
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
+                            font.pointSize: 10
 
                         }
                     }
@@ -265,6 +266,7 @@ Item {
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
+                            font.pointSize: 10
                         }
                     }
                 }
@@ -276,11 +278,11 @@ Item {
                 opacity: 0.5
                 z: 0
             }
+
             focus: true
             highlightFollowsCurrentItem: true
             highlightMoveDuration:1
             smooth: true
-
             footerPositioning: ListView.OverlayFooter
             footer: Rectangle {
                 width: browser.width
@@ -290,6 +292,7 @@ Item {
 
                 Column {
                     height: parent.height
+                    // ------------- search row -------------
                     Row {
                         Rectangle {
                             width: browser.width - file_search_btn.width
@@ -303,7 +306,7 @@ Item {
                                 y: 2
                                 source: "qrc:icons/24_find_icon.png"
                             }
-
+                            // ------------- search input field -------------
                             TextInput {
                                 id: file_search_txt
                                 x:30
@@ -327,12 +330,19 @@ Item {
                         }
                     }
                 }
-
+                // ------------- bottom status -------------
                 Text {
                     y: 22
                     width: parent.width
                     height: 20
-                    text: folder.count+" Items"
+                    font.pointSize: 9
+                    text: {
+                        if(folder.count == 1) {
+                            folder.count + " Item"
+                        } else {
+                            folder.count + " Items"
+                        }
+                    }
                 }
             }
         }

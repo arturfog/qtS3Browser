@@ -43,8 +43,11 @@ Window {
         totalBytes = 0
         transferSpeedBytes = 0
         secondsLeft = 0
-        s3Model.refreshQML()
         lastDate = new Date()
+
+        if(!visible) {
+            s3Model.refreshQML()
+        }
     }
 
     function getSizeString(bytes) {
