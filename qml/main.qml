@@ -26,9 +26,9 @@ import QtQuick.Dialogs 1.1
 ApplicationWindow {
     id: app_window
     visible: true
-    width: 940
+    width: 960
     height: 480
-    minimumWidth: 940
+    minimumWidth: 800
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 

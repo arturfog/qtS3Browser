@@ -31,6 +31,31 @@ Window {
 
     property string borderColor: "gray"
 
+    function extendInputText(input, input_field, input_field_rect) {
+        let sizeInc = 40;
+        if(input.text.length > 40 && input_field.height === 30) {
+            input_field_rect.height += sizeInc
+            input_field.height += sizeInc
+            create_bookmark_win.height += sizeInc
+            create_bookmark_win.maximumHeight += sizeInc
+        } else if(input.text.length <= 40 && input_field.height > 30) {
+            input_field_rect.height -= sizeInc
+            input_field.height -= sizeInc
+            create_bookmark_win.height -= sizeInc
+            create_bookmark_win.maximumHeight -= sizeInc
+        }
+    }
+
+    function focusChangedHandler(input_field, input_rect) {
+        if(input_field.focus) {
+            input_rect.color = "white"
+            input_rect.border.color = "orange"
+        } else {
+            input_rect.color = "#efefef"
+            input_rect.border.color = borderColor
+        }
+    }
+
     Rectangle {
         color: "#3367d6"
         width: parent.width
@@ -131,21 +156,15 @@ Window {
                 TextInput {
                     id: bookmarkName
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 10
                     maximumLength: 128
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
+                    onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
 
-                    onActiveFocusChanged: {
-                        if(bookmarkName.focus) {
-                            bookmark_name_input_rect.color = "white"
-                            bookmark_name_input_rect.border.color = "orange"
-                        } else {
-                            bookmark_name_input_rect.color = "#efefef"
-                            bookmark_name_input_rect.border.color = borderColor
-                        }
-                    }
                 }
             }
 
@@ -202,22 +221,15 @@ Window {
                 TextInput {
                     id: bookmarkPath
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 10
                     maximumLength: 128
                     text: "s3://"
-
-                    onActiveFocusChanged: {
-                        if(bookmarkPath.focus) {
-                            bookmark_url_input_rect.color = "white"
-                            bookmark_url_input_rect.border.color = "orange"
-                        } else {
-                            bookmark_url_input_rect.color = "#efefef"
-                            bookmark_url_input_rect.border.color = borderColor
-                        }
-                    }
+                    wrapMode: Text.WrapAnywhere
+                    onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
+                    onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
                 }
             }
 
@@ -230,7 +242,7 @@ Window {
 
     Row {
         height: 30
-        y: 240
+        y: create_bookmark_rect.y + create_bookmark_rect.height + 10
         anchors.horizontalCenter: parent.horizontalCenter
 
         Button {

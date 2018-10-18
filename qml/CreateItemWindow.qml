@@ -32,7 +32,7 @@ Window {
     height: 200
     minimumHeight: 200
     minimumWidth: 400
-    maximumHeight: 130
+    maximumHeight: 250
     title: win_title
     // ------------- windows modes -------------
     readonly property int createBucket: 0
@@ -41,9 +41,36 @@ Window {
     // ------------- properties -------------
     property string win_title: ""
     property int create_action: 0
+    property string borderColor: "gray"
     // ------------- event handlers -------------
     onVisibilityChanged: {
         itemName.text = ""
+        create_item_win.height = 200
+    }
+
+    function extendInputText(input, input_field, input_field_rect) {
+        let sizeInc = 40;
+        if(input.text.length > 40 && input_field.height === 30) {
+            input_field_rect.height += sizeInc
+            input_field.height += sizeInc
+            create_item_win.height += sizeInc
+            create_item_win.maximumHeight += sizeInc
+        } else if(input.text.length <= 40 && input_field.height > 30) {
+            input_field_rect.height -= sizeInc
+            input_field.height -= sizeInc
+            create_item_win.height -= sizeInc
+            create_item_win.maximumHeight -= sizeInc
+        }
+    }
+
+    function focusChangedHandler(input_field, input_rect) {
+        if(input_field.focus) {
+            input_rect.color = "white"
+            input_rect.border.color = "orange"
+        } else {
+            input_rect.color = "#efefef"
+            input_rect.border.color = borderColor
+        }
     }
 
     property CustomMessageDialog msgDialog: CustomMessageDialog {
@@ -170,21 +197,14 @@ Window {
                 TextInput {
                     id: itemName
                     x: 10
-                    width: parent.width
+                    width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 10
                     maximumLength: 128
-
-                    onActiveFocusChanged: {
-                        if(itemName.focus) {
-                            item_name_input_rect.color = "white"
-                            item_name_input_rect.border.color = "orange"
-                        } else {
-                            item_name_input_rect.color = "#efefef"
-                            item_name_input_rect.border.color = "gray"
-                        }
-                    }
+                    wrapMode: Text.WrapAnywhere
+                    onActiveFocusChanged: focusChangedHandler(itemName, item_name_input_rect);
+                    onTextChanged: extendInputText(itemName, item_name_input_rect, create_item_rect)
                 }
             }
         }

@@ -55,7 +55,7 @@ Item {
         }
     }
 
-    focus: true
+    //focus: true
 
     ToolBar {
         width: parent.width
@@ -141,6 +141,7 @@ Item {
         width: parent.width
         height: parent.height - top_buttons_row.height
         y: top_buttons_row.height
+        focusPolicy: Qt.NoFocus
         clip: true
         ListView {
             id: view
@@ -196,7 +197,7 @@ Item {
                         x:95
                         font.pointSize: 10
                         selectByMouse: true
-                        width: parent.width - s3_browser_path_go.width - 2
+                        width: parent.width - 135
                         anchors.verticalCenter: parent.verticalCenter
                         wrapMode: Text.WrapAnywhere
                         text: path.replace("s3://","")
@@ -204,7 +205,7 @@ Item {
 
                     RoundButton {
                         id: s3_browser_path_go
-                        x: s3_browser_path_text.width
+                        x: s3_browser_path_text.width + s3_browser_path_text.x
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
@@ -233,6 +234,7 @@ Item {
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
+                            font.pointSize: 10
 
                         }
                     }
@@ -250,6 +252,7 @@ Item {
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
+                            font.pointSize: 10
                         }
                     }
                 }
@@ -261,7 +264,8 @@ Item {
                 opacity: 0.5
                 z: 0
             }
-            focus: true
+
+            //focus: true
             highlightFollowsCurrentItem: true
             highlightMoveDuration:1
             smooth: true
@@ -301,7 +305,7 @@ Item {
 
                                 onTextChanged: {
                                     if(text.length > 0) {
-                                        s3Model.search(text)
+                                        s3Model.search(text);
                                     } else {
                                         s3Model.searchReset();
                                     }
@@ -324,6 +328,7 @@ Item {
                     y: 22
                     width: parent.width
                     height: 20
+                    font.pointSize: 9
                     text: footerText
                 }
             }

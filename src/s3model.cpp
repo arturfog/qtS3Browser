@@ -87,6 +87,7 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
             if(m_s3items.at(idx).filePath().compare("/") == 0) {
                 isDir = true;
             }
+
             download(m_s3items.at(idx).fileName(), isDir);
         }
     }
