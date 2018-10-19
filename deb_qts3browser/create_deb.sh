@@ -28,6 +28,11 @@ cd build
 
 cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
 /opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
+
+wget 'https://sonarqube.com/static/cpp/build-wrapper-linux-x86.zip'
+unzip build-wrapper-linux-x86.zip
+
+export PATH=$PATH:$PWD/build-wrapper-linux-x86
 build-wrapper-linux-x86-64 --out-dir ../../bw-output make -j 2
 
 cd ..
