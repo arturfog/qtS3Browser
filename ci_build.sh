@@ -39,4 +39,6 @@ if [ "$?" == "0" ]; then
   apt-get update
   wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
   wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb"
+  apt-get install -y libssl1.0.0:i386
+  dpkg -i qt-everywhere_5.10.0_i386.deb
 fi
