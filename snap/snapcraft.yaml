@@ -3,7 +3,7 @@ version: '1.0.2'
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
-architectures: [amd64]
+architectures: [amd64, i386]
 grade: 'stable' 
 confinement: 'strict' 
 
@@ -36,7 +36,9 @@ apps:
 parts:
   aws:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb
+    source: 
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb
     source-type: deb
     stage-packages:
        - libssl1.0.0
@@ -53,7 +55,9 @@ parts:
   
   qt510:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
+    source: 
+       - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb
+       - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb
     source-type: deb
     stage-packages:
         - fontconfig
@@ -140,7 +144,9 @@ parts:
 
   application:
     plugin: dump
-    source: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.2_amd64.deb
+    source: 
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.2_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.2_i386.deb
     source-type: deb
     override-build: |
       snapcraftctl build

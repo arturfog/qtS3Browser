@@ -77,6 +77,7 @@ Window {
         win_title: "Error"
         msg: "Directory already exists"
         ico: StandardIcon.Warning
+        buttons: StandardButton.Close
         yesAction: function() { close() }
     }
     // ------------- header rectangle -------------
@@ -229,8 +230,10 @@ Window {
                     } else if (create_action === createS3Folder) {
                         s3Model.createFolderQML(itemName.text)
                     } else {
-                        if(!fsModel.createFolderQML(itemName.text)) {
+                        if(!fsModel.createFolderQML(itemName.text, view.path)) {
                             msgDialog.visible = true
+                        } else {
+                            close()
                         }
                     }
 

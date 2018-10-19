@@ -25,11 +25,18 @@ else
   echo "Building deb for $DEB_ARCH"
 fi
 
-wget 'https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb'
-dpkg -i amazon-s3-cpp-sdk_1.6.0_amd64.deb
 
-wget 'https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb'
+wget "https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb"
+wget "https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb"
+dpkg -i amazon-s3-cpp-sdk_1.6.0_amd64.deb
 dpkg -i qt-everywhere_5.10.0_amd64.deb
 
 cd deb_qts3browser
 ./create_deb.sh
+
+sudo dpkg --add-architecture i386
+if [ "$?" == "0" ]; then
+  sudo apt-get update
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb"
+fi

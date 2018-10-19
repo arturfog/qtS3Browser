@@ -21,10 +21,12 @@ public:
         }
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool createFolderQML(const QString &path) {
-        QDir dir(path);
+    Q_INVOKABLE bool createFolderQML(const QString& name, const QString& path) {
+        QString tmpPath = path;
+        tmpPath = tmpPath.replace("file://", "");
+        QDir dir(tmpPath.append("/").append(name));
         if(!dir.exists()) {
-            dir.mkdir(path);
+            dir.mkdir(tmpPath);
             return true;
         }
 
