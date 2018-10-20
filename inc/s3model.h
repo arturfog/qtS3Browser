@@ -130,6 +130,8 @@ public:
                                      const QString& secretKey,
                                      const int regionIdx,
                                      const QString& region,
+                                     const int timeoutIdx,
+                                     const QString& timeout,
                                      const QString& endpoint) {
         settings.setValue("StartPath", startPath);
         settings.setValue("AccessKey", accessKey);

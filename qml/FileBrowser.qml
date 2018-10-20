@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.5
-import QtQuick.Controls.Material 2.0
+import QtQuick 2.9
+import QtQuick.Controls.Material 2.1
 import QtQuick.Controls 2.3
 import QtQuick.Dialogs 1.1
-import Qt.labs.folderlistmodel 2.0
+import Qt.labs.folderlistmodel 2.1
 import QtQuick.Layouts 1.0
 
 Item {
@@ -68,9 +68,6 @@ Item {
             view.path = folder.parentFolder
         }
     }
-
-    focus: true
-
     ToolBar {
         width: parent.width
         height: 48
@@ -166,6 +163,7 @@ Item {
             model: FolderListModel {
                 id: folder
                 showDirsFirst: true
+                //showHidden: true
                 folder: view.path
             }
 
@@ -284,6 +282,7 @@ Item {
             highlightMoveDuration:1
             smooth: true
             footerPositioning: ListView.OverlayFooter
+            // ------------- footer -------------
             footer: Rectangle {
                 width: browser.width
                 height: 40
@@ -314,12 +313,21 @@ Item {
                                 selectByMouse: true
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
+                                maximumLength: 25
+
+                                onActiveFocusChanged: {
+                                    if(text.length > 0) {
+                                        file_search_txt.focus = true
+                                        file_search_txt.cursorPosition = length;
+                                    }
+                                }
+
                                 onTextChanged: {
-                                    //folder.nameFilters = ["*" + text + "*"]
+                                    folder.nameFilters = ["*" + text + "*"]
                                 }
                             }
                         }
-
+                        // ------------- clear button -------------
                         RoundButton {
                             id: file_search_btn
                             icon.source: "qrc:icons/32_clear_icon.png"
