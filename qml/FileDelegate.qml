@@ -84,11 +84,28 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Upload')
+            onClicked: {
+                var filePath = folder.get(view.currentIndex, "filePath")
+
+                app_window.progressWindow.title = qsTr("Upload progress ...")
+                app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
+                app_window.progressWindow.visible = true
+                if(!folder.get(view.currentIndex, "fileIsDir")) {
+                    s3Model.uploadFileQML(filePath)
+                } else {
+                    s3Model.uploadDirQML(filePath)
+                }
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             text: qsTr('Delete')
+            onClicked: {
+                var fileName = folder.get(view.currentIndex, "fileName")
+                msgDialog.msg = "Remove " + fileName + " ?"
+                msgDialog.open()
+            }
         }
     }
 

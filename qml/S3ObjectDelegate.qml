@@ -113,12 +113,24 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Download')
+            onClicked: {
+                app_window.progressWindow.title = qsTr("Download progress ...")
+                app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
+                app_window.progressWindow.visible = true
+                s3Model.downloadQML(view.currentIndex)
+
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Delete')
+            onClicked: {
+                var fileName = s3Model.getItemNameQML(view.currentIndex)
+                msgDialog.msg = "Remove " + fileName + " ?"
+                msgDialog.open()
+            }
         }
     }
 
