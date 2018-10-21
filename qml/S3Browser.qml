@@ -28,7 +28,6 @@ Item {
     height: 400
 
     property alias path: view.path
-
     property bool connected: false
     property string footerText: ""
     property CustomMessageDialog msgDialog: CustomMessageDialog {
@@ -54,8 +53,6 @@ Item {
             view.currentIndex = newIndex
         }
     }
-
-    //focus: true
 
     ToolBar {
         width: parent.width
@@ -141,7 +138,6 @@ Item {
         width: parent.width
         height: parent.height - top_buttons_row.height
         y: top_buttons_row.height
-        focusPolicy: Qt.NoFocus
         clip: true
         ListView {
             id: view
@@ -221,8 +217,6 @@ Item {
                     }
                 }
 
-
-
                 Row {
                     width: parent.width
                     height: 32
@@ -265,13 +259,11 @@ Item {
                 z: 0
             }
 
-            //focus: true
             highlightFollowsCurrentItem: true
             highlightMoveDuration:1
             smooth: true
-
-            footerPositioning: ListView.OverlayHeader
-
+            footerPositioning: ListView.OverlayFooter
+            // ------------- footer -------------
             footer: Rectangle {
                 id: s3_footer
                 width: s3_browser.width
@@ -280,7 +272,8 @@ Item {
                 z: 2
 
                 Column {
-                    anchors.fill: parent
+                    height: parent.height
+                    // ------------- search row -------------
                     Row {
                         Rectangle {
                             width: s3_browser.width - s3_search_btn.width
@@ -294,14 +287,22 @@ Item {
                                 y: 2
                                 source: "qrc:icons/24_find_icon.png"
                             }
-
+                            // ------------- search input field -------------
                             TextInput {
                                 id: s3_search_txt
                                 x:30
                                 text: ""
                                 selectByMouse: true
+                                maximumLength: 25
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
+
+                                onActiveFocusChanged: {
+                                    if(text.length > 0) {
+                                        s3_search_txt.focus = true
+                                        s3_search_txt.cursorPosition = length;
+                                    }
+                                }
 
                                 onTextChanged: {
                                     if(text.length > 0) {
@@ -312,6 +313,7 @@ Item {
                                 }
                             }
                         }
+                        // ------------- clear button -------------
                         RoundButton {
                             id: s3_search_btn
                             icon.source: "qrc:icons/32_clear_icon.png"
@@ -323,7 +325,7 @@ Item {
                         }
                     }
                 }
-
+                // ------------- bottom status -------------
                 Text {
                     y: 22
                     width: parent.width

@@ -391,7 +391,7 @@ Window {
         radius: 5
 
         Column {
-            width: parent.width
+            width: parent.width / 2
             height: parent.height
 
             Rectangle {
@@ -452,6 +452,74 @@ Window {
                         "eu-west-1",
                         "eu-west-2",
                         "eu-west-3" ]
+                }
+
+            }
+        }
+
+        Column {
+            x: parent.width / 2
+            width: parent.width / 2
+            height: parent.height
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+            // ------------- icon | title row -------------
+            Row {
+                x: 10
+                y: 10
+                width: parent.width
+                height: 40
+                Image {
+                    source: "qrc:icons/32_clock_icon.png"
+                }
+
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Network timeout (seconds)"
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: labelFontSize
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+            // ------------- combo box top gap -------------
+            Rectangle {
+                width: parent.width
+                height: 5
+            }
+
+            Rectangle {
+                id: timeout_input_rect
+                x: 10
+                width: parent.width - 20
+                height: 30
+                border.color: "gray"
+                border.width: 1
+                radius: 20
+                color: "#f8f9fa"
+
+                ComboBox {
+                    id: timeout
+                    width: parent.width
+                    height: parent.height
+                    font.pointSize: inputFontSize
+                    currentIndex: s3Model.getRegionIdxQML()
+                    model: [ "5",
+                        "10",
+                        "15",
+                        "20",
+                        "25",
+                        "30",
+                        "35" ]
                 }
 
             }
@@ -567,6 +635,8 @@ Window {
                                             secretKey.text,
                                             s3region.currentIndex,
                                             s3region.currentText,
+                                            timeout.currentIndex,
+                                            timeout.currentText,
                                             endpointURL.text
                                             )
                     close()
