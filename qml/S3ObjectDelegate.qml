@@ -58,10 +58,12 @@ Rectangle {
 
         s3_browser.footerText = s3Model.getItemsCountQML()+" Items";
     }
+
     id:delegate
     width: view.width
     height:34
     color: "transparent"
+
     Row {
         anchors.fill: parent
 
@@ -81,8 +83,6 @@ Rectangle {
             width: parent.width - 135
             anchors.verticalCenter: parent.verticalCenter
         }
-
-
 
         Text {
             id: i_size
@@ -134,6 +134,7 @@ Rectangle {
                 contextMenu.popup()
                 console.log("Right")
             }
+
         }
 
         onDoubleClicked:  {

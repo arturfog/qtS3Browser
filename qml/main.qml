@@ -201,6 +201,7 @@ ApplicationWindow {
             MenuSeparator { }
 
             function addBookmarks() {
+                console.log("test")
                 var bookmarksLen = s3Model.getBookmarksNumQML();
                 if(bookmarksLen > 0) {
                     var keys = s3Model.getBookmarksKeysQML()
@@ -208,6 +209,10 @@ ApplicationWindow {
                         if(bookmarks_menu.count <= 3 + i) {
                             bookmarks_menu.addItem(menuItem.createObject(bookmarks_menu, { text: keys[i] }))
                         }
+                    }
+                } else {
+                    for(var i = 3; i < bookmarks_menu.count; i++){
+                        bookmarks_menu.removeItem(bookmarks_menu.itemAt(i));
                     }
                 }
             }

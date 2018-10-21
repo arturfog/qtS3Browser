@@ -27,8 +27,19 @@ Window {
     color: "#f8f9fa"
     title: "Manage bookmarks"
 
+    onVisibleChanged: {
+        addBookmarks()
+    }
+
     function addBookmarks() {
         var bookmarksLen = s3Model.getBookmarksNumQML();
+
+        for(var i = bookmarks_list.children.length; i > 0 ; i--) {
+          bookmarks_list.children[i-1].destroy()
+        }
+
+        var emptyObject = null;
+
         if(bookmarksLen > 0) {
             var keys = s3Model.getBookmarksKeysQML()
             var values = s3Model.getBookmarksLinksQML()
@@ -53,7 +64,7 @@ Column {
   }
 
   Column {
-    width: parent.width - 160;
+    width: parent.width - 180;
     Text {
       font.pointSize: 14
       text: "' + keys[i] +'"
@@ -69,7 +80,12 @@ Column {
     text: "Remove";
     icon.source: "qrc:icons/32_delete_icon.png"
     icon.color: "transparent"
-    onClicked: { s3Model.removeBookmarkQML("' + keys[i] + '") }
+    onClicked: {
+      s3Model.removeBookmarkQML("' + keys[i] + '")
+      if(s3Model.getBookmarksNumQML() == 0) {
+        close()
+      }
+    }
   }
 }
 
@@ -96,7 +112,8 @@ Rectangle {
         } else {
             about_win.maximumHeight = about_win.height
             about_win.maximumWidth = about_win.width
-            var emptyObject = Qt.createQmlObject('
+
+            emptyObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
 
@@ -187,11 +204,14 @@ onClicked: { createBookmarkWindow.visible = true; close() } }
             border.width: 1
             radius: 5
 
+            onVisibleChanged: {
+                bookmarks_list.update()
+            }
+
             Column {
                 y: 10
                 id: bookmarks_list
                 width: parent.width
-                Component.onCompleted: addBookmarks()
             }
         }
     }

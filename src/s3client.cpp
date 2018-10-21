@@ -80,11 +80,18 @@ void S3Client::init() {
             }
         }
 
+        if(settings.contains("Timeout")) {
+            const int timeout = settings.value("Timeout").toInt();
+            if(timeout > 0) {
+                config.requestTimeoutMs = (timeout * 1000);
+            }
+        }
+
 #ifdef QT_DEBUG
         config.scheme = Aws::Http::Scheme::HTTP;
-        //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 20000);
-        //config.readRateLimiter = m_limiter;
-        //config.writeRateLimiter = m_limiter;
+        auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 20000);
+        config.readRateLimiter = m_limiter;
+        config.writeRateLimiter = m_limiter;
 #endif
 
 
@@ -123,6 +130,13 @@ void S3Client::reloadCredentials()
         const QString end = settings.value("Endpoint").toString();
         if(!end.isEmpty()) {
             config.endpointOverride = end.toStdString().c_str();
+        }
+    }
+
+    if(settings.contains("Timeout")) {
+        const int timeout = settings.value("Timeout").toInt();
+        if(timeout > 0) {
+            config.requestTimeoutMs = (timeout * 1000);
         }
     }
 
