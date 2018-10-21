@@ -512,14 +512,14 @@ Window {
                     width: parent.width
                     height: parent.height
                     font.pointSize: inputFontSize
-                    currentIndex: s3Model.getRegionIdxQML()
-                    model: [ "5",
+                    currentIndex: s3Model.getTimeoutIdxQML()
+                    model: [ "3",
+                        "5",
                         "10",
                         "15",
                         "20",
                         "25",
-                        "30",
-                        "35" ]
+                        "30" ]
                 }
 
             }

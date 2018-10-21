@@ -26,8 +26,8 @@ Item {
     id: browser
     width: 300
     property alias path: view.path
-
     property bool connected: false
+
     property CustomMessageDialog msgDialog: CustomMessageDialog {
         win_title: "Remove?"
         yesAction: function() {
@@ -41,33 +41,6 @@ Item {
         win_title: qsTr("Create folder")
     }
 
-    Keys.onUpPressed: {
-        var newIndex = view.currentIndex - 1;
-        if (newIndex < 0) {
-            newIndex = 0
-        }
-        view.currentIndex = newIndex
-    }
-
-    Keys.onDownPressed: {
-        var newIndex = view.currentIndex + 1;
-        if (newIndex >= view.count) {
-            newIndex = view.count - 1;
-        } else {
-            view.currentIndex = newIndex
-        }
-    }
-
-    Keys.onReturnPressed: {
-        var url = folder.get(view.currentIndex, "fileURL")
-        folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
-    }
-
-    Keys.onDeletePressed: {
-        if(folder.parentFolder.toString().length > 0) {
-            view.path = folder.parentFolder
-        }
-    }
     ToolBar {
         width: parent.width
         height: 48
@@ -152,6 +125,34 @@ Item {
         height: parent.height - 48
         y: 48
         clip: true
+
+        Keys.onUpPressed: {
+            var newIndex = view.currentIndex - 1;
+            if (newIndex < 0) {
+                newIndex = 0
+            }
+            view.currentIndex = newIndex
+        }
+
+        Keys.onDownPressed: {
+            var newIndex = view.currentIndex + 1;
+            if (newIndex >= view.count) {
+                newIndex = view.count - 1;
+            } else {
+                view.currentIndex = newIndex
+            }
+        }
+
+        Keys.onReturnPressed: {
+            var url = folder.get(view.currentIndex, "fileURL")
+            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+        }
+
+        Keys.onDeletePressed: {
+            if(folder.parentFolder.toString().length > 0) {
+                view.path = folder.parentFolder
+            }
+        }
 
         ListView {
             id: view
@@ -277,7 +278,6 @@ Item {
                 z: 0
             }
 
-            focus: true
             highlightFollowsCurrentItem: true
             highlightMoveDuration:1
             smooth: true

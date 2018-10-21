@@ -37,23 +37,6 @@ Item {
         }
     }
 
-    Keys.onUpPressed: {
-        var newIndex = view.currentIndex - 1;
-        if (newIndex < 0) {
-            newIndex = 0
-        }
-        view.currentIndex = newIndex
-    }
-
-    Keys.onDownPressed: {
-        var newIndex = view.currentIndex + 1;
-        if (newIndex >= view.count) {
-            newIndex = view.count - 1;
-        } else {
-            view.currentIndex = newIndex
-        }
-    }
-
     ToolBar {
         width: parent.width
         height: 48
@@ -139,6 +122,25 @@ Item {
         height: parent.height - top_buttons_row.height
         y: top_buttons_row.height
         clip: true
+
+
+        Keys.onUpPressed: {
+            var newIndex = view.currentIndex - 1;
+            if (newIndex < 0) {
+                newIndex = 0
+            }
+            view.currentIndex = newIndex
+        }
+
+        Keys.onDownPressed: {
+            var newIndex = view.currentIndex + 1;
+            if (newIndex >= view.count) {
+                newIndex = view.count - 1;
+            } else {
+                view.currentIndex = newIndex
+            }
+        }
+
         ListView {
             id: view
             property string path : s3Model.getS3PathQML()

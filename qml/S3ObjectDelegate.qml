@@ -58,10 +58,12 @@ Rectangle {
 
         s3_browser.footerText = s3Model.getItemsCountQML()+" Items";
     }
+
     id:delegate
     width: view.width
     height:34
     color: "transparent"
+
     Row {
         anchors.fill: parent
 
@@ -81,8 +83,6 @@ Rectangle {
             width: parent.width - 135
             anchors.verticalCenter: parent.verticalCenter
         }
-
-
 
         Text {
             id: i_size
@@ -113,12 +113,24 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Download')
+            onClicked: {
+                app_window.progressWindow.title = qsTr("Download progress ...")
+                app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
+                app_window.progressWindow.visible = true
+                s3Model.downloadQML(view.currentIndex)
+
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Delete')
+            onClicked: {
+                var fileName = s3Model.getItemNameQML(view.currentIndex)
+                msgDialog.msg = "Remove " + fileName + " ?"
+                msgDialog.open()
+            }
         }
     }
 
@@ -134,6 +146,7 @@ Rectangle {
                 contextMenu.popup()
                 console.log("Right")
             }
+
         }
 
         onDoubleClicked:  {

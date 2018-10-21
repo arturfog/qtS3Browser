@@ -139,6 +139,8 @@ public:
         settings.setValue("RegionIdx", regionIdx);
         settings.setValue("Region", region);
         settings.setValue("Endpoint", endpoint);
+        settings.setValue("TimeoutIdx", timeoutIdx);
+        settings.setValue("Timeout", timeout);
         settings.sync();
 
         s3.reloadCredentials();
@@ -147,6 +149,13 @@ public:
     Q_INVOKABLE int getRegionIdxQML() {
         if(settings.contains("RegionIdx")) {
             return settings.value("RegionIdx").toInt();
+        }
+        return 0;
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE int getTimeoutIdxQML() {
+        if(settings.contains("TimeoutIdx")) {
+            return settings.value("TimeoutIdx").toInt();
         }
         return 0;
     }
