@@ -53,13 +53,13 @@ Window {
         if(input.text.length > 40 && input_field.height === 30) {
             input_field_rect.height += sizeInc
             input_field.height += sizeInc
-            create_item_win.height += sizeInc
             create_item_win.maximumHeight += sizeInc
+            create_item_win.height += sizeInc
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
-            create_item_win.height -= sizeInc
             create_item_win.maximumHeight -= sizeInc
+            create_item_win.height -= sizeInc
         }
     }
 

@@ -97,21 +97,20 @@ Window {
             var seconds = currentDate.getSeconds() - lastDate.getSeconds()
 
             if(totalBytes > 0 && seconds > 0) {
-                //console.log("seconds: " + seconds)
+                console.log("seconds: " + seconds + " current:" + current)
                 var bytesdiff = current - lastTotalBytes
+                secondsLeft = (totalBytes - currentBytes) / transferSpeedBytes
                 if(bytesdiff > 0) {
                     transferSpeedBytes = (bytesdiff / seconds)
-                    //console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
+                    console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
                 }
+                lastTotalBytes = current
             }
 
-            lastTotalBytes = current
             lastDate = currentDate
 
             currentProgress = (((current / total) * 100) | 0)
             currentFile = s3Model.getCurrentFileQML()
-
-            secondsLeft = (totalBytes - currentBytes) / transferSpeedBytes
 
             if(currentProgress == 100) {
                 cancel_btn.icon.source = "qrc:icons/32_close_icon.png"

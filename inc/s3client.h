@@ -160,6 +160,8 @@ private:
                                      const Aws::S3::Model::GetObjectRequest& request,
                                      const Aws::S3::Model::GetObjectOutcome& outcome,
                                      const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
+
+    void loadConfig();
 public:
     struct ObjectInfo_S {
         long long size;
