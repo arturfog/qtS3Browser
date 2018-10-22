@@ -19,14 +19,21 @@
     },
 
     "files":
-    [{"includePattern": "deb_qts3browser/(qts3browser.*\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
+    [{"includePattern": "deb_qts3browser/(qts3browser.*\_amd64.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
           "matrixParams": {
             "override": 1,
             "deb_distribution": "stretch",
             "deb_component": "main",
             "deb_architecture": "amd64"
           }
-        }
-    ],
+      },
+      {"includePattern": "deb_qts3browser/(qts3browser.*_i386\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
+          "matrixParams": {
+            "override": 1,
+            "deb_distribution": "stretch",
+            "deb_component": "main",
+            "deb_architecture": "i386"
+          }
+      }],
     "publish": true
 }
