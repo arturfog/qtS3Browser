@@ -25,8 +25,8 @@ cd deb_qts3browser
 ./create_deb.sh "amd64"
 
 # remove amd64 versions of packages
-apt remove amazon-s3-cpp-sdk
-apt remove qt-everywhere
+apt remove -y amazon-s3-cpp-sdk
+apt remove -y qt-everywhere
 
 ##################
 #                #

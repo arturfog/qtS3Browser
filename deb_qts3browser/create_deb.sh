@@ -20,9 +20,9 @@ cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
 
 # Build package
 if [ "$ARCH" == "amd64" ]; then
-  dpkg-buildpackage -rfakeroot -I.git -R debian/rules
+  dpkg-buildpackage -rfakeroot --rules-file=debian/rules -I.git
 else
-  dpkg-buildpackage -rfakeroot -I.git -R debian/rules32
+  dpkg-buildpackage -rfakeroot --rules-file=debian/rules32 -I.git 
 fi
 
 cd ..
