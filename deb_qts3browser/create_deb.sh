@@ -8,33 +8,40 @@ rm *.dsc
 rm *.changes
 }
 
-mkdir -p build
+ARCH="amd64"
+if [ ! -z "$1" ]; then
+  ARCH="$1"
+fi
 
 cleanup
 
-cd build
-# copy debian directory
+mkdir -p build && cd build
 cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
 
 # Build package
-dpkg-buildpackage -rfakeroot -I.git
+if [ "$ARCH" == "amd64" ]; then
+  dpkg-buildpackage -rfakeroot -I.git -R debian/rules
+else
+  dpkg-buildpackage -rfakeroot -I.git -R debian/rules32
+fi
+
 cd ..
 
 cleanup
 
-mkdir -p build
+# build for sonarcloud
+if [ "$ARCH" == "amd64" ]; then
+  mkdir -p build && cd build
+  cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
 
-cd build
-
-cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
-/opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
-
-wget 'https://sonarqube.com/static/cpp/build-wrapper-linux-x86.zip'
-unzip build-wrapper-linux-x86.zip
-
-export PATH=$PATH:$PWD/build-wrapper-linux-x86
-build-wrapper-linux-x86-64 --out-dir /home/travis/build/arturfog/qtS3Browser/bw_output make -j 2
-
-cd ..
+  /opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
+ 
+  wget 'https://sonarqube.com/static/cpp/build-wrapper-linux-x86.zip'
+  unzip build-wrapper-linux-x86.zip
+  export PATH=$PATH:$PWD/build-wrapper-linux-x86
+ 
+  build-wrapper-linux-x86-64 --out-dir /home/travis/build/arturfog/qtS3Browser/bw_output make -j 2
+  cd ..
+fi
 
 cleanup
