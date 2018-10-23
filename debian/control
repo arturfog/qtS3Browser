@@ -10,7 +10,7 @@ Homepage: https://github.com/arturfog/qtS3Browser
 
 Package: qts3browser
 Section: misc
-Architecture: amd64
+Architecture: any
 Depends:
  qt-everywhere,
  amazon-s3-cpp-sdk,

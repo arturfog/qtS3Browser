@@ -24,7 +24,7 @@ if [ "$ARCH" == "amd64" ]; then
 else
   cp -vf debian/rules32 debian/rules
   cp -vf debian/control32 debian/control
-  dpkg-buildpackage -I.git 
+  dpkg-buildpackage -ai386 -I.git 
 fi
 
 cd ..
