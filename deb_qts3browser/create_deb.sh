@@ -23,6 +23,7 @@ if [ "$ARCH" == "amd64" ]; then
   dpkg-buildpackage -rfakeroot -I.git
 else
   cp -vf debian/rules32 debian/rules
+  cp -vf debian/control32 debian/control
   dpkg-buildpackage -rfakeroot -I.git 
 fi
 
