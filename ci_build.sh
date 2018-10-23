@@ -2,8 +2,6 @@
 # TODO: add return value checking
 # TODO: add colors to printed statuses
 
-DEB_ARCH="amd64"
-
 # update
 apt-get update
 
@@ -13,32 +11,43 @@ apt-get install -y build-essential wget libcanberra-gtk-module libx11-xcb1 libx1
 # add gpg key
 apt-key add gpg/bintray.key
 
-if [ "$DEB_ARCH" == "amd64" ]; then
-  echo "Building deb for $DEB_ARCH"
-elif [ "$DEB_ARCH" == "i386" ]; then
-  echo "Building deb for $DEB_ARCH"
-elif [ "$DEB_ARCH" == "armhf" ]; then
-  echo "Building deb for $DEB_ARCH"
-elif [ "$DEB_ARCH" == "arm64" ]; then
-  echo "Building deb for $DEB_ARCH"
-else
-  echo "Building deb for $DEB_ARCH"
-fi
-
-
+###################
+#                 #
+#      amd64      #
+#                 #
+###################
 wget "https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb"
 wget "https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb"
 dpkg -i amazon-s3-cpp-sdk_1.6.0_amd64.deb
 dpkg -i qt-everywhere_5.10.0_amd64.deb
 
 cd deb_qts3browser
-./create_deb.sh
+./create_deb.sh "amd64"
 
+# remove amd64 versions of packages
+apt remove -y amazon-s3-cpp-sdk
+apt remove -y qt-everywhere
+apt remove -y libgl1-mesa-dev libgl1-mesa-glx libgles2-mesa-dev libegl1-mesa fakeroot
+
+##################
+#                #
+#      i386      #
+#                #
+##################
+# add architecture
 dpkg --add-architecture i386
 if [ "$?" == "0" ]; then
   apt-get update
+  
+  apt-get install -y libssl1.0.0:i386 gcc-multilib g++-multilib libgl1-mesa-dev:i386 libgl1-mesa-glx:i386 libgles2-mesa-dev:i386 zlib1g:i386 libcurl3:i386 libkrb5-3:i386 libgssapi3-heimdal:i386 libroken18-heimdal:i386 libgnutls30:i386 libp11-kit0:i386 libstdc++6:i386 libgcc1:i386 libdb5.3:i386 libxcb-glx0:i386 libxcb-present0:i386 libxcb-sync1:i386 libxcb1:i386 libicu55:i386 libkrb5-3:i386 libgssapi3-heimdal:i386 libroken18-heimdal:i386 libpng12-0:i386 libglib2.0-0:i386 fakeroot:i386
+
+  ln -sf /usr/bin/x86_64-linux-gnu-strip /usr/bin/i686-linux-gnu-strip
+
   wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
   wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb"
-  apt-get install -y libssl1.0.0:i386
   dpkg -i qt-everywhere_5.10.0_i386.deb
+  dpkg -i amazon-s3-cpp-sdk_1.6.0_i386.deb
+
+  #cd deb_qts3browser
+  ./create_deb.sh "i386"
 fi

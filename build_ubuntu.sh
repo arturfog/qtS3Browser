@@ -29,6 +29,10 @@ else
   exit
 fi
 
+# install all packages
+apt-get install -y build-essential wget libcanberra-gtk-module libx11-xcb1 libx11-6 libxau6 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxxf86vm1 libdouble-conversion1v5 libdrm2 libglapi-mesa libgraphite2-3 libharfbuzz0b libicu55 libpcre16-3 libproxy1v5 libxcb-dri2-0 libxcb-dri3-0  libxcb-glx0 libxcb-present0 libxcb-sync1 libxcb1 libxshmfence1 libssl1.0.0 zlib1g libcurl3 libkrb5-3 libgssapi3-heimdal libroken18-heimdal libgnutls30 libp11-kit0 libstdc++6 libgcc1 libdb5.3 libgl1-mesa-dev libgl1-mesa-glx libgles2-mesa-dev libegl1-mesa fakeroot devscripts dh-make fonts-dejavu-core
+
+
 if [ "$?" == "0" ]; then
   # Installing generated AWS deb
   sudo apt-get install -y amazon-s3-cpp-sdk
@@ -39,12 +43,6 @@ fi
 if [ "$?" == "0" ]; then
   # Installing genereated QT deb
   sudo apt-get install -y qt-everywhere
-else
-  exit
-fi
-
-if [ "$?" == "0" ]; then
-  sudo apt-get install -y build-essential
 else
   exit
 fi
