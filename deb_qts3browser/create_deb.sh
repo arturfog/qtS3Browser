@@ -24,7 +24,7 @@ if [ "$ARCH" == "amd64" ]; then
 else
   cp -vf debian/rules32 debian/rules
   cp -vf debian/control32 debian/control
-  LD_PRELOAD="/usr/lib/i386-linux-gnu/libfakeroot/libfakeroot-sysv.so" dpkg-buildpackage -rfakeroot -I.git 
+  dpkg-buildpackage -I.git 
 fi
 
 cd ..
