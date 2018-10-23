@@ -39,6 +39,7 @@ if [ "$?" == "0" ]; then
   apt-get update
   
   apt-get install -y libssl1.0.0:i386 gcc-multilib g++-multilib
+  apt-get install -y libgl1-mesa-dev:i386 libgl1-mesa-glx:i386 libgles2-mesa-dev:i386 libegl1-mesa:i386
   apt-get install -y zlib1g:i386 libcurl3:i386 libkrb5-3:i386 libgssapi3-heimdal:i386 libroken18-heimdal:i386 libgnutls30:i386 libp11-kit0:i386 libstdc++6:i386 libgcc1:i386 libdb5.3:i386
 
   wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
