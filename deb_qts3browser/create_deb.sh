@@ -45,5 +45,3 @@ if [ "$ARCH" == "amd64" ]; then
   build-wrapper-linux-x86-64 --out-dir /home/travis/build/arturfog/qtS3Browser/bw_output make -j 2
   cd ..
 fi
-
-cleanup
