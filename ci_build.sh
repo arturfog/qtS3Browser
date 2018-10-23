@@ -46,6 +46,6 @@ if [ "$?" == "0" ]; then
   dpkg -i qt-everywhere_5.10.0_i386.deb
   dpkg -i amazon-s3-cpp-sdk_1.6.0_i386.deb
 
-  cd deb_qts3browser
+  #cd deb_qts3browser
   ./create_deb.sh "i386"
 fi
