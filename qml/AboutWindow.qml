@@ -21,11 +21,10 @@ import QtGraphicalEffects 1.0
 
 Window {
     id: about_win
-    x: app_window.x; y: app_window.y;
     minimumHeight: 350; maximumHeight: 350
     minimumWidth: 440; maximumWidth: 440
+    width: 440; height: 350;
     color: "#f8f9fa"
-
     title: "About qtS3Browser"
 
     Rectangle {
@@ -87,7 +86,7 @@ Window {
             Text {
                 x: 20
                 y: 10
-                text: "Version: 1.0.2"
+                text: "Version: 1.0.3"
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 height: 40

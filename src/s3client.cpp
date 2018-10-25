@@ -97,7 +97,7 @@ void S3Client::loadConfig()
 
     if(settings.contains("Region")) {
         const QString reg = settings.value("Region").toString();
-        if(!reg.isEmpty() && reg.compare("Default") != 0) {
+        if(!reg.isEmpty()) {
             config.region = reg.toStdString().c_str();
         }
     }
@@ -457,6 +457,14 @@ void S3Client::cancelDownloadUpload()
     if(transferHandle != nullptr) {
         transferHandle->Cancel();
     }
+}
+// --------------------------------------------------------------------------
+bool S3Client::isTransferring() const
+{
+    if(transferHandle != nullptr) {
+        return (transferHandle->GetStatus() == Aws::Transfer::TransferStatus::IN_PROGRESS);
+    }
+    return false;
 }
 // --------------------------------------------------------------------------
 void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc)

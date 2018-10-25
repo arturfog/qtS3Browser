@@ -26,8 +26,6 @@ import QtQuick.Dialogs 1.2
 Window {
     // ------------- configuration -------------
     id: create_item_win
-    x: app_window.x
-    y: app_window.y
     width: 400
     height: 200
     minimumHeight: 200

@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 Window {
     id: settings_win
-    x: app_window.x; y: app_window.y; width: 640; height: 640
+    width: 640; height: 640
     minimumHeight: 350; maximumHeight: 640
     minimumWidth: 640
     color: "#f8f9fa"
@@ -445,8 +445,7 @@ Window {
                     height: parent.height
                     font.pointSize: inputFontSize
                     currentIndex: s3Model.getRegionIdxQML()
-                    model: [ "Default",
-                        "us-east-1",
+                    model: [ "us-east-1",
                         "us-east-2",
                         "eu-central-1",
                         "eu-west-1",

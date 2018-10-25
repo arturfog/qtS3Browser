@@ -37,6 +37,13 @@ Item {
         }
     }
 
+    property CustomMessageDialog s3Error: CustomMessageDialog {
+        win_title: "S3 Error"
+        msg: "There is transfer in progress. Please wait for it to complete."
+        buttons: StandardButton.Ok
+        ico: StandardIcon.Warning
+    }
+
     ToolBar {
         width: parent.width
         height: 48
@@ -77,11 +84,16 @@ Item {
                 text: "Download"
                 enabled: connected && s3Model.canDownload()
                 onClicked: {
-                    app_window.progressWindow.title = qsTr("Download progress ...")
-                    app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-                    app_window.progressWindow.visible = true
-                    s3Model.downloadQML(view.currentIndex)
-
+                    if(!s3Model.isTransferring()) {
+                        app_window.progressWindow.title = qsTr("Download progress ...")
+                        app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
+                        app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
+                        app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
+                        app_window.progressWindow.visible = true
+                        s3Model.downloadQML(view.currentIndex)
+                    } else {
+                        s3Error.visible = true
+                    }
                 }
             }
 
@@ -93,9 +105,13 @@ Item {
                 text: "Delete"
                 enabled: connected
                 onClicked: {
-                    var fileName = s3Model.getItemNameQML(view.currentIndex)
-                    msgDialog.msg = "Remove " + fileName + " ?"
-                    msgDialog.open()
+                    if(!s3Model.isTransferring()) {
+                        var fileName = s3Model.getItemNameQML(view.currentIndex)
+                        msgDialog.msg = "Remove " + fileName + " ?"
+                        msgDialog.open()
+                    } else {
+                        s3Error.visible = true
+                    }
                 }
             }
 
