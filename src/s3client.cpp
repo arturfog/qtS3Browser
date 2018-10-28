@@ -97,7 +97,7 @@ void S3Client::loadConfig()
 
     if(settings.contains("Region")) {
         const QString reg = settings.value("Region").toString();
-        if(!reg.isEmpty() && reg.compare("Default") != 0) {
+        if(!reg.isEmpty()) {
             config.region = reg.toStdString().c_str();
         }
     }
@@ -297,7 +297,9 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
         for (auto const &bucket : bucket_list)
         {
             m_stringFunc(bucket.GetName().c_str());
-            std::cout << "  * " << bucket.GetName() << std::endl;
+#ifdef QT_DEBUG
+            //std::cout << "  * " << bucket.GetName() << std::endl;
+#endif
         }
 
         if(bucket_list.size() == 0) {
@@ -457,6 +459,14 @@ void S3Client::cancelDownloadUpload()
     if(transferHandle != nullptr) {
         transferHandle->Cancel();
     }
+}
+// --------------------------------------------------------------------------
+bool S3Client::isTransferring() const
+{
+    if(transferHandle != nullptr) {
+        return (transferHandle->GetStatus() == Aws::Transfer::TransferStatus::IN_PROGRESS);
+    }
+    return false;
 }
 // --------------------------------------------------------------------------
 void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc)

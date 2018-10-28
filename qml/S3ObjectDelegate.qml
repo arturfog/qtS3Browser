@@ -113,13 +113,7 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Download')
-            onClicked: {
-                app_window.progressWindow.title = qsTr("Download progress ...")
-                app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-                app_window.progressWindow.visible = true
-                s3Model.downloadQML(view.currentIndex)
-
-            }
+            onClicked: { download() }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"

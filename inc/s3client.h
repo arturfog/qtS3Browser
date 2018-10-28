@@ -294,6 +294,12 @@ public:
     void cancelDownloadUpload();
 
     /**
+     * @brief isTransferring
+     * @return
+     */
+    bool isTransferring() const;
+
+    /**
      * @brief setErrorHandler
      * @param errorFunc
      */

@@ -34,11 +34,15 @@ ApplicationWindow {
 
     property int uiFontSize: 10
 
-    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {}
-    property AboutWindow aboutWindow: AboutWindow {}
-    property SettingsWindow settingsWindow: SettingsWindow {}
-    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {}
-    property OperationProgressWindow progressWindow: OperationProgressWindow {}
+    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property AboutWindow aboutWindow: AboutWindow {
+        x: app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
+        y: app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
+        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+    }
+    property SettingsWindow settingsWindow: SettingsWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: Qt.Dialog | Qt.WindowCloseButtonHint}
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: "Missing credentials"
@@ -64,10 +68,12 @@ ApplicationWindow {
 
     property CreateItemWindow createBucketWindow: CreateItemWindow {
         win_title: qsTr("Create S3 bucket")
+        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
     }
 
     property CreateItemWindow createS3FolderWindow: CreateItemWindow {
         win_title: qsTr("Create S3 folder")
+        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
     }
 
     onAfterRendering: {
@@ -102,7 +108,11 @@ ApplicationWindow {
                 text: qsTr("Settings")
                 icon.source: "qrc:icons/32_settings_icon.png"
                 icon.color: "transparent"
-                onTriggered: settingsWindow.visible = true
+                onTriggered: {
+                    settingsWindow.x = app_window.x + (app_window.width / 2) - (settingsWindow.width / 2)
+                    settingsWindow.y = app_window.y + (app_window.height / 2) - (settingsWindow.height / 2)
+                    settingsWindow.visible = true
+                }
             }
             MenuSeparator { }
             MenuItem {
@@ -187,6 +197,8 @@ ApplicationWindow {
                 icon.source: "qrc:icons/32_bookmark2.png"
                 icon.color: "transparent"
                 onTriggered: {
+                    createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
+                    createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
                     createBookmarkWindow.visible = true
                 }
             }
@@ -195,6 +207,8 @@ ApplicationWindow {
                 icon.source: "qrc:icons/32_edit_icon.png"
                 icon.color: "transparent"
                 onTriggered: {
+                    manageBookmarksWindow.x = app_window.x + (app_window.width / 2) - (manageBookmarksWindow.width / 2)
+                    manageBookmarksWindow.y = app_window.y + (app_window.height / 2) - (manageBookmarksWindow.height / 2)
                     manageBookmarksWindow.visible = true
                 }
             }
@@ -241,6 +255,8 @@ ApplicationWindow {
                 icon.source: "qrc:icons/32_about_icon.png"
                 icon.color: "transparent"
                 onTriggered: {
+                    aboutWindow.x = app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
+                    aboutWindow.y = app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
                     aboutWindow.visible = true
                 }
             }

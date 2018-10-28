@@ -41,6 +41,23 @@ Item {
         win_title: qsTr("Create folder")
     }
 
+    function upload() {
+        if(!s3Model.isTransferring()) {
+            var filePath = folder.get(view.currentIndex, "filePath")
+            app_window.progressWindow.title = qsTr("Upload progress ...")
+            app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
+            app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
+            app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
+            app_window.progressWindow.visible = true
+            app_window.progressWindow.mode = app_window.progressWindow.modeUPLOAD
+            if(!folder.get(view.currentIndex, "fileIsDir")) {
+                s3Model.uploadFileQML(filePath)
+            } else {
+                s3Model.uploadDirQML(filePath)
+            }
+        }
+    }
+
     ToolBar {
         width: parent.width
         height: 48
@@ -77,18 +94,7 @@ Item {
                 icon.color: "transparent"
                 text: qsTr("Upload")
                 enabled: connected
-                onClicked: {
-                    var filePath = folder.get(view.currentIndex, "filePath")
-
-                    app_window.progressWindow.title = qsTr("Upload progress ...")
-                    app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
-                    app_window.progressWindow.visible = true
-                    if(!folder.get(view.currentIndex, "fileIsDir")) {
-                        s3Model.uploadFileQML(filePath)
-                    } else {
-                        s3Model.uploadDirQML(filePath)
-                    }
-                }
+                onClicked: { upload() }
             }
 
             ToolButton {
@@ -126,33 +132,16 @@ Item {
         y: 48
         clip: true
 
-        Keys.onUpPressed: {
-            var newIndex = view.currentIndex - 1;
-            if (newIndex < 0) {
-                newIndex = 0
-            }
-            view.currentIndex = newIndex
-        }
+//        Keys.onReturnPressed: {
+//            var url = folder.get(view.currentIndex, "fileURL")
+//            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+//        }
 
-        Keys.onDownPressed: {
-            var newIndex = view.currentIndex + 1;
-            if (newIndex >= view.count) {
-                newIndex = view.count - 1;
-            } else {
-                view.currentIndex = newIndex
-            }
-        }
-
-        Keys.onReturnPressed: {
-            var url = folder.get(view.currentIndex, "fileURL")
-            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
-        }
-
-        Keys.onDeletePressed: {
-            if(folder.parentFolder.toString().length > 0) {
-                view.path = folder.parentFolder
-            }
-        }
+//        Keys.onDeletePressed: {
+//            if(folder.parentFolder.toString().length > 0) {
+//                view.path = folder.parentFolder
+//            }
+//        }
 
         ListView {
             id: view
@@ -218,6 +207,12 @@ Item {
                         wrapMode: Text.WrapAnywhere
                         font.pointSize: 10
                         selectByMouse: true
+
+                        Keys.onReturnPressed: {
+                            if(fsModel.isDirQML(text)) {
+                                path = "file://" + file_browser_path_text.text
+                            }
+                        }
                     }
 
                     RoundButton {
@@ -247,7 +242,20 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
                             font.pointSize: 10
+                        }
 
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                folder.sortField = FolderListModel.Name
+                                if(folder.sortReversed) {
+                                    folder.sortReversed = false
+                                } else {
+                                    folder.sortReversed = true
+                                }
+
+                                console.log("Sorting")
+                            }
                         }
                     }
 

@@ -68,6 +68,8 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool isConnectedQML() const { return isConnected; }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE bool isTransferring() const { return s3.isTransferring(); }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void setConnectedQML(const bool state) { isConnected = state; }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
@@ -301,7 +303,9 @@ public:
     /**
      * @brief cancelDownloadUpload
      */
-    inline void cancelDownloadUpload() { s3.cancelDownloadUpload(); }
+    inline void cancelDownloadUpload() {
+        s3.cancelDownloadUpload();
+    }
     /**
      * @brief getObjects
      * @param item

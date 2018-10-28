@@ -21,7 +21,7 @@ import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
 Window {
     id: progress_win
-    x: app_window.x; y: app_window.y; width: 500; height: 310
+    width: 500; height: 310
     minimumHeight: 310; maximumHeight: 310
     minimumWidth: 500; maximumWidth: 500
 
@@ -37,6 +37,11 @@ Window {
     property double lastTotalBytes: 0
     property double transferSpeedBytes: 0
     property int secondsLeft: 0
+
+    readonly property int modeDL: 0
+    readonly property int modeUPLOAD: 1
+
+    property int mode: modeDL
 
     onVisibleChanged: {
         lastTotalBytes = 0
@@ -389,6 +394,11 @@ Window {
         onClicked: {
             if(currentProgress < 100) {
                 s3Model.cancelDownloadUploadQML()
+                if(mode == modeDL) {
+                    var path = s3Model.getFileBrowserPath() + currentFile
+                    console.log("removing not finished file: " + path)
+                    fsModel.removeQML(path)
+                }
             }
 
             close()
