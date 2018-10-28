@@ -75,6 +75,10 @@ Item {
         }
     }
 
+    function gotoClicked() {
+
+    }
+
     ToolBar {
         width: parent.width
         height: 48
@@ -159,24 +163,6 @@ Item {
         y: top_buttons_row.height
         clip: true
 
-
-        Keys.onUpPressed: {
-            var newIndex = view.currentIndex - 1;
-            if (newIndex < 0) {
-                newIndex = 0
-            }
-            view.currentIndex = newIndex
-        }
-
-        Keys.onDownPressed: {
-            var newIndex = view.currentIndex + 1;
-            if (newIndex >= view.count) {
-                newIndex = view.count - 1;
-            } else {
-                view.currentIndex = newIndex
-            }
-        }
-
         ListView {
             id: view
             property string path : s3Model.getS3PathQML()
@@ -235,6 +221,16 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         wrapMode: Text.WrapAnywhere
                         text: path.replace("s3://","")
+
+                        Keys.onReturnPressed: {
+                            if(s3_browser_path_text.text === "") {
+                                s3Model.getBucketsQML()
+                            } else {
+                                s3Model.gotoQML("s3://" + s3_browser_path_text.text)
+                            }
+                            s3_panel.connected = s3Model.isConnectedQML()
+                            file_panel.connected = s3Model.isConnectedQML()
+                        }
                     }
 
                     RoundButton {

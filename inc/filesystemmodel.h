@@ -38,6 +38,11 @@ public:
         return file.exists();
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE bool isDirQML(const QString& path) {
+        QDir dir(path);
+        return dir.exists();
+    }
+    // --------------------------------------------------------------------------
 };
 
 #endif // FILESYSTEMMODEL_H
