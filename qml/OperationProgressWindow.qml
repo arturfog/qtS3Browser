@@ -38,6 +38,11 @@ Window {
     property double transferSpeedBytes: 0
     property int secondsLeft: 0
 
+    readonly property int modeDL: 0
+    readonly property int modeUPLOAD: 1
+
+    property int mode: modeDL
+
     onVisibleChanged: {
         lastTotalBytes = 0
         totalBytes = 0
@@ -389,6 +394,11 @@ Window {
         onClicked: {
             if(currentProgress < 100) {
                 s3Model.cancelDownloadUploadQML()
+                if(mode == modeDL) {
+                    var path = s3Model.getFileBrowserPath() + currentFile
+                    console.log("removing not finished file: " + path)
+                    fsModel.removeQML(path)
+                }
             }
 
             close()

@@ -303,7 +303,9 @@ public:
     /**
      * @brief cancelDownloadUpload
      */
-    inline void cancelDownloadUpload() { s3.cancelDownloadUpload(); }
+    inline void cancelDownloadUpload() {
+        s3.cancelDownloadUpload();
+    }
     /**
      * @brief getObjects
      * @param item

@@ -33,6 +33,11 @@ public:
         return false;
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE bool fileExistsQML(const QString& path) {
+        QFile file(path);
+        return file.exists();
+    }
+    // --------------------------------------------------------------------------
 };
 
 #endif // FILESYSTEMMODEL_H

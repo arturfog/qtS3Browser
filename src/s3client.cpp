@@ -297,7 +297,9 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
         for (auto const &bucket : bucket_list)
         {
             m_stringFunc(bucket.GetName().c_str());
-            std::cout << "  * " << bucket.GetName() << std::endl;
+#ifdef QT_DEBUG
+            //std::cout << "  * " << bucket.GetName() << std::endl;
+#endif
         }
 
         if(bucket_list.size() == 0) {

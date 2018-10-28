@@ -140,7 +140,12 @@ text: qsTr("Add bookmark");
 icon.source: "qrc:icons/32_add_bookmark.png"
 icon.color: "transparent"
 anchors.horizontalCenter: parent.horizontalCenter
-onClicked: { createBookmarkWindow.visible = true; close() } }
+onClicked: {
+  createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
+  createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
+  createBookmarkWindow.visible = true; close()
+}
+}
 }',
             bookmarks_list, "dynamicBookmarks");
         }

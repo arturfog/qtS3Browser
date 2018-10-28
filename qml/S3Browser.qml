@@ -31,10 +31,15 @@ Item {
     property bool connected: false
     property string footerText: ""
     property CustomMessageDialog msgDialog: CustomMessageDialog {
-        win_title: "Remove?"
+        win_title: "Remove ?"
         yesAction: function() {
             s3Model.removeQML(view.currentIndex);
         }
+    }
+
+    property CustomMessageDialog overwriteDialog: CustomMessageDialog {
+        win_title: "Overwrite ?"
+        yesAction: function() { downloadInternal() }
     }
 
     property CustomMessageDialog s3Error: CustomMessageDialog {
@@ -42,6 +47,32 @@ Item {
         msg: "There is transfer in progress. Please wait for it to complete."
         buttons: StandardButton.Ok
         ico: StandardIcon.Warning
+    }
+
+    function downloadInternal() {
+        if(!s3Model.isTransferring()) {
+            app_window.progressWindow.title = qsTr("Download progress ...")
+            app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
+            app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
+            app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
+            app_window.progressWindow.visible = true
+            app_window.progressWindow.mode = app_window.progressWindow.modeDL
+            s3Model.downloadQML(view.currentIndex)
+        } else {
+            s3Error.visible = true
+        }
+    }
+
+    function download() {
+        var fileName = s3Model.getItemNameQML(view.currentIndex)
+        var path = s3Model.getFileBrowserPath()
+
+        if(fsModel.fileExistsQML(path + fileName)) {
+            overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"
+            overwriteDialog.visible = true
+        } else {
+            downloadInternal()
+        }
     }
 
     ToolBar {
@@ -83,18 +114,7 @@ Item {
                 icon.color: "transparent"
                 text: "Download"
                 enabled: connected && s3Model.canDownload()
-                onClicked: {
-                    if(!s3Model.isTransferring()) {
-                        app_window.progressWindow.title = qsTr("Download progress ...")
-                        app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-                        app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
-                        app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
-                        app_window.progressWindow.visible = true
-                        s3Model.downloadQML(view.currentIndex)
-                    } else {
-                        s3Error.visible = true
-                    }
-                }
+                onClicked: { download() }
             }
 
             ToolButton {
@@ -288,6 +308,7 @@ Item {
                 height: 40
                 color: "#ededed"
                 z: 2
+                visible: connected
 
                 Column {
                     height: parent.height
