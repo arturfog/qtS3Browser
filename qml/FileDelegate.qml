@@ -78,6 +78,11 @@ Rectangle {
             icon.source: "qrc:icons/32_about_icon.png"
             icon.color: "transparent"
             text: qsTr('Info')
+            onClicked: {
+                infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
+                infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
+                infoWindow.visible = true
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_upload_icon.png"

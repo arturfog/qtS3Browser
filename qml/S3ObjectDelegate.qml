@@ -144,13 +144,15 @@ Rectangle {
         }
 
         onDoubleClicked:  {
-            s3Model.getObjectsQML(i_fileName.text)
-            path = s3Model.getS3PathQML()
+            if(i_size.text == "DIR") {
+                s3Model.getObjectsQML(i_fileName.text)
+                path = s3Model.getS3PathQML()
 
-            if(s3Model.getCurrentPathDepthQML() <= 0) {
-                s3_create_dir_btn.enabled = false
-            } else {
-                s3_create_dir_btn.enabled = true
+                if(s3Model.getCurrentPathDepthQML() <= 0) {
+                    s3_create_dir_btn.enabled = false
+                } else {
+                    s3_create_dir_btn.enabled = true
+                }
             }
         }
     }
