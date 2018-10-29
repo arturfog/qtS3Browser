@@ -43,6 +43,7 @@ ApplicationWindow {
     property SettingsWindow settingsWindow: SettingsWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
     property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
     property OperationProgressWindow progressWindow: OperationProgressWindow {flags: Qt.Dialog | Qt.WindowCloseButtonHint}
+    property InfoWindow infoWindow: InfoWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: "Missing credentials"

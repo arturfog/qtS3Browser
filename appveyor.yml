@@ -59,7 +59,7 @@ build_script:
       windeployqt --qmldir ..\qml release\s3browser.exe --dir distrib
       cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
       cp c:\projects\aws\aws-cpp-sdk-*.lib distrib
-      cp relase\s3browser.exe distrib
+      cp release\s3browser.exe distrib
       7z a -y distrib.zip distrib
 
   # Build the installer

@@ -67,8 +67,6 @@ void S3Client::init() {
         config.readRateLimiter = m_limiter;
         config.writeRateLimiter = m_limiter;
 #endif
-
-
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
         this->s3_client = s3_client;
         std::cout << "S3Client::init" << std::endl;

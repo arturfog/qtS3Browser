@@ -295,8 +295,9 @@ void S3Model::createBucket(const std::string &bucket)
 // --------------------------------------------------------------------------
 void S3Model::createFolder(const QString &folder)
 {
+    qDebug() << "createFolder: " << folder;
     s3.createFolder(getCurrentBucket().toStdString().c_str(),
-                    QString(folder).append("/_empty_file_to_remove").toStdString().c_str());
+                    QString(getPathWithoutBucket()).append(QString(folder)).append("/_empty_file_to_remove").toStdString().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Model::removeBucket(const std::string &bucket)

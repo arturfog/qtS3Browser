@@ -53,5 +53,6 @@
         <file>icons/32_clear_icon.png</file>
         <file>icons/32_add_icon.png</file>
         <file>icons/32_name_icon.png</file>
+        <file>qml/InfoWindow.qml</file>
     </qresource>
 </RCC>
