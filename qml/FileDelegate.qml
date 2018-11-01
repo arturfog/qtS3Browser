@@ -81,6 +81,8 @@ Rectangle {
             onClicked: {
                 infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
                 infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
+                infoWindow.name = fileName
+                infoWindow.path = filePath
                 infoWindow.visible = true
             }
         }

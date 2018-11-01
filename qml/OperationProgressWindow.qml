@@ -23,7 +23,7 @@ Window {
     id: progress_win
     width: 500; height: 310
     minimumHeight: 310; maximumHeight: 310
-    minimumWidth: 500; maximumWidth: 500
+    minimumWidth: 540; maximumWidth: 540
 
     title: "Progress"
 
@@ -192,13 +192,15 @@ Window {
                     source: "qrc:icons/32_file_icon.png"
                     anchors.verticalCenter: parent.verticalCenter
                 }
-
+                // ------------------ currently transferred file ----------------
                 Text {
-                    width: parent.width
+                    wrapMode: Text.NoWrap
+                    elide: Text.ElideRight
+                    width: parent.width - 50
                     height: 40
                     text: currentFile
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: 11
                 }
             }
 

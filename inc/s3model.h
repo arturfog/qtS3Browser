@@ -56,7 +56,9 @@ public:
         if(!item.isEmpty()) {
             addS3Item(S3Item(item, path));
         } else {
-            emit noBucketsSignal();
+            if(getCurrentPathDepthQML() <= 0) {
+                emit noBucketsSignal();
+            }
         }
     }
     // --------------------------------------------------------------------------
@@ -92,7 +94,7 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
+    Q_INVOKABLE bool createFolderQML(const QString &folder);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadFileQML(const QString &file) { upload(file, false); }
     // --------------------------------------------------------------------------
@@ -274,11 +276,6 @@ public:
      * @param bucket
      */
     void createBucket(const std::string &bucket);
-    /**
-     * @brief createFolder
-     * @param folder
-     */
-    void createFolder(const QString &folder);
     /**
      * @brief removeBucket
      * @param bucket

@@ -27,6 +27,9 @@ Window {
     color: "#f8f9fa"
     title: "Info"
 
+    property string name: ""
+    property string path: ""
+
     // ------------- header -------------
     Rectangle {
         color: "#3367d6"
@@ -39,7 +42,9 @@ Window {
             width: parent.width
 
             Image {
-                source: "qrc:icons/32_settings_icon.png"
+                source: "image://iconProvider/"+path
+                width: 48
+                height: 48
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -51,7 +56,7 @@ Window {
 
             Text {
                 color: "white"
-                text: "Settings"
+                text: name
                 font.bold: true
                 font.pointSize: 14
                 height: parent.height
@@ -76,12 +81,15 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 80
+        height: 180
         border.color: "#efefef"
         border.width: 1
         radius: 5
         Column {
+            width: parent.width
             Row {
+                width: parent.width
+                height: 40
                 Text {
                     width: parent.width
                     height: 40
@@ -98,10 +106,31 @@ Window {
             }
 
             Row {
+                width: parent.width
+                height: 40
                 Text {
                     width: parent.width
                     height: 40
                     text: "Modification date"
+                    verticalAlignment: Text.AlignVCenter
+                    //font.pointSize: labelFontSize
+                }
+            }
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                width: parent.width
+                height: 40
+                Text {
+                    width: parent.width
+                    height: 40
+                    text: "Owner"
                     verticalAlignment: Text.AlignVCenter
                     //font.pointSize: labelFontSize
                 }

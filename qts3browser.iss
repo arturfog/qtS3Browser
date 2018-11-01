@@ -1,5 +1,5 @@
 #define AppName "qts3browser"
-#define AppVersion "1.0.1"
+#define AppVersion "1.0.4"
 #define AppPublisher "Artur Fogiel"
 #define AppURL "http://"
 #define AppExeName "s3browser.exe"

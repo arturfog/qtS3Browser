@@ -226,7 +226,10 @@ Window {
                     if (create_action === createBucket) {
                         s3Model.createBucketQML(itemName.text)
                     } else if (create_action === createS3Folder) {
-                        s3Model.createFolderQML(itemName.text)
+                        if(!s3Model.createFolderQML(itemName.text)) {
+                          msgDialog.msg = "Invalid folder name. It cannot contain '/' sign"
+                          msgDialog.visible = true
+                        }
                     } else {
                         if(!fsModel.createFolderQML(itemName.text, view.path)) {
                             msgDialog.visible = true
