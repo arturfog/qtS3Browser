@@ -167,6 +167,7 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
             objectInfo.size = s3_object.GetSize();
             objectInfo.lastModified = s3_object.GetLastModified();
             objectInfo.etag = s3_object.GetETag();
+            objectInfo.owner = s3_object.GetOwner().GetDisplayName();
 
             Aws::String key = s3_object.GetKey();
             std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
@@ -192,6 +193,25 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name,
     Aws::S3::Model::GetObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getModificationDate(const Aws::String &name)
+{
+    auto item = objectInfoVec.at(name);
+    Aws::String time = item.lastModified.ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601);
+    return time.c_str();
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getOwner(const Aws::String &name)
+{
+    auto item = objectInfoVec.at(name);
+    return item.owner.c_str();
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getETAG(const Aws::String &name)
+{
+    auto item = objectInfoVec.at(name);
+    return item.etag.c_str();
 }
 // --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,

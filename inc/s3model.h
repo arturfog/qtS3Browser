@@ -180,6 +180,10 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
     // --------------------------------------------------------------------------
+    Q_INVOKABLE void getOwnerQML(const QString &name) { s3.getOwner(name.toStdString().c_str()); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void getModificationDateQML(const QString &name) { s3.getModificationDate(name.toStdString().c_str()); }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void search(const QString& txt) {
         if(m_s3itemsBackup.size() == 0) {
             m_s3itemsBackup.append(m_s3items);

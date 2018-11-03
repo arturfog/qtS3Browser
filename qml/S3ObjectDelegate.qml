@@ -107,6 +107,17 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Info')
+            onClicked: {
+                infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
+                infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
+                infoWindow.name = fileName
+                infoWindow.path = "s3://" + s3Model.getS3PathQML() + fileName
+                var size = s3Model.getObjectSizeQML(i_fileName.text)
+                infoWindow.size = size
+                //infoWindow.modified = s3Model.getModificationDateQML(fileName)
+                //infoWindow.owner = s3Model.getOwnerQML(fileName)
+                infoWindow.visible = true
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_file_icon.png"
