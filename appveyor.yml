@@ -52,11 +52,11 @@ build_script:
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
   
   - mkdir .\build && cd .\build
-  - qmake -v && qmake ..\s3Browser.pro CONFIG+=release -spec win32-msvc -config release && nmake /f Makefile.Release
+  - qmake -v && qmake ..\s3Browser.pro "CONFIG+=release" "CONFIG+=qml_release" -spec win32-msvc -config release && nmake /f Makefile.Release
 
   # Bundle all dependencies
   - ps: |
-      windeployqt --qmldir ..\qml release\s3browser.exe --dir distrib
+      windeployqt --release --qmldir ..\qml release\s3browser.exe --dir distrib
       cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
       cp c:\projects\aws\aws-cpp-sdk-*.lib distrib
       cp release\s3browser.exe distrib
