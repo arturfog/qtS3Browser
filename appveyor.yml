@@ -33,8 +33,8 @@ build_script:
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . -j 4
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . --config Release -j 4
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
