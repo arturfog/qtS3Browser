@@ -114,8 +114,8 @@ Rectangle {
                 infoWindow.path = "s3://" + s3Model.getS3PathQML() + fileName
                 var size = s3Model.getObjectSizeQML(i_fileName.text)
                 infoWindow.size = size
-                //infoWindow.modified = s3Model.getModificationDateQML(fileName)
-                //infoWindow.owner = s3Model.getOwnerQML(fileName)
+                infoWindow.modified = s3Model.getModificationDateQML(fileName)
+                infoWindow.owner = s3Model.getOwnerQML(fileName)
                 infoWindow.visible = true
             }
         }

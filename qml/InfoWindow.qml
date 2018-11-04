@@ -32,6 +32,7 @@ Window {
     property string size: ""
     property string owner: ""
     property string modified: ""
+    property string etag: ""
 
     function getSizeString(bytes) {
         if(bytes === "DIR") {
@@ -59,7 +60,7 @@ Window {
             width: parent.width
 
             Image {
-                source: "image://iconProvider/"+path
+                source: "image://iconProvider/" + ((name.lastIndexOf("/") > 0) ? "//" : path)
                 width: 32
                 height: 32
                 anchors.verticalCenter: parent.verticalCenter
@@ -208,6 +209,34 @@ Window {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
+            }
+
+            Row {
+                x: 10
+                width: parent.width
+                height: 40
+                visible: etag === "" ? false : true
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: "ETag"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: fsModel.getOwner(path)
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+                visible: etag === "" ? false : true
             }
 
             Row {

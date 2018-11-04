@@ -180,9 +180,11 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void getOwnerQML(const QString &name) { s3.getOwner(name.toStdString().c_str()); }
+    Q_INVOKABLE QString getOwnerQML(const QString &name) { return s3.getOwner(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void getModificationDateQML(const QString &name) { s3.getModificationDate(name.toStdString().c_str()); }
+    Q_INVOKABLE QString getEtagQML(const QString &name) { return s3.getETAG(name.toStdString().c_str()).c_str(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getModificationDateQML(const QString &name) { return s3.getModificationDate(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void search(const QString& txt) {
         if(m_s3itemsBackup.size() == 0) {
