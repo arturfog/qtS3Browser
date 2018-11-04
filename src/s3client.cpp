@@ -155,6 +155,8 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
         auto common_list = outcome.GetResult().GetCommonPrefixes();
         auto key = request.GetPrefix();
 
+        ObjectInfo_S objectInfo;
+
         for (auto const &s3_object : common_list)
         {
             std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
@@ -163,10 +165,10 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
         }
         for (auto const &s3_object : object_list)
         {
-            ObjectInfo_S objectInfo;
             objectInfo.size = s3_object.GetSize();
             objectInfo.lastModified = s3_object.GetLastModified();
             objectInfo.etag = s3_object.GetETag();
+            objectInfo.owner = s3_object.GetOwner().GetDisplayName();
 
             Aws::String key = s3_object.GetKey();
             std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
@@ -192,6 +194,40 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name,
     Aws::S3::Model::GetObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getModificationDate(const Aws::String &name)
+{
+    auto it = objectInfoVec.find(name);
+    if (it != objectInfoVec.end()) {
+        auto item = objectInfoVec.at(name);
+        Aws::String time = item.lastModified.ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601);
+        return time.c_str();
+    }
+
+    return "";
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getOwner(const Aws::String &name)
+{
+    auto it = objectInfoVec.find(name);
+    if (it != objectInfoVec.end()) {
+        auto item = objectInfoVec.at(name);
+        return item.owner.c_str();
+    }
+
+    return "";
+}
+// --------------------------------------------------------------------------
+std::string S3Client::getETAG(const Aws::String &name)
+{
+    auto it = objectInfoVec.find(name);
+    if (it != objectInfoVec.end()) {
+        auto item = objectInfoVec.at(name);
+        return item.etag.c_str();
+    }
+
+    return "";
 }
 // --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,

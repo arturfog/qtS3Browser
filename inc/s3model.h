@@ -56,7 +56,9 @@ public:
         if(!item.isEmpty()) {
             addS3Item(S3Item(item, path));
         } else {
-            emit noBucketsSignal();
+            if(getCurrentPathDepthQML() <= 0) {
+                emit noBucketsSignal();
+            }
         }
     }
     // --------------------------------------------------------------------------
@@ -92,7 +94,7 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void createFolderQML(const QString &folder) { createFolder(folder); }
+    Q_INVOKABLE bool createFolderQML(const QString &folder);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadFileQML(const QString &file) { upload(file, false); }
     // --------------------------------------------------------------------------
@@ -177,6 +179,12 @@ public:
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getOwnerQML(const QString &name) { return s3.getOwner(name.toStdString().c_str()).c_str(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getEtagQML(const QString &name) { return s3.getETAG(name.toStdString().c_str()).c_str(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getModificationDateQML(const QString &name) { return s3.getModificationDate(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void search(const QString& txt) {
         if(m_s3itemsBackup.size() == 0) {
@@ -274,11 +282,6 @@ public:
      * @param bucket
      */
     void createBucket(const std::string &bucket);
-    /**
-     * @brief createFolder
-     * @param folder
-     */
-    void createFolder(const QString &folder);
     /**
      * @brief removeBucket
      * @param bucket

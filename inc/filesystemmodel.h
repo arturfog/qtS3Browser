@@ -21,7 +21,12 @@ public:
         }
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool createFolderQML(const QString& name, const QString& path) {
+    Q_INVOKABLE int createFolderQML(const QString& name, const QString& path) {
+        if(name.contains("/")) {
+            // two "/" sign present. return error
+            return -1;
+        }
+
         QString tmpPath = path;
         tmpPath = tmpPath.replace("file://", "");
         QDir dir(tmpPath.append("/").append(name));
@@ -30,7 +35,7 @@ public:
             return true;
         }
 
-        return false;
+        return -2;
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool fileExistsQML(const QString& path) {
@@ -41,6 +46,20 @@ public:
     Q_INVOKABLE bool isDirQML(const QString& path) {
         QDir dir(path);
         return dir.exists();
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getOwner(const QString& path) {
+        QFileInfo fi(path);
+        return fi.owner();
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString permissions(const QString& path) {
+        QFileInfo fi(path);
+        QString executable = fi.isExecutable() ? "x" : "-";
+        QString readable = fi.isReadable() ? "r" : "-";
+        QString writeable = fi.isWritable() ? "w" : "-";
+
+        return readable.append(writeable).append(executable);
     }
     // --------------------------------------------------------------------------
 };

@@ -194,7 +194,7 @@ ApplicationWindow {
             onOpened: addBookmarks()
             font.pointSize: uiFontSize
             MenuItem {
-                text: qsTr("Create bookmark")
+                text: qsTr("Create S3 bookmark")
                 icon.source: "qrc:icons/32_bookmark2.png"
                 icon.color: "transparent"
                 onTriggered: {
@@ -204,7 +204,7 @@ ApplicationWindow {
                 }
             }
             MenuItem {
-                text: qsTr("Manage bookmarks")
+                text: qsTr("Manage S3 bookmarks")
                 icon.source: "qrc:icons/32_edit_icon.png"
                 icon.color: "transparent"
                 onTriggered: {

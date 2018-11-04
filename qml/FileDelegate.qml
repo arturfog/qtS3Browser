@@ -81,6 +81,10 @@ Rectangle {
             onClicked: {
                 infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
                 infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
+                infoWindow.name = fileName
+                infoWindow.path = filePath
+                infoWindow.size = folder.get(view.currentIndex, "fileSize")
+                infoWindow.modified = folder.get(view.currentIndex, "fileModified")
                 infoWindow.visible = true
             }
         }

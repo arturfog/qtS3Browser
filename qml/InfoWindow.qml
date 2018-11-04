@@ -21,17 +21,38 @@ import QtGraphicalEffects 1.0
 
 Window {
     id: info_win
-    minimumHeight: 350; maximumHeight: 350
-    minimumWidth: 440; maximumWidth: 440
-    width: 440; height: 350;
+    minimumHeight: 320; maximumHeight: 320
+    minimumWidth: 640; maximumWidth: 640
+    width: 640; height: 320;
     color: "#f8f9fa"
     title: "Info"
+
+    property string name: ""
+    property string path: ""
+    property string size: ""
+    property string owner: ""
+    property string modified: ""
+    property string etag: ""
+
+    function getSizeString(bytes) {
+        if(bytes === "DIR") {
+            return "DIR"
+        }
+
+        if(bytes > 1048576) {
+            return Number(bytes / 1048576).toFixed(1)  + " MB"
+        } else if(bytes >= 1024) {
+            return Number(bytes / 1024).toFixed(1)  + " KB"
+        } else {
+            return Number(bytes)  + " B"
+        }
+    }
 
     // ------------- header -------------
     Rectangle {
         color: "#3367d6"
         width: parent.width
-        height: 50
+        height: 80
 
         Row {
             x:10
@@ -39,7 +60,9 @@ Window {
             width: parent.width
 
             Image {
-                source: "qrc:icons/32_settings_icon.png"
+                source: "image://iconProvider/" + ((name.lastIndexOf("/") > 0) ? "//" : path)
+                width: 32
+                height: 32
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -51,15 +74,16 @@ Window {
 
             Text {
                 color: "white"
-                text: "Settings"
+                text: name
+                wrapMode: Text.Wrap
                 font.bold: true
                 font.pointSize: 14
-                height: parent.height
+                height: 80
                 verticalAlignment: Text.AlignVCenter
             }
         }
     }
-
+    // ------------- header end -------------
     DropShadow {
         anchors.fill: info_rect
         horizontalOffset: 1
@@ -72,22 +96,33 @@ Window {
 
     Rectangle {
         id: info_rect
-        y: 60
+        y: 90
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 80
+        height: 210
         border.color: "#efefef"
         border.width: 1
         radius: 5
         Column {
+            width: parent.width
             Row {
+                x: 10
+                width: parent.width
+                height: 40
                 Text {
-                    width: parent.width
+                    width: parent.width / 2
                     height: 40
                     text: "Size"
+                    font.bold: true
                     verticalAlignment: Text.AlignVCenter
-                    //font.pointSize: labelFontSize
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: getSizeString(size)
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
@@ -98,12 +133,133 @@ Window {
             }
 
             Row {
+                x: 10
+                width: parent.width
+                height: 40
                 Text {
-                    width: parent.width
+                    width: parent.width / 2
                     height: 40
                     text: "Modification date"
+                    font.bold: true
                     verticalAlignment: Text.AlignVCenter
-                    //font.pointSize: labelFontSize
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: modified
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                width: parent.width
+                height: 40
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: "Permissions"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: fsModel.permissions(path)
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                width: parent.width
+                height: 40
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: "Owner"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: fsModel.getOwner(path)
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+            }
+
+            Row {
+                x: 10
+                width: parent.width
+                height: 40
+                visible: etag === "" ? false : true
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: "ETag"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: fsModel.getOwner(path)
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+
+            Rectangle {
+                width: parent.width
+                color: "#dbdbdb"
+                height: 1
+                visible: etag === "" ? false : true
+            }
+
+            Row {
+                x: 10
+                width: parent.width
+                height: 50
+                Text {
+                    width: parent.width / 2
+                    height: 40
+                    text: "Path"
+                    font.bold: true
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                TextEdit {
+                    width: parent.width / 2
+                    wrapMode: Text.Wrap
+                    height: 50
+                    text: path
+                    readOnly: true
+                    selectByMouse: true
+                    font.pointSize: 10
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }

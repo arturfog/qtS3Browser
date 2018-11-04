@@ -226,9 +226,17 @@ Window {
                     if (create_action === createBucket) {
                         s3Model.createBucketQML(itemName.text)
                     } else if (create_action === createS3Folder) {
-                        s3Model.createFolderQML(itemName.text)
+                        if(!s3Model.createFolderQML(itemName.text)) {
+                          msgDialog.msg = "Invalid folder name. It cannot contain '/' sign"
+                          msgDialog.visible = true
+                        }
                     } else {
-                        if(!fsModel.createFolderQML(itemName.text, view.path)) {
+                        var ret = fsModel.createFolderQML(itemName.text, view.path)
+                        if(ret === -1) {
+                            msgDialog.msg = "Invalid folder name. It cannot contain '/' sign"
+                            msgDialog.visible = true
+                        } else if (ret === -2) {
+                            msgDialog.msg = "Directory already exists"
                             msgDialog.visible = true
                         } else {
                             close()

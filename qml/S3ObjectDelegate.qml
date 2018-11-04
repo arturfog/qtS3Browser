@@ -107,6 +107,27 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Info')
+            onClicked: {
+                infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
+                infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
+                infoWindow.name = fileName
+                infoWindow.path = "s3://" + s3Model.getS3PathQML() + fileName
+                var size = s3Model.getObjectSizeQML(i_fileName.text)
+                infoWindow.size = size
+                infoWindow.modified = s3Model.getModificationDateQML(fileName)
+                infoWindow.owner = s3Model.getOwnerQML(fileName)
+                infoWindow.visible = true
+            }
+        }
+        MenuItem {
+            icon.source: "qrc:icons/32_file_icon.png"
+            icon.color: "transparent"
+            enabled: connected
+            text: qsTr('Copy S3 path')
+            onClicked: {
+                var fileName = s3Model.getItemNameQML(view.currentIndex)
+                s3_browser_clipboard.copy("s3://" + s3Model.getS3PathQML() + fileName)
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_download_icon.png"
@@ -128,6 +149,21 @@ Rectangle {
         }
     }
 
+    Item {
+        id: s3_browser_clipboard
+        opacity: 0
+
+        function copy(text) {
+            helper.text = text;
+            helper.selectAll();
+            helper.copy();
+        }
+
+        TextEdit {
+            id: helper
+        }
+    }
+
     MouseArea {
         id:mouseArea
         anchors.fill: parent
@@ -138,7 +174,6 @@ Rectangle {
             if (mouse.button === Qt.RightButton)
             {
                 contextMenu.popup()
-                console.log("Right")
             }
 
         }

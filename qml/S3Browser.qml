@@ -263,7 +263,13 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
                             font.pointSize: 10
+                        }
 
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log("Sorting")
+                            }
                         }
                     }
                     Rectangle {

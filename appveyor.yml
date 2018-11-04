@@ -60,6 +60,17 @@ build_script:
       cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
       cp c:\projects\aws\aws-cpp-sdk-*.lib distrib
       cp release\s3browser.exe distrib
+      
+      mkdir distrib\64
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\msvcp140.dll" distrib
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.OPENMP\vcomp140.dll" distrib
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\vcruntime140.dll" distrib
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.CRT\msvcp140.dll" distrib\64
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.OPENMP\vcomp140.dll" distrib\64
+      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.CRT\vcruntime140.dll" distrib\64
+      cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x86\*" distrib
+      cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x64\*" distrib\64
+
       7z a -y distrib.zip distrib
 
   # Build the installer

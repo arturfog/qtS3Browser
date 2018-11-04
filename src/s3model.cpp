@@ -293,11 +293,18 @@ void S3Model::createBucket(const std::string &bucket)
     s3.createBucket(bucket.c_str());
 }
 // --------------------------------------------------------------------------
-void S3Model::createFolder(const QString &folder)
+bool S3Model::createFolderQML(const QString &folder)
 {
     qDebug() << "createFolder: " << folder;
+
+    if(folder.contains("/")) {
+	    // two "/" sign present. return error
+        return false;
+    }
+
     s3.createFolder(getCurrentBucket().toStdString().c_str(),
                     QString(getPathWithoutBucket()).append(QString(folder)).append("/_empty_file_to_remove").toStdString().c_str());
+    return true;
 }
 // --------------------------------------------------------------------------
 void S3Model::removeBucket(const std::string &bucket)

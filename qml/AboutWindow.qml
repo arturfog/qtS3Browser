@@ -86,7 +86,7 @@ Window {
             Text {
                 x: 20
                 y: 10
-                text: "Version: 1.0.3"
+                text: "Version: 1.0.4"
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 height: 40

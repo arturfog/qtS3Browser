@@ -168,7 +168,7 @@ public:
         Aws::String type;
         Aws::String etag;
         Aws::Utils::DateTime lastModified;
-
+        Aws::String owner;
     };
     static Aws::String currentPrefix;
 
@@ -314,6 +314,13 @@ public:
      */
     void getObjectInfo(const Aws::String &bucket_name,
                        const Aws::String &key_name);
+
+
+    std::string getModificationDate(const Aws::String& name);
+
+    std::string getOwner(const Aws::String& name);
+
+    std::string getETAG(const Aws::String& name);
 };
 
 

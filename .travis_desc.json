@@ -12,9 +12,9 @@
     },
 
     "version": {
-        "name": "1.0.2",
+        "name": "1.0.4",
         "desc": "",
-        "released": "2018-10-06",
+        "released": "2018-10-26",
         "gpgSign": true
     },
 
