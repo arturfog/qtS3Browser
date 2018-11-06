@@ -32,18 +32,31 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
-    property int uiFontSize: 10
 
-    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    function getWindowFlags() {
+        if(Qt.platform.os == "windows") {
+            return Qt.WindowActive
+        }
+        if(Qt.platform.os == "linux") {
+            return Qt.WindowActive | Qt.WindowCloseButtonHint
+        }
+
+        return Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+    }
+
+    property int uiFontSize: 10
+    property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+
+    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: windowFlags}
     property AboutWindow aboutWindow: AboutWindow {
         x: app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
         y: app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: windowFlags
     }
-    property SettingsWindow settingsWindow: SettingsWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
-    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property SettingsWindow settingsWindow: SettingsWindow {flags: windowFlags}
+    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: windowFlags}
     property OperationProgressWindow progressWindow: OperationProgressWindow {flags: Qt.Dialog | Qt.WindowCloseButtonHint}
-    property InfoWindow infoWindow: InfoWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property InfoWindow infoWindow: InfoWindow {flags: windowFlags}
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: "Missing credentials"
@@ -69,12 +82,12 @@ ApplicationWindow {
 
     property CreateItemWindow createBucketWindow: CreateItemWindow {
         win_title: qsTr("Create S3 bucket")
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: windowFlags
     }
 
     property CreateItemWindow createS3FolderWindow: CreateItemWindow {
         win_title: qsTr("Create S3 folder")
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: windowFlags
     }
 
     onAfterRendering: {
@@ -280,7 +293,7 @@ ApplicationWindow {
                 id: file_panel
                 height: parent.height
                 width: parent.width
-                path: "file:///home/" // let's start with the Home folder
+                path: "file://" + fsModel.getHomePath()
             }
         }
 

@@ -145,7 +145,7 @@ Item {
 
         ListView {
             id: view
-            property string path
+            property string path: fsModel.getHomePath()
 
             width: parent.width
             height: parent.height

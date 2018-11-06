@@ -53,6 +53,10 @@ public:
         return fi.owner();
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getHomePath() {
+        return QDir::homePath();
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) {
         QFileInfo fi(path);
         QString executable = fi.isExecutable() ? "x" : "-";

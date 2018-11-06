@@ -75,10 +75,11 @@ Window {
             Text {
                 color: "white"
                 text: name
-                wrapMode: Text.Wrap
+                elide: Text.ElideRight
                 font.bold: true
                 font.pointSize: 14
                 height: 80
+                width: parent.width - 80
                 verticalAlignment: Text.AlignVCenter
             }
         }
