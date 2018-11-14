@@ -155,7 +155,7 @@ Window {
                 color: "white"
                 text: title
                 font.bold: true
-                font.pointSize: 14
+                font.pointSize: getLargeFontSize()
                 height: parent.height
                 verticalAlignment: Text.AlignVCenter
             }
@@ -206,7 +206,7 @@ Window {
                     height: 40
                     text: currentFile
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
 
@@ -288,7 +288,7 @@ Window {
                     width: 100
                     text: "Copied: " + getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
 
                 Rectangle {
@@ -318,7 +318,7 @@ Window {
                     height: 40
                     text: "Total: " + getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
 
@@ -349,7 +349,7 @@ Window {
                     width: 100
                     text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
 
                 Rectangle {
@@ -385,7 +385,7 @@ Window {
                     height: 40
                     text: "ETA: " + secondsToEta(secondsLeft)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
         }

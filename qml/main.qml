@@ -32,10 +32,33 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
+    function getSmallFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 8
+        } else {
+            return 10
+        }
+    }
+
+    function getMediumFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 10
+        } else {
+            return 12
+        }
+    }
+
+    function getLargeFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 12
+        } else {
+            return 14
+        }
+    }
 
     function getWindowFlags() {
         if(Qt.platform.os == "windows") {
-            return Qt.WindowActive
+            return Qt.Window
         }
         if(Qt.platform.os == "linux") {
             return Qt.WindowActive | Qt.WindowCloseButtonHint
@@ -47,16 +70,16 @@ ApplicationWindow {
     property int uiFontSize: 10
     property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
 
-    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: windowFlags}
+    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: getWindowFlags() }
     property AboutWindow aboutWindow: AboutWindow {
         x: app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
         y: app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
-        flags: windowFlags
+        flags: getWindowFlags()
     }
-    property SettingsWindow settingsWindow: SettingsWindow {flags: windowFlags}
-    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: windowFlags}
-    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: Qt.Dialog | Qt.WindowCloseButtonHint}
-    property InfoWindow infoWindow: InfoWindow {flags: windowFlags}
+    property SettingsWindow settingsWindow: SettingsWindow {flags: getWindowFlags()}
+    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: getWindowFlags() }
+    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: getWindowFlags() }
+    property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: "Missing credentials"
@@ -82,12 +105,12 @@ ApplicationWindow {
 
     property CreateItemWindow createBucketWindow: CreateItemWindow {
         win_title: qsTr("Create S3 bucket")
-        flags: windowFlags
+        flags: getWindowFlags()
     }
 
     property CreateItemWindow createS3FolderWindow: CreateItemWindow {
         win_title: qsTr("Create S3 folder")
-        flags: windowFlags
+        flags: getWindowFlags()
     }
 
     onAfterRendering: {

@@ -87,7 +87,7 @@ Item {
         Row {
             anchors.fill: parent
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
@@ -101,7 +101,7 @@ Item {
 
             ToolButton {
                 id: s3_refresh_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
@@ -112,7 +112,7 @@ Item {
 
             ToolButton {
                 id: s3_download_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_download_icon.png"
                 icon.color: "transparent"
@@ -122,7 +122,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
@@ -141,7 +141,7 @@ Item {
 
             ToolButton {
                 id: s3_create_dir_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"

@@ -65,7 +65,7 @@ Item {
         Row {
             anchors.fill: parent
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
@@ -79,7 +79,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
@@ -88,7 +88,7 @@ Item {
 
             ToolButton {
                 id: file_upload_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_upload_icon.png"
                 icon.color: "transparent"
@@ -98,7 +98,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
@@ -111,7 +111,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
@@ -205,7 +205,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
                         wrapMode: Text.WrapAnywhere
-                        font.pointSize: 10
+                        font.pointSize: getSmallFontSize()
                         selectByMouse: true
 
                         Keys.onReturnPressed: {
@@ -241,7 +241,7 @@ Item {
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
 
                         MouseArea {
@@ -273,7 +273,7 @@ Item {
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
                     }
                 }

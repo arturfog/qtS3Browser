@@ -39,14 +39,14 @@ Rectangle {
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
             text: fileName
-            font.pointSize: 10
+            font.pointSize: getSmallFontSize()
             width: parent.width - 130
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
             width: 100
-            font.pointSize: 10
+            font.pointSize: getSmallFontSize()
             text: {
                 if (fileIsDir) {
                     "DIR"
