@@ -167,7 +167,7 @@ Window {
                         }
                     }
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: getMediumFontSize()
                 }
             }
 
@@ -199,7 +199,7 @@ Window {
                     width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
+                    font.pointSize: getSmallFontSize()
                     maximumLength: 128
                     wrapMode: Text.WrapAnywhere
                     onActiveFocusChanged: focusChangedHandler(itemName, item_name_input_rect);
@@ -222,6 +222,7 @@ Window {
                 text: qsTr("Create")
                 icon.source: "qrc:icons/32_add_icon.png"
                 icon.color: "transparent"
+                font.pointSize: getMediumFontSize()
                 onClicked: {
                     if (create_action === createBucket) {
                         s3Model.createBucketQML(itemName.text)
@@ -260,6 +261,7 @@ Window {
                 text: qsTr("Cancel")
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
+                font.pointSize: getMediumFontSize()
                 onClicked: {
                     close()
                 }

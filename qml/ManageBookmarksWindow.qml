@@ -21,10 +21,10 @@ import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 Window {
     id: man_boomarks_win
-    width: 480;
+    width: 540;
     height: 320
     minimumHeight: 320; maximumHeight: 800
-    minimumWidth: 480
+    minimumWidth: 540
     color: "#f8f9fa"
     title: "Manage bookmarks"
 
@@ -132,7 +132,7 @@ width: parent.width;
 height: 40;
 wrapMode: Text.Wrap
 text: qsTr("There are no bookmarks, click below to create one")
-font.pointSize: 12
+font.pointSize: getMediumFontSize()
 }
 
 Button {
@@ -192,7 +192,7 @@ onClicked: {
                     color: "white"
                     text: qsTr("Manage bookmarks")
                     font.bold: true
-                    font.pointSize: 14
+                    font.pointSize: getLargeFontSize()
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
                 }

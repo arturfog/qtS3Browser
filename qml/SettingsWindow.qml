@@ -30,7 +30,7 @@ Window {
     title: "Settings"
 
     property string borderColor: "gray"
-    readonly property int labelFontSize: 11
+    readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
 
     onVisibilityChanged: {

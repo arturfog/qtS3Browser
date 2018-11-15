@@ -32,6 +32,14 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
+    function getTinyFont() {
+        if(Qt.platform.os == "windows") {
+            return 7
+        } else {
+            return 9
+        }
+    }
+
     function getSmallFontSize() {
         if(Qt.platform.os == "windows") {
             return 8
@@ -140,7 +148,7 @@ ApplicationWindow {
         font.pointSize: uiFontSize
         Menu {
             title: qsTr("File")
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Settings")
                 icon.source: "qrc:icons/32_settings_icon.png"
@@ -162,7 +170,7 @@ ApplicationWindow {
 
         Menu {
             title: "S3"
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Connect...")
                 icon.source: "qrc:icons/32_connect_icon.png"
@@ -228,7 +236,7 @@ ApplicationWindow {
             id: bookmarks_menu
             title: qsTr("Bookmarks")
             onOpened: addBookmarks()
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Create S3 bookmark")
                 icon.source: "qrc:icons/32_bookmark2.png"
@@ -286,7 +294,7 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("Help")
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("About")
                 icon.source: "qrc:icons/32_about_icon.png"

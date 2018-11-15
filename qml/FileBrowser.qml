@@ -154,7 +154,7 @@ Item {
                 id: folder
                 showDirsFirst: true
                 //showHidden: true
-                folder: view.path
+                folder: path
             }
 
             delegate: FileDelegate { }
@@ -185,7 +185,7 @@ Item {
                         x:50
                         width: 50
                         font.bold: true
-                        font.pointSize: 8
+                        font.pointSize: getTinyFont()
                         anchors.verticalCenter: parent.verticalCenter
                         text: "file://"
                     }
@@ -351,7 +351,7 @@ Item {
                     y: 22
                     width: parent.width
                     height: 20
-                    font.pointSize: 9
+                    font.pointSize: getTinyFont()
                     text: {
                         if(folder.count == 1) {
                             folder.count + " Item"

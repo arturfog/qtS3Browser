@@ -54,7 +54,13 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getHomePath() {
-        return QDir::homePath();
+#ifdef __linux__
+    return QDir::homePath();
+#elif _WIN32
+    return QString("/").append(QDir::homePath());
+#else
+    return QDir::homePath();
+#endif
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) {
