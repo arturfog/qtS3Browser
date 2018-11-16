@@ -72,7 +72,7 @@ Window {
                 width: parent.width
                 text: "qtS3Browser"
                 verticalAlignment: Text.AlignVCenter
-                font.pointSize: 14
+                font.pointSize: getLargeFontSize()
                 height: 40
             }
 
@@ -88,7 +88,7 @@ Window {
                 y: 10
                 text: "Version: 1.0.4"
                 verticalAlignment: Text.AlignVCenter
-                font.pointSize: 10
+                font.pointSize: getSmallFontSize()
                 height: 40
             }
         }
@@ -139,7 +139,7 @@ Window {
                     height: 40
                     text: "Artur Fogiel"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: getMediumFontSize()
 
                 }
             }
@@ -167,7 +167,7 @@ Window {
                     text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'
                     verticalAlignment: Text.AlignVCenter
                     onLinkActivated: Qt.openUrlExternally("https://github.com/arturfog/qtS3Browser")
-                    font.pointSize: 10
+                    font.pointSize: getSmallFontSize()
                 }
             }
         }

@@ -117,7 +117,13 @@ Window {
             currentProgress = (((current / total) * 100) | 0)
             currentFile = s3Model.getCurrentFileQML()
 
-            if(currentProgress == 100) {
+            if(currentProgress >= 100) {
+                if(mode == modeDL) {
+                    title = qsTr("Download completed")
+                } else {
+                    title = qsTr("Upload completed")
+                }
+
                 cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
                 cancel_btn.text = "Close"
             }
@@ -149,7 +155,7 @@ Window {
                 color: "white"
                 text: title
                 font.bold: true
-                font.pointSize: 14
+                font.pointSize: getLargeFontSize()
                 height: parent.height
                 verticalAlignment: Text.AlignVCenter
             }
@@ -200,7 +206,7 @@ Window {
                     height: 40
                     text: currentFile
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
 
@@ -282,7 +288,7 @@ Window {
                     width: 100
                     text: "Copied: " + getSizeString(currentBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
 
                 Rectangle {
@@ -312,7 +318,7 @@ Window {
                     height: 40
                     text: "Total: " + getSizeString(totalBytes)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
 
@@ -343,7 +349,7 @@ Window {
                     width: 100
                     text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
 
                 Rectangle {
@@ -379,7 +385,7 @@ Window {
                     height: 40
                     text: "ETA: " + secondsToEta(secondsLeft)
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 11
+                    font.pointSize: getSmallFontSize()
                 }
             }
         }

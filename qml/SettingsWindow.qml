@@ -30,8 +30,8 @@ Window {
     title: "Settings"
 
     property string borderColor: "gray"
-    readonly property int labelFontSize: 11
-    readonly property int inputFontSize: 10
+    readonly property int labelFontSize: getMediumFontSize()
+    readonly property int inputFontSize: getSmallFontSize()
 
     onVisibilityChanged: {
         startPath.text = s3Model.getStartPathQML()
@@ -91,7 +91,7 @@ Window {
                 color: "white"
                 text: "Settings"
                 font.bold: true
-                font.pointSize: 14
+                font.pointSize: getLargeFontSize()
                 height: parent.height
                 verticalAlignment: Text.AlignVCenter
             }

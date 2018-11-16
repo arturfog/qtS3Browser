@@ -65,7 +65,7 @@ Item {
         Row {
             anchors.fill: parent
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
@@ -79,7 +79,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
@@ -88,7 +88,7 @@ Item {
 
             ToolButton {
                 id: file_upload_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_upload_icon.png"
                 icon.color: "transparent"
@@ -98,7 +98,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
@@ -111,7 +111,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
@@ -145,7 +145,7 @@ Item {
 
         ListView {
             id: view
-            property string path
+            property string path: fsModel.getHomePath()
 
             width: parent.width
             height: parent.height
@@ -154,7 +154,7 @@ Item {
                 id: folder
                 showDirsFirst: true
                 //showHidden: true
-                folder: view.path
+                folder: path
             }
 
             delegate: FileDelegate { }
@@ -185,7 +185,7 @@ Item {
                         x:50
                         width: 50
                         font.bold: true
-                        font.pointSize: 8
+                        font.pointSize: getTinyFont()
                         anchors.verticalCenter: parent.verticalCenter
                         text: "file://"
                     }
@@ -205,7 +205,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: view.path.replace("file://", "")
                         wrapMode: Text.WrapAnywhere
-                        font.pointSize: 10
+                        font.pointSize: getSmallFontSize()
                         selectByMouse: true
 
                         Keys.onReturnPressed: {
@@ -241,7 +241,7 @@ Item {
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
 
                         MouseArea {
@@ -273,7 +273,7 @@ Item {
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
                     }
                 }
@@ -351,7 +351,7 @@ Item {
                     y: 22
                     width: parent.width
                     height: 20
-                    font.pointSize: 9
+                    font.pointSize: getTinyFont()
                     text: {
                         if(folder.count == 1) {
                             folder.count + " Item"

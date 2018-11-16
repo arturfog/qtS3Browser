@@ -87,7 +87,7 @@ Item {
         Row {
             anchors.fill: parent
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
@@ -101,7 +101,7 @@ Item {
 
             ToolButton {
                 id: s3_refresh_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
@@ -112,7 +112,7 @@ Item {
 
             ToolButton {
                 id: s3_download_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_download_icon.png"
                 icon.color: "transparent"
@@ -122,7 +122,7 @@ Item {
             }
 
             ToolButton {
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_delete_icon.png"
                 icon.color: "transparent"
@@ -141,7 +141,7 @@ Item {
 
             ToolButton {
                 id: s3_create_dir_btn
-                font.pointSize: uiFontSize
+                font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
@@ -200,7 +200,7 @@ Item {
                         x:50
                         width: 50
                         font.bold: true
-                        font.pointSize: 8
+                        font.pointSize: getTinyFont()
                         anchors.verticalCenter: parent.verticalCenter
                         text: "s3://"
                     }
@@ -215,7 +215,7 @@ Item {
                     TextInput {
                         id: s3_browser_path_text
                         x:95
-                        font.pointSize: 10
+                        font.pointSize: getSmallFontSize()
                         selectByMouse: true
                         width: parent.width - 135
                         anchors.verticalCenter: parent.verticalCenter
@@ -262,7 +262,7 @@ Item {
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Name"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
 
                         MouseArea {
@@ -286,7 +286,7 @@ Item {
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
                             text: "Size"
-                            font.pointSize: 10
+                            font.pointSize: getSmallFontSize()
                         }
                     }
                 }
@@ -371,7 +371,7 @@ Item {
                     y: 22
                     width: parent.width
                     height: 20
-                    font.pointSize: 9
+                    font.pointSize: getTinyFont()
                     text: footerText
                 }
             }

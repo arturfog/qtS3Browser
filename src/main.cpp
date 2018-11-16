@@ -40,7 +40,13 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("qtS3Browser");
     QSettings settings;
 
+#ifdef __linux__
     QFont font("DejaVu Sans");
+#elif _WIN32
+    QFont font("Segoe UI");
+#else
+    QFont font("DejaVu Sans");
+#endif
     QApplication::setFont(font);
 
     S3Model s3Model;

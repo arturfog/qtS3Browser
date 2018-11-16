@@ -32,18 +32,62 @@ ApplicationWindow {
     minimumHeight: 400
     title: qsTr("s3FileBrowser")
 
-    property int uiFontSize: 10
+    function getTinyFont() {
+        if(Qt.platform.os == "windows") {
+            return 7
+        } else {
+            return 9
+        }
+    }
 
-    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    function getSmallFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 8
+        } else {
+            return 10
+        }
+    }
+
+    function getMediumFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 10
+        } else {
+            return 12
+        }
+    }
+
+    function getLargeFontSize() {
+        if(Qt.platform.os == "windows") {
+            return 12
+        } else {
+            return 14
+        }
+    }
+
+    function getWindowFlags() {
+        if(Qt.platform.os == "windows") {
+            return Qt.Window
+        }
+        if(Qt.platform.os == "linux") {
+            return Qt.WindowActive | Qt.WindowCloseButtonHint
+        }
+
+        return Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+    }
+
+    property int uiFontSize: 10
+    property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+
+    property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: getWindowFlags() }
     property AboutWindow aboutWindow: AboutWindow {
         x: app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
         y: app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: getWindowFlags()
     }
-    property SettingsWindow settingsWindow: SettingsWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
-    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
-    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: Qt.Dialog | Qt.WindowCloseButtonHint}
-    property InfoWindow infoWindow: InfoWindow {flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint}
+    property SettingsWindow settingsWindow: SettingsWindow {flags: getWindowFlags()}
+    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: getWindowFlags() }
+    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: getWindowFlags() }
+    property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: "Missing credentials"
@@ -69,12 +113,12 @@ ApplicationWindow {
 
     property CreateItemWindow createBucketWindow: CreateItemWindow {
         win_title: qsTr("Create S3 bucket")
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: getWindowFlags()
     }
 
     property CreateItemWindow createS3FolderWindow: CreateItemWindow {
         win_title: qsTr("Create S3 folder")
-        flags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
+        flags: getWindowFlags()
     }
 
     onAfterRendering: {
@@ -104,7 +148,7 @@ ApplicationWindow {
         font.pointSize: uiFontSize
         Menu {
             title: qsTr("File")
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Settings")
                 icon.source: "qrc:icons/32_settings_icon.png"
@@ -126,7 +170,7 @@ ApplicationWindow {
 
         Menu {
             title: "S3"
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Connect...")
                 icon.source: "qrc:icons/32_connect_icon.png"
@@ -192,7 +236,7 @@ ApplicationWindow {
             id: bookmarks_menu
             title: qsTr("Bookmarks")
             onOpened: addBookmarks()
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("Create S3 bookmark")
                 icon.source: "qrc:icons/32_bookmark2.png"
@@ -250,7 +294,7 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("Help")
-            font.pointSize: uiFontSize
+            font.pointSize: getSmallFontSize()
             MenuItem {
                 text: qsTr("About")
                 icon.source: "qrc:icons/32_about_icon.png"
@@ -280,7 +324,7 @@ ApplicationWindow {
                 id: file_panel
                 height: parent.height
                 width: parent.width
-                path: "file:///home/" // let's start with the Home folder
+                path: "file://" + fsModel.getHomePath()
             }
         }
 

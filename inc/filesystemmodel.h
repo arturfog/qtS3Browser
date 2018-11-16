@@ -53,6 +53,16 @@ public:
         return fi.owner();
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getHomePath() {
+#ifdef __linux__
+    return QDir::homePath();
+#elif _WIN32
+    return QString("/").append(QDir::homePath());
+#else
+    return QDir::homePath();
+#endif
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) {
         QFileInfo fi(path);
         QString executable = fi.isExecutable() ? "x" : "-";

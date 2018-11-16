@@ -79,7 +79,7 @@ Rectangle {
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
             text: fileName
-            font.pointSize: 10
+            font.pointSize: getSmallFontSize()
             width: parent.width - 135
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -87,7 +87,7 @@ Rectangle {
         Text {
             id: i_size
             width: 100
-            font.pointSize: 10
+            font.pointSize: getSmallFontSize()
             text: {
                 if (filePath == "/") {
                     return "DIR"

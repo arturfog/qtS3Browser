@@ -15,7 +15,7 @@ install:
   - set MINGW_PATH=C:\Qt\Tools\mingw530_32
   # - set QTDIR=C:\Qt\5.11.1\mingw53_32
   # - set QTDIR=C:\Qt\5.11.1\msvc2017_64
-  - set QTDIR=C:\Qt\5.11.1\msvc2015
+  - set QTDIR=C:\Qt\5.11.2\msvc2015
   - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
   # Install Inno Setup
   - choco install InnoSetup

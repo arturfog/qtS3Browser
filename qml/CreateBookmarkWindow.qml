@@ -81,7 +81,7 @@ Window {
                 color: "white"
                 text: qsTr("Create bookmark")
                 font.bold: true
-                font.pointSize: 14
+                font.pointSize: getLargeFontSize()
                 height: parent.height
                 verticalAlignment: Text.AlignVCenter
             }
@@ -127,7 +127,7 @@ Window {
                     height: 40
                     text: qsTr("Bookmark name")
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: getMediumFontSize()
                 }
             }
 
@@ -159,7 +159,7 @@ Window {
                     width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
+                    font.pointSize: getSmallFontSize()
                     maximumLength: 128
                     wrapMode: Text.WrapAnywhere
                     onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
@@ -193,7 +193,7 @@ Window {
                     height: 40
                     text: qsTr("S3 URL")
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
+                    font.pointSize: getMediumFontSize()
                 }
             }
 
@@ -224,7 +224,7 @@ Window {
                     width: parent.width - 20
                     height: parent.height
                     verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 10
+                    font.pointSize: getSmallFontSize()
                     maximumLength: 128
                     text: "s3://"
                     wrapMode: Text.WrapAnywhere
@@ -250,6 +250,7 @@ Window {
             text: qsTr("Create")
             icon.source: "qrc:icons/32_add_icon.png"
             icon.color: "transparent"
+            font.pointSize: getMediumFontSize()
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
             onClicked: {
                 s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
@@ -266,6 +267,7 @@ Window {
             text: qsTr("Cancel")
             icon.source: "qrc:icons/32_cancel_icon.png"
             icon.color: "transparent"
+            font.pointSize: getMediumFontSize()
             onClicked: {
                 bookmarkName.text = ""
                 bookmarkPath.text = "s3://"
