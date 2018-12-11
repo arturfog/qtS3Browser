@@ -245,7 +245,9 @@ Window {
                     }
 
                     if(create_action !== createLocalFolder) {
-                        s3Model.refreshQML()
+                        if(s3Model.getCurrentPathDepthQML() <= 0) {
+                            s3Model.getBucketsQML()
+                        }
                         close()
                     }
                 }

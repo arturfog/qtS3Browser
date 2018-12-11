@@ -48,12 +48,8 @@ Rectangle {
     onFocusChanged: {
         if(s3Model.getCurrentPathDepthQML() <= 0) {
             s3_create_dir_btn.enabled = false
-            menu_s3_create_dir.enabled = false
-            s3_download_btn.enabled = false
         } else {
             s3_create_dir_btn.enabled = true
-            menu_s3_create_dir.enabled = true
-            s3_download_btn.enabled = true
         }
 
         s3_browser.footerText = s3Model.getItemsCountQML()+" Items";
@@ -132,19 +128,23 @@ Rectangle {
         MenuItem {
             icon.source: "qrc:icons/32_download_icon.png"
             icon.color: "transparent"
-            enabled: connected
+            enabled: connected && s3Model.canDownload()
             text: qsTr('Download')
             onClicked: { download() }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
-            enabled: connected
+            enabled: connected && !s3Model.isTransferring()
             text: qsTr('Delete')
             onClicked: {
-                var fileName = s3Model.getItemNameQML(view.currentIndex)
-                msgDialog.msg = "Remove " + fileName + " ?"
-                msgDialog.open()
+                if(!s3Model.isTransferring()) {
+                    var fileName = s3Model.getItemNameQML(view.currentIndex)
+                    msgDialog.msg = "Remove " + fileName + " ?"
+                    msgDialog.open()
+                } else {
+                    s3Error.visible = true
+                }
             }
         }
     }

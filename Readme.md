@@ -44,3 +44,7 @@ Application will be released as .dmg file
 
 ### Windows (installer)
 Application will be relased as installer file
+
+# Support this project
+- Star GitHub repository :star:
+- Create pull requests, submit bugs or suggest new features

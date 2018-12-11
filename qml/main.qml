@@ -146,50 +146,10 @@ ApplicationWindow {
     menuBar: MenuBar {
         id: menu_bar
         font.pointSize: uiFontSize
-        Menu {
-            title: qsTr("File")
-            font.pointSize: getSmallFontSize()
-            MenuItem {
-                text: qsTr("Settings")
-                icon.source: "qrc:icons/32_settings_icon.png"
-                icon.color: "transparent"
-                onTriggered: {
-                    settingsWindow.x = app_window.x + (app_window.width / 2) - (settingsWindow.width / 2)
-                    settingsWindow.y = app_window.y + (app_window.height / 2) - (settingsWindow.height / 2)
-                    settingsWindow.visible = true
-                }
-            }
-            MenuSeparator { }
-            MenuItem {
-                text: qsTr("Close")
-                icon.source: "qrc:icons/32_close_icon.png"
-                icon.color: "transparent"
-                onTriggered: Qt.quit();
-            }
-        }
 
         Menu {
             title: "S3"
             font.pointSize: getSmallFontSize()
-            MenuItem {
-                text: qsTr("Connect...")
-                icon.source: "qrc:icons/32_connect_icon.png"
-                icon.color: "transparent"
-                onTriggered: {
-                    if(s3Model.getStartPathQML() !== "s3://" && s3Model.getAccesKeyQML() !== "") {
-                        s3Model.gotoQML(s3Model.getStartPathQML())
-                        s3_panel.path = s3Model.getS3PathQML()
-                    } else if (s3Model.getAccesKeyQML() !== ""){
-                        s3Model.getBucketsQML()
-                    } else {
-                        invalidCredentialsDialog.open()
-                    }
-
-                }
-                enabled: !s3_panel.connected
-
-            }
-            MenuSeparator { }
             MenuItem {
                 text: qsTr("Create bucket")
                 icon.source: "qrc:icons/32_bucket_icon.png"
@@ -201,34 +161,6 @@ ApplicationWindow {
                     createBucketWindow.visible = true
                 }
                 enabled: s3_panel.connected
-            }
-            MenuItem {
-                id: menu_s3_create_dir
-                text: qsTr("Create directory")
-                onTriggered: {
-                    createS3FolderWindow.x = app_window.x + (app_window.width / 2) - (createS3FolderWindow.width / 2)
-                    createS3FolderWindow.y = app_window.y + (app_window.height / 2) - (createS3FolderWindow.height / 2)
-                    createS3FolderWindow.create_action = createS3FolderWindow.createS3Folder
-                    createS3FolderWindow.visible = true
-                }
-                icon.source: "qrc:icons/32_new_folder_icon.png"
-                icon.color: "transparent"
-                enabled: false
-            }
-            MenuSeparator { }
-            MenuItem {
-                text: qsTr("Disconnect...")
-                icon.source: "qrc:icons/32_disconnect_icon.png"
-                icon.color: "transparent"
-                onTriggered: {
-                    s3Model.clearItemsQML()
-                    s3Model.setConnectedQML(false)
-                    s3_panel.connected = s3Model.isConnectedQML()
-                    file_panel.connected = s3Model.isConnectedQML()
-                    s3_panel.path = s3Model.getStartPathQML()
-                }
-                enabled: s3_panel.connected
-
             }
         }
 
@@ -247,20 +179,9 @@ ApplicationWindow {
                     createBookmarkWindow.visible = true
                 }
             }
-            MenuItem {
-                text: qsTr("Manage S3 bookmarks")
-                icon.source: "qrc:icons/32_edit_icon.png"
-                icon.color: "transparent"
-                onTriggered: {
-                    manageBookmarksWindow.x = app_window.x + (app_window.width / 2) - (manageBookmarksWindow.width / 2)
-                    manageBookmarksWindow.y = app_window.y + (app_window.height / 2) - (manageBookmarksWindow.height / 2)
-                    manageBookmarksWindow.visible = true
-                }
-            }
             MenuSeparator { }
 
             function addBookmarks() {
-                console.log("test")
                 var bookmarksLen = s3Model.getBookmarksNumQML();
                 if(bookmarksLen > 0) {
                     var keys = s3Model.getBookmarksKeysQML()
@@ -291,62 +212,164 @@ ApplicationWindow {
                 }
             }
         }
-
-        Menu {
-            title: qsTr("Help")
-            font.pointSize: getSmallFontSize()
-            MenuItem {
-                text: qsTr("About")
-                icon.source: "qrc:icons/32_about_icon.png"
-                icon.color: "transparent"
-                onTriggered: {
-                    aboutWindow.x = app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
-                    aboutWindow.y = app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
-                    aboutWindow.visible = true
-                }
-            }
-        }
     }
 
 
     Row {
-        focus: true
-        Keys.forwardTo: [file_panel, s3_panel]
-
-        anchors.top: parent.top
-        anchors.fill: parent
-
-        Column {
-            width: parent.width / 2
-            height: parent.height
-
-            FileBrowser {
-                id: file_panel
-                height: parent.height
-                width: parent.width
-                path: "file://" + fsModel.getHomePath()
-            }
-        }
-
-        Column {
-            width: 3
+        height: parent.height
+        width: parent.width
+        // ------------ Gray 48px row on left ----------------
+        Row {
+            width: 48
             height: parent.height
 
             Rectangle {
                 height: parent.height
-                width: 1
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "black"
+                width: parent.width - 2
+                color: "gray"
+
+                Column {
+                    width: 48
+                    // ------------ Connect ----------------
+                    Button {
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_connect_icon.png"
+                        icon.color: "transparent"
+                        //enabled:
+                        onClicked: {
+                            if(!s3_panel.connected) {
+                                var canDisconnect = false
+
+                                if(s3Model.getStartPathQML() !== "s3://" && s3Model.getAccesKeyQML() !== "") {
+                                    s3Model.gotoQML(s3Model.getStartPathQML())
+                                    s3_panel.path = s3Model.getS3PathQML()
+                                    canDisconnect = true
+                                } else if (s3Model.getAccesKeyQML() !== ""){
+                                    s3Model.getBucketsQML()
+                                    canDisconnect = true
+                                } else {
+                                    invalidCredentialsDialog.open()
+                                }
+
+                                if(canDisconnect) {
+                                    icon.source = "qrc:icons/32_disconnect_icon.png"
+                                }
+                            } else {
+                                icon.source = "qrc:icons/32_connect_icon.png"
+                                s3Model.clearItemsQML()
+                                s3Model.setConnectedQML(false)
+                                s3_panel.connected = s3Model.isConnectedQML()
+                                file_panel.connected = s3Model.isConnectedQML()
+                                s3_panel.path = s3Model.getStartPathQML()
+                            }
+                        }
+                    }
+                    // ------------ Bookmarks ----------------
+                    Button {
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_bookmark2.png"
+                        icon.color: "transparent"
+                        onClicked: {
+                            manageBookmarksWindow.x = app_window.x + (app_window.width / 2) - (manageBookmarksWindow.width / 2)
+                            manageBookmarksWindow.y = app_window.y + (app_window.height / 2) - (manageBookmarksWindow.height / 2)
+                            manageBookmarksWindow.visible = true
+                        }
+                    }
+                    // ------------ Settings ----------------
+                    Button {
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_settings_icon.png"
+                        icon.color: "transparent"
+                        onClicked: {
+                            settingsWindow.x = app_window.x + (app_window.width / 2) - (settingsWindow.width / 2)
+                            settingsWindow.y = app_window.y + (app_window.height / 2) - (settingsWindow.height / 2)
+                            settingsWindow.visible = true
+                        }
+                    }
+                    // ------------ About ----------------
+                    Button {
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_about_icon.png"
+                        icon.color: "transparent"
+                        onClicked: {
+                            aboutWindow.x = app_window.x + (app_window.width / 2) - (aboutWindow.width / 2)
+                            aboutWindow.y = app_window.y + (app_window.height / 2) - (aboutWindow.height / 2)
+                            aboutWindow.visible = true
+                        }
+                    }
+                    // ------------ Close ----------------
+                    Button {
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_close_icon.png"
+                        icon.color: "transparent"
+                        onClicked: {
+                            s3Model.cancelDownloadUploadQML()
+                            s3Model.clearItemsQML()
+                            s3Model.setConnectedQML(false)
+                            Qt.quit()
+                        }
+                    }
+                }
+            }
+            // ------------ Black 1px bar on right side ----------------
+            Column {
+                width: 2
+                height: parent.height
+
+                Rectangle {
+                    height: parent.height
+                    width: 1
+                    color: "black"
+                }
             }
         }
-
-        Column {
-            width: parent.width / 2
+        // ------------ Container for file and s3 browser ----------------
+        Row {
+            focus: true
+            Keys.forwardTo: [file_panel, s3_panel]
+            x:48
+            anchors.top: parent.top
+            //anchors.fill: parent
             height: parent.height
-            S3Browser {
-                id: s3_panel
+            width: parent.width - x
+
+            Column {
+                width: parent.width / 2
                 height: parent.height
-                width: parent.width
+
+                FileBrowser {
+                    id: file_panel
+                    height: parent.height
+                    width: parent.width
+                    path: "file://" + fsModel.getHomePath()
+                }
+            }
+
+            Column {
+                width: 3
+                height: parent.height
+
+                Rectangle {
+                    height: parent.height
+                    width: 1
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "black"
+                }
+            }
+
+            Column {
+                width: parent.width / 2
+                height: parent.height
+                S3Browser {
+                    id: s3_panel
+                    height: parent.height
+                    width: parent.width
+                }
             }
         }
     }
