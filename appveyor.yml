@@ -38,14 +38,14 @@ build_script:
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Release\aws-cpp-sdk-core.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Release\aws-cpp-sdk-core.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-core.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-core.dll c:\projects\aws
  
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Release\aws-cpp-sdk-s3.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Release\aws-cpp-sdk-s3.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-s3.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-s3.dll c:\projects\aws
  
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Release\aws-cpp-sdk-transfer.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Release\aws-cpp-sdk-transfer.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-transfer.lib c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-transfer.dll c:\projects\aws
   
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
