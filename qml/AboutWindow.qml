@@ -27,6 +27,7 @@ Window {
     color: "#f8f9fa"
     title: "About qtS3Browser"
 
+    // ------------ Top bar ----------------
     Rectangle {
         color: "#3367d6"
         width: parent.width
@@ -65,7 +66,7 @@ Window {
         Column {
             width: parent.width
             height: parent.height
-
+            // ------------ App name ----------------
             Text {
                 x: 20
                 y: 10
@@ -75,14 +76,13 @@ Window {
                 font.pointSize: getLargeFontSize()
                 height: 40
             }
-
-
+            // ------------ Separator ----------------
             Rectangle {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------ Software version ----------------
             Text {
                 x: 20
                 y: 10
@@ -124,7 +124,7 @@ Window {
                 color: "#dbdbdb"
                 height: 1
             }
-            // ------------- author row -------------
+            // ------------- Author row -------------
             Row {
                 x: 10
                 y: 10
@@ -143,15 +143,13 @@ Window {
 
                 }
             }
-
-
-
+            // ------------ Separator ----------------
             Rectangle {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
             }
-            // ------------- github link row -------------
+            // ------------- Github link row -------------
             Row {
                 x: 10
                 y: 10

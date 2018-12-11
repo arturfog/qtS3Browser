@@ -113,12 +113,7 @@ Rectangle {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
-
-            if (mouse.button === Qt.RightButton)
-            {
-                contextMenu.popup()
-                console.log("Right")
-            }
+            if (mouse.button === Qt.RightButton) { contextMenu.popup() }
         }
 
         onDoubleClicked: {

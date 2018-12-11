@@ -111,35 +111,6 @@ Item {
             }
 
             ToolButton {
-                id: s3_download_btn
-                font.pointSize: getSmallFontSize()
-                height: parent.height
-                icon.source: "qrc:icons/32_download_icon.png"
-                icon.color: "transparent"
-                text: "Download"
-                enabled: connected && s3Model.canDownload()
-                onClicked: { download() }
-            }
-
-            ToolButton {
-                font.pointSize: getSmallFontSize()
-                height: parent.height
-                icon.source: "qrc:icons/32_delete_icon.png"
-                icon.color: "transparent"
-                text: "Delete"
-                enabled: connected
-                onClicked: {
-                    if(!s3Model.isTransferring()) {
-                        var fileName = s3Model.getItemNameQML(view.currentIndex)
-                        msgDialog.msg = "Remove " + fileName + " ?"
-                        msgDialog.open()
-                    } else {
-                        s3Error.visible = true
-                    }
-                }
-            }
-
-            ToolButton {
                 id: s3_create_dir_btn
                 font.pointSize: getSmallFontSize()
                 height: parent.height

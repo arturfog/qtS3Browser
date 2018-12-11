@@ -87,30 +87,6 @@ Item {
             }
 
             ToolButton {
-                id: file_upload_btn
-                font.pointSize: getSmallFontSize()
-                height: parent.height
-                icon.source: "qrc:icons/32_upload_icon.png"
-                icon.color: "transparent"
-                text: qsTr("Upload")
-                enabled: connected
-                onClicked: { upload() }
-            }
-
-            ToolButton {
-                font.pointSize: getSmallFontSize()
-                height: parent.height
-                icon.source: "qrc:icons/32_delete_icon.png"
-                icon.color: "transparent"
-                text: qsTr("Delete")
-                onClicked: {
-                    var fileName = folder.get(view.currentIndex, "fileName")
-                    msgDialog.msg = "Remove " + fileName + " ?"
-                    msgDialog.open()
-                }
-            }
-
-            ToolButton {
                 font.pointSize: getSmallFontSize()
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
@@ -211,6 +187,7 @@ Item {
                         Keys.onReturnPressed: {
                             if(fsModel.isDirQML(text)) {
                                 path = "file://" + file_browser_path_text.text
+                                s3Model.setFileBrowserPath(path)
                             }
                         }
                     }
