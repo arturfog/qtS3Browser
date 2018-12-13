@@ -19,13 +19,9 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
 
-Window {
-    id: about_win
-    minimumHeight: 350; maximumHeight: 350
-    minimumWidth: 440; maximumWidth: 440
-    width: 440; height: 350;
-    color: "#f8f9fa"
-    title: "About qtS3Browser"
+Item {
+    width: parent.width
+    height: parent.height
 
     // ------------ Top bar ----------------
     Rectangle {
@@ -57,7 +53,7 @@ Window {
         y: app_icon_256.y + app_icon_256.height + 10
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 50
+        width: parent.width - (parent.width / 3)
         height: 80
         border.color: "#efefef"
         border.width: 1
@@ -109,7 +105,7 @@ Window {
         id: rect
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 50
+        width: parent.width - (parent.width / 3)
         height: 80
         border.color: "#efefef"
         border.width: 1

@@ -125,6 +125,21 @@ Item {
                     createS3FolderWindow.visible = true
                 }
             }
+
+            ToolButton {
+                font.pointSize: getSmallFontSize()
+                height: parent.height
+                text: qsTr("Create bucket")
+                icon.source: "qrc:icons/32_bucket_icon.png"
+                icon.color: "transparent"
+                enabled: s3_panel.connected
+                onClicked: {
+                    createBucketWindow.x = app_window.x + (app_window.width / 2) - (createBucketWindow.width / 2)
+                    createBucketWindow.y = app_window.y + (app_window.height / 2) - (createBucketWindow.height / 2)
+                    createBucketWindow.create_action = createBucketWindow.createBucket
+                    createBucketWindow.visible = true
+                }
+            }
         }
     }
 
@@ -158,7 +173,6 @@ Item {
                     border.color: "orange"
                     height: 38
                     color: "#ffebcc"
-                    radius: 20
 
                     Image {
                         x:10
@@ -204,12 +218,14 @@ Item {
                         }
                     }
 
-                    RoundButton {
+                    Button {
                         id: s3_browser_path_go
                         x: s3_browser_path_text.width + s3_browser_path_text.x
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
+                        flat: true
+                        width: 40
                         onClicked: {
                             if(s3_browser_path_text.text === "") {
                                 s3Model.getBucketsQML()

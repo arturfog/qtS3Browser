@@ -21,10 +21,10 @@ import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 Window {
     id: man_boomarks_win
-    width: 540;
+    width: 640;
     height: 320
     minimumHeight: 320; maximumHeight: 800
-    minimumWidth: 540
+    minimumWidth: 640
     color: "#f8f9fa"
     title: "Manage bookmarks"
 
@@ -65,7 +65,7 @@ Column {
   }
 
   Column {
-    width: parent.width - 180;
+    width: parent.width - 280;
     Text {
       font.pointSize: 14
       text: "' + keys[i] +'"
@@ -77,14 +77,34 @@ Column {
      }
   }
 
-  Button {
-    text: "Remove";
-    icon.source: "qrc:icons/32_delete_icon.png"
-    icon.color: "transparent"
-    onClicked: {
-      s3Model.removeBookmarkQML("' + keys[i] + '")
-      if(s3Model.getBookmarksNumQML() == 0) {
-        close()
+  Row {
+      Button {
+        text: "Open"
+        icon.source: "qrc:icons/32_go_icon.png"
+        icon.color: "transparent"
+        onClicked: {
+            s3Model.gotoQML("' + values[i] +'")
+            s3_panel.path = s3Model.getS3PathQML()
+            s3_panel.connected = s3Model.isConnectedQML()
+            file_panel.connected = s3Model.isConnectedQML()
+            close()
+        }
+      }
+
+      Rectangle {
+        width: 5
+        height: 10
+      }
+
+      Button {
+        text: "Remove";
+        icon.source: "qrc:icons/32_delete_icon.png"
+        icon.color: "transparent"
+        onClicked: {
+          s3Model.removeBookmarkQML("' + keys[i] + '")
+          if(s3Model.getBookmarksNumQML() == 0) {
+            close()
+        }
       }
     }
   }
@@ -194,7 +214,26 @@ onClicked: {
                     font.bold: true
                     font.pointSize: getLargeFontSize()
                     height: parent.height
+                    width: parent.width - 280;
                     verticalAlignment: Text.AlignVCenter
+                }
+
+                Rectangle {
+                    width: 5
+                    height: parent.height
+                    color: "transparent"
+                }
+
+                Button {
+                    text: qsTr("Add bookmark");
+                    icon.source: "qrc:icons/32_add_bookmark.png"
+                    icon.color: "transparent"
+                    anchors.verticalCenter: parent.verticalCenter
+                    onClicked: {
+                      createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
+                      createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
+                      createBookmarkWindow.visible = true; close()
+                    }
                 }
             }
         }

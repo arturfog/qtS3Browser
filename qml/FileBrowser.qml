@@ -108,11 +108,6 @@ Item {
         y: 48
         clip: true
 
-//        Keys.onReturnPressed: {
-//            var url = folder.get(view.currentIndex, "fileURL")
-//            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
-//        }
-
 //        Keys.onDeletePressed: {
 //            if(folder.parentFolder.toString().length > 0) {
 //                view.path = folder.parentFolder
@@ -133,6 +128,11 @@ Item {
                 folder: path
             }
 
+            Keys.onReturnPressed: {
+                var url = folder.get(view.currentIndex, "fileURL")
+                folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+            }
+
             delegate: FileDelegate { }
 
             headerPositioning: ListView.OverlayHeader
@@ -148,7 +148,6 @@ Item {
                     border.color: "lightblue"
                     color: "#e6f9ff"
                     height: 38
-                    radius: 20
 
                     Image {
                         x:10
@@ -192,11 +191,12 @@ Item {
                         }
                     }
 
-                    RoundButton {
+                    Button {
                         id: file_browser_path_go
                         x: file_browser_path_text.width + file_browser_path_text.x
-                        radius: 20
                         height: parent.height
+                        width: 40
+                        flat: true
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         onClicked: {
