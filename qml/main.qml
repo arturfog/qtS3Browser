@@ -77,10 +77,7 @@ ApplicationWindow {
 
     property int uiFontSize: 10
     property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
-
     property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: getWindowFlags() }
-    property SettingsWindow settingsWindow: SettingsWindow {flags: getWindowFlags()}
-    property ManageBookmarksWindow manageBookmarksWindow: ManageBookmarksWindow {flags: getWindowFlags() }
     property OperationProgressWindow progressWindow: OperationProgressWindow {flags: getWindowFlags() }
     property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
 
@@ -140,6 +137,23 @@ ApplicationWindow {
                 createBucketsDialog.open()
             }
         }
+    }
+
+    function switchPanel(btn, panel) {
+        fm_btn.down = false
+        mainPanel.visible = false
+
+        bookmarks_btn.down = false
+        manageBookmarksPanel.visible = false
+
+        about_btn.down = false
+        aboutPanel.visible = false
+
+        settings_btn.down = false
+        settingsPanel.visible = false
+
+        btn.down = true
+        panel.visible = true
     }
 
 
@@ -212,16 +226,11 @@ ApplicationWindow {
                         ToolTip.visible: hovered
                         ToolTip.text: qsTr("File/S3 manager")
 
-                        onClicked: {
-                            aboutPanel.visible = false
-                            mainPanel.visible = true
-
-                            fm_btn.down = true
-                            about_btn.down = false
-                        }
+                        onClicked: { switchPanel(fm_btn, mainPanel) }
                     }
                     // ------------ Bookmarks ----------------
                     Button {
+                        id:bookmarks_btn
                         width: 48
                         flat: true
                         icon.source: "qrc:icons/32_bookmark2.png"
@@ -233,14 +242,11 @@ ApplicationWindow {
                         ToolTip.visible: hovered
                         ToolTip.text: qsTr("Bookmarks")
 
-                        onClicked: {
-                            manageBookmarksWindow.x = app_window.x + (app_window.width / 2) - (manageBookmarksWindow.width / 2)
-                            manageBookmarksWindow.y = app_window.y + (app_window.height / 2) - (manageBookmarksWindow.height / 2)
-                            manageBookmarksWindow.visible = true
-                        }
+                        onClicked: { switchPanel(bookmarks_btn, manageBookmarksPanel) }
                     }
                     // ------------ Settings ----------------
                     Button {
+                        id:settings_btn
                         width: 48
                         flat: true
                         icon.source: "qrc:icons/32_settings_icon.png"
@@ -252,11 +258,7 @@ ApplicationWindow {
                         ToolTip.visible: hovered
                         ToolTip.text: qsTr("Settings")
 
-                        onClicked: {
-                            settingsWindow.x = app_window.x + (app_window.width / 2) - (settingsWindow.width / 2)
-                            settingsWindow.y = app_window.y + (app_window.height / 2) - (settingsWindow.height / 2)
-                            settingsWindow.visible = true
-                        }
+                        onClicked: { switchPanel(settings_btn, settingsPanel) }
                     }
                     // ------------ About ----------------
                     Button {
@@ -272,13 +274,7 @@ ApplicationWindow {
                         ToolTip.visible: hovered
                         ToolTip.text: qsTr("About")
 
-                        onClicked: {
-                            mainPanel.visible = false
-                            aboutPanel.visible = true
-
-                            fm_btn.down = false
-                            about_btn.down = true
-                        }
+                        onClicked: { switchPanel(about_btn, aboutPanel) }
                     }
                     // ------------ Close ----------------
                     Button {
@@ -330,6 +326,16 @@ ApplicationWindow {
 
             AboutPanel {
                 id:aboutPanel
+                visible: false
+            }
+
+            ManageBookmarksPanel {
+                id:manageBookmarksPanel
+                visible: false
+            }
+
+            SettingsPanel {
+                id:settingsPanel
                 visible: false
             }
         }

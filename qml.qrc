@@ -13,8 +13,8 @@
         <file>icons/32_delete_icon.png</file>
         <file>icons/32_new_folder_icon.png</file>
         <file>qml/CreateBookmarkWindow.qml</file>
-        <file>qml/SettingsWindow.qml</file>
-        <file>qml/ManageBookmarksWindow.qml</file>
+        <file>qml/SettingsPanel.qml</file>
+        <file>qml/ManageBookmarksPanel.qml</file>
         <file>qml/OperationProgressWindow.qml</file>
         <file>icons/256_app.png</file>
         <file>icons/128_add_bookmark.png</file>

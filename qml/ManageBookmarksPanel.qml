@@ -19,14 +19,11 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
-Window {
+
+Item {
     id: man_boomarks_win
-    width: 640;
-    height: 320
-    minimumHeight: 320; maximumHeight: 800
-    minimumWidth: 640
-    color: "#f8f9fa"
-    title: "Manage bookmarks"
+    width: parent.width
+    height: parent.height
 
     onVisibleChanged: {
         addBookmarks()
@@ -87,7 +84,6 @@ Column {
             s3_panel.path = s3Model.getS3PathQML()
             s3_panel.connected = s3Model.isConnectedQML()
             file_panel.connected = s3Model.isConnectedQML()
-            close()
         }
       }
 
@@ -102,13 +98,10 @@ Column {
         icon.color: "transparent"
         onClicked: {
           s3Model.removeBookmarkQML("' + keys[i] + '")
-          if(s3Model.getBookmarksNumQML() == 0) {
-            close()
         }
       }
     }
   }
-}
 
 Rectangle {
     width: parent.width
@@ -130,44 +123,6 @@ Rectangle {
 ',
                 bookmarks_list, "dynamicBookmarks");
             }
-        } else {
-            man_boomarks_win.maximumHeight = man_boomarks_win.height
-            man_boomarks_win.maximumWidth = man_boomarks_win.width
-
-            emptyObject = Qt.createQmlObject('
-import QtQuick 2.5;
-import QtQuick.Controls 2.2;
-
-Column {
-width: man_boomarks_win.width
-
-Image {
-source: "qrc:icons/128_add_bookmark.png"
-anchors.horizontalCenter: parent.horizontalCenter
-}
-
-Text {
-x:10
-width: parent.width;
-height: 40;
-wrapMode: Text.Wrap
-text: qsTr("There are no bookmarks, click below to create one")
-font.pointSize: getMediumFontSize()
-}
-
-Button {
-text: qsTr("Add bookmark");
-icon.source: "qrc:icons/32_add_bookmark.png"
-icon.color: "transparent"
-anchors.horizontalCenter: parent.horizontalCenter
-onClicked: {
-  createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
-  createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
-  createBookmarkWindow.visible = true; close()
-}
-}
-}',
-            bookmarks_list, "dynamicBookmarks");
         }
     }
 
@@ -232,7 +187,7 @@ onClicked: {
                     onClicked: {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
-                      createBookmarkWindow.visible = true; close()
+                      createBookmarkWindow.visible = true;
                     }
                 }
             }

@@ -21,24 +21,20 @@ import QtQml.Models 2.1
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
-Window {
-    id: settings_win
-    width: 640; height: 640
-    minimumHeight: 350; maximumHeight: 640
-    minimumWidth: 640
-    color: "#f8f9fa"
-    title: "Settings"
+Item {
+    width: parent.width
+    height: parent.height
 
     property string borderColor: "gray"
     readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
 
-    onVisibilityChanged: {
-        startPath.text = s3Model.getStartPathQML()
-        secretKey.text = s3Model.getSecretKeyQML()
-        accessKey.text = s3Model.getAccesKeyQML()
-        endpointURL.text = s3Model.getEndpointQML()
-    }
+//    onVisibilityChanged: {
+//        startPath.text = s3Model.getStartPathQML()
+//        secretKey.text = s3Model.getSecretKeyQML()
+//        accessKey.text = s3Model.getAccesKeyQML()
+//        endpointURL.text = s3Model.getEndpointQML()
+//    }
 
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
