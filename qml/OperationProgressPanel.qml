@@ -19,13 +19,9 @@ import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
-Window {
+Item {
     id: progress_win
-    width: 500; height: 310
-    minimumHeight: 310; maximumHeight: 310
-    minimumWidth: 540; maximumWidth: 540
-
-    title: "Progress"
+    width: parent.width; height: parent.height
 
     property double currentProgress: 0
     property double currentBytes: 0
@@ -157,31 +153,54 @@ Window {
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
+                width: parent.width - 230
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            Button {
+                id: cancel_btn
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Cancel")
+                icon.source: "qrc:icons/32_cancel_icon.png"
+                icon.color: "transparent"
+                onClicked: {
+                    if(currentProgress < 100) {
+                        s3Model.cancelDownloadUploadQML()
+                        if(mode == modeDL) {
+                            var path = s3Model.getFileBrowserPath() + currentFile
+                            console.log("removing not finished file: " + path)
+                            fsModel.removeQML(path)
+                        }
+                    }
+                }
+                background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        opacity: enabled ? 1 : 0.3
+                        color: cancel_btn.down ? "#dddedf" : "#eeeeee"
+
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: cancel_btn.down ? "#17a81a" : "#21be2b"
+                            anchors.bottom: parent.bottom
+                        }
+                    }
             }
         }
     }
 
     // ------------------------------------------------------------
-    DropShadow {
-        anchors.fill: operation_progress_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: operation_progress_rect
-    }
-
     Rectangle {
         id: operation_progress_rect
         y: 60
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 50
+        width: parent.width - 150
         height: 180
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -391,26 +410,6 @@ Window {
         }
     }
 
-    Button {
-        id: cancel_btn
-        x: operation_progress_rect.width - cancel_btn.width
-        y: operation_progress_rect.y + operation_progress_rect.height + 10
-        height: 40
-        text: qsTr("Cancel")
-        icon.source: "qrc:icons/32_cancel_icon.png"
-        icon.color: "transparent"
-        onClicked: {
-            if(currentProgress < 100) {
-                s3Model.cancelDownloadUploadQML()
-                if(mode == modeDL) {
-                    var path = s3Model.getFileBrowserPath() + currentFile
-                    console.log("removing not finished file: " + path)
-                    fsModel.removeQML(path)
-                }
-            }
 
-            close()
-        }
-    }
     // ------------------------------------------------------------
 }

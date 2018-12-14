@@ -15,7 +15,7 @@
         <file>qml/CreateBookmarkWindow.qml</file>
         <file>qml/SettingsPanel.qml</file>
         <file>qml/ManageBookmarksPanel.qml</file>
-        <file>qml/OperationProgressWindow.qml</file>
+        <file>qml/OperationProgressPanel.qml</file>
         <file>icons/256_app.png</file>
         <file>icons/128_add_bookmark.png</file>
         <file>icons/32_bookmark.png</file>

@@ -38,16 +38,6 @@ Item {
 
     }
 
-    DropShadow {
-        anchors.fill: app_name_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: app_name_rect
-    }
-
     Rectangle {
         id: app_name_rect
         y: app_icon_256.y + app_icon_256.height + 10
@@ -55,8 +45,8 @@ Item {
         color: "white"
         width: parent.width - (parent.width / 3)
         height: 80
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -74,8 +64,9 @@ Item {
             }
             // ------------ Separator ----------------
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
+                width: parent.width - 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "lightgray"
                 height: 1
             }
             // ------------ Software version ----------------
@@ -90,25 +81,16 @@ Item {
         }
     }
 
-    DropShadow {
-        anchors.fill: rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: rect
-    }
-
     Rectangle {
         y: app_name_rect.y + app_name_rect.height + 20
         id: rect
         anchors.horizontalCenter: parent.horizontalCenter
-        color: "white"
+        //color: "white"
+        color: "#efefef"
         width: parent.width - (parent.width / 3)
-        height: 80
-        border.color: "#efefef"
-        border.width: 1
+        height: 90
+        border.color: "lightblue"
+        border.width: 2
         radius: 5
 
         Column {
@@ -125,12 +107,14 @@ Item {
                 x: 10
                 y: 10
                 width: parent.width
-                height: 40
+                height: 45
                 Image {
                     source: "qrc:icons/32_author_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
                     height: 40
                     text: "Artur Fogiel"
@@ -141,8 +125,9 @@ Item {
             }
             // ------------ Separator ----------------
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
+                width: parent.width - 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "lightblue"
                 height: 1
             }
             // ------------- Github link row -------------
@@ -153,9 +138,11 @@ Item {
                 height: 40
                 Image {
                     source: "qrc:icons/32_github_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
                     height: 40
                     text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'

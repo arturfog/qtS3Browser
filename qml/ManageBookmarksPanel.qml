@@ -46,14 +46,20 @@ Item {
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
 
-Column {
- width: parent.width;
+Rectangle {
+ x: 5
+ width: parent.width - 10;
+ height: 60
+
  Row {
   width: parent.width;
+  height: 40
+  anchors.verticalCenter: parent.verticalCenter
   id: bookmarks_item
   x: 10
+
   Image {
-    source: "qrc:icons/32_bookmark.png"
+    source: "qrc:icons/32_amazon_icon.png"
   }
 
   Rectangle {
@@ -62,7 +68,7 @@ Column {
   }
 
   Column {
-    width: parent.width - 280;
+    width: parent.width - 390;
     Text {
       font.pointSize: 14
       text: "' + keys[i] +'"
@@ -76,6 +82,7 @@ Column {
 
   Row {
       Button {
+        id:add' + i + '
         text: "Open"
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
@@ -85,6 +92,19 @@ Column {
             s3_panel.connected = s3Model.isConnectedQML()
             file_panel.connected = s3Model.isConnectedQML()
         }
+                    background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 40
+                            opacity: enabled ? 1 : 0.3
+                            color: add' + i + '.down ? "#dddedf" : "#eeeeee"
+
+                            Rectangle {
+                                width: parent.width
+                                height: 1
+                                color: add' + i + '.down ? "#17a81a" : "#21be2b"
+                                anchors.bottom: parent.bottom
+                            }
+                        }
       }
 
       Rectangle {
@@ -93,30 +113,62 @@ Column {
       }
 
       Button {
+        id:e' + i + '
+        text: "Edit";
+        icon.source: "qrc:icons/32_edit_icon.png"
+        icon.color: "transparent"
+        onClicked: {
+          s3Model.removeBookmarkQML("' + keys[i] + '")
+        }
+                    background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 40
+                            opacity: enabled ? 1 : 0.3
+                            color: e' + i + '.down ? "#dddedf" : "#eeeeee"
+
+                            Rectangle {
+                                width: parent.width
+                                height: 1
+                                color: e' + i + '.down ? "#17a81a" : "#21be2b"
+                                anchors.bottom: parent.bottom
+                            }
+                        }
+      }
+
+      Rectangle {
+        width: 5
+        height: 10
+      }
+
+      Button {
+        id:d' + i + '
         text: "Remove";
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
         onClicked: {
           s3Model.removeBookmarkQML("' + keys[i] + '")
         }
+                    background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 40
+                            opacity: enabled ? 1 : 0.3
+                            color: d' + i + '.down ? "#dddedf" : "#eeeeee"
+
+                            Rectangle {
+                                width: parent.width
+                                height: 1
+                                color: d' + i + '.down ? "#17a81a" : "#21be2b"
+                                anchors.bottom: parent.bottom
+                            }
+                        }
       }
     }
   }
 
 Rectangle {
     width: parent.width
-    height: 5
-}
-
-Rectangle {
-    width: parent.width
     color: "#dbdbdb"
     height: 1
-}
-
-Rectangle {
-    width: parent.width
-    height: 5
 }
 
 }
@@ -129,18 +181,7 @@ Rectangle {
     ScrollView {
         width: parent.width
         height: parent.height
-
         clip: true
-
-        DropShadow {
-            anchors.fill: manage_bookmark_rect
-            horizontalOffset: 1
-            verticalOffset: 2
-            radius: 8.0
-            samples: 17
-            color: "#aa000000"
-            source: manage_bookmark_rect
-        }
 
         Rectangle {
             color: "#3367d6"
@@ -153,7 +194,7 @@ Rectangle {
                 width: parent.width
 
                 Image {
-                    source: "qrc:icons/32_edit_icon.png"
+                    source: "qrc:icons/32_bookmark2.png"
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
@@ -180,6 +221,7 @@ Rectangle {
                 }
 
                 Button {
+                    id: add
                     text: qsTr("Add bookmark");
                     icon.source: "qrc:icons/32_add_bookmark.png"
                     icon.color: "transparent"
@@ -189,6 +231,20 @@ Rectangle {
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
                       createBookmarkWindow.visible = true;
                     }
+
+                    background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 40
+                            opacity: enabled ? 1 : 0.3
+                            color: add.down ? "#dddedf" : "#eeeeee"
+
+                            Rectangle {
+                                width: parent.width
+                                height: 1
+                                color: add.down ? "#17a81a" : "#21be2b"
+                                anchors.bottom: parent.bottom
+                            }
+                        }
                 }
             }
         }
@@ -200,8 +256,8 @@ Rectangle {
             color: "white"
             width: parent.width - 50
             height: parent.height - 80
-            border.color: "#efefef"
-            border.width: 1
+            border.color: "lightgray"
+            border.width: 2
             radius: 5
 
             onVisibleChanged: {

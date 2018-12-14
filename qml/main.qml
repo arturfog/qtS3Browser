@@ -78,7 +78,6 @@ ApplicationWindow {
     property int uiFontSize: 10
     property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
     property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: getWindowFlags() }
-    property OperationProgressWindow progressWindow: OperationProgressWindow {flags: getWindowFlags() }
     property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
@@ -151,6 +150,9 @@ ApplicationWindow {
 
         settings_btn.down = false
         settingsPanel.visible = false
+
+        transfer_btn.down = false
+        progressPanel.visible = false
 
         btn.down = true
         panel.visible = true
@@ -244,6 +246,22 @@ ApplicationWindow {
 
                         onClicked: { switchPanel(bookmarks_btn, manageBookmarksPanel) }
                     }
+                    // ------------ Transfer ----------------
+                    Button {
+                        id:transfer_btn
+                        width: 48
+                        flat: true
+                        icon.source: "qrc:icons/32_download_icon.png"
+                        icon.color: "transparent"
+
+                        hoverEnabled: true
+                        ToolTip.delay: 1000
+                        ToolTip.timeout: 5000
+                        ToolTip.visible: hovered
+                        ToolTip.text: qsTr("Transfers")
+
+                        onClicked: { switchPanel(transfer_btn, progressPanel) }
+                    }
                     // ------------ Settings ----------------
                     Button {
                         id:settings_btn
@@ -336,6 +354,11 @@ ApplicationWindow {
 
             SettingsPanel {
                 id:settingsPanel
+                visible: false
+            }
+
+            OperationProgressPanel {
+                id:progressPanel
                 visible: false
             }
         }
