@@ -31,7 +31,6 @@ Item {
     property CustomMessageDialog msgDialog: CustomMessageDialog {
         win_title: "Remove?"
         yesAction: function() {
-            console.log("blabla: " + view.currentIndex)
             var filePath = folder.get(view.currentIndex, "filePath")
             fsModel.removeQML(filePath);
         }
@@ -230,8 +229,6 @@ Item {
                                 } else {
                                     folder.sortReversed = true
                                 }
-
-                                console.log("Sorting")
                             }
                         }
                     }

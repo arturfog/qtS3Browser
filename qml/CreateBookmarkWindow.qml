@@ -88,16 +88,6 @@ Window {
         }
     }
 
-    DropShadow {
-        anchors.fill: create_bookmark_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: create_bookmark_rect
-    }
-
     Rectangle {
         id: create_bookmark_rect
         y: 60
@@ -105,8 +95,8 @@ Window {
         color: "white"
         width: parent.width - 50
         height: 165
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -150,7 +140,6 @@ Window {
                 height: 30
                 border.color: borderColor
                 border.width: 1
-                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -215,7 +204,6 @@ Window {
                 height: 30
                 border.color: borderColor
                 border.width: 1
-                radius: 20
                 color: "#efefef"
 
                 TextInput {

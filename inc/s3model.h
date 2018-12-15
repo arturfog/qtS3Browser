@@ -27,6 +27,8 @@
 #include <QDebug>
 #include "s3client.h"
 
+#include "inc/logmgr.h"
+
 class S3Item
 {
 public:
@@ -110,6 +112,7 @@ public:
     Q_INVOKABLE void removeQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
+        LogMgr::debug(Q_FUNC_INFO, name);
         auto search = s3.objectInfoVec.find(name.toStdString().c_str());
         if (search != s3.objectInfoVec.end()) {
             return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
@@ -119,6 +122,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void clearItemsQML() {
+        LogMgr::debug(Q_FUNC_INFO);
         clearItems();
         m_s3Path.clear();
     }
@@ -137,6 +141,7 @@ public:
                                      const int timeoutIdx,
                                      const QString& timeout,
                                      const QString& endpoint) {
+        LogMgr::debug(Q_FUNC_INFO);
         settings.setValue("StartPath", startPath);
         settings.setValue("AccessKey", accessKey);
         settings.setValue("SecretKey", secretKey);
@@ -151,6 +156,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getRegionIdxQML() {
+        LogMgr::debug(Q_FUNC_INFO);
         if(settings.contains("RegionIdx")) {
             return settings.value("RegionIdx").toInt();
         }
@@ -158,6 +164,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getTimeoutIdxQML() {
+        LogMgr::debug(Q_FUNC_INFO);
         if(settings.contains("TimeoutIdx")) {
             return settings.value("TimeoutIdx").toInt();
         }
@@ -187,6 +194,7 @@ public:
     Q_INVOKABLE QString getModificationDateQML(const QString &name) { return s3.getModificationDate(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void search(const QString& txt) {
+        LogMgr::debug(Q_FUNC_INFO, txt);
         if(m_s3itemsBackup.size() == 0) {
             m_s3itemsBackup.append(m_s3items);
         }
@@ -201,14 +209,13 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void searchReset() {
+        LogMgr::debug(Q_FUNC_INFO);
         if(m_s3itemsBackup.size() > 0) {
             clearItems();
 
             beginInsertRows(QModelIndex(), 0, m_s3itemsBackup.size() - 1);
             m_s3items.append(m_s3itemsBackup);
             endInsertRows();
-
-            qDebug() << "search reset";
 
             m_s3itemsBackup.clear();
         }

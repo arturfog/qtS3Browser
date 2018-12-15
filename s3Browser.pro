@@ -17,7 +17,8 @@ SOURCES += src/main.cpp \
     src/s3model.cpp \
     src/s3client.cpp \
     src/iconprovider.cpp \
-    src/filesystemmodel.cpp
+    src/filesystemmodel.cpp \
+    src/logmgr.cpp
 
 RESOURCES += qml.qrc
 
@@ -47,7 +48,8 @@ HEADERS += \
     inc/s3model.h \
     inc/s3client.h \
     inc/iconprovider.h \
-    inc/filesystemmodel.h
+    inc/filesystemmodel.h \
+    inc/logmgr.h
 
 
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core

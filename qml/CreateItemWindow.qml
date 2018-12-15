@@ -124,16 +124,7 @@ Window {
             }
         }
     }
-    // ------------- content frame shadow -------------
-    DropShadow {
-        anchors.fill: create_item_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: create_item_rect
-    }
+
     // ------------- content frame -------------
     Rectangle {
         id: create_item_rect
@@ -142,8 +133,8 @@ Window {
         color: "white"
         width: parent.width - 50
         height: 85
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -190,7 +181,6 @@ Window {
                 height: 30
                 border.color: "gray"
                 border.width: 1
-                radius: 20
                 color: "#efefef"
 
                 TextInput {
@@ -251,6 +241,20 @@ Window {
                         close()
                     }
                 }
+
+                background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        opacity: enabled ? 1 : 0.3
+                        color: cw_cb.down ? "#dddedf" : "#eeeeee"
+
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: cw_cb.down ? "#17a81a" : "#21be2b"
+                            anchors.bottom: parent.bottom
+                        }
+                    }
             }
 
             Rectangle {
@@ -260,6 +264,7 @@ Window {
 
 
             Button {
+                id:cancel_btn
                 text: qsTr("Cancel")
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
@@ -267,6 +272,20 @@ Window {
                 onClicked: {
                     close()
                 }
+
+                background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        opacity: enabled ? 1 : 0.3
+                        color: cancel_btn.down ? "#dddedf" : "#eeeeee"
+
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: cancel_btn.down ? "#17a81a" : "#21be2b"
+                            anchors.bottom: parent.bottom
+                        }
+                    }
             }
         }
     }

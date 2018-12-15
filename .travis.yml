@@ -1,6 +1,7 @@
 language: cpp
 compiler:
   - gcc
+cache: ccache
 matrix:
   include:
     - os: osx
@@ -18,6 +19,8 @@ addons:
 
 before_script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker pull ubuntu:xenial; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then brew install ccache; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
 
 script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR -v $HOME/.ccache:$HOME/.ccache -v $HOME/.sonar:$HOME/.sonar -w $TRAVIS_BUILD_DIR --env CC --env CXX --env TRAVIS_BUILD_DIR --env TRAVIS_BUILD_TYPE ubuntu:xenial /bin/bash ./ci_build.sh; fi

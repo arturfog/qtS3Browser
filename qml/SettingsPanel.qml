@@ -139,7 +139,7 @@ Item {
         height: parent.height - 50
         contentHeight: start_path_rect.height + secret_key_rect.height +
                        access_key_rect.height + region_rect.height +
-                       endpoint_url_rect.height + 100
+                       endpoint_url_rect.height + advanced_rect.height + 120
         clip: true
         // ------------- S3 start path -------------
         Rectangle {
@@ -554,9 +554,57 @@ Item {
                 }
             }
         }
-        // ------------- endpoint url -------------
+
+        // ------------- advanced -------------
         Rectangle {
             y: region_rect.y + region_rect.height + 20
+            id: advanced_rect
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
+            width: parent.width - 150
+            height: 50
+            border.color: "lightgray"
+            border.width: 2
+            radius: 5
+
+            Column {
+                width: parent.width
+                height: parent.height
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+                // ------------- icon | title row -------------
+                Row {
+                    x: 50
+                    width: parent.width
+                    height: 40
+
+                    Button {
+                        y: 4
+                        flat: true
+                        width: parent.width - 100
+                        height: 40
+                        text: "Show advanced options"
+                        font.pointSize: labelFontSize
+
+                        onClicked: {
+                            if(endpoint_url_rect.visible) {
+                                endpoint_url_rect.visible = false
+                            } else {
+                                endpoint_url_rect.visible = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ------------- endpoint url -------------
+        Rectangle {
+            y: advanced_rect.y + advanced_rect.height + 20
             id: endpoint_url_rect
             anchors.horizontalCenter: parent.horizontalCenter
             color: "white"
@@ -565,6 +613,7 @@ Item {
             border.color: "lightgray"
             border.width: 2
             radius: 5
+            visible: false
 
             Column {
                 width: parent.width

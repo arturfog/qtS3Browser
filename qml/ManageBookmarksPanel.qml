@@ -118,7 +118,9 @@ Rectangle {
         icon.source: "qrc:icons/32_edit_icon.png"
         icon.color: "transparent"
         onClicked: {
-          s3Model.removeBookmarkQML("' + keys[i] + '")
+                  createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
+                  createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
+                  createBookmarkWindow.visible = true;
         }
                     background: Rectangle {
                             implicitWidth: 100
