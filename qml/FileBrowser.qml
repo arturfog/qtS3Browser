@@ -43,12 +43,9 @@ Item {
     function upload() {
         if(!s3Model.isTransferring()) {
             var filePath = folder.get(view.currentIndex, "filePath")
-            app_window.progressWindow.title = qsTr("Upload progress ...")
-            app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
-            app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
-            app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
-            app_window.progressWindow.visible = true
-            app_window.progressWindow.mode = app_window.progressWindow.modeUPLOAD
+            switchPanel(transfer_btn, progressPanel)
+            //app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
+            //app_window.progressWindow.mode = app_window.progressWindow.modeUPLOAD
             if(!folder.get(view.currentIndex, "fileIsDir")) {
                 s3Model.uploadFileQML(filePath)
             } else {

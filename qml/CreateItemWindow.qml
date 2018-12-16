@@ -169,31 +169,34 @@ Window {
                 height: 1
             }
 
-            Rectangle {
-                width: parent.width
-                height: 5
-            }
             // ------------- input text -------------
             Rectangle {
-                id: item_name_input_rect
-                x: 10
                 width: parent.width - 20
-                height: 30
-                border.color: "gray"
-                border.width: 1
-                color: "#efefef"
+                height: 40
+                x: 10
 
-                TextInput {
-                    id: itemName
-                    x: 10
-                    width: parent.width - 20
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                    maximumLength: 128
-                    wrapMode: Text.WrapAnywhere
-                    onActiveFocusChanged: focusChangedHandler(itemName, item_name_input_rect);
-                    onTextChanged: extendInputText(itemName, item_name_input_rect, create_item_rect)
+                Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    y: 10
+                    id: item_name_input_rect
+                    width: parent.width
+                    height: 30
+                    border.color: "gray"
+                    border.width: 1
+                    color: "#efefef"
+
+                    TextInput {
+                        id: itemName
+                        x: 10
+                        width: parent.width
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                        maximumLength: 128
+                        wrapMode: Text.WrapAnywhere
+                        onActiveFocusChanged: focusChangedHandler(itemName, item_name_input_rect);
+                        onTextChanged: extendInputText(itemName, item_name_input_rect, create_item_rect)
+                    }
                 }
             }
         }

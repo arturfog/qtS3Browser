@@ -88,9 +88,9 @@ Rectangle {
         icon.color: "transparent"
         onClicked: {
             s3Model.gotoQML("' + values[i] +'")
-            s3_panel.path = s3Model.getS3PathQML()
-            s3_panel.connected = s3Model.isConnectedQML()
-            file_panel.connected = s3Model.isConnectedQML()
+            mainPanel.s3_panel.path = s3Model.getS3PathQML()
+            mainPanel.s3_panel.connected = s3Model.isConnectedQML()
+            mainPanel.file_panel.connected = s3Model.isConnectedQML()
         }
                     background: Rectangle {
                             implicitWidth: 100
@@ -149,6 +149,7 @@ Rectangle {
         icon.color: "transparent"
         onClicked: {
           s3Model.removeBookmarkQML("' + keys[i] + '")
+          addBookmarks()
         }
                     background: Rectangle {
                             implicitWidth: 100

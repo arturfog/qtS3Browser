@@ -238,11 +238,6 @@ Item {
                 height: 1
             }
 
-            Rectangle {
-                width: parent.width
-                height: 5
-            }
-
             Row {
                 x: 10
                 y: 10
@@ -287,11 +282,6 @@ Item {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Row {
@@ -348,11 +338,6 @@ Item {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Row {

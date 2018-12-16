@@ -51,12 +51,8 @@ Item {
 
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
-            app_window.progressWindow.title = qsTr("Download progress ...")
-            app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-            app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
-            app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
-            app_window.progressWindow.visible = true
-            app_window.progressWindow.mode = app_window.progressWindow.modeDL
+            //app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
+            //app_window.progressWindow.mode = app_window.progressWindow.modeDL
             s3Model.downloadQML(view.currentIndex)
         } else {
             s3Error.visible = true
@@ -66,6 +62,8 @@ Item {
     function download() {
         var fileName = s3Model.getItemNameQML(view.currentIndex)
         var path = s3Model.getFileBrowserPath()
+
+        switchPanel(transfer_btn, progressPanel)
 
         if(fsModel.fileExistsQML(path + fileName)) {
             overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"

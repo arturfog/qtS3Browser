@@ -23,8 +23,8 @@ import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 Window {
     id: create_bookmark_win
-    width: 450; height: 260
-    minimumHeight: 290; maximumHeight: 290
+    width: 450; height: 300
+    minimumHeight: 290; maximumHeight: 300
     minimumWidth: 450
     color: "#f8f9fa"
     title: qsTr("Create bookmark")
@@ -94,7 +94,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 165
+        height: 185
         border.color: "lightgray"
         border.width: 2
         radius: 5
@@ -129,37 +129,32 @@ Window {
             }
 
             Rectangle {
-                width: parent.width
-                height: 5
-            }
-
-            Rectangle {
-                id: bookmark_name_input_rect
-                x: 10
                 width: parent.width - 20
-                height: 30
-                border.color: borderColor
-                border.width: 1
-                color: "#efefef"
+                x: 10
+                height: 50
+                Rectangle {
+                    id: bookmark_name_input_rect
+                    y: 10
+                    width: parent.width
+                    height: 30
+                    border.color: borderColor
+                    border.width: 1
+                    color: "#efefef"
 
-                TextInput {
-                    id: bookmarkName
-                    x: 10
-                    width: parent.width - 20
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                    maximumLength: 128
-                    wrapMode: Text.WrapAnywhere
-                    onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
-                    onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
+                    TextInput {
+                        id: bookmarkName
+                        x: 10
+                        width: parent.width - 20
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                        maximumLength: 128
+                        wrapMode: Text.WrapAnywhere
+                        onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
+                        onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
 
+                    }
                 }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Rectangle {
@@ -193,38 +188,34 @@ Window {
             }
 
             Rectangle {
-                width: parent.width
-                height: 5
-            }
-
-            Rectangle {
-                id: bookmark_url_input_rect
                 x: 10
                 width: parent.width - 20
-                height: 30
-                border.color: borderColor
-                border.width: 1
-                color: "#efefef"
+                height: 40
+                Rectangle {
+                    id: bookmark_url_input_rect
+                    y: 10
+                    width: parent.width
+                    height: 30
+                    border.color: borderColor
+                    border.width: 1
+                    color: "#efefef"
 
-                TextInput {
-                    id: bookmarkPath
-                    x: 10
-                    width: parent.width - 20
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                    maximumLength: 128
-                    text: "s3://"
-                    wrapMode: Text.WrapAnywhere
-                    onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
-                    onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
+                    TextInput {
+                        id: bookmarkPath
+                        x: 10
+                        width: parent.width - 20
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                        maximumLength: 128
+                        text: "s3://"
+                        wrapMode: Text.WrapAnywhere
+                        onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
+                        onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
+                    }
                 }
             }
 
-            Rectangle {
-                width: parent.width
-                height: 5
-            }
         }
     }
 
@@ -242,6 +233,7 @@ Window {
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
             onClicked: {
                 s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                manageBookmarksPanel.addBookmarks();
                 close()
             }
         }
