@@ -120,6 +120,9 @@ Rectangle {
         onClicked: {
                   createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                   createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
+                  createBookmarkWindow.book_name = "' + keys[i] +'"
+                  createBookmarkWindow.book_path = "' + values[i] +'"
+                  createBookmarkWindow.win_title = qsTr("Edit bookmark")
                   createBookmarkWindow.visible = true;
         }
                     background: Rectangle {
@@ -232,6 +235,7 @@ Rectangle {
                     onClicked: {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
+                      createBookmarkWindow.win_title = qsTr("Add bookmark")
                       createBookmarkWindow.visible = true;
                     }
 

@@ -259,9 +259,12 @@ void S3Model::addBookmark(const QString &name, const QString &path)
 {
     LogMgr::debug(Q_FUNC_INFO, name);
 
-    if(!bookmarks.contains(name)) {
-        bookmarks[name] = path;
-        saveBookmarks(bookmarks);
+    if(!name.isEmpty() && !path.isEmpty())
+    {
+        if(!bookmarks.contains(name)) {
+            bookmarks[name] = path;
+            saveBookmarks(bookmarks);
+        }
     }
 }
 // --------------------------------------------------------------------------
@@ -269,9 +272,12 @@ void S3Model::removeBookmark(const QString& name)
 {
     LogMgr::debug(Q_FUNC_INFO, name);
 
-    if(bookmarks.contains(name)) {
-        bookmarks.remove(name);
-        saveBookmarks(bookmarks);
+    if(!name.isEmpty())
+    {
+        if(bookmarks.contains(name)) {
+            bookmarks.remove(name);
+            saveBookmarks(bookmarks);
+        }
     }
 }
 // --------------------------------------------------------------------------
@@ -321,7 +327,9 @@ void S3Model::refresh()
 void S3Model::createBucket(const std::string &bucket)
 {
     LogMgr::debug(Q_FUNC_INFO, bucket);
-    s3.createBucket(bucket.c_str());
+    if(!bucket.empty()) {
+        s3.createBucket(bucket.c_str());
+    }
 }
 // --------------------------------------------------------------------------
 bool S3Model::createFolderQML(const QString &folder)
@@ -340,7 +348,10 @@ bool S3Model::createFolderQML(const QString &folder)
 void S3Model::removeBucket(const std::string &bucket)
 {
     LogMgr::debug(Q_FUNC_INFO, bucket);
-    s3.deleteBucket(bucket.c_str());
+    if(!bucket.empty())
+    {
+        s3.deleteBucket(bucket.c_str());
+    }
 }
 // --------------------------------------------------------------------------
 void S3Model::removeObject(const QString &key, bool isDir)

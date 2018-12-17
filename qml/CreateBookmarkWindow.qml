@@ -27,9 +27,17 @@ Window {
     minimumHeight: 290; maximumHeight: 300
     minimumWidth: 450
     color: "#f8f9fa"
-    title: qsTr("Create bookmark")
 
+    property alias book_name: bookmarkName.text
+    property alias book_path: bookmarkPath.text
+    property alias win_title: create_bookmark_win.title
     property string borderColor: "gray"
+
+    property string oldName: ""
+
+    onVisibilityChanged: {
+        oldName = bookmarkName.text
+    }
 
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
@@ -79,7 +87,7 @@ Window {
 
             Text {
                 color: "white"
-                text: qsTr("Create bookmark")
+                text: create_bookmark_win.title
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
@@ -231,8 +239,16 @@ Window {
             icon.color: "transparent"
             font.pointSize: getMediumFontSize()
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
-            onClicked: {
-                s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+            onClicked: {                
+                if(s3Model.hasBookmarkQML(oldName))
+                {
+                    s3Model.removeBookmarkQML(oldName)
+                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                }
+                else
+                {
+                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                }
                 manageBookmarksPanel.addBookmarks();
                 close()
             }
@@ -251,6 +267,7 @@ Window {
             onClicked: {
                 bookmarkName.text = ""
                 bookmarkPath.text = "s3://"
+                oldName = ""
 
                 close()
             }

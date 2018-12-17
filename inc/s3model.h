@@ -180,6 +180,8 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE bool hasBookmarkQML(const QString &name) { return bookmarks.contains(name); }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
