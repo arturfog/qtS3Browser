@@ -60,6 +60,12 @@ S3Model::S3Model(QObject *parent)
 
     loadBookmarks();
     readCLIConfig();
+
+    if(getFileBrowserPath().isEmpty())
+    {
+        const QString home = fsm.getHomePath();
+        setFileBrowserPath(home);
+    }
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE QString S3Model::getFileBrowserPath() const {
@@ -68,6 +74,7 @@ Q_INVOKABLE QString S3Model::getFileBrowserPath() const {
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE bool S3Model::canDownload() const {
+    LogMgr::debug(Q_FUNC_INFO, getFileBrowserPath());
     const QFileInfo fileInfo = QFileInfo(getFileBrowserPath());
     if(fileInfo.isDir() && fileInfo.isWritable()) {
         return true;

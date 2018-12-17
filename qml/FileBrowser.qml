@@ -44,8 +44,6 @@ Item {
         if(!s3Model.isTransferring()) {
             var filePath = folder.get(view.currentIndex, "filePath")
             switchPanel(transfer_btn, progressPanel)
-            //app_window.progressWindow.icon = "qrc:icons/32_upload_icon.png"
-            //app_window.progressWindow.mode = app_window.progressWindow.modeUPLOAD
             if(!folder.get(view.currentIndex, "fileIsDir")) {
                 s3Model.uploadFileQML(filePath)
             } else {

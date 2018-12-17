@@ -51,8 +51,6 @@ Item {
 
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
-            //app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-            //app_window.progressWindow.mode = app_window.progressWindow.modeDL
             s3Model.downloadQML(view.currentIndex)
         } else {
             s3Error.visible = true

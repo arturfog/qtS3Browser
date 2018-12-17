@@ -118,12 +118,6 @@ Item {
             currentFile = s3Model.getCurrentFileQML()
 
             if(currentProgress >= 100) {
-                if(mode == modeDL) {
-                    title = qsTr("Download completed")
-                } else {
-                    title = qsTr("Upload completed")
-                }
-
                 cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
                 cancel_btn.text = "Close"
             }

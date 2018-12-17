@@ -28,6 +28,7 @@
 #include "s3client.h"
 
 #include "inc/logmgr.h"
+#include "inc/filesystemmodel.h"
 
 class S3Item
 {
@@ -55,10 +56,14 @@ public:
     // --------------------------------------------------------------------------
     Q_SLOT void addItemSlot(const QString& item, const QString& path) {
         setConnectedQML(true);
-        if(!item.isEmpty()) {
+        if(!item.isEmpty())
+        {
             addS3Item(S3Item(item, path));
-        } else {
-            if(getCurrentPathDepthQML() <= 0) {
+        }
+        else
+        {
+            if(getCurrentPathDepthQML() <= 0)
+            {
                 emit noBucketsSignal();
             }
         }
@@ -380,6 +385,7 @@ private:
     bool isConnected;
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;
+    FilesystemModel fsm;
     /**
      * @brief parseCLIConfig
      * @param credentialsFilePath

@@ -61,7 +61,7 @@ public:
         return fi.owner();
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getHomePath() {
+    Q_INVOKABLE QString getHomePath() const{
         LogMgr::debug(Q_FUNC_INFO);
 #ifdef __linux__
     return QDir::homePath();
