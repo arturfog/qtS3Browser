@@ -60,27 +60,36 @@ S3Model::S3Model(QObject *parent)
 
     loadBookmarks();
     readCLIConfig();
+
+    if(getFileBrowserPath().isEmpty())
+    {
+        const QString home = fsm.getHomePath();
+        setFileBrowserPath(home);
+    }
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE QString S3Model::getFileBrowserPath() const {
+    LogMgr::debug(Q_FUNC_INFO);
     return mFileBrowserPath;
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE bool S3Model::canDownload() const {
+    LogMgr::debug(Q_FUNC_INFO, getFileBrowserPath());
     const QFileInfo fileInfo = QFileInfo(getFileBrowserPath());
     if(fileInfo.isDir() && fileInfo.isWritable()) {
-        qDebug() << "canDownload: " << getFileBrowserPath() << " true";
         return true;
     }
     return false;
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::setFileBrowserPath(const QString& path) {
+    LogMgr::debug(Q_FUNC_INFO, path);
     mFileBrowserPath = path;
     mFileBrowserPath = mFileBrowserPath.replace("file://", "").append("/");
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::downloadQML(const int idx) {
+    LogMgr::debug(Q_FUNC_INFO);
     if (idx < m_s3items.count()) {
         if(getCurrentPathDepth() >= 1) {
             bool isDir = false;
@@ -94,6 +103,7 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
+    LogMgr::debug(Q_FUNC_INFO, path);
     m_s3Path.clear();
     QStringList pathItems = path.split("s3://");
     if(pathItems.count() > 1) {
@@ -107,6 +117,7 @@ Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::removeQML(const int idx) {
+    LogMgr::debug(Q_FUNC_INFO);
     if (idx < m_s3items.count() && idx >= 0) {
         if(getCurrentPathDepth() <= 0) {
             removeBucket(m_s3items.at(idx).fileName().toStdString());
@@ -125,12 +136,14 @@ Q_INVOKABLE void S3Model::removeQML(const int idx) {
 // --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
+    LogMgr::debug(Q_FUNC_INFO, item.fileName());
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_s3items << item;
     endInsertRows();
 }
 // --------------------------------------------------------------------------
 void S3Model::clearItems() {
+    LogMgr::debug(Q_FUNC_INFO);
     beginRemoveRows(QModelIndex(), 0, rowCount());
     m_s3items.clear();
     endRemoveRows();
@@ -143,11 +156,14 @@ int S3Model::rowCount(const QModelIndex & parent) const {
 // --------------------------------------------------------------------------
 void S3Model::goTo(const QString &path)
 {
+    LogMgr::debug(Q_FUNC_INFO, path);
     m_s3Path.push_back(path);
 }
 // --------------------------------------------------------------------------
 void S3Model::goBack()
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     if (m_s3Path.count() <= 1) {
         if(m_s3Path.count() == 1) {
             m_s3Path.removeLast();
@@ -155,13 +171,14 @@ void S3Model::goBack()
         getBuckets();
     } else {
         m_s3Path.removeLast();
-        qDebug() << "1 goBack: [" << getPathWithoutBucket() << "]";
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
 // --------------------------------------------------------------------------
 QString S3Model::getCurrentBucket() const
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     if (m_s3Path.count() >= 1) {
         return m_s3Path[0];
     }
@@ -170,6 +187,8 @@ QString S3Model::getCurrentBucket() const
 // --------------------------------------------------------------------------
 QString S3Model::getPathWithoutBucket() const
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     if (m_s3Path.count() >= 1) {
         return m_s3Path.mid(1).join("");
     }
@@ -177,6 +196,7 @@ QString S3Model::getPathWithoutBucket() const
 }
 // --------------------------------------------------------------------------
 QString S3Model::s3Path() const {
+    LogMgr::debug(Q_FUNC_INFO);
     QString path = getCurrentBucket();
     if(m_s3Path.count() >= 1) {
         path = path.append("/").append(getPathWithoutBucket());
@@ -185,6 +205,7 @@ QString S3Model::s3Path() const {
 }
 // --------------------------------------------------------------------------
 void S3Model::getObjects(const std::string &item, bool goBack) {
+    LogMgr::debug(Q_FUNC_INFO, item);
     clearItems();
     QString qsBucket = getCurrentBucket();
 
@@ -222,7 +243,6 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
             qsKey = getPathWithoutBucket();
         }
 
-        qDebug() << "3 qsKey: [" << qsKey << "] bucket[" << qsBucket << "]";
         s3.currentPrefix = getPathWithoutBucket().toStdString().c_str();
         s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), callback);
     }
@@ -230,28 +250,41 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
 // --------------------------------------------------------------------------
 void S3Model::getObjectInfo(const QString &key)
 {
+    LogMgr::debug(Q_FUNC_INFO, key);
     s3.getObjectInfo(getCurrentBucket().toStdString().c_str(),
                      getPathWithoutBucket().append(key).toStdString().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Model::addBookmark(const QString &name, const QString &path)
 {
-    if(!bookmarks.contains(name)) {
-        bookmarks[name] = path;
-        saveBookmarks(bookmarks);
+    LogMgr::debug(Q_FUNC_INFO, name);
+
+    if(!name.isEmpty() && !path.isEmpty())
+    {
+        if(!bookmarks.contains(name)) {
+            bookmarks[name] = path;
+            saveBookmarks(bookmarks);
+        }
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::removeBookmark(const QString& name)
 {
-    if(bookmarks.contains(name)) {
-        bookmarks.remove(name);
-        saveBookmarks(bookmarks);
+    LogMgr::debug(Q_FUNC_INFO, name);
+
+    if(!name.isEmpty())
+    {
+        if(bookmarks.contains(name)) {
+            bookmarks.remove(name);
+            saveBookmarks(bookmarks);
+        }
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     QFile file("bookmarks.dat");
     file.open(QIODevice::WriteOnly);
     QDataStream out(&file);
@@ -261,6 +294,8 @@ void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
 // --------------------------------------------------------------------------
 void S3Model::loadBookmarks()
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     QFile file("bookmarks.dat");
     if(file.exists()) {
         file.open(QIODevice::ReadOnly);
@@ -270,6 +305,7 @@ void S3Model::loadBookmarks()
 }
 // --------------------------------------------------------------------------
 void S3Model::getBuckets() {
+    LogMgr::debug(Q_FUNC_INFO);
     clearItems();
     std::function<void(const std::string&)> callback = [&](const std::string& item) {
         emit this->addItemSignal(QString(item.c_str()), "/");
@@ -279,24 +315,26 @@ void S3Model::getBuckets() {
 // --------------------------------------------------------------------------
 void S3Model::refresh()
 {
+    LogMgr::debug(Q_FUNC_INFO);
+
     if(m_s3Path.count() <= 0) {
-        qDebug() << "1 refresh: [" << getPathWithoutBucket() << "]";
         getBuckets();
     } else {
-        qDebug() << "refresh: [" << getPathWithoutBucket() << "]";
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::createBucket(const std::string &bucket)
 {
-    s3.createBucket(bucket.c_str());
+    LogMgr::debug(Q_FUNC_INFO, bucket);
+    if(!bucket.empty()) {
+        s3.createBucket(bucket.c_str());
+    }
 }
 // --------------------------------------------------------------------------
 bool S3Model::createFolderQML(const QString &folder)
 {
-    qDebug() << "createFolder: " << folder;
-
+    LogMgr::debug(Q_FUNC_INFO, folder);
     if(folder.contains("/")) {
 	    // two "/" sign present. return error
         return false;
@@ -309,11 +347,16 @@ bool S3Model::createFolderQML(const QString &folder)
 // --------------------------------------------------------------------------
 void S3Model::removeBucket(const std::string &bucket)
 {
-    s3.deleteBucket(bucket.c_str());
+    LogMgr::debug(Q_FUNC_INFO, bucket);
+    if(!bucket.empty())
+    {
+        s3.deleteBucket(bucket.c_str());
+    }
 }
 // --------------------------------------------------------------------------
 void S3Model::removeObject(const QString &key, bool isDir)
 {
+    LogMgr::debug(Q_FUNC_INFO, key);
     clearItems();
     std::function<void()> callbackObj = [&]() { refresh(); };
     std::function<void()> callbackDir = [&]() { refresh(); };
@@ -328,6 +371,7 @@ void S3Model::removeObject(const QString &key, bool isDir)
 // --------------------------------------------------------------------------
 void S3Model::upload(const QString& file, bool isDir)
 {
+    LogMgr::debug(Q_FUNC_INFO, file);
     std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
         emit this->setProgressSignal(bytes, total);
     };
@@ -353,11 +397,10 @@ void S3Model::upload(const QString& file, bool isDir)
 // --------------------------------------------------------------------------
 void S3Model::download(const QString &key, bool isDir)
 {
+    LogMgr::debug(Q_FUNC_INFO, key);
     std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
         emit this->setProgressSignal(bytes, total);
     };
-
-    std::cout << "download: " << key.toStdString() << std::endl;
 
     QString out_file;
     if(isDir) {
@@ -409,6 +452,8 @@ QString S3Model::extractKey(const QString& line) {
 }
 // ----------------------------------------------------------------------------
 void S3Model::parseCLIConfig(const QString& credentialsFilePath) {
+    LogMgr::debug(Q_FUNC_INFO, credentialsFilePath);
+
     QFile file(credentialsFilePath);
     if(!file.exists()) { return; }
     file.open(QIODevice::ReadOnly);
@@ -427,6 +472,7 @@ void S3Model::parseCLIConfig(const QString& credentialsFilePath) {
 // ----------------------------------------------------------------------------
 void S3Model::readCLIConfig()
 {
+    LogMgr::debug(Q_FUNC_INFO);
     // credentials sample contents
     //
     // [default]

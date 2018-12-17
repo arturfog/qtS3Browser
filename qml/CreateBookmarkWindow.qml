@@ -23,13 +23,21 @@ import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 Window {
     id: create_bookmark_win
-    width: 450; height: 260
-    minimumHeight: 290; maximumHeight: 290
+    width: 450; height: 300
+    minimumHeight: 290; maximumHeight: 300
     minimumWidth: 450
     color: "#f8f9fa"
-    title: qsTr("Create bookmark")
 
+    property alias book_name: bookmarkName.text
+    property alias book_path: bookmarkPath.text
+    property alias win_title: create_bookmark_win.title
     property string borderColor: "gray"
+
+    property string oldName: ""
+
+    onVisibilityChanged: {
+        oldName = bookmarkName.text
+    }
 
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
@@ -79,7 +87,7 @@ Window {
 
             Text {
                 color: "white"
-                text: qsTr("Create bookmark")
+                text: create_bookmark_win.title
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
@@ -88,25 +96,15 @@ Window {
         }
     }
 
-    DropShadow {
-        anchors.fill: create_bookmark_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: create_bookmark_rect
-    }
-
     Rectangle {
         id: create_bookmark_rect
         y: 60
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 165
-        border.color: "#efefef"
-        border.width: 1
+        height: 185
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -139,38 +137,32 @@ Window {
             }
 
             Rectangle {
-                width: parent.width
-                height: 5
-            }
-
-            Rectangle {
-                id: bookmark_name_input_rect
-                x: 10
                 width: parent.width - 20
-                height: 30
-                border.color: borderColor
-                border.width: 1
-                radius: 20
-                color: "#efefef"
+                x: 10
+                height: 50
+                Rectangle {
+                    id: bookmark_name_input_rect
+                    y: 10
+                    width: parent.width
+                    height: 30
+                    border.color: borderColor
+                    border.width: 1
+                    color: "#efefef"
 
-                TextInput {
-                    id: bookmarkName
-                    x: 10
-                    width: parent.width - 20
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                    maximumLength: 128
-                    wrapMode: Text.WrapAnywhere
-                    onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
-                    onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
+                    TextInput {
+                        id: bookmarkName
+                        x: 10
+                        width: parent.width - 20
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                        maximumLength: 128
+                        wrapMode: Text.WrapAnywhere
+                        onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
+                        onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
 
+                    }
                 }
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Rectangle {
@@ -204,39 +196,34 @@ Window {
             }
 
             Rectangle {
-                width: parent.width
-                height: 5
-            }
-
-            Rectangle {
-                id: bookmark_url_input_rect
                 x: 10
                 width: parent.width - 20
-                height: 30
-                border.color: borderColor
-                border.width: 1
-                radius: 20
-                color: "#efefef"
+                height: 40
+                Rectangle {
+                    id: bookmark_url_input_rect
+                    y: 10
+                    width: parent.width
+                    height: 30
+                    border.color: borderColor
+                    border.width: 1
+                    color: "#efefef"
 
-                TextInput {
-                    id: bookmarkPath
-                    x: 10
-                    width: parent.width - 20
-                    height: parent.height
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                    maximumLength: 128
-                    text: "s3://"
-                    wrapMode: Text.WrapAnywhere
-                    onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
-                    onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
+                    TextInput {
+                        id: bookmarkPath
+                        x: 10
+                        width: parent.width - 20
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                        maximumLength: 128
+                        text: "s3://"
+                        wrapMode: Text.WrapAnywhere
+                        onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
+                        onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
+                    }
                 }
             }
 
-            Rectangle {
-                width: parent.width
-                height: 5
-            }
         }
     }
 
@@ -252,8 +239,17 @@ Window {
             icon.color: "transparent"
             font.pointSize: getMediumFontSize()
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
-            onClicked: {
-                s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+            onClicked: {                
+                if(s3Model.hasBookmarkQML(oldName))
+                {
+                    s3Model.removeBookmarkQML(oldName)
+                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                }
+                else
+                {
+                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                }
+                manageBookmarksPanel.addBookmarks();
                 close()
             }
         }
@@ -271,6 +267,7 @@ Window {
             onClicked: {
                 bookmarkName.text = ""
                 bookmarkPath.text = "s3://"
+                oldName = ""
 
                 close()
             }

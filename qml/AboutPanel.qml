@@ -19,13 +19,9 @@ import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
 
-Window {
-    id: about_win
-    minimumHeight: 350; maximumHeight: 350
-    minimumWidth: 440; maximumWidth: 440
-    width: 440; height: 350;
-    color: "#f8f9fa"
-    title: "About qtS3Browser"
+Item {
+    width: parent.width
+    height: parent.height
 
     // ------------ Top bar ----------------
     Rectangle {
@@ -42,25 +38,15 @@ Window {
 
     }
 
-    DropShadow {
-        anchors.fill: app_name_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: app_name_rect
-    }
-
     Rectangle {
         id: app_name_rect
         y: app_icon_256.y + app_icon_256.height + 10
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 50
+        width: parent.width - (parent.width / 3)
         height: 80
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -78,15 +64,16 @@ Window {
             }
             // ------------ Separator ----------------
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
+                width: parent.width - 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "lightgray"
                 height: 1
             }
             // ------------ Software version ----------------
             Text {
                 x: 20
                 y: 10
-                text: "Version: 1.0.5"
+                text: "Version: 1.0.6"
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
                 height: 40
@@ -94,25 +81,16 @@ Window {
         }
     }
 
-    DropShadow {
-        anchors.fill: rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: rect
-    }
-
     Rectangle {
         y: app_name_rect.y + app_name_rect.height + 20
         id: rect
         anchors.horizontalCenter: parent.horizontalCenter
-        color: "white"
-        width: parent.width - 50
-        height: 80
-        border.color: "#efefef"
-        border.width: 1
+        //color: "white"
+        color: "#efefef"
+        width: parent.width - (parent.width / 3)
+        height: 90
+        border.color: "lightblue"
+        border.width: 2
         radius: 5
 
         Column {
@@ -129,12 +107,14 @@ Window {
                 x: 10
                 y: 10
                 width: parent.width
-                height: 40
+                height: 45
                 Image {
                     source: "qrc:icons/32_author_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
                     height: 40
                     text: "Artur Fogiel"
@@ -145,8 +125,9 @@ Window {
             }
             // ------------ Separator ----------------
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
+                width: parent.width - 50
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "lightblue"
                 height: 1
             }
             // ------------- Github link row -------------
@@ -157,9 +138,11 @@ Window {
                 height: 40
                 Image {
                     source: "qrc:icons/32_github_icon.png"
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
                     height: 40
                     text: '<a href="https://github.com/arturfog/qtS3Browser">https://github.com/arturfog/qtS3Browser</a>'

@@ -19,13 +19,9 @@ import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
 import QtGraphicalEffects 1.0
-Window {
+Item {
     id: progress_win
-    width: 500; height: 310
-    minimumHeight: 310; maximumHeight: 310
-    minimumWidth: 540; maximumWidth: 540
-
-    title: "Progress"
+    width: parent.width; height: parent.height
 
     property double currentProgress: 0
     property double currentBytes: 0
@@ -49,10 +45,6 @@ Window {
         transferSpeedBytes = 0
         secondsLeft = 0
         lastDate = new Date()
-
-        if(!visible) {
-            s3Model.refreshQML()
-        }
     }
 
     function getSizeString(bytes) {
@@ -71,6 +63,16 @@ Window {
         }
 
         return number
+    }
+
+    function addTransfers() {
+        var bookmarksLen = s3Model.getBookmarksNumQML();
+
+        for(var i = bookmarks_list.children.length; i > 0 ; i--) {
+          bookmarks_list.children[i-1].destroy()
+        }
+
+        var emptyObject = null;
     }
 
     function secondsToEta(seconds) {
@@ -102,12 +104,10 @@ Window {
             var seconds = currentDate.getSeconds() - lastDate.getSeconds()
 
             if(totalBytes > 0 && seconds > 0) {
-                console.log("seconds: " + seconds + " current:" + current)
                 var bytesdiff = current - lastTotalBytes
                 secondsLeft = (totalBytes - currentBytes) / transferSpeedBytes
                 if(bytesdiff > 0) {
                     transferSpeedBytes = (bytesdiff / seconds)
-                    console.log("bytesdiff: " + bytesdiff + " " + transferSpeedBytes)
                 }
                 lastTotalBytes = current
             }
@@ -118,12 +118,6 @@ Window {
             currentFile = s3Model.getCurrentFileQML()
 
             if(currentProgress >= 100) {
-                if(mode == modeDL) {
-                    title = qsTr("Download completed")
-                } else {
-                    title = qsTr("Upload completed")
-                }
-
                 cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
                 cancel_btn.text = "Close"
             }
@@ -153,35 +147,57 @@ Window {
 
             Text {
                 color: "white"
-                text: title
+                text: "File transfers"
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
+                width: parent.width - 230
                 verticalAlignment: Text.AlignVCenter
+            }
+
+            Button {
+                id: cancel_btn
+                height: 40
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Cancel")
+                icon.source: "qrc:icons/32_cancel_icon.png"
+                icon.color: "transparent"
+                onClicked: {
+                    if(currentProgress < 100) {
+                        s3Model.cancelDownloadUploadQML()
+                        if(mode == modeDL) {
+                            var path = s3Model.getFileBrowserPath() + currentFile
+                            fsModel.removeQML(path)
+                        }
+                    }
+                }
+                background: Rectangle {
+                        implicitWidth: 100
+                        implicitHeight: 40
+                        opacity: enabled ? 1 : 0.3
+                        color: cancel_btn.down ? "#dddedf" : "#eeeeee"
+
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: cancel_btn.down ? "#17a81a" : "#21be2b"
+                            anchors.bottom: parent.bottom
+                        }
+                    }
             }
         }
     }
 
     // ------------------------------------------------------------
-    DropShadow {
-        anchors.fill: operation_progress_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: operation_progress_rect
-    }
-
     Rectangle {
         id: operation_progress_rect
         y: 60
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 50
+        width: parent.width - 150
         height: 180
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
 
         Column {
@@ -214,11 +230,6 @@ Window {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Row {
@@ -265,11 +276,6 @@ Window {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Row {
@@ -326,11 +332,6 @@ Window {
                 width: parent.width
                 color: "#dbdbdb"
                 height: 1
-            }
-
-            Rectangle {
-                width: parent.width
-                height: 5
             }
 
             Row {
@@ -390,27 +391,26 @@ Window {
             }
         }
     }
+    // ------------------------------------------------------------
+    Rectangle {
+        id: manage_transfers_rect
+        y: operation_progress_rect.height + operation_progress_rect.y + 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        color: "white"
+        width: parent.width - 150
+        height: 300
+        border.color: "lightgray"
+        border.width: 2
+        radius: 5
 
-    Button {
-        id: cancel_btn
-        x: operation_progress_rect.width - cancel_btn.width
-        y: operation_progress_rect.y + operation_progress_rect.height + 10
-        height: 40
-        text: qsTr("Cancel")
-        icon.source: "qrc:icons/32_cancel_icon.png"
-        icon.color: "transparent"
-        onClicked: {
-            if(currentProgress < 100) {
-                s3Model.cancelDownloadUploadQML()
-                if(mode == modeDL) {
-                    var path = s3Model.getFileBrowserPath() + currentFile
-                    console.log("removing not finished file: " + path)
-                    fsModel.removeQML(path)
-                }
-            }
+        onVisibleChanged: {
+            //bookmarks_list.update()
+        }
 
-            close()
+        Column {
+            y: 10
+            //id: bookmarks_list
+            width: parent.width
         }
     }
-    // ------------------------------------------------------------
 }

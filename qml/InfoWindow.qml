@@ -85,15 +85,6 @@ Window {
         }
     }
     // ------------- header end -------------
-    DropShadow {
-        anchors.fill: info_rect
-        horizontalOffset: 1
-        verticalOffset: 2
-        radius: 8.0
-        samples: 17
-        color: "#aa000000"
-        source: info_rect
-    }
 
     Rectangle {
         id: info_rect
@@ -102,8 +93,8 @@ Window {
         color: "white"
         width: parent.width - 50
         height: 210
-        border.color: "#efefef"
-        border.width: 1
+        border.color: "lightgray"
+        border.width: 2
         radius: 5
         Column {
             width: parent.width

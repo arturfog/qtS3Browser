@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
+
+#include "inc/logmgr.h"
+
 class FilesystemModel : public QObject
 {
     Q_OBJECT
@@ -12,6 +15,7 @@ public:
     explicit FilesystemModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeQML(const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, path);
         QDir dir(path);
         if(dir.exists()) {
             dir.removeRecursively();
@@ -22,6 +26,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int createFolderQML(const QString& name, const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, name);
         if(name.contains("/")) {
             // two "/" sign present. return error
             return -1;
@@ -39,21 +44,25 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool fileExistsQML(const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, path);
         QFile file(path);
         return file.exists();
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool isDirQML(const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, path);
         QDir dir(path);
         return dir.exists();
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getOwner(const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, path);
         QFileInfo fi(path);
         return fi.owner();
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getHomePath() {
+    Q_INVOKABLE QString getHomePath() const{
+        LogMgr::debug(Q_FUNC_INFO);
 #ifdef __linux__
     return QDir::homePath();
 #elif _WIN32
@@ -64,6 +73,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) {
+        LogMgr::debug(Q_FUNC_INFO, path);
         QFileInfo fi(path);
         QString executable = fi.isExecutable() ? "x" : "-";
         QString readable = fi.isReadable() ? "r" : "-";

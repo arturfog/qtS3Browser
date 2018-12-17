@@ -51,12 +51,6 @@ Item {
 
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
-            app_window.progressWindow.title = qsTr("Download progress ...")
-            app_window.progressWindow.icon = "qrc:icons/32_download_icon.png"
-            app_window.progressWindow.x = app_window.x + (app_window.width / 2) - (app_window.progressWindow.width / 2)
-            app_window.progressWindow.y = app_window.y + (app_window.height / 2) - (app_window.progressWindow.height / 2)
-            app_window.progressWindow.visible = true
-            app_window.progressWindow.mode = app_window.progressWindow.modeDL
             s3Model.downloadQML(view.currentIndex)
         } else {
             s3Error.visible = true
@@ -66,6 +60,8 @@ Item {
     function download() {
         var fileName = s3Model.getItemNameQML(view.currentIndex)
         var path = s3Model.getFileBrowserPath()
+
+        switchPanel(transfer_btn, progressPanel)
 
         if(fsModel.fileExistsQML(path + fileName)) {
             overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"
@@ -125,6 +121,21 @@ Item {
                     createS3FolderWindow.visible = true
                 }
             }
+
+            ToolButton {
+                font.pointSize: getSmallFontSize()
+                height: parent.height
+                text: qsTr("Create bucket")
+                icon.source: "qrc:icons/32_bucket_icon.png"
+                icon.color: "transparent"
+                enabled: s3_panel.connected
+                onClicked: {
+                    createBucketWindow.x = app_window.x + (app_window.width / 2) - (createBucketWindow.width / 2)
+                    createBucketWindow.y = app_window.y + (app_window.height / 2) - (createBucketWindow.height / 2)
+                    createBucketWindow.create_action = createBucketWindow.createBucket
+                    createBucketWindow.visible = true
+                }
+            }
         }
     }
 
@@ -158,7 +169,6 @@ Item {
                     border.color: "orange"
                     height: 38
                     color: "#ffebcc"
-                    radius: 20
 
                     Image {
                         x:10
@@ -204,12 +214,14 @@ Item {
                         }
                     }
 
-                    RoundButton {
+                    Button {
                         id: s3_browser_path_go
                         x: s3_browser_path_text.width + s3_browser_path_text.x
                         height: parent.height
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
+                        flat: true
+                        width: 40
                         onClicked: {
                             if(s3_browser_path_text.text === "") {
                                 s3Model.getBucketsQML()
@@ -239,7 +251,6 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                console.log("Sorting")
                             }
                         }
                     }
