@@ -33,12 +33,12 @@ Item {
     readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
 
-//    onVisibilityChanged: {
-//        startPath.text = s3Model.getStartPathQML()
-//        secretKey.text = s3Model.getSecretKeyQML()
-//        accessKey.text = s3Model.getAccesKeyQML()
-//        endpointURL.text = s3Model.getEndpointQML()
-//    }
+    onVisibleChanged: {
+        startPath.text = s3Model.getStartPathQML()
+        secretKey.text = s3Model.getSecretKeyQML()
+        accessKey.text = s3Model.getAccesKeyQML()
+        endpointURL.text = s3Model.getEndpointQML()
+    }
 
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
