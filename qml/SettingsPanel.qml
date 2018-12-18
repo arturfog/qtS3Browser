@@ -587,13 +587,14 @@ Item {
                         flat: true
                         width: parent.width - 100
                         height: 40
-                        text: "Show advanced options"
+                        text: qsTr("Show advanced options")
                         font.pointSize: labelFontSize
-
                         onClicked: {
                             if(endpoint_url_rect.visible) {
+                                text =  qsTr("Show advanced options")
                                 endpoint_url_rect.visible = false
                             } else {
+                                text =  qsTr("Hide advanced options")
                                 endpoint_url_rect.visible = true
                             }
                         }

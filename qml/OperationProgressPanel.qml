@@ -97,6 +97,7 @@ Item {
     Connections {
         target: s3Model
         onSetProgressSignal: {
+            cancel_btn.visible = true
             currentBytes = current
             totalBytes = total
 
@@ -118,8 +119,7 @@ Item {
             currentFile = s3Model.getCurrentFileQML()
 
             if(currentProgress >= 100) {
-                cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
-                cancel_btn.text = "Close"
+                cancel_btn.visible = false
             }
         }
     }
@@ -162,6 +162,7 @@ Item {
                 text: qsTr("Cancel")
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
+                visible: false
                 onClicked: {
                     if(currentProgress < 100) {
                         s3Model.cancelDownloadUploadQML()

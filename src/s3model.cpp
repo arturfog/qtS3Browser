@@ -63,8 +63,8 @@ S3Model::S3Model(QObject *parent)
 
     if(getFileBrowserPath().isEmpty())
     {
-        const QString home = fsm.getHomePath();
-        setFileBrowserPath(home);
+        QString home = "file://";
+        setFileBrowserPath(home.append(fsm.getHomePath()));
     }
 }
 // --------------------------------------------------------------------------

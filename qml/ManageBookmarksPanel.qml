@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
@@ -184,7 +184,7 @@ Rectangle {
         }
     }
 
-    ScrollView {
+    Rectangle {
         width: parent.width
         height: parent.height
         clip: true
@@ -236,6 +236,8 @@ Rectangle {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
                       createBookmarkWindow.win_title = qsTr("Add bookmark")
+                      createBookmarkWindow.book_name = ""
+                      createBookmarkWindow.book_path = "s3://"
                       createBookmarkWindow.visible = true;
                     }
 
@@ -271,10 +273,52 @@ Rectangle {
                 bookmarks_list.update()
             }
 
-            Column {
+            Rectangle
+            {
+                id: frame
+                x: 5
                 y: 10
-                id: bookmarks_list
-                width: parent.width
+                width: parent.width - 10
+                height: parent.height - 30
+                clip: true
+
+                MouseArea {
+                    parent: manage_bookmark_rect      // specify the `visual parent`
+                    anchors.fill: frame
+                    onWheel: {
+                        if(frame.height < bookmarks_list.height)
+                        {
+                        if (wheel.angleDelta.y > 0)
+                        {
+                            vbar.decrease()
+
+                        }
+                        else
+                        {
+                            vbar.increase()
+                        }
+                        }
+                    }
+                }
+
+                ScrollBar {
+                        id: vbar
+                        hoverEnabled: true
+                        active: true
+                        orientation: Qt.Vertical
+                        size: frame.height / bookmarks_list.height
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                    }
+
+
+                Column
+                {
+                    id: bookmarks_list
+                    width: parent.width
+                    y: -vbar.position * height
+                }
             }
         }
     }
