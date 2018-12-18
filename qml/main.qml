@@ -27,9 +27,9 @@ ApplicationWindow {
     id: app_window
     visible: true
     width: 960
-    height: 480
-    minimumWidth: 800
-    minimumHeight: 400
+    height: 520
+    minimumWidth: 960
+    minimumHeight: 450
     title: qsTr("s3FileBrowser")
 
     function getTinyFont() {

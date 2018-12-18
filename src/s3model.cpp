@@ -45,7 +45,6 @@ S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent),
       currentFile(),
       m_s3items(),
-      bookmarks(),
       isConnected(false),
       mFileBrowserPath(),
       m_s3itemsBackup()
@@ -58,7 +57,6 @@ S3Model::S3Model(QObject *parent)
 
     s3.setErrorHandler(callback);
 
-    loadBookmarks();
     readCLIConfig();
 
     if(getFileBrowserPath().isEmpty())
@@ -253,55 +251,6 @@ void S3Model::getObjectInfo(const QString &key)
     LogMgr::debug(Q_FUNC_INFO, key);
     s3.getObjectInfo(getCurrentBucket().toStdString().c_str(),
                      getPathWithoutBucket().append(key).toStdString().c_str());
-}
-// --------------------------------------------------------------------------
-void S3Model::addBookmark(const QString &name, const QString &path)
-{
-    LogMgr::debug(Q_FUNC_INFO, name);
-
-    if(!name.isEmpty() && !path.isEmpty())
-    {
-        if(!bookmarks.contains(name)) {
-            bookmarks[name] = path;
-            saveBookmarks(bookmarks);
-        }
-    }
-}
-// --------------------------------------------------------------------------
-void S3Model::removeBookmark(const QString& name)
-{
-    LogMgr::debug(Q_FUNC_INFO, name);
-
-    if(!name.isEmpty())
-    {
-        if(bookmarks.contains(name)) {
-            bookmarks.remove(name);
-            saveBookmarks(bookmarks);
-        }
-    }
-}
-// --------------------------------------------------------------------------
-void S3Model::saveBookmarks(QMap<QString, QString> &bookmarks)
-{
-    LogMgr::debug(Q_FUNC_INFO);
-
-    QFile file("bookmarks.dat");
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    out << bookmarks;
-    file.close();
-}
-// --------------------------------------------------------------------------
-void S3Model::loadBookmarks()
-{
-    LogMgr::debug(Q_FUNC_INFO);
-
-    QFile file("bookmarks.dat");
-    if(file.exists()) {
-        file.open(QIODevice::ReadOnly);
-        QDataStream in(&file);
-        in >> bookmarks;
-    }
 }
 // --------------------------------------------------------------------------
 void S3Model::getBuckets() {

@@ -67,12 +67,9 @@ Item {
             overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"
             overwriteDialog.visible = true
         } else {
+            ftModel.addTransferQML(fileName, path + fileName)
             downloadInternal()
         }
-    }
-
-    function gotoClicked() {
-
     }
 
     ToolBar {

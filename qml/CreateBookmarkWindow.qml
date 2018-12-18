@@ -240,14 +240,21 @@ Window {
             font.pointSize: getMediumFontSize()
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
             onClicked: {                
-                if(s3Model.hasBookmarkQML(oldName))
+                if(bookModel.hasBookmarkQML(oldName))
                 {
-                    s3Model.removeBookmarkQML(oldName)
-                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                    bookModel.removeBookmarkQML(oldName)
+                    bookModel.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
                 }
                 else
                 {
-                    s3Model.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                    if(!bookModel.hasBookmarkQML(bookmarkName.text))
+                    {
+                        bookModel.addBookmarkQML(bookmarkName.text, bookmarkPath.text)
+                    }
+                    else
+                    {
+
+                    }
                 }
                 manageBookmarksPanel.addBookmarks();
                 close()

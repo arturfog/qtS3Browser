@@ -30,7 +30,7 @@ Item {
     }
 
     function addBookmarks() {
-        var bookmarksLen = s3Model.getBookmarksNumQML();
+        var bookmarksLen = bookModel.getBookmarksNumQML();
 
         for(var i = bookmarks_list.children.length; i > 0 ; i--) {
           bookmarks_list.children[i-1].destroy()
@@ -39,9 +39,9 @@ Item {
         var emptyObject = null;
 
         if(bookmarksLen > 0) {
-            var keys = s3Model.getBookmarksKeysQML()
-            var values = s3Model.getBookmarksLinksQML()
-            for(var i = 0; i < bookmarksLen; i++){
+            var keys = bookModel.getBookmarksKeysQML()
+            var values = bookModel.getBookmarksLinksQML()
+            for(i = 0; i < bookmarksLen; i++){
                 var newObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
@@ -82,7 +82,7 @@ Rectangle {
 
   Row {
       Button {
-        id:add' + i + '
+        id:o' + i + '
         text: "Open"
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
@@ -91,17 +91,18 @@ Rectangle {
             mainPanel.s3_panel.path = s3Model.getS3PathQML()
             mainPanel.s3_panel.connected = s3Model.isConnectedQML()
             mainPanel.file_panel.connected = s3Model.isConnectedQML()
+            switchPanel(fm_btn, mainPanel)
         }
                     background: Rectangle {
                             implicitWidth: 100
                             implicitHeight: 40
                             opacity: enabled ? 1 : 0.3
-                            color: add' + i + '.down ? "#dddedf" : "#eeeeee"
+                            color: o' + i + '.down ? "#dddedf" : "#eeeeee"
 
                             Rectangle {
                                 width: parent.width
                                 height: 1
-                                color: add' + i + '.down ? "#17a81a" : "#21be2b"
+                                color: o' + i + '.down ? "#17a81a" : "#21be2b"
                                 anchors.bottom: parent.bottom
                             }
                         }
@@ -151,7 +152,7 @@ Rectangle {
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
         onClicked: {
-          s3Model.removeBookmarkQML("' + keys[i] + '")
+          bookModel.removeBookmarkQML("' + keys[i] + '")
           addBookmarks()
         }
                     background: Rectangle {
@@ -284,19 +285,21 @@ Rectangle {
 
                 MouseArea {
                     parent: manage_bookmark_rect      // specify the `visual parent`
-                    anchors.fill: frame
-                    onWheel: {
+                    height: parent.height
+                    width: parent.width - 360;
+                    onWheel:
+                    {
                         if(frame.height < bookmarks_list.height)
                         {
-                        if (wheel.angleDelta.y > 0)
-                        {
-                            vbar.decrease()
+                            if (wheel.angleDelta.y > 0)
+                            {
+                                vbar.decrease()
 
-                        }
-                        else
-                        {
-                            vbar.increase()
-                        }
+                            }
+                            else
+                            {
+                                vbar.increase()
+                            }
                         }
                     }
                 }
@@ -310,7 +313,7 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                    }
+                }
 
 
                 Column

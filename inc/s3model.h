@@ -178,18 +178,6 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getEndpointQML() { return settings.value("Endpoint").toString(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE bool hasBookmarkQML(const QString &name) { return bookmarks.contains(name); }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QList<QString> getBookmarksKeysQML() {return bookmarks.keys();}
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QList<QString> getBookmarksLinksQML() { return bookmarks.values(); }
-    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     // --------------------------------------------------------------------------
     Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
@@ -335,26 +323,11 @@ public:
      */
     void getObjectInfo(const QString &key);
     /**
-     * @brief addBookmark
-     * @param name
-     * @param path
+     * @brief data
+     * @param index
+     * @param role
+     * @return
      */
-    void addBookmark(const QString& name, const QString& path);
-    /**
-     * @brief removeBookmark
-     * @param name
-     */
-    void removeBookmark(const QString &name);
-    /**
-     * @brief saveBookmarks
-     * @param bookmarks
-     */
-    void saveBookmarks(QMap<QString, QString> &bookmarks);
-    /**
-     * @brief loadBookmarks
-     */
-    void loadBookmarks();
-
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     /**
      * @brief getAccessKey
@@ -383,7 +356,6 @@ private:
     QString currentFile;
     QList<S3Item> m_s3items;
     QStringList m_s3Path;
-    QMap<QString, QString> bookmarks;
     bool isConnected;
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;

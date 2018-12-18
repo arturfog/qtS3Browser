@@ -45,6 +45,7 @@ Item {
         transferSpeedBytes = 0
         secondsLeft = 0
         lastDate = new Date()
+        addTransfers()
     }
 
     function getSizeString(bytes) {
@@ -66,13 +67,49 @@ Item {
     }
 
     function addTransfers() {
-        var bookmarksLen = s3Model.getBookmarksNumQML();
+        var transfersLen = ftModel.getTransfersNumQML();
 
-        for(var i = bookmarks_list.children.length; i > 0 ; i--) {
-          bookmarks_list.children[i-1].destroy()
+        for(var i = transfers_list.children.length; i > 0 ; i--) {
+          transfers_list.children[i-1].destroy()
         }
 
         var emptyObject = null;
+
+        if(transfersLen > 0) {
+            for(i = 0; i < transfersLen; i++)
+            {
+                var newObject = Qt.createQmlObject('
+import QtQuick 2.5;
+import QtQuick.Controls 2.2;
+
+Rectangle {
+    x: 5
+    width: parent.width - 10;
+    height: 60
+    color: "lightgray"
+
+    Row {
+        width: parent.width;
+        height: 40
+        anchors.verticalCenter: parent.verticalCenter
+        id: bookmarks_item
+        x: 10
+
+        Image
+        {
+            source: "qrc:icons/32_amazon_icon.png"
+        }
+
+        Rectangle
+        {
+            width: 10
+            height: 10
+        }
+    }
+}
+                ', transfers_list, "dynamicTransfers");
+            }
+        }
     }
 
     function secondsToEta(seconds) {
@@ -232,7 +269,7 @@ Item {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------------ progress bar and precentage row ----------------
             Row {
                 x: 10
                 y: 10
@@ -242,7 +279,7 @@ Item {
                 ProgressBar {
                     id: current_pb
                     height: parent.height
-                    width: parent.width - 80
+                    width: parent.width - 90
                     value: currentProgress
                     to: 100.0
                 }
@@ -279,9 +316,10 @@ Item {
                 height: 1
             }
 
+            // ------------------ total item size and currently transferred bytes ----------------
             Row {
                 x: 20
-                y: 10
+                y: 20
                 width: parent.width
                 height: 40
 
@@ -311,7 +349,7 @@ Item {
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -361,13 +399,14 @@ Item {
                 }
 
                 Rectangle {
+                    id: lower_divider
                     width: 1
                     color: "#dbdbdb"
                     height: parent.height - 5
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -399,19 +438,40 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 150
-        height: 300
+        height: 250
         border.color: "lightgray"
         border.width: 2
         radius: 5
 
         onVisibleChanged: {
-            //bookmarks_list.update()
+            transfers_list.update()
         }
 
-        Column {
+        Rectangle
+        {
+            id: frame
+            x: 5
             y: 10
-            //id: bookmarks_list
-            width: parent.width
+            width: parent.width - 10
+            height: parent.height - 30
+            clip: true
+
+            ScrollBar {
+                    id: vbar
+                    hoverEnabled: true
+                    active: true
+                    orientation: Qt.Vertical
+                    size: frame.height / transfers_list.height
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+            }
+
+            Column {
+                y: -vbar.position * height
+                id: transfers_list
+                width: parent.width
+            }
         }
     }
 }
