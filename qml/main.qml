@@ -251,7 +251,7 @@ ApplicationWindow {
                         id:transfer_btn
                         width: 48
                         flat: true
-                        icon.source: "qrc:icons/32_download_icon.png"
+                        icon.source: "qrc:icons/32_transfer_icon.png"
                         icon.color: "transparent"
 
                         hoverEnabled: true

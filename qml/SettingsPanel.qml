@@ -117,19 +117,20 @@ Item {
                 }
 
                 background: Rectangle {
-                        implicitWidth: 100
-                        implicitHeight: 40
-                        opacity: enabled ? 1 : 0.3
-                        color: control.down ? "#dddedf" : "#eeeeee"
+                    implicitWidth: 100
+                    implicitHeight: 40
+                    opacity: enabled ? 1 : 0.3
+                    color: control.down ? "#dddedf" : "#eeeeee"
 
-                        Rectangle {
-                            width: parent.width
-                            height: 1
-                            color: control.down ? "#17a81a" : "#21be2b"
-                            anchors.bottom: parent.bottom
-                        }
+                    Rectangle {
+                        width: parent.width
+                        height: 1
+                        color: control.down ? "#17a81a" : "#21be2b"
+                        anchors.bottom: parent.bottom
                     }
+                }
             }
+            // --------------------------
         }
     }
 
@@ -139,7 +140,8 @@ Item {
         height: parent.height - 50
         contentHeight: start_path_rect.height + secret_key_rect.height +
                        access_key_rect.height + region_rect.height +
-                       endpoint_url_rect.height + advanced_rect.height + 120
+                       endpoint_url_rect.height + advanced_rect.height +
+                       logging_rect.height + 140
         clip: true
         // ------------- S3 start path -------------
         Rectangle {
@@ -593,9 +595,11 @@ Item {
                             if(endpoint_url_rect.visible) {
                                 text =  qsTr("Show advanced options")
                                 endpoint_url_rect.visible = false
+                                logging_rect.visible = false
                             } else {
                                 text =  qsTr("Hide advanced options")
                                 endpoint_url_rect.visible = true
+                                logging_rect.visible = true
                             }
                         }
                     }
@@ -688,5 +692,150 @@ Item {
                 }
             }
         }
+        // ----------------------------------------
+        // ----------- logging settings -----------
+        Rectangle {
+            y: endpoint_url_rect.y + endpoint_url_rect.height + 20
+            id: logging_rect
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
+            width: parent.width - 150
+            height: 85
+            border.color: "lightgray"
+            border.width: 2
+            radius: 5
+            visible: false
+
+            Column {
+                width: parent.width
+                height: parent.height
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+                // ------------- icon | title row -------------
+                Row {
+                    x: 10
+                    y: 10
+                    width: parent.width
+                    height: 40
+                    Image {
+                        source: "qrc:icons/32_logs_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Text {
+                        width: parent.width - 200
+                        height: 40
+                        text: "Log files path"
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: labelFontSize
+                    }
+
+                    Switch {
+                            text: qsTr("Enable logs")
+                        }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+
+                Row {
+                    width: parent.width - 20
+                    height: 40
+
+                    Rectangle {
+                        width: 10
+                        color: "transparent"
+                        height: parent.height
+                    }
+
+                    Rectangle {
+                        id: logging_input_rect
+                        x: 20
+                        width: parent.width - 150
+                        height: 30
+                        //anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        border.color: borderColor
+                        border.width: 1
+                        color: "#efefef"
+
+                        TextInput {
+                            id: logsPath
+                            x: 10
+                            width: parent.width - 20
+                            height: parent.height
+                            verticalAlignment: Text.AlignVCenter
+                            font.pointSize: inputFontSize
+                            maximumLength: 128
+                            wrapMode: Text.WrapAnywhere
+                            onTextChanged: extendInputText(logsPath, logging_input_rect, logging_rect)
+                            onActiveFocusChanged: focusChangedHandler(logsPath, logging_input_rect)
+                        }
+                    }
+
+                    Rectangle {
+                        width: 10
+                        color: "transparent"
+                        height: parent.height
+                    }
+
+                    FileDialog {
+                        id: fileDialog
+                        title: "Please choose a folder"
+                        folder: shortcuts.home
+                        selectFolder : true
+                        onAccepted: {
+                            logsPath.text = fileDialog.fileUrl
+                        }
+                        onRejected: {
+                            console.log("Canceled")
+                        }
+                    }
+
+                    // ------------- log path btn -------------
+                    Button {
+                        id: logpath_btn
+                        font.pointSize: labelFontSize
+                        text: "Select path"
+                        icon.source: "qrc:icons/32_save_icon.png"
+                        icon.color: "transparent"
+                        anchors.verticalCenter: parent.verticalCenter
+                        height: 30
+                        onClicked: {
+                            fileDialog.visible = true
+                        }
+
+                        background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 30
+                            opacity: enabled ? 1 : 0.3
+                            color: logpath_btn.down ? "#dddedf" : "#eeeeee"
+
+                            Rectangle {
+                                width: parent.width
+                                height: 1
+                                color: logpath_btn.down ? "#17a81a" : "#21be2b"
+                                anchors.bottom: parent.bottom
+                            }
+                        }
+                    }
+                    // --------------------------
+                }
+            }
+        }
+        // ----------------------------------------
     }
 }

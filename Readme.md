@@ -24,9 +24,20 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 ### MacOS X 
 - use build_osx.sh script
+#### To build qts3browser, following software is required
+- brew - https://brew.sh/index
+- Qt5 (can be installed using brew)
+```sh
+brew install qt5 2>&1 > /dev/null
+brew link qt5 --force
+```
 
 ### Windows 10
 - use build_win10.bat script
+#### To build qts3browser, following software is required
+- Git for Windows - https://git-scm.com/download/win
+- Qt 5.12 or newer - https://www.qt.io/offline-installers
+- Visual Studio Community - https://visualstudio.microsoft.com/pl/vs/community/
 
 ## Installation
 

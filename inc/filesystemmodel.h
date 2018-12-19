@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
+#include <QProcessEnvironment>
 
 #include "inc/logmgr.h"
 
@@ -64,6 +65,14 @@ public:
     Q_INVOKABLE QString getHomePath() const{
         LogMgr::debug(Q_FUNC_INFO);
 #ifdef __linux__
+    QProcessEnvironment env;
+    if(env.contains("SNAP_ARCH")) {
+        const QString user(env.value("USER"));
+        if(!user.isEmpty()) {
+            QString path("/home/");
+            return path.append(user);
+        }
+    }
     return QDir::homePath();
 #elif _WIN32
     return QString("/").append(QDir::homePath());

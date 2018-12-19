@@ -2,14 +2,13 @@
 #include <iostream>
 #include <QDateTime>
 
-LogMgr::LogMgr(QObject *parent) : QObject(parent)
-{
+LogMgr::LogMgr(QObject *parent) : QObject(parent) {}
 
-}
+QString LogMgr::logsFolderPath("/tmp");
 
 void LogMgr::debug(const std::string msg, const std::string &arg1)
 {
-    QString now = QDateTime::currentDateTime().toString();
+    const QString now = QDateTime::currentDateTime().toString();
     std::cout << "[DBG]"  << " " << now.toStdString() << " : " << msg  << " ('" << arg1  << "')" << std::endl;
 }
 
@@ -25,11 +24,17 @@ void LogMgr::debug(const std::string msg, const char *arg1)
 
 void LogMgr::debug(const std::string msg)
 {
-    QString now = QDateTime::currentDateTime().toString();
+    const QString now = QDateTime::currentDateTime().toString();
     std::cout << "[DBG]"  << " " << now.toStdString() << " : " << msg  << std::endl;
 }
 
 void LogMgr::error(const std::string msg)
 {
-    std::cout << "[ERR]" << " " << __TIMESTAMP__ << " : " << msg << std::endl;
+    const QString now = QDateTime::currentDateTime().toString();
+    std::cout << "[ERR]"  << " " << now.toStdString() << " : " << msg  << std::endl;
+}
+
+void LogMgr::setLogsFolder(const QString &path)
+{
+    LogMgr::logsFolderPath = path;
 }

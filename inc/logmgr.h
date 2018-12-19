@@ -6,6 +6,8 @@
 class LogMgr : public QObject
 {
     Q_OBJECT
+private:
+    static QString logsFolderPath;
 public:
     explicit LogMgr(QObject *parent = nullptr);
 
@@ -14,9 +16,8 @@ public:
     static void debug(const std::string msg, const char* arg1);
     static void debug(const std::string msg);
     static void error(const std::string msg);
-signals:
 
-public slots:
+    static void setLogsFolder(const QString& path);
 };
 
 #endif // LOGMGR_H

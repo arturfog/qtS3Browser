@@ -16,8 +16,6 @@ public:
 protected:
     QFileIconProvider   m_provider;
     QMimeDatabase       m_mimeDB;
-signals:
-public slots:
 };
 
 #endif // ICONPROVIDER_H

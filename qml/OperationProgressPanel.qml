@@ -27,7 +27,7 @@ Item {
     property double currentBytes: 0
     property double totalBytes: 0
     property string currentFile: ""
-    property string icon: "qrc:icons/32_upload_icon.png"
+    property string icon: "qrc:icons/32_transfer_icon.png"
 
     property var lastDate: new Date()
     property double lastTotalBytes: 0
