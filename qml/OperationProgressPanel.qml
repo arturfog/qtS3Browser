@@ -459,7 +459,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 150
-        height: 250
+        height: parent.height - y - 50
         border.color: "lightgray"
         border.width: 2
         radius: 5
@@ -468,13 +468,42 @@ Rectangle {
             transfers_list.update()
         }
 
+        Row {
+            x: 10
+            y: 5
+            width: parent.width
+            height: 40
+
+            Image {
+                source: "qrc:icons/32_file_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            // ------------------ currently transferred file ----------------
+            Text {
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+                width: parent.width - 50
+                height: 40
+                text: "Transfers queue"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getMediumFontSize()
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            color: "#dbdbdb"
+            y:45
+            height: 1
+        }
+
         Rectangle
         {
             id: frame
             x: 5
-            y: 10
+            y: 50
             width: parent.width - 10
-            height: parent.height - 30
+            height: parent.height - 80
             clip: true
 
             ScrollBar {

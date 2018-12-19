@@ -145,7 +145,9 @@ public:
                                      const QString& region,
                                      const int timeoutIdx,
                                      const QString& timeout,
-                                     const QString& endpoint) {
+                                     const QString& endpoint,
+                                     const QString& logsDir,
+                                     const bool logsEnabled) {
         LogMgr::debug(Q_FUNC_INFO);
         settings.setValue("StartPath", startPath);
         settings.setValue("AccessKey", accessKey);
@@ -155,6 +157,8 @@ public:
         settings.setValue("Endpoint", endpoint);
         settings.setValue("TimeoutIdx", timeoutIdx);
         settings.setValue("Timeout", timeout);
+        settings.setValue("LogsDir", logsDir);
+        settings.setValue("LogsEnabled", logsEnabled);
         settings.sync();
 
         s3.reloadCredentials();
@@ -177,6 +181,10 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getEndpointQML() { return settings.value("Endpoint").toString(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getLogsDirQML() { return settings.value("LogsDir").toString(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE bool getLogsEnabledQML() { return settings.value("LogsEnabled").toBool(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     // --------------------------------------------------------------------------

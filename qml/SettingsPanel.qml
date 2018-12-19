@@ -38,6 +38,8 @@ Item {
         secretKey.text = s3Model.getSecretKeyQML()
         accessKey.text = s3Model.getAccesKeyQML()
         endpointURL.text = s3Model.getEndpointQML()
+        logsPath.text = s3Model.getLogsDirQML()
+        enableLogs.checked = s3Model.getLogsEnabledQML()
     }
 
     function extendInputText(input, input_field, input_field_rect) {
@@ -112,7 +114,9 @@ Item {
                                             s3region.currentText,
                                             timeout.currentIndex,
                                             timeout.currentText,
-                                            endpointURL.text
+                                            endpointURL.text,
+                                            logsPath.text,
+                                            enableLogs.checked
                                             )
                 }
 
@@ -735,14 +739,15 @@ Item {
                     Text {
                         width: parent.width - 200
                         height: 40
-                        text: "Log files path"
+                        text: qsTr("Log files directory")
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
 
                     Switch {
-                            text: qsTr("Enable logs")
-                        }
+                        id:enableLogs
+                        text: qsTr("Enable logs")
+                    }
                 }
 
                 Rectangle {
@@ -795,7 +800,7 @@ Item {
 
                     FileDialog {
                         id: fileDialog
-                        title: "Please choose a folder"
+                        title: qsTr("Please choose a folder")
                         folder: shortcuts.home
                         selectFolder : true
                         onAccepted: {
@@ -810,7 +815,7 @@ Item {
                     Button {
                         id: logpath_btn
                         font.pointSize: labelFontSize
-                        text: "Select path"
+                        text: qsTr("Select dir")
                         icon.source: "qrc:icons/32_save_icon.png"
                         icon.color: "transparent"
                         anchors.verticalCenter: parent.verticalCenter
