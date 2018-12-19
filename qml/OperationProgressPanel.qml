@@ -27,7 +27,7 @@ Item {
     property double currentBytes: 0
     property double totalBytes: 0
     property string currentFile: ""
-    property string icon: "qrc:icons/32_upload_icon.png"
+    property string icon: "qrc:icons/32_transfer_icon.png"
 
     property var lastDate: new Date()
     property double lastTotalBytes: 0
@@ -45,6 +45,7 @@ Item {
         transferSpeedBytes = 0
         secondsLeft = 0
         lastDate = new Date()
+        addTransfers()
     }
 
     function getSizeString(bytes) {
@@ -66,13 +67,70 @@ Item {
     }
 
     function addTransfers() {
-        var bookmarksLen = s3Model.getBookmarksNumQML();
+        var transfersLen = ftModel.getTransfersNumQML();
+        var keys = ftModel.getTransfersKeysQML()
 
-        for(var i = bookmarks_list.children.length; i > 0 ; i--) {
-          bookmarks_list.children[i-1].destroy()
+        for(var i = transfers_list.children.length; i > 0 ; i--) {
+          transfers_list.children[i-1].destroy()
         }
 
         var emptyObject = null;
+
+        if(transfersLen > 0) {
+            for(i = 0; i < transfersLen; i++)
+            {
+                var srcPath = ftModel.getTransferSrcPathQML(i)
+                var dstPath = ftModel.getTransferDstPathQML(i)
+                var icon = ftModel.getTransferIconQML(keys[i])
+                var newObject = Qt.createQmlObject('
+import QtQuick 2.5;
+import QtQuick.Controls 2.2;
+
+Rectangle {
+    x: 5
+    width: parent.width - 10;
+    height: 65
+    color: "lightgray"
+
+    Row {
+        width: parent.width;
+        height: 45
+        anchors.verticalCenter: parent.verticalCenter
+        id: bookmarks_item
+        x: 10
+
+        Image
+        {
+            source: "qrc:icons/' + icon +'"
+        }
+
+        Rectangle
+        {
+            width: 10
+            height: 10
+        }
+
+        Column {
+          width: parent.width - 390;
+          Text {
+            font.pointSize: 14
+            text: "' + keys[i] +'"
+           }
+
+           Text {
+             font.pointSize: 8
+             text: \'<a href="' + srcPath +'">' + srcPath + '</a>\'
+           }
+           Text {
+             font.pointSize: 8
+             text: "' + dstPath + '"
+           }
+        }
+    }
+}
+                ', transfers_list, "dynamicTransfers");
+            }
+        }
     }
 
     function secondsToEta(seconds) {
@@ -97,6 +155,7 @@ Item {
     Connections {
         target: s3Model
         onSetProgressSignal: {
+            cancel_btn.visible = true
             currentBytes = current
             totalBytes = total
 
@@ -118,8 +177,7 @@ Item {
             currentFile = s3Model.getCurrentFileQML()
 
             if(currentProgress >= 100) {
-                cancel_btn.icon.source = "qrc:icons/32_close_icon.png"
-                cancel_btn.text = "Close"
+                cancel_btn.visible = false
             }
         }
     }
@@ -162,6 +220,7 @@ Item {
                 text: qsTr("Cancel")
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
+                visible: false
                 onClicked: {
                     if(currentProgress < 100) {
                         s3Model.cancelDownloadUploadQML()
@@ -231,7 +290,7 @@ Item {
                 color: "#dbdbdb"
                 height: 1
             }
-
+            // ------------------ progress bar and precentage row ----------------
             Row {
                 x: 10
                 y: 10
@@ -241,7 +300,7 @@ Item {
                 ProgressBar {
                     id: current_pb
                     height: parent.height
-                    width: parent.width - 80
+                    width: parent.width - 90
                     value: currentProgress
                     to: 100.0
                 }
@@ -278,9 +337,10 @@ Item {
                 height: 1
             }
 
+            // ------------------ total item size and currently transferred bytes ----------------
             Row {
                 x: 20
-                y: 10
+                y: 20
                 width: parent.width
                 height: 40
 
@@ -310,7 +370,7 @@ Item {
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -360,13 +420,14 @@ Item {
                 }
 
                 Rectangle {
+                    id: lower_divider
                     width: 1
                     color: "#dbdbdb"
                     height: parent.height - 5
                 }
 
                 Rectangle {
-                    width: 30
+                    width: 80
                     height: parent.height
                     color: "transparent"
                 }
@@ -398,19 +459,69 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 150
-        height: 300
+        height: parent.height - y - 50
         border.color: "lightgray"
         border.width: 2
         radius: 5
 
         onVisibleChanged: {
-            //bookmarks_list.update()
+            transfers_list.update()
         }
 
-        Column {
-            y: 10
-            //id: bookmarks_list
+        Row {
+            x: 10
+            y: 5
             width: parent.width
+            height: 40
+
+            Image {
+                source: "qrc:icons/32_file_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            // ------------------ currently transferred file ----------------
+            Text {
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+                width: parent.width - 50
+                height: 40
+                text: "Transfers queue"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getMediumFontSize()
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            color: "#dbdbdb"
+            y:45
+            height: 1
+        }
+
+        Rectangle
+        {
+            id: frame
+            x: 5
+            y: 50
+            width: parent.width - 10
+            height: parent.height - 80
+            clip: true
+
+            ScrollBar {
+                    id: vbar
+                    hoverEnabled: true
+                    active: true
+                    orientation: Qt.Vertical
+                    size: frame.height / transfers_list.height
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+            }
+
+            Column {
+                y: -vbar.position * height
+                id: transfers_list
+                width: parent.width
+            }
         }
     }
 }

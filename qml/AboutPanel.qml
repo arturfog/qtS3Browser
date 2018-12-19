@@ -73,7 +73,7 @@ Item {
             Text {
                 x: 20
                 y: 10
-                text: "Version: 1.0.6"
+                text: "Version: 1.0.7"
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
                 height: 40

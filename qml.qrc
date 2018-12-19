@@ -56,5 +56,7 @@
         <file>qml/MainPanel.qml</file>
         <file>qml/AboutPanel.qml</file>
         <file>icons/32_fm_icon.png</file>
+        <file>icons/32_transfer_icon.png</file>
+        <file>icons/32_logs_icon.png</file>
     </qresource>
 </RCC>

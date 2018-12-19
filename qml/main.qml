@@ -27,9 +27,9 @@ ApplicationWindow {
     id: app_window
     visible: true
     width: 960
-    height: 480
-    minimumWidth: 800
-    minimumHeight: 400
+    height: 520
+    minimumWidth: 960
+    minimumHeight: 450
     title: qsTr("s3FileBrowser")
 
     function getTinyFont() {
@@ -251,7 +251,7 @@ ApplicationWindow {
                         id:transfer_btn
                         width: 48
                         flat: true
-                        icon.source: "qrc:icons/32_download_icon.png"
+                        icon.source: "qrc:icons/32_transfer_icon.png"
                         icon.color: "transparent"
 
                         hoverEnabled: true

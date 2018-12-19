@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with qtS3Browser.  If not, see <http://www.gnu.org/licenses/>.
 */
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
@@ -30,7 +30,7 @@ Item {
     }
 
     function addBookmarks() {
-        var bookmarksLen = s3Model.getBookmarksNumQML();
+        var bookmarksLen = bookModel.getBookmarksNumQML();
 
         for(var i = bookmarks_list.children.length; i > 0 ; i--) {
           bookmarks_list.children[i-1].destroy()
@@ -39,9 +39,9 @@ Item {
         var emptyObject = null;
 
         if(bookmarksLen > 0) {
-            var keys = s3Model.getBookmarksKeysQML()
-            var values = s3Model.getBookmarksLinksQML()
-            for(var i = 0; i < bookmarksLen; i++){
+            var keys = bookModel.getBookmarksKeysQML()
+            var values = bookModel.getBookmarksLinksQML()
+            for(i = 0; i < bookmarksLen; i++){
                 var newObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
@@ -82,7 +82,7 @@ Rectangle {
 
   Row {
       Button {
-        id:add' + i + '
+        id:o' + i + '
         text: "Open"
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
@@ -91,17 +91,18 @@ Rectangle {
             mainPanel.s3_panel.path = s3Model.getS3PathQML()
             mainPanel.s3_panel.connected = s3Model.isConnectedQML()
             mainPanel.file_panel.connected = s3Model.isConnectedQML()
+            switchPanel(fm_btn, mainPanel)
         }
                     background: Rectangle {
                             implicitWidth: 100
                             implicitHeight: 40
                             opacity: enabled ? 1 : 0.3
-                            color: add' + i + '.down ? "#dddedf" : "#eeeeee"
+                            color: o' + i + '.down ? "#dddedf" : "#eeeeee"
 
                             Rectangle {
                                 width: parent.width
                                 height: 1
-                                color: add' + i + '.down ? "#17a81a" : "#21be2b"
+                                color: o' + i + '.down ? "#17a81a" : "#21be2b"
                                 anchors.bottom: parent.bottom
                             }
                         }
@@ -151,7 +152,7 @@ Rectangle {
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
         onClicked: {
-          s3Model.removeBookmarkQML("' + keys[i] + '")
+          bookModel.removeBookmarkQML("' + keys[i] + '")
           addBookmarks()
         }
                     background: Rectangle {
@@ -184,7 +185,7 @@ Rectangle {
         }
     }
 
-    ScrollView {
+    Rectangle {
         width: parent.width
         height: parent.height
         clip: true
@@ -236,6 +237,8 @@ Rectangle {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
                       createBookmarkWindow.win_title = qsTr("Add bookmark")
+                      createBookmarkWindow.book_name = ""
+                      createBookmarkWindow.book_path = "s3://"
                       createBookmarkWindow.visible = true;
                     }
 
@@ -271,10 +274,54 @@ Rectangle {
                 bookmarks_list.update()
             }
 
-            Column {
+            Rectangle
+            {
+                id: frame
+                x: 5
                 y: 10
-                id: bookmarks_list
-                width: parent.width
+                width: parent.width - 10
+                height: parent.height - 30
+                clip: true
+
+                MouseArea {
+                    parent: manage_bookmark_rect      // specify the `visual parent`
+                    height: parent.height
+                    width: parent.width - 360;
+                    onWheel:
+                    {
+                        if(frame.height < bookmarks_list.height)
+                        {
+                            if (wheel.angleDelta.y > 0)
+                            {
+                                vbar.decrease()
+
+                            }
+                            else
+                            {
+                                vbar.increase()
+                            }
+                        }
+                    }
+                }
+
+                ScrollBar {
+                        id: vbar
+                        hoverEnabled: true
+                        active: true
+                        orientation: Qt.Vertical
+                        size: frame.height / bookmarks_list.height
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                }
+
+
+                Column
+                {
+                    id: bookmarks_list
+                    width: parent.width
+                    y: -vbar.position * height
+                }
             }
         }
     }
