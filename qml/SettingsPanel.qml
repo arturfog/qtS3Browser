@@ -781,6 +781,7 @@ Item {
                             font.pointSize: inputFontSize
                             maximumLength: 128
                             wrapMode: Text.WrapAnywhere
+                            text: "file:///tmp"
                             onTextChanged: extendInputText(logsPath, logging_input_rect, logging_rect)
                             onActiveFocusChanged: focusChangedHandler(logsPath, logging_input_rect)
                         }

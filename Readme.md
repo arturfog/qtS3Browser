@@ -19,9 +19,11 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 ## Build:
 
+![ubuntu](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_ubuntu_icon.png)
 ### Ubuntu
 - use build_ubuntu.sh script
 
+![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)
 ### MacOS X 
 - use build_osx.sh script
 #### To build qts3browser, following software is required
@@ -32,6 +34,7 @@ brew install qt5 2>&1 > /dev/null
 brew link qt5 --force
 ```
 
+![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_win10_icon.png)
 ### Windows 10
 - use build_win10.bat script
 #### To build qts3browser, following software is required
@@ -41,7 +44,8 @@ brew link qt5 --force
 
 ## Installation
 
-### Linux
+![ubuntu](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_ubuntu_icon.png)
+### Ubuntu
 Application will be released as snap and .deb packages (i386,x64) available on bintray
 ```sh
 # note: application is still under active development (it's only released in experimental 'edge' channel)
@@ -53,9 +57,11 @@ snap install --edge qts3browser
 install .deb packages from https://bintray.com/arturfog/oss-arturfog
 ```
 
+![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)
 ### MacOS X (dmg)
 Application will be released as .dmg file
 
+![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_win10_icon.png)
 ### Windows
 Application will be relased as standalone .zip and installer file
 

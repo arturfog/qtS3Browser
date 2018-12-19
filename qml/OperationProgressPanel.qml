@@ -68,6 +68,7 @@ Item {
 
     function addTransfers() {
         var transfersLen = ftModel.getTransfersNumQML();
+        var keys = ftModel.getTransfersKeysQML()
 
         for(var i = transfers_list.children.length; i > 0 ; i--) {
           transfers_list.children[i-1].destroy()
@@ -78,6 +79,9 @@ Item {
         if(transfersLen > 0) {
             for(i = 0; i < transfersLen; i++)
             {
+                var srcPath = ftModel.getTransferSrcPathQML(i)
+                var dstPath = ftModel.getTransferDstPathQML(i)
+                var icon = ftModel.getTransferIconQML(keys[i])
                 var newObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
@@ -85,25 +89,42 @@ import QtQuick.Controls 2.2;
 Rectangle {
     x: 5
     width: parent.width - 10;
-    height: 60
+    height: 65
     color: "lightgray"
 
     Row {
         width: parent.width;
-        height: 40
+        height: 45
         anchors.verticalCenter: parent.verticalCenter
         id: bookmarks_item
         x: 10
 
         Image
         {
-            source: "qrc:icons/32_amazon_icon.png"
+            source: "qrc:icons/' + icon +'"
         }
 
         Rectangle
         {
             width: 10
             height: 10
+        }
+
+        Column {
+          width: parent.width - 390;
+          Text {
+            font.pointSize: 14
+            text: "' + keys[i] +'"
+           }
+
+           Text {
+             font.pointSize: 8
+             text: \'<a href="' + srcPath +'">' + srcPath + '</a>\'
+           }
+           Text {
+             font.pointSize: 8
+             text: "' + dstPath + '"
+           }
         }
     }
 }

@@ -1,6 +1,3 @@
 #include "inc/filetransfersmodel.h"
 
-FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent)
-{
-
-}
+FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent) {}

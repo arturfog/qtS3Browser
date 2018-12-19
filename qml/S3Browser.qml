@@ -52,8 +52,15 @@ Item {
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
             s3Model.downloadQML(view.currentIndex)
+            switchPanel(transfer_btn, progressPanel)
         } else {
-            s3Error.visible = true
+            // download in progress, add transfer to queue
+            var fileName = s3Model.getItemNameQML(view.currentIndex)
+            var s3path = "s3://" + s3Model.getItemNameQML(view.currentIndex)
+
+            var path = s3Model.getFileBrowserPath()
+            var localPath = "file://" + path + fileName
+            ftModel.addTransferQML(fileName, s3path, localPath)
         }
     }
 
@@ -61,13 +68,10 @@ Item {
         var fileName = s3Model.getItemNameQML(view.currentIndex)
         var path = s3Model.getFileBrowserPath()
 
-        switchPanel(transfer_btn, progressPanel)
-
         if(fsModel.fileExistsQML(path + fileName)) {
             overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"
             overwriteDialog.visible = true
         } else {
-            ftModel.addTransferQML(fileName, path + fileName)
             downloadInternal()
         }
     }
