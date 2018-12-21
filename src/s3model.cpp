@@ -64,6 +64,8 @@ S3Model::S3Model(QObject *parent)
         QString home = "file://";
         setFileBrowserPath(home.append(fsm.getHomePath()));
     }
+
+    LogMgr::openLog();
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE QString S3Model::getFileBrowserPath() const {

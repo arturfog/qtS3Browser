@@ -244,8 +244,8 @@ Window {
                 }
 
                 TextEdit {
-                    width: parent.width / 2
-                    wrapMode: Text.Wrap
+                    width: (parent.width - 20) / 2
+                    wrapMode: Text.WrapAnywhere
                     height: 50
                     text: path
                     readOnly: true
