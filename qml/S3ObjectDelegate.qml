@@ -133,6 +133,13 @@ Rectangle {
             onClicked: { download() }
         }
         MenuItem {
+            icon.source: "qrc:icons/32_transfer_icon.png"
+            icon.color: "transparent"
+            enabled: false
+            text: qsTr('Sync')
+            onClicked: { sync() }
+        }
+        MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected && !s3Model.isTransferring()

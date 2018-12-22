@@ -65,7 +65,7 @@ public:
     Q_INVOKABLE QString getHomePath() const{
         LogMgr::debug(Q_FUNC_INFO);
 #ifdef __linux__
-    QProcessEnvironment env;
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if(env.contains("SNAP_ARCH")) {
         const QString user(env.value("USER"));
         if(!user.isEmpty()) {

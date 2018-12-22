@@ -178,6 +178,16 @@ Rectangle {
 
             if(currentProgress >= 100) {
                 cancel_btn.visible = false
+                var pendingTransfers = ftModel.getTransfersNumQML()
+                if(pendingTransfers > 0) {
+                    var src = ftModel.getTransferSrcPathQML(0);
+                    var dst = ftModel.getTransferDstPathQML(0);
+
+                    if(s3Model.isConnectedQML())
+                    {
+                        s3Model.downloadQML(src, dst)
+                    }
+                }
             }
         }
     }

@@ -91,6 +91,8 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool canDownload() const;
     // --------------------------------------------------------------------------
+    Q_INVOKABLE bool canDownload(const QString &path) const;
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getFileBrowserPath() const;
     // --------------------------------------------------------------------------
     Q_INVOKABLE void goBackQML() { goBack(); }
@@ -107,7 +109,13 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadDirQML(const QString &file) { upload(file, true); }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE void uploadQML(const QString &src, const QString &dst);
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void downloadQML(const int idx);
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void downloadQML(const QString &src, const QString &dst);
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void syncDownloadQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void refreshQML() { refresh(); }
     // --------------------------------------------------------------------------

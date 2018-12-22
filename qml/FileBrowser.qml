@@ -84,6 +84,11 @@ Item {
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
                 text: qsTr("Refresh")
+                onClicked: {
+                    var tmpPath = view.path
+                    view.path = "/"
+                    view.path = tmpPath
+                }
             }
 
             ToolButton {

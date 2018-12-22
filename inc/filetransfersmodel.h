@@ -24,6 +24,10 @@ public:
         return transfers.values().at(idx).at(1);
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE TransferMode getTransferModeQML(const QString &fileName) {
+        return modes[fileName];
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getTransferIconQML(const QString &fileName) {
         if(modes[fileName] == TransferMode::download) {
             return "32_download_icon.png";
