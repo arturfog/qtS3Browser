@@ -185,7 +185,8 @@ Rectangle {
 
                     if(s3Model.isConnectedQML())
                     {
-                        s3Model.downloadQML(src, dst)
+                        //s3Model.downloadQML(src, dst)
+                        //s3Model.uploadQML(src, dst)
                     }
                 }
             }

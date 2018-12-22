@@ -76,11 +76,6 @@ Item {
         }
     }
 
-    function sync() {
-        var fileName = s3Model.getItemNameQML(view.currentIndex)
-        var path = s3Model.getFileBrowserPath()
-    }
-
     ToolBar {
         width: parent.width
         height: 48

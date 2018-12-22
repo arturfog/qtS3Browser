@@ -133,11 +133,11 @@ Rectangle {
             onClicked: { download() }
         }
         MenuItem {
-            icon.source: "qrc:icons/32_transfer_icon.png"
+            icon.source: "qrc:icons/32_endpoint_icon.png"
             icon.color: "transparent"
-            enabled: false
-            text: qsTr('Sync')
-            onClicked: { sync() }
+            enabled: connected
+            text: qsTr('Presign link')
+            onClicked: { }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
