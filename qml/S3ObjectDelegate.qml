@@ -133,6 +133,13 @@ Rectangle {
             onClicked: { download() }
         }
         MenuItem {
+            icon.source: "qrc:icons/32_endpoint_icon.png"
+            icon.color: "transparent"
+            enabled: connected
+            text: qsTr('Presign link')
+            onClicked: { }
+        }
+        MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected && !s3Model.isTransferring()

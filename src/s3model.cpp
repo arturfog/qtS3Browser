@@ -82,6 +82,15 @@ Q_INVOKABLE bool S3Model::canDownload() const {
     return false;
 }
 // --------------------------------------------------------------------------
+Q_INVOKABLE bool S3Model::canDownload(const QString &path) const {
+    LogMgr::debug(Q_FUNC_INFO, getFileBrowserPath());
+    const QFileInfo fileInfo = QFileInfo(path);
+    if(fileInfo.isDir() && fileInfo.isWritable()) {
+        return true;
+    }
+    return false;
+}
+// --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::setFileBrowserPath(const QString& path) {
     LogMgr::debug(Q_FUNC_INFO, path);
     mFileBrowserPath = path;
@@ -100,6 +109,91 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
             download(m_s3items.at(idx).fileName(), isDir);
         }
     }
+}
+// --------------------------------------------------------------------------
+void S3Model::uploadQML(const QString &src, const QString &dst)
+{
+    LogMgr::debug(Q_FUNC_INFO, src);
+
+    std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
+        emit this->setProgressSignal(bytes, total);
+    };
+
+    if(isConnected)
+    {
+        QString tmpSrc(src);
+        QString tmpDst(dst);
+        QStringList dstList = tmpDst.replace("s3://", "").split("/");
+        if(!dstList.isEmpty())
+        {
+            const QString bucket(dstList[0]);
+            dstList.takeFirst();
+            const QString key(dstList.join("/"));
+
+            if(!key.isEmpty() && !bucket.isEmpty())
+            {
+                tmpSrc.replace("file://", "");
+                s3.uploadFile(bucket.toStdString().c_str(),
+                              key.toStdString().c_str(),
+                              tmpSrc.toStdString().c_str(),
+                              callback);
+            }
+        }
+    }
+}
+// --------------------------------------------------------------------------
+void S3Model::downloadQML(const QString &src, const QString &dst)
+{
+    LogMgr::debug(Q_FUNC_INFO, src);
+
+    std::function<void(const unsigned long long, const unsigned long long)> callback = [&](const unsigned long long bytes, const unsigned long long total) {
+        emit this->setProgressSignal(bytes, total);
+    };
+
+    if(isConnected)
+    {
+        QString tmpSrc(src);
+        QString tmpDst(dst);
+        QStringList srcList = tmpSrc.replace("s3://", "").split("/");
+        if(!srcList.isEmpty())
+        {
+            const QString bucket(srcList[0]);
+            srcList.takeFirst();
+            const QString key(srcList.join("/"));
+
+            if(!key.isEmpty() && !bucket.isEmpty())
+            {
+                tmpDst.replace("file://", "");
+                // TODO: check if source exist
+                // destination exist and is directory
+                if(canDownload(tmpDst))
+                {
+                    s3.downloadDirectory(bucket.toStdString().c_str(),
+                                         key.toStdString().c_str(),
+                                         tmpDst.toStdString().c_str(),
+                                         callback);
+                } else {
+                    // remove filename from path
+                    srcList.takeLast();
+                    const QString dstDir = srcList.join("/");
+                    // dst dir exists
+                    if(canDownload(dstDir))
+                    {
+                        s3.downloadFile(bucket.toStdString().c_str(),
+                                        key.toStdString().c_str(),
+                                        tmpDst.toStdString().c_str(),
+                                        callback);
+                    }
+                }
+            }
+        }
+    }
+
+}
+// --------------------------------------------------------------------------
+void S3Model::syncDownloadQML(const int idx)
+{
+    downloadQML(idx);
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
@@ -431,7 +525,7 @@ void S3Model::readCLIConfig()
     // aws_secret_access_key = 1234
     //
     static const QString winDefaultLocation = "%UserProfile%\\.aws\\credentials";
-    static const QString nixDefaultLocation = QDir::homePath() + "/.aws/credentials";
+    static const QString nixDefaultLocation = fsm.getHomePath() + "/.aws/credentials";
 
     // don't overwrite custom access/secret key set in app with those set in awscli
     if(settings.contains("AccessKey") && settings.contains("SecretKey")) {

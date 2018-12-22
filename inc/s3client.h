@@ -321,6 +321,14 @@ public:
     std::string getOwner(const Aws::String& name);
 
     std::string getETAG(const Aws::String& name);
+    /**
+     * @brief getPresignLink
+     * @param bucket_name
+     * @param key_name
+     * @return
+     */
+    std::string getPresignLink(const Aws::String &bucket_name,
+                               const Aws::String &key_name);
 };
 
 

@@ -61,8 +61,8 @@ build_script:
   # Bundle all dependencies
   - ps: |
       windeployqt --release --qmldir ..\qml release\s3browser.exe --dir distrib
-      cp c:\projects\aws\aws-cpp-sdk-*.dll distrib
-      cp c:\projects\aws\aws-cpp-sdk-*.lib distrib
+      cp c:\projects\aws\aws-*.dll distrib
+      cp c:\projects\aws\aws-*.lib distrib
       cp release\s3browser.exe distrib
       
       mkdir distrib\64
