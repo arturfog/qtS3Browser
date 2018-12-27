@@ -56,7 +56,7 @@ Item {
         } else {
             // download in progress, add transfer to queue
             var fileName = s3Model.getItemNameQML(view.currentIndex)
-            var s3path = "s3://" + s3Model.getItemNameQML(view.currentIndex)
+            var s3path = "s3://" + s3Model.getS3PathQML() + fileName
 
             var path = s3Model.getFileBrowserPath()
             var localPath = "file://" + path + fileName

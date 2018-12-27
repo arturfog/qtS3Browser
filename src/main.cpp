@@ -33,6 +33,7 @@
 #include "inc/filesystemmodel.h"
 #include "inc/filetransfersmodel.h"
 #include "inc/bookmarksmodel.h"
+#include "inc/settingsmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -55,6 +56,8 @@ int main(int argc, char *argv[])
     FilesystemModel fsModel;
     FileTransfersModel ftModel;
     BookmarksModel bookModel;
+    SettingsModel settingsModel;
+
     QQmlApplicationEngine engine;
     QQuickView view(&engine, nullptr);
 
@@ -63,6 +66,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("fsModel", &fsModel);
     ctxt->setContextProperty("bookModel", &bookModel);
     ctxt->setContextProperty("ftModel", &ftModel);
+    ctxt->setContextProperty("settingsModel", &settingsModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
     engine.addImageProvider(QLatin1String("iconProvider"), new IconProvider());

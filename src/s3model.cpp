@@ -163,8 +163,10 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 
             if(!key.isEmpty() && !bucket.isEmpty())
             {
-                tmpDst.replace("file://", "");
                 // TODO: check if source exist
+
+                tmpDst.replace("file://", "");
+                QStringList dstList = tmpDst.split("/");
                 // destination exist and is directory
                 if(canDownload(tmpDst))
                 {
@@ -173,12 +175,13 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
                                          tmpDst.toStdString().c_str(),
                                          callback);
                 } else {
-                    // remove filename from path
-                    srcList.takeLast();
-                    const QString dstDir = srcList.join("/");
+                    // remove filename from dest dir path
+                    const QString filename = dstList.takeLast();
+                    const QString dstDir = dstList.join("/");
                     // dst dir exists
                     if(canDownload(dstDir))
                     {
+                        currentFile = filename;
                         s3.downloadFile(bucket.toStdString().c_str(),
                                         key.toStdString().c_str(),
                                         tmpDst.toStdString().c_str(),
@@ -480,12 +483,6 @@ QVariant S3Model::data(const QModelIndex & index, int role) const {
         return item.filePath();
     return QVariant();
 }
-// ----------------------------------------------------------------------------
-QString S3Model::getAccessKey() const { return settings.value("AccessKey").toString(); }
-// ----------------------------------------------------------------------------
-QString S3Model::getSecretKey() const { return settings.value("SecretKey").toString(); }
-// ----------------------------------------------------------------------------
-QString S3Model::getStartPath() const { return settings.value("StartPath", "s3://").toString(); }
 // ----------------------------------------------------------------------------
 QString S3Model::extractKey(const QString& line) {
     const int startIdx = line.indexOf('=');

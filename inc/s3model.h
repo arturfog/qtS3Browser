@@ -140,12 +140,6 @@ public:
         m_s3Path.clear();
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getAccesKeyQML() {return getAccessKey();}
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getSecretKeyQML() {return getSecretKey();}
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getStartPathQML() {return getStartPath();}
-    // --------------------------------------------------------------------------
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
                                      const QString& accessKey,
                                      const QString& secretKey,
@@ -171,28 +165,6 @@ public:
 
         s3.reloadCredentials();
     }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE int getRegionIdxQML() {
-        LogMgr::debug(Q_FUNC_INFO);
-        if(settings.contains("RegionIdx")) {
-            return settings.value("RegionIdx").toInt();
-        }
-        return 0;
-    }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE int getTimeoutIdxQML() {
-        LogMgr::debug(Q_FUNC_INFO);
-        if(settings.contains("TimeoutIdx")) {
-            return settings.value("TimeoutIdx").toInt();
-        }
-        return 0;
-    }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getEndpointQML() { return settings.value("Endpoint").toString(); }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getLogsDirQML() { return settings.value("LogsDir").toString(); }
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE bool getLogsEnabledQML() { return settings.value("LogsEnabled").toBool(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
     // --------------------------------------------------------------------------
@@ -345,21 +317,6 @@ public:
      * @return
      */
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    /**
-     * @brief getAccessKey
-     * @return
-     */
-    QString getAccessKey() const;
-    /**
-     * @brief getSecretKey
-     * @return
-     */
-    QString getSecretKey() const;
-    /**
-     * @brief getStartPath
-     * @return
-     */
-    QString getStartPath() const;
     /**
      * @brief readCLIConfig
      */

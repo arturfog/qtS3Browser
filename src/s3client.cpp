@@ -64,7 +64,8 @@ void S3Client::init() {
 
 #ifdef QT_DEBUG
         config.scheme = Aws::Http::Scheme::HTTP;
-        auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 99000);
+        //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 99000);
+        auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 29000);
         config.readRateLimiter = m_limiter;
         config.writeRateLimiter = m_limiter;
 #endif
@@ -503,7 +504,7 @@ void S3Client::cancelDownloadUpload()
 // --------------------------------------------------------------------------
 bool S3Client::isTransferring() const
 {
-    LogMgr::debug(Q_FUNC_INFO);
+    //LogMgr::debug(Q_FUNC_INFO);
     if(transferHandle != nullptr) {
         return (transferHandle->GetStatus() == Aws::Transfer::TransferStatus::IN_PROGRESS);
     }

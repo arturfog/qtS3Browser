@@ -34,12 +34,12 @@ Item {
     readonly property int inputFontSize: getSmallFontSize()
 
     onVisibleChanged: {
-        startPath.text = s3Model.getStartPathQML()
-        secretKey.text = s3Model.getSecretKeyQML()
-        accessKey.text = s3Model.getAccesKeyQML()
-        endpointURL.text = s3Model.getEndpointQML()
-        logsPath.text = s3Model.getLogsDirQML()
-        enableLogs.checked = s3Model.getLogsEnabledQML()
+        startPath.text = settingsModel.getStartPathQML()
+        secretKey.text = settingsModel.getSecretKeyQML()
+        accessKey.text = settingsModel.getAccesKeyQML()
+        endpointURL.text = settingsModel.getEndpointQML()
+        logsPath.text = settingsModel.getLogsDirQML()
+        enableLogs.checked = settingsModel.getLogsEnabledQML()
     }
 
     function extendInputText(input, input_field, input_field_rect) {
@@ -471,7 +471,7 @@ Item {
                             width: parent.width
                             height: parent.height
                             font.pointSize: inputFontSize
-                            currentIndex: s3Model.getRegionIdxQML()
+                            currentIndex: settingsModel.getRegionIdxQML()
                             model: [ "us-east-1",
                                 "us-east-2",
                                 "eu-central-1",
@@ -546,7 +546,7 @@ Item {
                             width: parent.width
                             height: parent.height
                             font.pointSize: inputFontSize
-                            currentIndex: s3Model.getTimeoutIdxQML()
+                            currentIndex: settingsModel.getTimeoutIdxQML()
                             model: [ "3",
                                 "5",
                                 "10",

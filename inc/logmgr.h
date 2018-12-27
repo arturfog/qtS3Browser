@@ -20,6 +20,7 @@ public:
      * @param msg
      * @param arg1
      */
+    static void debug(const std::string &msg, const QString &arg1, const QString &arg2);
     static void debug(const std::string &msg, const std::string& arg1);
     static void debug(const std::string &msg, const QString& arg1);
     static void debug(const std::string &msg, const char* arg1);

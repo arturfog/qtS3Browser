@@ -178,17 +178,6 @@ Rectangle {
 
             if(currentProgress >= 100) {
                 cancel_btn.visible = false
-                var pendingTransfers = ftModel.getTransfersNumQML()
-                if(pendingTransfers > 0) {
-                    var src = ftModel.getTransferSrcPathQML(0);
-                    var dst = ftModel.getTransferDstPathQML(0);
-
-                    if(s3Model.isConnectedQML())
-                    {
-                        //s3Model.downloadQML(src, dst)
-                        //s3Model.uploadQML(src, dst)
-                    }
-                }
             }
         }
     }
@@ -477,6 +466,35 @@ Rectangle {
 
         onVisibleChanged: {
             transfers_list.update()
+        }
+
+        Timer {
+            interval: 500
+            running: true
+            repeat: true
+            onTriggered: {
+                var pendingTransfers = ftModel.getTransfersNumQML()
+                if(pendingTransfers > 0) {
+                    var src = ftModel.getTransferSrcPathQML(0);
+                    var dst = ftModel.getTransferDstPathQML(0);
+
+                    if(s3Model.isConnectedQML() && (s3Model.isTransferring() === false))
+                    {
+                        if(ftModel.getTransferModeQML(0) === 1)
+                        {
+                            s3Model.downloadQML(src, dst)
+                            ftModel.removeTransferQML(0);
+                            addTransfers()
+                        }
+                        else if (ftModel.getTransferModeQML(0) === 0)
+                        {
+                            s3Model.uploadQML(src, dst)
+                            ftModel.removeTransferQML(0);
+                            addTransfers()
+                        }
+                    }
+                }
+            }
         }
 
         Row {

@@ -42,6 +42,11 @@ Item {
             var keys = bookModel.getBookmarksKeysQML()
             var values = bookModel.getBookmarksLinksQML()
             for(i = 0; i < bookmarksLen; i++){
+                var color = "#dbdbdb"
+                if((i  % 2) == 0) {
+                    color = "transparent"
+                }
+
                 var newObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
@@ -50,6 +55,7 @@ Rectangle {
  x: 5
  width: parent.width - 10;
  height: 60
+ color: "' + color + '"
 
  Row {
   width: parent.width;
@@ -65,6 +71,7 @@ Rectangle {
   Rectangle {
     width: 10
     height: 10
+    color: "transparent"
   }
 
   Column {
@@ -111,6 +118,7 @@ Rectangle {
       Rectangle {
         width: 5
         height: 10
+        color: "transparent"
       }
 
       Button {
@@ -144,6 +152,7 @@ Rectangle {
       Rectangle {
         width: 5
         height: 10
+        color: "transparent"
       }
 
       Button {
@@ -174,7 +183,7 @@ Rectangle {
 
 Rectangle {
     width: parent.width
-    color: "#dbdbdb"
+    color: "gray"
     height: 1
 }
 
@@ -277,9 +286,9 @@ Rectangle {
             Rectangle
             {
                 id: frame
-                x: 5
+                x: 2
                 y: 10
-                width: parent.width - 10
+                width: parent.width - 4
                 height: parent.height - 30
                 clip: true
 

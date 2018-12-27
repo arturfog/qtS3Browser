@@ -34,6 +34,13 @@ void LogMgr::debug(const std::string &msg, const QString &arg1)
     LogMgr::debug(msg, arg1.toStdString());
 }
 // --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const QString &arg1, const QString &arg2)
+{
+    QString tmpArg(arg1);
+    tmpArg.append(" ").append(arg2);
+    LogMgr::debug(msg, tmpArg.toStdString());
+}
+// --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg, const char *arg1)
 {
     LogMgr::debug(msg, std::string(arg1));
