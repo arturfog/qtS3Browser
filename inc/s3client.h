@@ -53,10 +53,11 @@ private:
     static std::function<void(const std::string&)> m_stringFunc;
     static std::function<void(const std::string&)> m_errorFunc;
     static std::function<void()> m_emptyFunc;
-    static std::function<void(const unsigned long bytes, const unsigned long total)> m_progressFunc;
+    static std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> m_progressFunc;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;
+    static Aws::String lastTransferedFile;
     /**
      * @brief downloadProgress
      * @param manager
@@ -256,7 +257,9 @@ public:
     void downloadFile(const Aws::String &bucket_name,
                       const Aws::String &key_name,
                       const Aws::String &file_name,
-                      std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+                      std::function<void (const unsigned long long,
+                                          const unsigned long long,
+                                          const std::string)> progressFunc);
     /**
      * @brief downloadDirectory
      * @param bucket_name
@@ -266,7 +269,9 @@ public:
     void downloadDirectory(const Aws::String &bucket_name,
                            const Aws::String &key_name,
                            const Aws::String &dir_name,
-                           std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+                           std::function<void(const unsigned long long bytes,
+                                              const unsigned long long total,
+                                              const std::string key)> progressFunc);
     /**
      * @brief uploadFile
      * @param bucket_name
@@ -277,7 +282,9 @@ public:
     void uploadFile(const Aws::String &bucket_name,
                     const Aws::String &key_name,
                     const Aws::String &file_name,
-                    std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+                    std::function<void(const unsigned long long,
+                                   const unsigned long long,
+                                   const std::string)> progressFunc);
     /**
      * @brief uploadDirectory
      * @param bucket_name
@@ -287,7 +294,9 @@ public:
     void uploadDirectory(const Aws::String &bucket_name,
                          const Aws::String &key_name,
                          const Aws::String &dir_name,
-                         std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc);
+                         std::function<void(const unsigned long long,
+                                            const unsigned long long,
+                                            const std::string)> progressFunc);
     /**
      * @brief cancelDownloadUpload
      */
@@ -329,6 +338,8 @@ public:
      */
     std::string getPresignLink(const Aws::String &bucket_name,
                                const Aws::String &key_name);
+
+    std::string getLastTransferedFile();
 };
 
 

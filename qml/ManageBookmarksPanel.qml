@@ -91,6 +91,7 @@ Rectangle {
       Button {
         id:o' + i + '
         text: "Open"
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -124,6 +125,7 @@ Rectangle {
       Button {
         id:e' + i + '
         text: "Edit";
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_edit_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -158,6 +160,7 @@ Rectangle {
       Button {
         id:d' + i + '
         text: "Remove";
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -241,6 +244,7 @@ Rectangle {
                     text: qsTr("Add bookmark");
                     icon.source: "qrc:icons/32_add_bookmark.png"
                     icon.color: "transparent"
+                    font.pointSize: getSmallFontSize()
                     anchors.verticalCenter: parent.verticalCenter
                     onClicked: {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)

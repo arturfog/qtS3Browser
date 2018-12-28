@@ -90,7 +90,7 @@ Rectangle {
     x: 5
     width: parent.width - 10;
     height: 65
-    color: "lightgray"
+    color: "transparent"
 
     Row {
         width: parent.width;
@@ -127,6 +127,12 @@ Rectangle {
            }
         }
     }
+
+Rectangle {
+    width: parent.width
+    color: "gray"
+    height: 1
+}
 }
                 ', transfers_list, "dynamicTransfers");
             }
@@ -246,216 +252,251 @@ Rectangle {
             }
         }
     }
-
+    // ------------------------------------------------------------
+    // ------------------------------------------------------------
+    // ------------------------------------------------------------
     // ------------------------------------------------------------
     Rectangle {
-        id: operation_progress_rect
+        id: transfers_progress_rect
         y: 60
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 150
+        width: parent.width - 50
         height: 180
         border.color: "lightgray"
         border.width: 2
         radius: 5
 
-        Column {
+        Row {
+            x: 10
+            y: 5
             width: parent.width
-            height: parent.height
+            height: 40
 
-            Row {
-                x: 10
-                y: 10
-                width: parent.width
+            Image {
+                source: "qrc:icons/32_file_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            // ------------------ currently transferred file ----------------
+            Text {
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+                width: parent.width - 400
                 height: 40
-
-                Image {
-                    source: "qrc:icons/32_file_icon.png"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                // ------------------ currently transferred file ----------------
-                Text {
-                    wrapMode: Text.NoWrap
-                    elide: Text.ElideRight
-                    width: parent.width - 50
-                    height: 40
-                    text: currentFile
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                }
+                text: "Transfers progress"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getMediumFontSize()
             }
 
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
-                height: 1
-            }
-            // ------------------ progress bar and precentage row ----------------
-            Row {
-                x: 10
-                y: 10
-                width: parent.width
-                height: 40
-
-                ProgressBar {
-                    id: current_pb
-                    height: parent.height
-                    width: parent.width - 90
-                    value: currentProgress
-                    to: 100.0
-                }
-
-                Rectangle {
-                    width: 5
-                    height: parent.height
-                    color: "transparent"
-                }
-
-                Rectangle {
-                    width: 1
-                    color: "#dbdbdb"
-                    height: parent.height - 5
-                }
-
-                Rectangle {
-                    width: 5
-                    height: parent.height
-                    color: "transparent"
-                }
-
-                Text {
-                    height: 40
-                    text: Number(currentProgress)  + " %"
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: 12
-                }
+                width: 5
+                height: parent.height
+                color: "transparent"
             }
 
             Rectangle {
-                width: parent.width
+                width: 1
                 color: "#dbdbdb"
-                height: 1
-            }
-
-            // ------------------ total item size and currently transferred bytes ----------------
-            Row {
-                x: 20
-                y: 20
-                width: parent.width
-                height: 40
-
-                Image {
-                    source: "qrc:icons/32_server_icon.png"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Text {
-                    height: 40
-                    width: 100
-                    text: "Copied: " + getSizeString(currentBytes)
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                }
-
-                Rectangle {
-                    width: 80
-                    height: parent.height
-                    color: "transparent"
-                }
-
-                Rectangle {
-                    width: 1
-                    color: "#dbdbdb"
-                    height: parent.height - 5
-                }
-
-                Rectangle {
-                    width: 80
-                    height: parent.height
-                    color: "transparent"
-                }
-
-                Image {
-                    source: "qrc:icons/32_hdd_icon2.png"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Text {
-                    height: 40
-                    text: "Total: " + getSizeString(totalBytes)
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                }
+                height: parent.height - 5
             }
 
             Rectangle {
-                width: parent.width
-                color: "#dbdbdb"
-                height: 1
+                width: 5
+                height: parent.height
+                color: "transparent"
             }
 
-            Row {
-                x: 20
-                y: 10
-                width: parent.width
+            Image {
+                source: "qrc:icons/32_clock_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Text {
                 height: 40
+                text: "ETA: " + secondsToEta(secondsLeft)
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
 
-                Image {
-                    source: "qrc:icons/32_dl_speed_icon.png"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
 
-                Text {
-                    height: 40
-                    width: 100
-                    text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                }
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
 
-                Rectangle {
-                    width: 80
-                    height: parent.height
-                    color: "transparent"
-                }
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
 
-                Rectangle {
-                    id: lower_divider
-                    width: 1
-                    color: "#dbdbdb"
-                    height: parent.height - 5
-                }
+            Image {
+                source: "qrc:icons/32_dl_speed_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
 
-                Rectangle {
-                    width: 80
-                    height: parent.height
-                    color: "transparent"
-                }
+            Text {
+                height: 40
+                width: 100
+                text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+        }
 
-                Image {
-                    source: "qrc:icons/32_clock_icon.png"
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+        Rectangle {
+            width: parent.width
+            color: "#dbdbdb"
+            y:45
+            height: 1
+        }
 
-                Rectangle {
-                    width: 5
-                    height: parent.height
-                    color: "transparent"
-                }
+        // ------------------ progress bar and precentage row ----------------
+        Row {
+            x: 10
+            y: 45
+            width: parent.width
+            height: 40
 
-                Text {
-                    height: 40
-                    text: "ETA: " + secondsToEta(secondsLeft)
-                    verticalAlignment: Text.AlignVCenter
-                    font.pointSize: getSmallFontSize()
-                }
+            Text {
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+                width: parent.width - 560
+                height: 40
+                text: currentFile
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            ProgressBar {
+                id: current_pb
+                height: parent.height
+                width: 160
+                value: currentProgress
+                to: 100.0
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Text {
+                height: 40
+                text: Number(currentProgress)  + " %"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Image {
+                source: "qrc:icons/32_server_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                height: 40
+                width: 120
+                text: "Copied: " + getSizeString(currentBytes)
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Image {
+                source: "qrc:icons/32_hdd_icon2.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                height: 40
+                text: "Total: " + getSizeString(totalBytes)
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
             }
         }
     }
     // ------------------------------------------------------------
     Rectangle {
         id: manage_transfers_rect
-        y: operation_progress_rect.height + operation_progress_rect.y + 20
+        y: transfers_progress_rect.height + transfers_progress_rect.y + 20
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 150

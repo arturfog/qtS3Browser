@@ -29,6 +29,8 @@
 
 #include "inc/logmgr.h"
 #include "inc/filesystemmodel.h"
+#include "inc/settingsmodel.h"
+#include "inc/filetransfersmodel.h"
 
 class S3Item
 {
@@ -114,8 +116,6 @@ public:
     Q_INVOKABLE void downloadQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void downloadQML(const QString &src, const QString &dst);
-    // --------------------------------------------------------------------------
-    Q_INVOKABLE void syncDownloadQML(const int idx);
     // --------------------------------------------------------------------------
     Q_INVOKABLE void refreshQML() { refresh(); }
     // --------------------------------------------------------------------------
@@ -317,10 +317,7 @@ public:
      * @return
      */
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    /**
-     * @brief readCLIConfig
-     */
-    void readCLIConfig();
+
 protected:
     QHash<int, QByteArray> roleNames() const;
     S3Client s3;
@@ -333,17 +330,8 @@ private:
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;
     FilesystemModel fsm;
-    /**
-     * @brief parseCLIConfig
-     * @param credentialsFilePath
-     */
-    void parseCLIConfig(const QString &credentialsFilePath);
-    /**
-     * @brief extractKey
-     * @param line
-     * @return
-     */
-    static QString extractKey(const QString& line);
+    SettingsModel sm;
+    FileTransfersModel ftm;
 };
 
 #endif // S3MODEL_H

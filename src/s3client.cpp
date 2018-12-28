@@ -44,7 +44,7 @@
 std::function<void(const std::string&)> S3Client::m_stringFunc;
 std::function<void(const std::string&)> S3Client::m_errorFunc;
 std::function<void()> S3Client::m_emptyFunc;
-std::function<void(const unsigned long bytes, const unsigned long total)> S3Client::m_progressFunc;
+std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> S3Client::m_progressFunc;
 
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
         Aws::MakeShared<Aws::Utils::Threading::PooledThreadExecutor>("s3-executor", 10);
@@ -52,6 +52,7 @@ std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
 Aws::String S3Client::currentPrefix;
 std::vector<std::string> S3Client::items;
 Aws::Transfer::TransferManagerConfiguration S3Client::transferConfig(S3Client::executor.get());
+Aws::String S3Client::lastTransferedFile;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -82,7 +83,7 @@ void S3Client::init() {
     }
     Aws::ShutdownAPI(options);
 }
-
+// --------------------------------------------------------------------------
 void S3Client::loadConfig()
 {
     LogMgr::debug(Q_FUNC_INFO);
@@ -119,7 +120,7 @@ void S3Client::loadConfig()
         }
     }
 }
-
+// --------------------------------------------------------------------------
 void S3Client::reloadCredentials()
 {
     loadConfig();
@@ -240,6 +241,11 @@ std::string S3Client::getPresignLink(const Aws::String &bucket_name,
     return url.c_str();
 }
 // --------------------------------------------------------------------------
+std::string S3Client::getLastTransferedFile()
+{
+    return lastTransferedFile.c_str();
+}
+// --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
                                     const Aws::S3::Model::GetObjectRequest &request,
                                     const Aws::S3::Model::GetObjectOutcome &outcome,
@@ -294,13 +300,13 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
 void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
+    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize(), handle->GetKey().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize());
+    m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize(), handle->GetKey().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
@@ -313,12 +319,13 @@ void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
                             const Aws::Client::AWSError<Aws::S3::S3Errors>& error)
 {
     LogMgr::error(error.GetMessage().c_str());
-    //m_errorFunc(error.GetMessage().c_str());
+    m_errorFunc(error.GetMessage().c_str());
 }
-
+// --------------------------------------------------------------------------
 void S3Client::transferInitiatedHandler(const Aws::Transfer::TransferManager *,
-                                        const std::shared_ptr<const Aws::Transfer::TransferHandle> &)
+                                        const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
+    lastTransferedFile = handle->GetKey();
 }
 // --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
@@ -471,7 +478,9 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
 void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &key_name,
                           const Aws::String &file_name,
-                          std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc)
+                          std::function<void(const unsigned long long bytes,
+                                             const unsigned long long total,
+                                             const std::string key)> progressFunc)
 {
     LogMgr::debug(Q_FUNC_INFO);
     m_progressFunc = progressFunc;
@@ -484,7 +493,9 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
 void S3Client::uploadDirectory(const Aws::String &bucket_name,
                                const Aws::String &key_name,
                                const Aws::String &dir_name,
-                               std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
+                               std::function<void (const unsigned long long,
+                                                   const unsigned long long,
+                                                   const std::string key)> progressFunc)
 {
     LogMgr::debug(Q_FUNC_INFO);
     m_progressFunc = progressFunc;
@@ -519,7 +530,9 @@ void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc
 void S3Client::downloadFile(const Aws::String &bucket_name,
                             const Aws::String &key_name,
                             const Aws::String &file_name,
-                            std::function<void(const unsigned long long bytes, const unsigned long long total)> progressFunc)
+                            std::function<void(const unsigned long long bytes,
+                                               const unsigned long long total,
+                                               const std::string key)> progressFunc)
 {
     LogMgr::debug(Q_FUNC_INFO, file_name.c_str());
 
@@ -533,7 +546,9 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
 void S3Client::downloadDirectory(const Aws::String &bucket_name,
                                  const Aws::String &key_name,
                                  const Aws::String &dir_name,
-                                 std::function<void (const unsigned long long, const unsigned long long)> progressFunc)
+                                 std::function<void(const unsigned long long bytes,
+                                                const unsigned long long total,
+                                                const std::string key)> progressFunc)
 {
     LogMgr::debug(Q_FUNC_INFO, dir_name.c_str());
 

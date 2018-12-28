@@ -11,6 +11,7 @@ class FileTransfersModel : public QObject
 public:
     enum class TransferMode { upload, download };
     Q_ENUMS(TransferMode)
+
     explicit FileTransfersModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getTransfersNumQML() { return transfers.size(); }
@@ -68,9 +69,20 @@ public:
         transfers.remove(fileName);
         modes.remove(fileName);
     }
+    // --------------------------------------------------------------------------
+    void addTransferProgress(const QString key,
+                             const unsigned long current,
+                             const unsigned long total) {
+        transfersProgress[key] = { current, total };
+    }
+    // --------------------------------------------------------------------------
+    void clearTranferProgress() {
+        transfersProgress.clear();
+    }
 private:
     QMap<QString, QStringList> transfers;
     QMap<QString, TransferMode> modes;
+    QMap<QString, QList<unsigned long>> transfersProgress;
 };
 
 #endif // FILETRANSFERSMODEL_H

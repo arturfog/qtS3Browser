@@ -3,13 +3,29 @@
 
 #include <QObject>
 #include <QSettings>
+
 #include "inc/logmgr.h"
+#include "inc/filesystemmodel.h"
 
 class SettingsModel : public QObject
 {
     Q_OBJECT
 private:
     QSettings settings;
+    FilesystemModel fsm;
+
+    /**
+     * @brief parseCLIConfig
+     * @param credentialsFilePath
+     */
+    void parseCLIConfig(const QString &credentialsFilePath);
+    /**
+     * @brief extractKey
+     * @param line
+     * @return
+     */
+    static QString extractKey(const QString& line);
+
 public:
     explicit SettingsModel(QObject *parent = nullptr);
 
@@ -41,6 +57,11 @@ public:
     Q_INVOKABLE QString getLogsDirQML() { return settings.value("LogsDir").toString(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool getLogsEnabledQML() { return settings.value("LogsEnabled").toBool(); }
+
+    /**
+     * @brief readCLIConfig
+     */
+    void readCLIConfig();
 };
 
 #endif // SETTINGSMODEL_H
