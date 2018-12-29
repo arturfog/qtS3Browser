@@ -19,15 +19,24 @@ public:
     Q_INVOKABLE QList<QString> getTransfersKeysQML() {return transfers.keys();}
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getTransferSrcPathQML(int idx) const {
-        return transfers.values().at(idx).at(0);
+        if(transfers.size() > 0 && idx < transfers.size()) {
+            return transfers.values().at(idx).at(0);
+        }
+        return "";
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getTransferDstPathQML(int idx) const {
-        return transfers.values().at(idx).at(1);
+        if(transfers.size() > 0 && idx < transfers.size()) {
+            return transfers.values().at(idx).at(1);
+        }
+        return "";
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE TransferMode getTransferModeQML(int idx) const {
-        return modes.values().at(idx);
+        if(modes.size() > 0 && idx < modes.size()) {
+            return modes.values().at(idx);
+        }
+        return TransferMode::download;
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getTransferIconQML(const QString &fileName) {
@@ -59,15 +68,21 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeTransferQML(const QString &fileName) {
         LogMgr::debug(Q_FUNC_INFO, fileName);
-        transfers.remove(fileName);
-        modes.remove(fileName);
+
+        if(!fileName.isEmpty() && transfers.contains(fileName)) {
+            transfers.remove(fileName);
+            modes.remove(fileName);
+        }
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeTransferQML(const int idx) {
         LogMgr::debug(Q_FUNC_INFO);
-        QString fileName(transfers.keys().at(idx));
-        transfers.remove(fileName);
-        modes.remove(fileName);
+
+        if(transfers.size() > 0 && idx < transfers.size()) {
+            QString fileName(transfers.keys().at(idx));
+            transfers.remove(fileName);
+            modes.remove(fileName);
+        }
     }
     // --------------------------------------------------------------------------
     void addTransferProgress(const QString key,

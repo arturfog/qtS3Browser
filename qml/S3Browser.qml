@@ -51,6 +51,7 @@ Item {
 
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
+            ftModel.clearTransfersProgress();
             s3Model.downloadQML(view.currentIndex)
             switchPanel(transfer_btn, progressPanel)
         } else {

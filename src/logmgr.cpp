@@ -43,7 +43,11 @@ void LogMgr::debug(const std::string &msg, const QString &arg1, const QString &a
 // --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg, const char *arg1)
 {
-    LogMgr::debug(msg, std::string(arg1));
+    if(arg1 != nullptr) {
+        LogMgr::debug(msg, std::string(arg1));
+    } else {
+        LogMgr::debug(msg, "nullptr");
+    }
 }
 // --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg)

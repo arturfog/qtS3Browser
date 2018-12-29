@@ -237,7 +237,7 @@ Window {
             text: qsTr("Create")
             icon.source: "qrc:icons/32_add_icon.png"
             icon.color: "transparent"
-            font.pointSize: getMediumFontSize()
+            font.pointSize: getSmallFontSize()
             enabled: (bookmarkName.length > 0 && bookmarkPath.length > 5)
             onClicked: {                
                 if(bookModel.hasBookmarkQML(oldName))
@@ -270,7 +270,7 @@ Window {
             text: qsTr("Cancel")
             icon.source: "qrc:icons/32_cancel_icon.png"
             icon.color: "transparent"
-            font.pointSize: getMediumFontSize()
+            font.pointSize: getSmallFontSize()
             onClicked: {
                 bookmarkName.text = ""
                 bookmarkPath.text = "s3://"

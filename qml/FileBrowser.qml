@@ -43,6 +43,7 @@ Item {
     function upload() {
         if(!s3Model.isTransferring()) {
             var filePath = folder.get(view.currentIndex, "filePath")
+            ftModel.clearTransfersProgress();
             switchPanel(transfer_btn, progressPanel)
             if(!folder.get(view.currentIndex, "fileIsDir")) {
                 s3Model.uploadFileQML(filePath)
