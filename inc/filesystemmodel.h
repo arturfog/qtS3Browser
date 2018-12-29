@@ -17,12 +17,17 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeQML(const QString& path) {
         LogMgr::debug(Q_FUNC_INFO, path);
-        QDir dir(path);
-        if(dir.exists()) {
-            dir.removeRecursively();
-        } else {
-            QFile file(path);
-            file.remove();
+
+        if(!path.isEmpty()) {
+            QDir dir(path);
+            if(dir.exists()) {
+                dir.removeRecursively();
+            } else {
+                QFile file(path);
+                if(file.exists()) {
+                    file.remove();
+                }
+            }
         }
     }
     // --------------------------------------------------------------------------
@@ -33,30 +38,40 @@ public:
             return -1;
         }
 
-        QString tmpPath = path;
-        tmpPath = tmpPath.replace("file://", "");
-        QDir dir(tmpPath.append("/").append(name));
-        if(!dir.exists()) {
-            dir.mkdir(tmpPath);
-            return true;
+        if(!path.isEmpty()) {
+            QString tmpPath = path;
+            tmpPath = tmpPath.replace("file://", "");
+            QDir dir(tmpPath.append("/").append(name));
+            if(!dir.exists()) {
+                dir.mkdir(tmpPath);
+                return true;
+            }
         }
 
         return -2;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool fileExistsQML(const QString& path) {
+    Q_INVOKABLE bool fileExistsQML(const QString& path) const {
         LogMgr::debug(Q_FUNC_INFO, path);
-        QFile file(path);
-        return file.exists();
+
+        if(!path.isEmpty()) {
+            QFile file(path);
+            return file.exists();
+        }
+        return false;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool isDirQML(const QString& path) {
+    Q_INVOKABLE bool isDirQML(const QString& path) const {
         LogMgr::debug(Q_FUNC_INFO, path);
-        QDir dir(path);
-        return dir.exists();
+
+        if(!path.isEmpty()) {
+            QDir dir(path);
+            return dir.exists();
+        }
+        return false;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getOwner(const QString& path) {
+    Q_INVOKABLE QString getOwner(const QString& path) const {
         LogMgr::debug(Q_FUNC_INFO, path);
         QFileInfo fi(path);
         return fi.owner();
@@ -81,7 +96,7 @@ public:
 #endif
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString permissions(const QString& path) {
+    Q_INVOKABLE QString permissions(const QString& path) const {
         LogMgr::debug(Q_FUNC_INFO, path);
         QFileInfo fi(path);
         QString executable = fi.isExecutable() ? "x" : "-";

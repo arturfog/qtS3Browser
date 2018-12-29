@@ -43,6 +43,7 @@ Item {
     function upload() {
         if(!s3Model.isTransferring()) {
             var filePath = folder.get(view.currentIndex, "filePath")
+            ftModel.clearTransfersProgress();
             switchPanel(transfer_btn, progressPanel)
             if(!folder.get(view.currentIndex, "fileIsDir")) {
                 s3Model.uploadFileQML(filePath)
@@ -51,10 +52,10 @@ Item {
             }
         } else {
             var fileName = folder.get(view.currentIndex, "fileName")
-            var s3path = "s3://" + s3Model.getS3PathQML()
+            var s3path = "s3://" + s3Model.getS3PathQML() + fileName
             var localPath = folder.get(view.currentIndex, "filePath")
             // upload in progress, add transfer to queue
-            ftModel.addTransferQML(fileName, localPath, s3path)
+            ftModel.addTransferToQueueQML(fileName, localPath, s3path)
         }
     }
 

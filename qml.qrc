@@ -58,5 +58,8 @@
         <file>icons/32_fm_icon.png</file>
         <file>icons/32_transfer_icon.png</file>
         <file>icons/32_logs_icon.png</file>
+        <file>icons/32_traffic_icon.png</file>
+        <file>icons/32_transfers_icon.png</file>
+        <file>icons/32_language_icon.png</file>
     </qresource>
 </RCC>

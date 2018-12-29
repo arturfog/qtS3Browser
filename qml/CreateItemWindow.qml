@@ -215,7 +215,7 @@ Window {
                 text: qsTr("Create")
                 icon.source: "qrc:icons/32_add_icon.png"
                 icon.color: "transparent"
-                font.pointSize: getMediumFontSize()
+                font.pointSize: getSmallFontSize()
                 onClicked: {
                     if (create_action === createBucket) {
                         s3Model.createBucketQML(itemName.text)
@@ -271,7 +271,7 @@ Window {
                 text: qsTr("Cancel")
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
-                font.pointSize: getMediumFontSize()
+                font.pointSize: getSmallFontSize()
                 onClicked: {
                     close()
                 }

@@ -192,11 +192,11 @@ ApplicationWindow {
                             if(!mainPanel.s3_panel.connected) {
                                 var canDisconnect = false
 
-                                if(s3Model.getStartPathQML() !== "s3://" && s3Model.getAccesKeyQML() !== "") {
-                                    s3Model.gotoQML(s3Model.getStartPathQML())
+                                if(settingsModel.getStartPathQML() !== "s3://" && settingsModel.getAccesKeyQML() !== "") {
+                                    s3Model.gotoQML(settingsModel.getStartPathQML())
                                     mainPanel.s3_panel.path = s3Model.getS3PathQML()
                                     canDisconnect = true
-                                } else if (s3Model.getAccesKeyQML() !== ""){
+                                } else if (settingsModel.getAccesKeyQML() !== ""){
                                     s3Model.getBucketsQML()
                                     canDisconnect = true
                                 } else {
@@ -206,9 +206,10 @@ ApplicationWindow {
                                 icon.source = "qrc:icons/32_connect_icon.png"
                                 s3Model.clearItemsQML()
                                 s3Model.setConnectedQML(false)
+                                s3Model.cancelDownloadUploadQML();
                                 mainPanel.s3_panel.connected = s3Model.isConnectedQML()
                                 mainPanel.file_panel.connected = s3Model.isConnectedQML()
-                                mainPanel.s3_panel.path = s3Model.getStartPathQML()
+                                mainPanel.s3_panel.path = settingsModel.getStartPathQML()
                             }
                         }
                     }

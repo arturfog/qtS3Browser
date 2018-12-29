@@ -34,12 +34,12 @@ Item {
     readonly property int inputFontSize: getSmallFontSize()
 
     onVisibleChanged: {
-        startPath.text = s3Model.getStartPathQML()
-        secretKey.text = s3Model.getSecretKeyQML()
-        accessKey.text = s3Model.getAccesKeyQML()
-        endpointURL.text = s3Model.getEndpointQML()
-        logsPath.text = s3Model.getLogsDirQML()
-        enableLogs.checked = s3Model.getLogsEnabledQML()
+        startPath.text = settingsModel.getStartPathQML()
+        secretKey.text = settingsModel.getSecretKeyQML()
+        accessKey.text = settingsModel.getAccesKeyQML()
+        endpointURL.text = settingsModel.getEndpointQML()
+        logsPath.text = settingsModel.getLogsDirQML()
+        enableLogs.checked = settingsModel.getLogsEnabledQML()
     }
 
     function extendInputText(input, input_field, input_field_rect) {
@@ -159,7 +159,7 @@ Item {
             radius: 5
 
             Column {
-                width: parent.width
+                width: parent.width / 2
                 height: parent.height
                 // ------------- icon | title row -------------
                 Row {
@@ -222,6 +222,77 @@ Item {
                             onTextChanged: extendInputText(startPath, start_path_input_rect, start_path_rect)
                             onActiveFocusChanged: focusChangedHandler(startPath, start_path_input_rect)
                         }
+                    }
+                }
+            }
+
+            Column {
+                x: parent.width / 2
+                width: parent.width / 2
+                height: parent.height
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+                // ------------- icon | title row -------------
+                Row {
+                    x: 10
+                    y: 10
+                    width: parent.width
+                    height: 40
+                    Image {
+                        source: "qrc:icons/32_language_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Text {
+                        width: parent.width
+                        height: 40
+                        text: "Language"
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: labelFontSize
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+
+                Rectangle {
+                    width: parent.width - 20
+                    height: 40
+                    x: 10
+                    Rectangle {
+                        id: language_input_rect
+                        x: 10
+                        width: parent.width
+                        height: 30
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        border.color: "gray"
+                        border.width: 1
+                        color: "#f8f9fa"
+
+                        ComboBox {
+                            id: language
+                            width: parent.width
+                            height: parent.height
+                            font.pointSize: inputFontSize
+                            currentIndex: settingsModel.getTimeoutIdxQML()
+                            model: [ "English",
+                                "Polish" ]
+                        }
+
                     }
                 }
             }
@@ -471,7 +542,7 @@ Item {
                             width: parent.width
                             height: parent.height
                             font.pointSize: inputFontSize
-                            currentIndex: s3Model.getRegionIdxQML()
+                            currentIndex: settingsModel.getRegionIdxQML()
                             model: [ "us-east-1",
                                 "us-east-2",
                                 "eu-central-1",
@@ -546,7 +617,7 @@ Item {
                             width: parent.width
                             height: parent.height
                             font.pointSize: inputFontSize
-                            currentIndex: s3Model.getTimeoutIdxQML()
+                            currentIndex: settingsModel.getTimeoutIdxQML()
                             model: [ "3",
                                 "5",
                                 "10",

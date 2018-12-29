@@ -20,7 +20,8 @@ SOURCES += src/main.cpp \
     src/filesystemmodel.cpp \
     src/logmgr.cpp \
     src/filetransfersmodel.cpp \
-    src/bookmarksmodel.cpp
+    src/bookmarksmodel.cpp \
+    src/settingsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -53,7 +54,8 @@ HEADERS += \
     inc/filesystemmodel.h \
     inc/logmgr.h \
     inc/filetransfersmodel.h \
-    inc/bookmarksmodel.h
+    inc/bookmarksmodel.h \
+    inc/settingsmodel.h
 
 
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core

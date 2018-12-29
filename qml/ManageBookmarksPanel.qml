@@ -42,6 +42,11 @@ Item {
             var keys = bookModel.getBookmarksKeysQML()
             var values = bookModel.getBookmarksLinksQML()
             for(i = 0; i < bookmarksLen; i++){
+                var color = "#dbdbdb"
+                if((i  % 2) == 0) {
+                    color = "transparent"
+                }
+
                 var newObject = Qt.createQmlObject('
 import QtQuick 2.5;
 import QtQuick.Controls 2.2;
@@ -50,6 +55,7 @@ Rectangle {
  x: 5
  width: parent.width - 10;
  height: 60
+ color: "' + color + '"
 
  Row {
   width: parent.width;
@@ -65,6 +71,7 @@ Rectangle {
   Rectangle {
     width: 10
     height: 10
+    color: "transparent"
   }
 
   Column {
@@ -84,6 +91,7 @@ Rectangle {
       Button {
         id:o' + i + '
         text: "Open"
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -111,11 +119,13 @@ Rectangle {
       Rectangle {
         width: 5
         height: 10
+        color: "transparent"
       }
 
       Button {
         id:e' + i + '
         text: "Edit";
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_edit_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -144,11 +154,13 @@ Rectangle {
       Rectangle {
         width: 5
         height: 10
+        color: "transparent"
       }
 
       Button {
         id:d' + i + '
         text: "Remove";
+        font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
         onClicked: {
@@ -174,7 +186,7 @@ Rectangle {
 
 Rectangle {
     width: parent.width
-    color: "#dbdbdb"
+    color: "gray"
     height: 1
 }
 
@@ -232,6 +244,7 @@ Rectangle {
                     text: qsTr("Add bookmark");
                     icon.source: "qrc:icons/32_add_bookmark.png"
                     icon.color: "transparent"
+                    font.pointSize: getSmallFontSize()
                     anchors.verticalCenter: parent.verticalCenter
                     onClicked: {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
@@ -277,10 +290,11 @@ Rectangle {
             Rectangle
             {
                 id: frame
-                x: 5
+                x: 0
                 y: 10
-                width: parent.width - 10
+                width: parent.width
                 height: parent.height - 30
+                color: "transparent"
                 clip: true
 
                 MouseArea {
