@@ -23,10 +23,8 @@ Item {
     id: progress_win
     width: parent.width; height: parent.height
 
-    property double currentProgress: 0
     property double currentBytes: 0
     property double totalBytes: 0
-    property string currentFile: ""
     property string icon: "qrc:icons/32_transfer_icon.png"
 
     property var lastDate: new Date()
@@ -34,18 +32,14 @@ Item {
     property double transferSpeedBytes: 0
     property int secondsLeft: 0
 
-    readonly property int modeDL: 0
-    readonly property int modeUPLOAD: 1
-
-    property int mode: modeDL
-
     onVisibleChanged: {
         lastTotalBytes = 0
         totalBytes = 0
         transferSpeedBytes = 0
         secondsLeft = 0
         lastDate = new Date()
-        addTransfers()
+        updateTransfersQueue()
+        updateTransfers()
     }
 
     function getSizeString(bytes) {
@@ -66,12 +60,177 @@ Item {
         return number
     }
 
-    function addTransfers() {
-        var transfersLen = ftModel.getTransfersNumQML();
-        var keys = ftModel.getTransfersKeysQML()
+    function updateTransfers() {
+        var transfersLen = ftModel.getTransferProgressNum();
 
         for(var i = transfers_list.children.length; i > 0 ; i--) {
           transfers_list.children[i-1].destroy()
+        }
+
+        if(transfersLen > 0) {
+            for(i = 0; i < transfersLen; i++)
+            {
+                var key = ftModel.getTransfersProgressKey(i);
+                var currentBytes = ftModel.getTransfersCopiedBytes(key)
+                var totalBytes = ftModel.getTransfersTotalBytes(key)
+                var currentProgress = (((currentBytes / totalBytes) * 100) | 0)
+
+var newObject = Qt.createQmlObject('
+import QtQuick 2.5;
+import QtQuick.Controls 2.2;
+
+Rectangle {
+    x: 5
+    width: parent.width - 10;
+    height: 65
+    color: "transparent"
+
+        Row {
+            x: 10
+            y: 4
+            width: parent.width
+            height: 40
+
+            Text {
+                wrapMode: Text.NoWrap
+                elide: Text.ElideRight
+                width: parent.width - 560
+                height: 40
+                text: "' + key + '"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            ProgressBar {
+                id: current_pb
+                height: parent.height
+                width: 160
+                value: ' + currentProgress + '
+                to: 100.0
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Text {
+                height: 40
+                text: Number(' + currentProgress + ')  + " %"
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Image {
+                source: "qrc:icons/32_server_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                height: 40
+                width: 120
+                text: "Copied: " + getSizeString(' + currentBytes + ')
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Image {
+                source: "qrc:icons/32_hdd_icon2.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Text {
+                height: 40
+                text: "Total: " + getSizeString(' + totalBytes + ')
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+        }
+
+    Rectangle {
+        width: parent.width
+        color: "gray"
+        height: 1
+    }
+}
+', transfers_list, "dynamicTransfers");
+            }
+        }
+    }
+
+    function updateTransfersQueue() {
+        var transfersLen = ftModel.getTransfersNumQML();
+        var keys = ftModel.getTransfersKeysQML()
+
+        for(var i = transfers_queue_list.children.length; i > 0 ; i--) {
+          transfers_queue_list.children[i-1].destroy()
         }
 
         var emptyObject = null;
@@ -134,7 +293,7 @@ Rectangle {
     height: 1
 }
 }
-                ', transfers_list, "dynamicTransfers");
+                ', transfers_queue_list, "dynamicTransfersQueue");
             }
         }
     }
@@ -161,9 +320,9 @@ Rectangle {
     Connections {
         target: s3Model
         onSetProgressSignal: {
-            cancel_btn.visible = true
             currentBytes = current
             totalBytes = total
+            updateTransfers()
 
             var currentDate = new Date()
             var seconds = currentDate.getSeconds() - lastDate.getSeconds()
@@ -179,10 +338,9 @@ Rectangle {
 
             lastDate = currentDate
 
-            currentProgress = (((current / total) * 100) | 0)
-            currentFile = s3Model.getCurrentFileQML()
-
-            if(currentProgress >= 100) {
+            if(s3Model.isTransferring()) {
+                cancel_btn.visible = true
+            } else {
                 cancel_btn.visible = false
             }
         }
@@ -228,12 +386,9 @@ Rectangle {
                 icon.color: "transparent"
                 visible: false
                 onClicked: {
-                    if(currentProgress < 100) {
+                    if(s3Model.isTransferring()) {
                         s3Model.cancelDownloadUploadQML()
-                        if(mode == modeDL) {
-                            var path = s3Model.getFileBrowserPath() + currentFile
-                            fsModel.removeQML(path)
-                        }
+                        ftModel.clearTransfersProgress()
                     }
                 }
                 background: Rectangle {
@@ -253,16 +408,13 @@ Rectangle {
         }
     }
     // ------------------------------------------------------------
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
-    // ------------------------------------------------------------
     Rectangle {
         id: transfers_progress_rect
         y: 60
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
         width: parent.width - 50
-        height: 180
+        height: parent.height / 2 - y
         border.color: "lightgray"
         border.width: 2
         radius: 5
@@ -274,7 +426,7 @@ Rectangle {
             height: 40
 
             Image {
-                source: "qrc:icons/32_file_icon.png"
+                source: "qrc:icons/32_transfers_icon.png"
                 anchors.verticalCenter: parent.verticalCenter
             }
             // ------------------ currently transferred file ----------------
@@ -363,133 +515,52 @@ Rectangle {
             height: 1
         }
 
-        // ------------------ progress bar and precentage row ----------------
-        Row {
-            x: 10
-            y: 45
-            width: parent.width
-            height: 40
+        Rectangle
+        {
+            id: transfers_frame
+            x: 5
+            y: 50
+            width: parent.width - 10
+            height: parent.height - 80
+            clip: true
 
-            Text {
-                wrapMode: Text.NoWrap
-                elide: Text.ElideRight
-                width: parent.width - 560
-                height: 40
-                text: currentFile
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-
-            Rectangle {
-                width: 5
+            MouseArea {
+                parent: transfers_progress_rect      // specify the `visual parent`
                 height: parent.height
-                color: "transparent"
+                width: parent.width - 160;
+                onWheel:
+                {
+                    if(transfers_frame.height < transfers_list.height)
+                    {
+                        if (wheel.angleDelta.y > 0)
+                        {
+                            vbar.decrease()
+
+                        }
+                        else
+                        {
+                            vbar.increase()
+                        }
+                    }
+                }
             }
 
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
+
+            ScrollBar {
+                    id: vbar
+                    hoverEnabled: true
+                    active: true
+                    orientation: Qt.Vertical
+                    size: transfers_frame.height / transfers_list.height
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
             }
 
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            ProgressBar {
-                id: current_pb
-                height: parent.height
-                width: 160
-                value: currentProgress
-                to: 100.0
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Text {
-                height: 40
-                text: Number(currentProgress)  + " %"
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Image {
-                source: "qrc:icons/32_server_icon.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Text {
-                height: 40
-                width: 120
-                text: "Copied: " + getSizeString(currentBytes)
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Image {
-                source: "qrc:icons/32_hdd_icon2.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Text {
-                height: 40
-                text: "Total: " + getSizeString(totalBytes)
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
+            Column {
+                y: -vbar.position * height
+                id: transfers_list
+                width: parent.width
             }
         }
     }
@@ -499,7 +570,7 @@ Rectangle {
         y: transfers_progress_rect.height + transfers_progress_rect.y + 20
         anchors.horizontalCenter: parent.horizontalCenter
         color: "white"
-        width: parent.width - 150
+        width: parent.width - 50
         height: parent.height - y - 50
         border.color: "lightgray"
         border.width: 2
@@ -521,17 +592,18 @@ Rectangle {
 
                     if(s3Model.isConnectedQML() && (s3Model.isTransferring() === false))
                     {
+                        cancel_btn.visible = false
                         if(ftModel.getTransferModeQML(0) === 1)
                         {
                             s3Model.downloadQML(src, dst)
                             ftModel.removeTransferQML(0);
-                            addTransfers()
+                            updateTransfersQueue()
                         }
                         else if (ftModel.getTransferModeQML(0) === 0)
                         {
                             s3Model.uploadQML(src, dst)
                             ftModel.removeTransferQML(0);
-                            addTransfers()
+                            updateTransfersQueue()
                         }
                     }
                 }
@@ -545,7 +617,7 @@ Rectangle {
             height: 40
 
             Image {
-                source: "qrc:icons/32_file_icon.png"
+                source: "qrc:icons/32_traffic_icon.png"
                 anchors.verticalCenter: parent.verticalCenter
             }
             // ------------------ currently transferred file ----------------
@@ -576,20 +648,41 @@ Rectangle {
             height: parent.height - 80
             clip: true
 
+            MouseArea {
+                parent: manage_transfers_rect      // specify the `visual parent`
+                height: parent.height
+                width: parent.width - 160;
+                onWheel:
+                {
+                    if(frame.height < transfers_queue_list.height)
+                    {
+                        if (wheel.angleDelta.y > 0)
+                        {
+                            vbar_queue.decrease()
+
+                        }
+                        else
+                        {
+                            vbar_queue.increase()
+                        }
+                    }
+                }
+            }
+
             ScrollBar {
-                    id: vbar
+                    id: vbar_queue
                     hoverEnabled: true
                     active: true
                     orientation: Qt.Vertical
-                    size: frame.height / transfers_list.height
+                    size: frame.height / transfers_queue_list.height
                     anchors.top: parent.top
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
             }
 
             Column {
-                y: -vbar.position * height
-                id: transfers_list
+                y: -vbar_queue.position * height
+                id: transfers_queue_list
                 width: parent.width
             }
         }

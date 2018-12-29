@@ -159,7 +159,7 @@ Item {
             radius: 5
 
             Column {
-                width: parent.width
+                width: parent.width / 2
                 height: parent.height
                 // ------------- icon | title row -------------
                 Row {
@@ -222,6 +222,77 @@ Item {
                             onTextChanged: extendInputText(startPath, start_path_input_rect, start_path_rect)
                             onActiveFocusChanged: focusChangedHandler(startPath, start_path_input_rect)
                         }
+                    }
+                }
+            }
+
+            Column {
+                x: parent.width / 2
+                width: parent.width / 2
+                height: parent.height
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+                // ------------- icon | title row -------------
+                Row {
+                    x: 10
+                    y: 10
+                    width: parent.width
+                    height: 40
+                    Image {
+                        source: "qrc:icons/32_language_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Text {
+                        width: parent.width
+                        height: 40
+                        text: "Language"
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: labelFontSize
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    color: "#dbdbdb"
+                    height: 1
+                }
+
+                Rectangle {
+                    width: parent.width - 20
+                    height: 40
+                    x: 10
+                    Rectangle {
+                        id: language_input_rect
+                        x: 10
+                        width: parent.width
+                        height: 30
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        border.color: "gray"
+                        border.width: 1
+                        color: "#f8f9fa"
+
+                        ComboBox {
+                            id: language
+                            width: parent.width
+                            height: parent.height
+                            font.pointSize: inputFontSize
+                            currentIndex: settingsModel.getTimeoutIdxQML()
+                            model: [ "English",
+                                "Polish" ]
+                        }
+
                     }
                 }
             }

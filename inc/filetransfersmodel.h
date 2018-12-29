@@ -37,7 +37,7 @@ public:
         return "32_upload_icon.png";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void addTransferQML(const QString &fileName,
+    Q_INVOKABLE void addTransferToQueueQML(const QString &fileName,
                                     const QString &src,
                                     const QString &dst)
     {
@@ -73,16 +73,52 @@ public:
     void addTransferProgress(const QString key,
                              const unsigned long current,
                              const unsigned long total) {
-        transfersProgress[key] = { current, total };
+        //LogMgr::debug(Q_FUNC_INFO, key);
+
+        if(!transfersProgress.contains(key)) {
+            transfersProgress.insert(key, { current, total });
+        } else {
+            transfersProgress[key] = { current, total };
+        }
+
     }
     // --------------------------------------------------------------------------
-    void clearTranferProgress() {
+    Q_INVOKABLE int getTransferProgressNum() const {
+        return transfersProgress.size();
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE unsigned long getTransfersCopiedBytes(const QString& key) const {
+        //LogMgr::debug(Q_FUNC_INFO);
+        if(transfersProgress.contains(key)) {
+            return transfersProgress[key].first();
+        }
+        return 0;
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE unsigned long getTransfersTotalBytes(const QString& key) const {
+        //LogMgr::debug(Q_FUNC_INFO);
+        if(transfersProgress.contains(key)) {
+            return transfersProgress[key].last();
+        }
+        return 0;
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE QString getTransfersProgressKey(int idx) const {
+        //LogMgr::debug(Q_FUNC_INFO);
+        if(transfersProgress.size() > 0) {
+            return transfersProgress.keys().at(idx);
+        }
+        return "";
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void clearTransfersProgress() {
+        LogMgr::debug(Q_FUNC_INFO);
         transfersProgress.clear();
     }
 private:
     QMap<QString, QStringList> transfers;
     QMap<QString, TransferMode> modes;
-    QMap<QString, QList<unsigned long>> transfersProgress;
+    static QMap<QString, QList<unsigned long>> transfersProgress;
 };
 
 #endif // FILETRANSFERSMODEL_H

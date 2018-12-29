@@ -60,7 +60,7 @@ Item {
 
             var path = s3Model.getFileBrowserPath()
             var localPath = "file://" + path + fileName
-            ftModel.addTransferQML(fileName, s3path, localPath)
+            ftModel.addTransferToQueueQML(fileName, s3path, localPath)
         }
     }
 

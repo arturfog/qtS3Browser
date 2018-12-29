@@ -290,10 +290,11 @@ Rectangle {
             Rectangle
             {
                 id: frame
-                x: 2
+                x: 0
                 y: 10
-                width: parent.width - 4
+                width: parent.width
                 height: parent.height - 30
+                color: "transparent"
                 clip: true
 
                 MouseArea {

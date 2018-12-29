@@ -206,6 +206,7 @@ ApplicationWindow {
                                 icon.source = "qrc:icons/32_connect_icon.png"
                                 s3Model.clearItemsQML()
                                 s3Model.setConnectedQML(false)
+                                s3Model.cancelDownloadUploadQML();
                                 mainPanel.s3_panel.connected = s3Model.isConnectedQML()
                                 mainPanel.file_panel.connected = s3Model.isConnectedQML()
                                 mainPanel.s3_panel.path = settingsModel.getStartPathQML()
