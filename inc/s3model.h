@@ -56,6 +56,8 @@ public:
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
     // --------------------------------------------------------------------------
+    Q_SIGNAL void clearItemsSignal();
+    // --------------------------------------------------------------------------
     Q_SLOT void addItemSlot(const QString& item, const QString& path) {
         setConnectedQML(true);
         if(!item.isEmpty())
@@ -117,7 +119,9 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void downloadQML(const QString &src, const QString &dst);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void refreshQML() { refresh(); }
+    Q_INVOKABLE void refreshQML() {
+        refresh();
+    }
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getCurrentPathDepthQML() {
         return getCurrentPathDepth(); }
@@ -134,10 +138,13 @@ public:
         }
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE void clearS3PathQML() {
+        m_s3Path.clear();
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE void clearItemsQML() {
         LogMgr::debug(Q_FUNC_INFO);
         clearItems();
-        m_s3Path.clear();
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
@@ -332,6 +339,8 @@ private:
     FilesystemModel fsm;
     SettingsModel sm;
     FileTransfersModel ftm;
+
+    static std::mutex mut;
 };
 
 #endif // S3MODEL_H

@@ -77,6 +77,13 @@ Item {
         }
     }
 
+    Connections {
+        target: s3Model
+        onClearItemsSignal: {
+            s3Model.clearItemsQML();
+        }
+    }
+
     ToolBar {
         width: parent.width
         height: 48
