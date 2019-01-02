@@ -9,17 +9,17 @@ class BookmarksModel : public QObject
 public:
     explicit BookmarksModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
+    Q_INVOKABLE inline void addBookmarkQML(const QString &name, const QString &path) { addBookmark(name, path); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool hasBookmarkQML(const QString &name) { return bookmarks.contains(name); }
+    Q_INVOKABLE inline bool hasBookmarkQML(const QString &name) const { return bookmarks.contains(name); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void removeBookmarkQML(const QString &name) {removeBookmark(name);}
+    Q_INVOKABLE inline void removeBookmarkQML(const QString &name) { removeBookmark(name); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getBookmarksNumQML() {return bookmarks.size();}
+    Q_INVOKABLE inline int getBookmarksNumQML() const { return bookmarks.size(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QList<QString> getBookmarksKeysQML() {return bookmarks.keys();}
+    Q_INVOKABLE inline QList<QString> getBookmarksKeysQML() const { return bookmarks.keys(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QList<QString> getBookmarksLinksQML() { return bookmarks.values(); }
+    Q_INVOKABLE inline QList<QString> getBookmarksLinksQML() const { return bookmarks.values(); }
     /**
      * @brief addBookmark
      * @param name

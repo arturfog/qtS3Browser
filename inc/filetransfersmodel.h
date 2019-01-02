@@ -14,32 +14,32 @@ public:
 
     explicit FileTransfersModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getTransfersNumQML() { return transfers.size(); }
+    Q_INVOKABLE inline int getTransfersNumQML() const { return transfers.size(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QList<QString> getTransfersKeysQML() {return transfers.keys();}
+    Q_INVOKABLE inline QList<QString> getTransfersKeysQML() const { return transfers.keys(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getTransferSrcPathQML(int idx) const {
-        if(transfers.size() > 0 && idx < transfers.size()) {
+    Q_INVOKABLE QString getTransferSrcPathQML(const int idx) const {
+        if(transfers.size() > 0 && idx < transfers.size() && idx >= 0) {
             return transfers.values().at(idx).at(0);
         }
         return "";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getTransferDstPathQML(int idx) const {
-        if(transfers.size() > 0 && idx < transfers.size()) {
+    Q_INVOKABLE QString getTransferDstPathQML(const int idx) const {
+        if(transfers.size() > 0 && idx < transfers.size() && idx >= 0) {
             return transfers.values().at(idx).at(1);
         }
         return "";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE TransferMode getTransferModeQML(int idx) const {
-        if(modes.size() > 0 && idx < modes.size()) {
+    Q_INVOKABLE TransferMode getTransferModeQML(const int idx) const {
+        if(modes.size() > 0 && idx < modes.size() && idx >= 0) {
             return modes.values().at(idx);
         }
         return TransferMode::download;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getTransferIconQML(const QString &fileName) {
+    Q_INVOKABLE QString getTransferIconQML(const QString &fileName) const {
         if(modes[fileName] == TransferMode::download) {
             return "32_download_icon.png";
         }
@@ -51,8 +51,7 @@ public:
                                     const QString &dst)
     {
         LogMgr::debug(Q_FUNC_INFO, src, dst);
-
-        if(!fileName.isEmpty() && !src.isEmpty())
+        if(!fileName.isEmpty() && !src.isEmpty() && !dst.isEmpty())
         {
             if(!transfers.contains(fileName)) {
                 QStringList list({src, dst});
@@ -68,7 +67,6 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeTransferQML(const QString &fileName) {
         LogMgr::debug(Q_FUNC_INFO, fileName);
-
         if(!fileName.isEmpty() && transfers.contains(fileName)) {
             transfers.remove(fileName);
             modes.remove(fileName);
@@ -78,7 +76,7 @@ public:
     Q_INVOKABLE void removeTransferQML(const int idx) {
         LogMgr::debug(Q_FUNC_INFO);
 
-        if(transfers.size() > 0 && idx < transfers.size()) {
+        if(transfers.size() > 0 && idx < transfers.size() && idx >= 0) {
             QString fileName(transfers.keys().at(idx));
             transfers.remove(fileName);
             modes.remove(fileName);
@@ -89,22 +87,22 @@ public:
                              const unsigned long current,
                              const unsigned long total) {
         //LogMgr::debug(Q_FUNC_INFO, key);
-
-        if(!transfersProgress.contains(key)) {
-            transfersProgress.insert(key, { current, total });
-        } else {
-            transfersProgress[key] = { current, total };
+        if(!key.isEmpty()) {
+            if(!transfersProgress.contains(key)) {
+                transfersProgress.insert(key, { current, total });
+            } else {
+                transfersProgress[key] = { current, total };
+            }
         }
-
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getTransferProgressNum() const {
+    Q_INVOKABLE inline int getTransferProgressNum() const {
         return transfersProgress.size();
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE unsigned long getTransfersCopiedBytes(const QString& key) const {
         //LogMgr::debug(Q_FUNC_INFO);
-        if(transfersProgress.contains(key)) {
+        if(!key.isEmpty() && transfersProgress.contains(key)) {
             return transfersProgress[key].first();
         }
         return 0;
@@ -112,21 +110,21 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE unsigned long getTransfersTotalBytes(const QString& key) const {
         //LogMgr::debug(Q_FUNC_INFO);
-        if(transfersProgress.contains(key)) {
+        if(!key.isEmpty() && transfersProgress.contains(key)) {
             return transfersProgress[key].last();
         }
         return 0;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getTransfersProgressKey(int idx) const {
+    Q_INVOKABLE QString getTransfersProgressKey(const int idx) const {
         //LogMgr::debug(Q_FUNC_INFO);
-        if(transfersProgress.size() > 0) {
+        if(transfersProgress.size() > 0 && idx < transfersProgress.size() && idx >= 0) {
             return transfersProgress.keys().at(idx);
         }
         return "";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void clearTransfersProgress() {
+    Q_INVOKABLE inline void clearTransfersProgress() {
         LogMgr::debug(Q_FUNC_INFO);
         transfersProgress.clear();
     }

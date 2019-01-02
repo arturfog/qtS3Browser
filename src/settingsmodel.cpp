@@ -8,10 +8,12 @@ SettingsModel::SettingsModel(QObject *parent) : QObject(parent)
 
 // ----------------------------------------------------------------------------
 QString SettingsModel::extractKey(const QString& line) {
-    const int startIdx = line.indexOf('=');
-    if(startIdx > 0) {
-        const QString key = line.mid(startIdx + 1).trimmed();
-        return key;
+    if(!line.isEmpty()) {
+        const int startIdx = line.indexOf('=');
+        if(startIdx > 0) {
+            const QString key = line.mid(startIdx + 1).trimmed();
+            return key;
+        }
     }
     return "Empty";
 }
@@ -19,6 +21,7 @@ QString SettingsModel::extractKey(const QString& line) {
 void SettingsModel::parseCLIConfig(const QString& credentialsFilePath) {
     LogMgr::debug(Q_FUNC_INFO, credentialsFilePath);
 
+    if(credentialsFilePath.isEmpty()) { return; }
     QFile file(credentialsFilePath);
     if(!file.exists()) { return; }
     file.open(QIODevice::ReadOnly);

@@ -207,11 +207,11 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
     LogMgr::debug(Q_FUNC_INFO, path);
-
     if(!path.isEmpty()) {
-        m_s3Path.clear();
-        QStringList pathItems = path.split("s3://");
-        if(pathItems.count() > 1) {
+        const QStringList pathItems = path.split("s3://");
+        // if more then 2, path is invalid and contains more than one 's3://'
+        if(pathItems.count() == 2) {
+            m_s3Path.clear();
             for(auto item: pathItems[1].split("/")) {
                 if(!item.isEmpty()) {
                     m_s3Path.append(item + "/");
@@ -228,13 +228,11 @@ Q_INVOKABLE void S3Model::removeQML(const int idx) {
         if(getCurrentPathDepth() <= 0) {
             removeBucket(m_s3items.at(idx).fileName().toStdString());
         } else {
-
-            bool isDir = false;
+            bool isDir(false);
             if(m_s3items.at(idx).filePath().compare("/") == 0) {
                 isDir = true;
             }
-
-            const QString filename = m_s3items.at(idx).fileName();
+            const QString filename(m_s3items.at(idx).fileName());
             removeObject(getPathWithoutBucket().append(filename), isDir);
         }
     }
@@ -265,23 +263,22 @@ int S3Model::rowCount(const QModelIndex & parent) const {
 void S3Model::goTo(const QString &path)
 {
     LogMgr::debug(Q_FUNC_INFO, path);
-
     if(!path.isEmpty()) {
-        m_s3Path.push_back(path);
+        if(!path.contains("/")) {
+            m_s3Path.push_back(path + "/");
+        } else {
+            m_s3Path.push_back(path);
+        }
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::goBack()
 {
     LogMgr::debug(Q_FUNC_INFO);
-
-    if (m_s3Path.count() <= 1) {
-        if(m_s3Path.count() == 1) {
-            m_s3Path.removeLast();
-        }
+    if(!m_s3Path.isEmpty()) { m_s3Path.removeLast(); }
+    if (m_s3Path.count() < 1) {
         getBuckets();
     } else {
-        m_s3Path.removeLast();
         getObjects(getPathWithoutBucket().toStdString(), true);
     }
 }
@@ -289,9 +286,9 @@ void S3Model::goBack()
 QString S3Model::getCurrentBucket() const
 {
     LogMgr::debug(Q_FUNC_INFO);
-
     if (m_s3Path.count() >= 1) {
-        return m_s3Path[0];
+        QString tmp(m_s3Path[0]);
+        return tmp.replace("/", "");
     }
     return "";
 }
@@ -305,13 +302,9 @@ QString S3Model::getPathWithoutBucket() const
     return "";
 }
 // --------------------------------------------------------------------------
-QString S3Model::s3Path() const {
+QString S3Model::getS3PathQML() const {
     LogMgr::debug(Q_FUNC_INFO);
-
-    QString path(getCurrentBucket());
-    if(m_s3Path.count() >= 1) {
-        path = path.append("/").append(getPathWithoutBucket());
-    }
+    QString path(m_s3Path.join(""));
     return path;
 }
 // --------------------------------------------------------------------------
