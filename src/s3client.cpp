@@ -135,17 +135,19 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
 
     LogMgr::debug(Q_FUNC_INFO);
 
-    Aws::S3::Model::ListObjectsRequest objects_request;
-    objects_request.SetBucket(bucket_name);
-    objects_request.SetDelimiter("/");
+    if(!bucket_name.empty()) {
+        Aws::S3::Model::ListObjectsRequest objects_request;
+        objects_request.SetBucket(bucket_name);
+        objects_request.SetDelimiter("/");
 
-    if(key != "") {
-        objects_request.SetPrefix(key);
+        if(!key.empty()) {
+            objects_request.SetPrefix(key);
+        }
+
+        objectInfoVec.clear();
+        m_stringFunc = func;
+        s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
     }
-
-    objectInfoVec.clear();
-    m_stringFunc = func;
-    s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
@@ -158,16 +160,15 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
     {
         Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
-        auto common_list = outcome.GetResult().GetCommonPrefixes();
-        auto key = request.GetPrefix();
-
-        ObjectInfo_S objectInfo;
-
+        const auto common_list = outcome.GetResult().GetCommonPrefixes();
+        const auto key = request.GetPrefix();
         for (auto const &s3_object : common_list)
         {
             std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
             m_stringFunc(item);
         }
+
+        ObjectInfo_S objectInfo;
         for (auto const &s3_object : object_list)
         {
             objectInfo.size = s3_object.GetSize();
@@ -310,8 +311,11 @@ void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
 }
 // --------------------------------------------------------------------------
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
-                            const std::shared_ptr<const Aws::Transfer::TransferHandle> &)
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
+    if(handle->GetStatus() == Aws::Transfer::TransferStatus::COMPLETED) {
+        m_emptyFunc();
+    }
 }
 // --------------------------------------------------------------------------
 void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
@@ -448,7 +452,9 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
     }
 }
 // --------------------------------------------------------------------------
-void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &key_name)
+void S3Client::createFolder(const Aws::String &bucket_name,
+                            const Aws::String &key_name,
+                            std::function<void ()> callback)
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
@@ -456,6 +462,8 @@ void S3Client::createFolder(const Aws::String &bucket_name, const Aws::String &k
 
     object_request.SetBucket(bucket_name);
     object_request.SetKey(key_name);
+
+    m_emptyFunc = callback;
 
     s3_client->PutObjectAsync(object_request, &createFolderHandler);
 }
@@ -468,6 +476,7 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
+        m_emptyFunc();
     }
     else
     {
@@ -480,10 +489,12 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &file_name,
                           std::function<void(const unsigned long long bytes,
                                              const unsigned long long total,
-                                             const std::string key)> progressFunc)
+                                             const std::string key)> progressFunc,
+                                             std::function<void ()> callback)
 {
     LogMgr::debug(Q_FUNC_INFO);
     m_progressFunc = progressFunc;
+    m_emptyFunc = callback;
 
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,

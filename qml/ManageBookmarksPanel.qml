@@ -77,12 +77,12 @@ Rectangle {
   Column {
     width: parent.width - 390;
     Text {
-      font.pointSize: 14
+      font.pointSize: getMediumFontSize()
       text: "' + keys[i] +'"
      }
 
      Text {
-       font.pointSize: 8
+       font.pointSize: getSmallFontSize()
        text: \'<a href="' + values[i] +'">' + values[i] + '</a>\'
      }
   }

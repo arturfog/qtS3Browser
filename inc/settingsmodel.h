@@ -46,17 +46,17 @@ public:
         return 0;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getAccesKeyQML() const { return settings.value("AccessKey").toString();}
+    Q_INVOKABLE inline QString getAccesKeyQML() const { return settings.value("AccessKey").toString();}
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getSecretKeyQML() const { return settings.value("SecretKey").toString(); }
+    Q_INVOKABLE inline QString getSecretKeyQML() const { return settings.value("SecretKey").toString(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getStartPathQML() const { return settings.value("StartPath", "s3://").toString(); }
+    Q_INVOKABLE inline QString getStartPathQML() const { return settings.value("StartPath", "s3://").toString(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getEndpointQML() const { return settings.value("Endpoint").toString(); }
+    Q_INVOKABLE inline QString getEndpointQML() const { return settings.value("Endpoint").toString(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getLogsDirQML() const { return settings.value("LogsDir").toString(); }
+    Q_INVOKABLE inline QString getLogsDirQML() const { return settings.value("LogsDir").toString(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool getLogsEnabledQML() const { return settings.value("LogsEnabled").toBool(); }
+    Q_INVOKABLE inline bool getLogsEnabledQML() const { return settings.value("LogsEnabled").toBool(); }
 
     /**
      * @brief readCLIConfig

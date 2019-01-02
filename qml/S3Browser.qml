@@ -77,6 +77,24 @@ Item {
         }
     }
 
+    function gotoPressed(item) {
+        if(item.text === "") {
+            s3Model.getBucketsQML()
+        } else {
+            s3Model.gotoQML("s3://" + item.text)
+        }
+        s3_panel.connected = s3Model.isConnectedQML()
+        file_panel.connected = s3Model.isConnectedQML()
+        path = s3Model.getS3PathQML();
+    }
+
+    Connections {
+        target: s3Model
+        onClearItemsSignal: {
+            s3Model.clearItemsQML();
+        }
+    }
+
     ToolBar {
         width: parent.width
         height: 48
@@ -204,16 +222,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         wrapMode: Text.WrapAnywhere
                         text: path.replace("s3://","")
-
-                        Keys.onReturnPressed: {
-                            if(s3_browser_path_text.text === "") {
-                                s3Model.getBucketsQML()
-                            } else {
-                                s3Model.gotoQML("s3://" + s3_browser_path_text.text)
-                            }
-                            s3_panel.connected = s3Model.isConnectedQML()
-                            file_panel.connected = s3Model.isConnectedQML()
-                        }
+                        Keys.onReturnPressed: { gotoPressed(s3_browser_path_text) }
                     }
 
                     Button {
@@ -224,15 +233,7 @@ Item {
                         icon.color: "transparent"
                         flat: true
                         width: 40
-                        onClicked: {
-                            if(s3_browser_path_text.text === "") {
-                                s3Model.getBucketsQML()
-                            } else {
-                                s3Model.gotoQML("s3://" + s3_browser_path_text.text)
-                            }
-                            s3_panel.connected = s3Model.isConnectedQML()
-                            file_panel.connected = s3Model.isConnectedQML()
-                        }
+                        onClicked: { gotoPressed(s3_browser_path_text) }
                     }
                 }
 

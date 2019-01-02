@@ -50,10 +50,12 @@ private:
     Aws::Map<Aws::String, Aws::String> metadata;
 
     static const Aws::String ALLOCATION_TAG;
+
     static std::function<void(const std::string&)> m_stringFunc;
     static std::function<void(const std::string&)> m_errorFunc;
     static std::function<void()> m_emptyFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> m_progressFunc;
+
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;
@@ -233,7 +235,9 @@ public:
      * @param bucket_name
      * @param key_name
      */
-    void createFolder(const Aws::String &bucket_name, const Aws::String &key_name);
+    void createFolder(const Aws::String &bucket_name,
+                      const Aws::String &key_name,
+                      std::function<void()> callback);
     // GET BUCKETS
     /**
      * @brief getBuckets
@@ -284,7 +288,8 @@ public:
                     const Aws::String &file_name,
                     std::function<void(const unsigned long long,
                                    const unsigned long long,
-                                   const std::string)> progressFunc);
+                                   const std::string)> progressFunc,
+                                   std::function<void ()> callback);
     /**
      * @brief uploadDirectory
      * @param bucket_name

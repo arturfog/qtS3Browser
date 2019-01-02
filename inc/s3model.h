@@ -56,6 +56,8 @@ public:
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
     // --------------------------------------------------------------------------
+    Q_SIGNAL void clearItemsSignal();
+    // --------------------------------------------------------------------------
     Q_SLOT void addItemSlot(const QString& item, const QString& path) {
         setConnectedQML(true);
         if(!item.isEmpty())
@@ -77,17 +79,17 @@ public:
     // --------------------------------------------------------------------------
     Q_SIGNAL void noBucketsSignal();
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool isConnectedQML() const { return isConnected; }
+    Q_INVOKABLE inline bool isConnectedQML() const { return isConnected; }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE bool isTransferring() const { return s3.isTransferring(); }
+    Q_INVOKABLE inline bool isTransferring() const { return s3.isTransferring(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void setConnectedQML(const bool state) { isConnected = state; }
+    Q_INVOKABLE inline void setConnectedQML(const bool state) { isConnected = state; }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getS3PathQML() const { return s3Path(); }
+    Q_INVOKABLE QString getS3PathQML() const;
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getItemsCountQML() const { return m_s3items.count(); }
+    Q_INVOKABLE inline int getItemsCountQML() const { return m_s3items.count(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void getBucketsQML() { getBuckets(); }
+    Q_INVOKABLE inline void getBucketsQML() { getBuckets(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void setFileBrowserPath(const QString& path);
     // --------------------------------------------------------------------------
@@ -97,19 +99,19 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getFileBrowserPath() const;
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void goBackQML() { goBack(); }
+    Q_INVOKABLE inline void goBackQML() { goBack(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void gotoQML(const QString &path);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
+    Q_INVOKABLE inline void getObjectsQML(const QString &text) { getObjects(text.toStdString()); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
+    Q_INVOKABLE inline void createBucketQML(const QString &bucket) { createBucket(bucket.toStdString()); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE bool createFolderQML(const QString &folder);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void uploadFileQML(const QString &file) { upload(file, false); }
+    Q_INVOKABLE inline void uploadFileQML(const QString &file) { upload(file, false); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void uploadDirQML(const QString &file) { upload(file, true); }
+    Q_INVOKABLE inline void uploadDirQML(const QString &file) { upload(file, true); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void uploadQML(const QString &src, const QString &dst);
     // --------------------------------------------------------------------------
@@ -119,8 +121,7 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void refreshQML() { refresh(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getCurrentPathDepthQML() {
-        return getCurrentPathDepth(); }
+    Q_INVOKABLE inline int getCurrentPathDepthQML() const { return getCurrentPathDepth(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeQML(const int idx);
     // --------------------------------------------------------------------------
@@ -134,11 +135,9 @@ public:
         }
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void clearItemsQML() {
-        LogMgr::debug(Q_FUNC_INFO);
-        clearItems();
-        m_s3Path.clear();
-    }
+    Q_INVOKABLE inline void clearS3PathQML() { m_s3Path.clear(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE inline void clearItemsQML() { LogMgr::debug(Q_FUNC_INFO); clearItems(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
                                      const QString& accessKey,
@@ -166,9 +165,9 @@ public:
         s3.reloadCredentials();
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getCurrentFileQML() {return currentFile;}
+    Q_INVOKABLE inline QString getCurrentFileQML() const { return currentFile; }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void cancelDownloadUploadQML() {cancelDownloadUpload();}
+    Q_INVOKABLE inline void cancelDownloadUploadQML() { cancelDownloadUpload(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getOwnerQML(const QString &name) { return s3.getOwner(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
@@ -332,6 +331,8 @@ private:
     FilesystemModel fsm;
     SettingsModel sm;
     FileTransfersModel ftm;
+
+    static std::mutex mut;
 };
 
 #endif // S3MODEL_H

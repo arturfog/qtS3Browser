@@ -28,6 +28,10 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 ### MacOS X 
 - use build_osx.sh script
 #### To build qts3browser, following software is required
+- Xcode command line tools
+```sh
+xcode-select --install
+```
 - brew - https://brew.sh/index
 - Qt5 (can be installed using brew)
 ```sh
