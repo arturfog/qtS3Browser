@@ -73,3 +73,5 @@ win32 {
   LIBS += -L"$$PWD/../aws"
   INCLUDEPATH += "$$PWD/../aws"
 }
+
+TRANSLATIONS = s3browser_pl.ts
