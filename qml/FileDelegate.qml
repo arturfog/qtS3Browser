@@ -77,7 +77,7 @@ Rectangle {
         MenuItem {
             icon.source: "qrc:icons/32_about_icon.png"
             icon.color: "transparent"
-            text: qsTr('Info')
+            text: qsTr('Info') + tsMgr.emptyString
             onClicked: {
                 infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
                 infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
@@ -92,13 +92,13 @@ Rectangle {
             icon.source: "qrc:icons/32_upload_icon.png"
             icon.color: "transparent"
             enabled: connected
-            text: qsTr('Upload')
+            text: qsTr('Upload') + tsMgr.emptyString
             onClicked: { upload() }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
-            text: qsTr('Delete')
+            text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
                 var fileName = folder.get(view.currentIndex, "fileName")
                 msgDialog.msg = "Remove " + fileName + " ?"

@@ -48,12 +48,12 @@ private:
     std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;
     std::shared_ptr<Aws::Client::DefaultRetryStrategy> retryStrategy;
     Aws::Map<Aws::String, Aws::String> metadata;
-
+    // STATIC VARIABLES
     static const Aws::String ALLOCATION_TAG;
-
+    // callbacks
     static std::function<void(const std::string&)> m_stringFunc;
     static std::function<void(const std::string&)> m_errorFunc;
-    static std::function<void()> m_emptyFunc;
+    static std::function<void()> m_refreshFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> m_progressFunc;
 
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
@@ -174,7 +174,6 @@ public:
         Aws::String owner;
     };
     static Aws::String currentPrefix;
-
     static std::map<Aws::String, ObjectInfo_S> objectInfoVec;
     /**
      * @brief S3Client
@@ -192,7 +191,9 @@ public:
      * @brief init
      */
     void init();
-
+    /**
+     * @brief reloadCredentials
+     */
     void reloadCredentials();
     // LIST OBJECTS
     /**
@@ -211,8 +212,7 @@ public:
      * @param key_name
      */
     void deleteObject(const Aws::String &bucket_name,
-                      const Aws::String &key_name,
-                      std::function<void()> callback);
+                      const Aws::String &key_name);
 
     /**
      * @brief deleteDirectory
@@ -221,8 +221,7 @@ public:
      * @param callback
      */
     void deleteDirectory(const Aws::String &bucket_name,
-                         const Aws::String &key_name,
-                         std::function<void()> callback);
+                         const Aws::String &key_name);
     // DELETE BUCKET
     /**
      * @brief deleteBucket
@@ -236,8 +235,7 @@ public:
      * @param key_name
      */
     void createFolder(const Aws::String &bucket_name,
-                      const Aws::String &key_name,
-                      std::function<void()> callback);
+                      const Aws::String &key_name);
     // GET BUCKETS
     /**
      * @brief getBuckets
@@ -288,8 +286,7 @@ public:
                     const Aws::String &file_name,
                     std::function<void(const unsigned long long,
                                    const unsigned long long,
-                                   const std::string)> progressFunc,
-                                   std::function<void ()> callback);
+                                   const std::string)> progressFunc);
     /**
      * @brief uploadDirectory
      * @param bucket_name
@@ -306,13 +303,11 @@ public:
      * @brief cancelDownloadUpload
      */
     void cancelDownloadUpload();
-
     /**
      * @brief isTransferring
      * @return
      */
     bool isTransferring() const;
-
     /**
      * @brief setErrorHandler
      * @param errorFunc
@@ -329,11 +324,23 @@ public:
     void getObjectInfo(const Aws::String &bucket_name,
                        const Aws::String &key_name);
 
-
+    /**
+     * @brief getModificationDate
+     * @param name
+     * @return
+     */
     std::string getModificationDate(const Aws::String& name);
-
+    /**
+     * @brief getOwner
+     * @param name
+     * @return
+     */
     std::string getOwner(const Aws::String& name);
-
+    /**
+     * @brief getETAG
+     * @param name
+     * @return
+     */
     std::string getETAG(const Aws::String& name);
     /**
      * @brief getPresignLink
@@ -343,8 +350,11 @@ public:
      */
     std::string getPresignLink(const Aws::String &bucket_name,
                                const Aws::String &key_name);
-
-    std::string getLastTransferedFile();
+    /**
+     * @brief setRefreshCallback
+     * @param refreshFunc
+     */
+    void setRefreshCallback(std::function<void()> refreshFunc);
 };
 
 

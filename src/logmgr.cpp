@@ -13,20 +13,18 @@ QFile LogMgr::logfile;
 
 LogMgr::LogMgr(QObject *parent) : QObject(parent) {}
 // --------------------------------------------------------------------------
-void LogMgr::debug(const std::string &msg, const std::string &arg1)
+void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg)
 {
     const QString now = QDateTime::currentDateTime().toString();
-    QString log("[DBG] ");
+    QString log(LvlToString(level).c_str());
     log.append(now).append(" : ").append(msg.c_str());
 
-    if(!arg1.empty()) {
-        log.append(" (").append(arg1.c_str()).append(") ");
-        std::cout << log.toStdString() << std::endl;
-    } else {
-        std::cout << log.toStdString() << std::endl;
-    }
-
     writeToFile(log);
+}
+// --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const std::string &arg1)
+{
+    log(LOG_LEVEL::DEBUG, msg, arg1);
 }
 // --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg, const QString &arg1)
@@ -52,13 +50,17 @@ void LogMgr::debug(const std::string &msg, const char *arg1)
 // --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg)
 {
-    LogMgr::debug(msg, "");
+    log(LOG_LEVEL::DEBUG, msg);
 }
 // --------------------------------------------------------------------------
 void LogMgr::error(const std::string &msg)
 {
-    const QString now = QDateTime::currentDateTime().toString();
-    std::cout << "[ERR]"  << " " << now.toStdString() << " : " << msg  << std::endl;
+    log(LOG_LEVEL::ERROR, msg);
+}
+// --------------------------------------------------------------------------
+void LogMgr::trace(const std::string &msg)
+{
+    log(LOG_LEVEL::TRACE, msg);
 }
 // --------------------------------------------------------------------------
 bool LogMgr::logsEnabled()
@@ -163,4 +165,28 @@ void LogMgr::closeLog()
 {
     logfile.flush();
     logfile.close();
+}
+// --------------------------------------------------------------------------
+template<typename T>
+void LogMgr::trace(const std::string &msg, const T &x)
+{
+    log(LOG_LEVEL::TRACE, msg, x);
+}
+// --------------------------------------------------------------------------
+template<typename T>
+void LogMgr::error(const std::string &msg, const T &x)
+{
+   log(LOG_LEVEL::ERROR, msg, x);
+}
+// --------------------------------------------------------------------------
+template<typename T>
+void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg, const T &x)
+{
+    const QString now = QDateTime::currentDateTime().toString();
+    QString log(LvlToString(level).c_str());
+    log.append(now).append(" : ").append(msg.c_str());
+    log.append(" (").append(x.c_str()).append(") ");
+
+    std::cout << log.toStdString() << std::endl;
+    writeToFile(log);
 }

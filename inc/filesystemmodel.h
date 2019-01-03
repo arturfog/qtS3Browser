@@ -38,11 +38,11 @@ public:
             return -1;
         }
 
-        if(!path.isEmpty()) {
-            QString tmpPath = path;
+        if(!path.isEmpty() && !name.isEmpty()) {
+            QString tmpPath(path);
             tmpPath = tmpPath.replace("file://", "");
             QDir dir(tmpPath.append("/").append(name));
-            if(!dir.exists()) {
+            if(!dir.exists() && !tmpPath.isEmpty()) {
                 dir.mkdir(tmpPath);
                 return true;
             }
@@ -98,7 +98,7 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) const {
         LogMgr::debug(Q_FUNC_INFO, path);
-        QFileInfo fi(path);
+        const QFileInfo fi(path);
         QString executable = fi.isExecutable() ? "x" : "-";
         QString readable = fi.isReadable() ? "r" : "-";
         QString writeable = fi.isWritable() ? "w" : "-";

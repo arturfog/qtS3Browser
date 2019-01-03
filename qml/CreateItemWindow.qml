@@ -110,11 +110,11 @@ Window {
                 color: "white"
                 text: {
                     if(create_action === createBucket) {
-                        qsTr("Create bucket")
+                        qsTr("Create bucket") + tsMgr.emptyString
                     } else if(create_action === createS3Folder) {
-                        qsTr("Create S3 directory")
+                        qsTr("Create S3 directory") + tsMgr.emptyString
                     } else {
-                        qsTr("Create local directory")
+                        qsTr("Create local directory") + tsMgr.emptyString
                     }
                 }
                 font.bold: true
@@ -212,7 +212,7 @@ Window {
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 id: cw_cb
-                text: qsTr("Create")
+                text: qsTr("Create") + tsMgr.emptyString
                 icon.source: "qrc:icons/32_add_icon.png"
                 icon.color: "transparent"
                 font.pointSize: getSmallFontSize()
@@ -268,7 +268,7 @@ Window {
 
             Button {
                 id:cancel_btn
-                text: qsTr("Cancel")
+                text: qsTr("Cancel") + tsMgr.emptyString
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
                 font.pointSize: getSmallFontSize()

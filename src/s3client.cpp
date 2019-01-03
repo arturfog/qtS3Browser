@@ -43,7 +43,7 @@
 
 std::function<void(const std::string&)> S3Client::m_stringFunc;
 std::function<void(const std::string&)> S3Client::m_errorFunc;
-std::function<void()> S3Client::m_emptyFunc;
+std::function<void()> S3Client::m_refreshFunc;
 std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> S3Client::m_progressFunc;
 
 std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> S3Client::executor =
@@ -242,9 +242,11 @@ std::string S3Client::getPresignLink(const Aws::String &bucket_name,
     return url.c_str();
 }
 // --------------------------------------------------------------------------
-std::string S3Client::getLastTransferedFile()
+void S3Client::setRefreshCallback(std::function<void ()> refreshFunc)
 {
-    return lastTransferedFile.c_str();
+    if(refreshFunc) {
+        m_refreshFunc = refreshFunc;
+    }
 }
 // --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
@@ -290,6 +292,7 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
+        m_refreshFunc();
     }
     else
     {
@@ -314,7 +317,7 @@ void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
                             const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
 {
     if(handle->GetStatus() == Aws::Transfer::TransferStatus::COMPLETED) {
-        m_emptyFunc();
+        m_refreshFunc();
     }
 }
 // --------------------------------------------------------------------------
@@ -347,9 +350,7 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
-
         Aws::Vector<Aws::S3::Model::Bucket> bucket_list = outcome.GetResult().GetBuckets();
-
         for (auto const &bucket : bucket_list)
         {
             m_stringFunc(bucket.GetName().c_str());
@@ -366,21 +367,18 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
 }
 // --------------------------------------------------------------------------
 void S3Client::deleteObject(const Aws::String &bucket_name,
-                            const Aws::String &key_name,
-                            std::function<void()>callback) {
+                            const Aws::String &key_name) {
 
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
     Aws::S3::Model::DeleteObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
-    m_emptyFunc = callback;
     s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
 
 }
 // --------------------------------------------------------------------------
 void S3Client::deleteDirectory(const Aws::String &bucket_name,
-                               const Aws::String &key_name,
-                               std::function<void ()> callback)
+                               const Aws::String &key_name)
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
@@ -392,7 +390,6 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
     }
 
     auto outcome = s3_client->ListObjects(list_request);
-    std::function<void()> cb = [&]() { };
     if(outcome.IsSuccess()) {
         Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
@@ -401,9 +398,9 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
         {
             --items;
             if(items <= 1) {
-                deleteObject(bucket_name, s3_object.GetKey(), callback);
+                deleteObject(bucket_name, s3_object.GetKey());
             } else {
-                deleteObject(bucket_name, s3_object.GetKey(), cb);
+                deleteObject(bucket_name, s3_object.GetKey());
             }
         }
     }
@@ -417,7 +414,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
-        m_emptyFunc();
+        m_refreshFunc();
     }
     else
     {
@@ -445,6 +442,7 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
+        m_refreshFunc();
     }
     else
     {
@@ -453,8 +451,7 @@ void S3Client::deleteBucketHandler(const Aws::S3::S3Client *,
 }
 // --------------------------------------------------------------------------
 void S3Client::createFolder(const Aws::String &bucket_name,
-                            const Aws::String &key_name,
-                            std::function<void ()> callback)
+                            const Aws::String &key_name)
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
@@ -462,8 +459,6 @@ void S3Client::createFolder(const Aws::String &bucket_name,
 
     object_request.SetBucket(bucket_name);
     object_request.SetKey(key_name);
-
-    m_emptyFunc = callback;
 
     s3_client->PutObjectAsync(object_request, &createFolderHandler);
 }
@@ -476,7 +471,7 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
     LogMgr::debug(Q_FUNC_INFO);
     if (outcome.IsSuccess())
     {
-        m_emptyFunc();
+        m_refreshFunc();
     }
     else
     {
@@ -489,12 +484,10 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &file_name,
                           std::function<void(const unsigned long long bytes,
                                              const unsigned long long total,
-                                             const std::string key)> progressFunc,
-                                             std::function<void ()> callback)
+                                             const std::string key)> progressFunc)
 {
     LogMgr::debug(Q_FUNC_INFO);
     m_progressFunc = progressFunc;
-    m_emptyFunc = callback;
 
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,

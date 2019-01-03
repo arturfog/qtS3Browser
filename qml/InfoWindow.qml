@@ -105,7 +105,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: "Size"
+                    text: qsTr("Size")
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -131,7 +131,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: "Modification date"
+                    text: qsTr("Modification date")
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -157,7 +157,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: "Permissions"
+                    text: qsTr("Permissions")
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -184,7 +184,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: "Owner"
+                    text: qsTr("Owner")
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -238,7 +238,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: "Path"
+                    text: qsTr("Path")
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }

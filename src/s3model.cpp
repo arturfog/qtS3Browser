@@ -66,6 +66,9 @@ S3Model::S3Model(QObject *parent)
         setFileBrowserPath(home.append(fsm.getHomePath()));
     }
 
+    std::function<void()> refreshCallback = [&]() { refresh(); };
+    s3.setRefreshCallback(refreshCallback);
+
     LogMgr::openLog();
 }
 // --------------------------------------------------------------------------
@@ -125,7 +128,7 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
         emit this->setProgressSignal(bytes, total);
     };
 
-    std::function<void()> refreshCallback = [&]() { refresh(); };
+
 
     if(isConnected && (src.isEmpty() == false) && (dst.isEmpty() == false))
     {
@@ -144,7 +147,7 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
                 s3.uploadFile(bucket.toStdString().c_str(),
                               key.toStdString().c_str(),
                               tmpSrc.toStdString().c_str(),
-                              callback, refreshCallback);
+                              callback);
             }
         }
     }
@@ -396,10 +399,9 @@ bool S3Model::createFolderQML(const QString &folder)
     }
 
     if(!folder.isEmpty()) {
-        std::function<void()> callback = [&]() { refresh(); };
         QString tmpFolder(folder);
         const std::string folderPath = QString(getPathWithoutBucket()).append(tmpFolder).append("/_empty_file_to_remove").toStdString();
-        s3.createFolder(getCurrentBucket().toStdString().c_str(), folderPath.c_str(), callback);
+        s3.createFolder(getCurrentBucket().toStdString().c_str(), folderPath.c_str());
         return true;
     }
 
@@ -421,12 +423,11 @@ void S3Model::removeObject(const QString &key, bool isDir)
 
     if(!key.isEmpty()) {
         clearItems();
-        std::function<void()> callback = [&]() { refresh(); };
         const std::string bucket(getCurrentBucket().toStdString());
         if(isDir) {
-            s3.deleteDirectory(bucket.c_str(), key.toStdString().c_str(), callback);
+            s3.deleteDirectory(bucket.c_str(), key.toStdString().c_str());
         } else {
-            s3.deleteObject(bucket.c_str(), key.toStdString().c_str(), callback);
+            s3.deleteObject(bucket.c_str(), key.toStdString().c_str());
         }
     }
 }
@@ -451,15 +452,9 @@ void S3Model::upload(const QString& file, bool isDir)
     currentFile = filename;
 
     if(isDir) {
-        s3.uploadDirectory(bucket.c_str(),
-                           key.c_str(),
-                           file.toStdString().c_str(),
-                           callback);
+        s3.uploadDirectory(bucket.c_str(), key.c_str(), file.toStdString().c_str(), callback);
     } else {
-        s3.uploadFile(bucket.c_str(),
-                      key.c_str(),
-                      file.toStdString().c_str(),
-                      callback, refreshCallback);
+        s3.uploadFile(bucket.c_str(), key.c_str(), file.toStdString().c_str(), callback);
     }
 }
 // --------------------------------------------------------------------------

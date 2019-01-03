@@ -21,7 +21,8 @@ SOURCES += src/main.cpp \
     src/logmgr.cpp \
     src/filetransfersmodel.cpp \
     src/bookmarksmodel.cpp \
-    src/settingsmodel.cpp
+    src/settingsmodel.cpp \
+    src/translationsmgr.cpp
 
 RESOURCES += qml.qrc
 
@@ -55,7 +56,8 @@ HEADERS += \
     inc/logmgr.h \
     inc/filetransfersmodel.h \
     inc/bookmarksmodel.h \
-    inc/settingsmodel.h
+    inc/settingsmodel.h \
+    inc/translationsmgr.h
 
 
 LIBS += -laws-cpp-sdk-s3 -laws-cpp-sdk-transfer -laws-cpp-sdk-core
@@ -74,4 +76,4 @@ win32 {
   INCLUDEPATH += "$$PWD/../aws"
 }
 
-TRANSLATIONS = s3browser_pl.ts
+TRANSLATIONS = translations/s3browser_pl.ts
