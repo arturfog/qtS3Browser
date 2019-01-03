@@ -37,7 +37,7 @@ Item {
     }
 
     property CreateItemWindow createFolderWindow: CreateItemWindow {
-        win_title: qsTr("Create folder")
+        win_title: qsTr("Create folder") + tsMgr.emptyString
     }
 
     function upload() {
@@ -70,7 +70,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
-                text: qsTr("Up")
+                text: qsTr("Up") + tsMgr.emptyString
                 onClicked: {
                     if(folder.parentFolder.toString().length > 0) {
                         view.path = folder.parentFolder
@@ -84,7 +84,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
-                text: qsTr("Refresh")
+                text: qsTr("Refresh") + tsMgr.emptyString
                 onClicked: {
                     var tmpPath = view.path
                     view.path = "/"
@@ -97,7 +97,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
-                text: qsTr("New")
+                text: qsTr("New") + tsMgr.emptyString
                 onClicked: {
                     createFolderWindow.x = app_window.x + (app_window.width / 2) - (createFolderWindow.width / 2)
                     createFolderWindow.y = app_window.y + (app_window.height / 2) - (createFolderWindow.height / 2)
@@ -223,7 +223,7 @@ Item {
                             x: 30
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Name"
+                            text: qsTr("Name") + tsMgr.emptyString
                             font.pointSize: getSmallFontSize()
                         }
 
@@ -253,7 +253,7 @@ Item {
                             x: 3
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Size"
+                            text: qsTr("Size") + tsMgr.emptyString
                             font.pointSize: getSmallFontSize()
                         }
                     }
@@ -335,9 +335,9 @@ Item {
                     font.pointSize: getTinyFont()
                     text: {
                         if(folder.count == 1) {
-                            folder.count + " Item"
+                            folder.count + qsTr(" Item") + tsMgr.emptyString
                         } else {
-                            folder.count + " Items"
+                            folder.count + qsTr(" Items") + tsMgr.emptyString
                         }
                     }
                 }

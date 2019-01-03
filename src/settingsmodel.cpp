@@ -1,11 +1,8 @@
 #include "inc/settingsmodel.h"
 #include <QTextStream>
 
-SettingsModel::SettingsModel(QObject *parent) : QObject(parent)
-{
-
-}
-
+// ----------------------------------------------------------------------------
+SettingsModel::SettingsModel(QObject *parent) : QObject(parent) {}
 // ----------------------------------------------------------------------------
 QString SettingsModel::extractKey(const QString& line) {
     if(!line.isEmpty()) {
@@ -47,15 +44,13 @@ void SettingsModel::readCLIConfig()
     // aws_access_key_id = abc
     // aws_secret_access_key = 1234
     //
-    static const QString winDefaultLocation = "%UserProfile%\\.aws\\credentials";
-    static const QString nixDefaultLocation = fsm.getHomePath() + "/.aws/credentials";
-
+    static const QString winDefaultLocation("%UserProfile%\\.aws\\credentials");
+    static const QString nixDefaultLocation(fsm.getHomePath() + "/.aws/credentials");
     // don't overwrite custom access/secret key set in app with those set in awscli
     if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
         return;
     }
-
-    QString os = QSysInfo::productType();
+    QString os(QSysInfo::productType());
     if(os == "windows") {
          // Windows location is "%UserProfile%\.aws"
         parseCLIConfig(winDefaultLocation);

@@ -123,7 +123,7 @@ Window {
                 Text {
                     width: parent.width
                     height: 40
-                    text: qsTr("Bookmark name")
+                    text: qsTr("Bookmark name") + tsMgr.emptyString
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: getMediumFontSize()
                 }
@@ -183,7 +183,7 @@ Window {
                 Text {
                     width: parent.width
                     height: 40
-                    text: qsTr("S3 URL")
+                    text: qsTr("S3 URL") + tsMgr.emptyString
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: getMediumFontSize()
                 }
@@ -234,7 +234,7 @@ Window {
 
         Button {
             id: create_btn
-            text: qsTr("Create")
+            text: qsTr("Create") + tsMgr.emptyString
             icon.source: "qrc:icons/32_add_icon.png"
             icon.color: "transparent"
             font.pointSize: getSmallFontSize()
@@ -267,7 +267,7 @@ Window {
         }
 
         Button {
-            text: qsTr("Cancel")
+            text: qsTr("Cancel") + tsMgr.emptyString
             icon.source: "qrc:icons/32_cancel_icon.png"
             icon.color: "transparent"
             font.pointSize: getSmallFontSize()

@@ -13,7 +13,6 @@ class SettingsModel : public QObject
 private:
     QSettings settings;
     FilesystemModel fsm;
-
     /**
      * @brief parseCLIConfig
      * @param credentialsFilePath
@@ -25,10 +24,8 @@ private:
      * @return
      */
     static QString extractKey(const QString& line);
-
 public:
     explicit SettingsModel(QObject *parent = nullptr);
-
     // --------------------------------------------------------------------------
     Q_INVOKABLE int getRegionIdxQML() const {
         LogMgr::debug(Q_FUNC_INFO);
@@ -57,7 +54,6 @@ public:
     Q_INVOKABLE inline QString getLogsDirQML() const { return settings.value("LogsDir").toString(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline bool getLogsEnabledQML() const { return settings.value("LogsEnabled").toBool(); }
-
     /**
      * @brief readCLIConfig
      */

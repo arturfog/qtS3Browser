@@ -186,7 +186,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Connect/Disconnect")
+                        ToolTip.text: qsTr("Connect/Disconnect") + tsMgr.emptyString
 
                         onClicked: {
                             if(!mainPanel.s3_panel.connected) {
@@ -228,7 +228,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("File/S3 manager")
+                        ToolTip.text: qsTr("File/S3 manager") + tsMgr.emptyString
 
                         onClicked: { switchPanel(fm_btn, mainPanel) }
                     }
@@ -244,7 +244,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Bookmarks")
+                        ToolTip.text: qsTr("Bookmarks") + tsMgr.emptyString
 
                         onClicked: { switchPanel(bookmarks_btn, manageBookmarksPanel) }
                     }
@@ -260,7 +260,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Transfers")
+                        ToolTip.text: qsTr("Transfers") + tsMgr.emptyString
 
                         onClicked: { switchPanel(transfer_btn, progressPanel) }
                     }
@@ -276,7 +276,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Settings")
+                        ToolTip.text: qsTr("Settings") + tsMgr.emptyString
 
                         onClicked: { switchPanel(settings_btn, settingsPanel) }
                     }
@@ -292,7 +292,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("About")
+                        ToolTip.text: qsTr("About") + tsMgr.emptyString
 
                         onClicked: { switchPanel(about_btn, aboutPanel) }
                     }
@@ -307,7 +307,7 @@ ApplicationWindow {
                         ToolTip.delay: 1000
                         ToolTip.timeout: 5000
                         ToolTip.visible: hovered
-                        ToolTip.text: qsTr("Close")
+                        ToolTip.text: qsTr("Close") + tsMgr.emptyString
 
                         onClicked: {
                             s3Model.cancelDownloadUploadQML()

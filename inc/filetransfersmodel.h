@@ -87,6 +87,7 @@ public:
                              const unsigned long current,
                              const unsigned long total) {
         //LogMgr::debug(Q_FUNC_INFO, key);
+        std::lock_guard<std::mutex> lock(mut);
         if(!key.isEmpty()) {
             if(!transfersProgress.contains(key)) {
                 transfersProgress.insert(key, { current, total });
@@ -125,6 +126,7 @@ public:
     }
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline void clearTransfersProgress() {
+        std::lock_guard<std::mutex> lock(mut);
         LogMgr::debug(Q_FUNC_INFO);
         transfersProgress.clear();
     }
@@ -132,6 +134,7 @@ private:
     QMap<QString, QStringList> transfers;
     QMap<QString, TransferMode> modes;
     static QMap<QString, QList<unsigned long>> transfersProgress;
+    static std::mutex mut;
 };
 
 #endif // FILETRANSFERSMODEL_H

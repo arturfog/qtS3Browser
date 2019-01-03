@@ -61,5 +61,6 @@
         <file>icons/32_traffic_icon.png</file>
         <file>icons/32_transfers_icon.png</file>
         <file>icons/32_language_icon.png</file>
+        <file>qml/PresignLinkWindow.qml</file>
     </qresource>
 </RCC>

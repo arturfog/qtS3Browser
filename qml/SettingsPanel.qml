@@ -91,7 +91,7 @@ Item {
 
             Text {
                 color: "white"
-                text: "Settings"
+                text: qsTr("Settings") + tsMgr.emptyString
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
@@ -102,7 +102,7 @@ Item {
             Button {
                 id: control
                 font.pointSize: labelFontSize
-                text: "Save"
+                text: qsTr("Save") + tsMgr.emptyString
                 icon.source: "qrc:icons/32_save_icon.png"
                 icon.color: "transparent"
                 anchors.verticalCenter: parent.verticalCenter
@@ -182,7 +182,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "S3 Start Path"
+                        text: qsTr("S3 Start Path") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -256,7 +256,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Language"
+                        text: qsTr("Language") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -288,9 +288,16 @@ Item {
                             width: parent.width
                             height: parent.height
                             font.pointSize: inputFontSize
-                            currentIndex: settingsModel.getTimeoutIdxQML()
+                            //currentIndex: settingsModel.getTimeoutIdxQML()
                             model: [ "English",
-                                "Polish" ]
+                                "Polski" ]
+                            onCurrentTextChanged: {
+                                if(currentText == "Polski") {
+                                    tsMgr.selectLanguage("pl")
+                                } else {
+                                    tsMgr.selectLanguage("en")
+                                }
+                            }
                         }
 
                     }
@@ -339,7 +346,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Secret Key"
+                        text: qsTr("Secret Key") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -425,7 +432,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Access Key"
+                        text: qsTr("Access Key") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -510,7 +517,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Region"
+                        text: qsTr("Region") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -585,7 +592,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Network timeout (seconds)"
+                        text: qsTr("Network timeout (seconds)") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -664,15 +671,15 @@ Item {
                         flat: true
                         width: parent.width - 100
                         height: 40
-                        text: qsTr("Show advanced options")
+                        text: qsTr("Show advanced options") + tsMgr.emptyString
                         font.pointSize: labelFontSize
                         onClicked: {
                             if(endpoint_url_rect.visible) {
-                                text =  qsTr("Show advanced options")
+                                text =  qsTr("Show advanced options") + tsMgr.emptyString
                                 endpoint_url_rect.visible = false
                                 logging_rect.visible = false
                             } else {
-                                text =  qsTr("Hide advanced options")
+                                text =  qsTr("Hide advanced options") + tsMgr.emptyString
                                 endpoint_url_rect.visible = true
                                 logging_rect.visible = true
                             }
@@ -724,7 +731,7 @@ Item {
                     Text {
                         width: parent.width
                         height: 40
-                        text: "Endpoint URL"
+                        text: qsTr("Endpoint URL") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
@@ -810,14 +817,14 @@ Item {
                     Text {
                         width: parent.width - 200
                         height: 40
-                        text: qsTr("Log files directory")
+                        text: qsTr("Log files directory") + tsMgr.emptyString
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: labelFontSize
                     }
 
                     Switch {
                         id:enableLogs
-                        text: qsTr("Enable logs")
+                        text: qsTr("Enable logs") + tsMgr.emptyString
                     }
                 }
 
@@ -871,7 +878,7 @@ Item {
 
                     FileDialog {
                         id: fileDialog
-                        title: qsTr("Please choose a folder")
+                        title: qsTr("Please choose a folder") + tsMgr.emptyString
                         folder: shortcuts.home
                         selectFolder : true
                         onAccepted: {
@@ -886,7 +893,7 @@ Item {
                     Button {
                         id: logpath_btn
                         font.pointSize: labelFontSize
-                        text: qsTr("Select dir")
+                        text: qsTr("Select dir") + tsMgr.emptyString
                         icon.source: "qrc:icons/32_save_icon.png"
                         icon.color: "transparent"
                         anchors.verticalCenter: parent.verticalCenter

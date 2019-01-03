@@ -107,7 +107,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_up_icon.png"
                 icon.color: "transparent"
-                text: "Up"
+                text: qsTr("Up") + tsMgr.emptyString
                 enabled: connected
                 onClicked: {
                     s3Model.goBackQML()
@@ -121,7 +121,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_refresh_icon.png"
                 icon.color: "transparent"
-                text: "Refresh"
+                text: qsTr("Refresh") + tsMgr.emptyString
                 enabled: connected
                 onClicked: s3Model.refreshQML()
             }
@@ -132,7 +132,7 @@ Item {
                 height: parent.height
                 icon.source: "qrc:icons/32_new_folder_icon.png"
                 icon.color: "transparent"
-                text: "New"
+                text: qsTr("New") + tsMgr.emptyString
                 enabled: false
                 onClicked: {
                     createS3FolderWindow.x = app_window.x + (app_window.width / 2) - (createS3FolderWindow.width / 2)
@@ -145,7 +145,7 @@ Item {
             ToolButton {
                 font.pointSize: getSmallFontSize()
                 height: parent.height
-                text: qsTr("Create bucket")
+                text: qsTr("Create bucket") + tsMgr.emptyString
                 icon.source: "qrc:icons/32_bucket_icon.png"
                 icon.color: "transparent"
                 enabled: s3_panel.connected
@@ -247,7 +247,7 @@ Item {
                             x: 30
                             width: 230
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Name"
+                            text: qsTr("Name") + tsMgr.emptyString
                             font.pointSize: getSmallFontSize()
                         }
 
@@ -270,7 +270,7 @@ Item {
                             x: 3
                             width: 100
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Size"
+                            text: qsTr("Size") + tsMgr.emptyString
                             font.pointSize: getSmallFontSize()
                         }
                     }
