@@ -26,18 +26,7 @@ private:
     template <typename T>
     static void log(const LOG_LEVEL level, const std::string &msg, T const& x);
 
-    inline static const std::string LvlToString(LOG_LEVEL lvl)
-    {
-        switch (lvl)
-        {
-        case LOG_LEVEL::DEBUG: return "[DBG]";
-        case LOG_LEVEL::INFO:  return "[INFO]";
-        case LOG_LEVEL::TRACE: return "[TRACE]";
-        case LOG_LEVEL::ERROR: return "[ERR]";
-        }
-
-        return "";
-    }
+    static const std::string LvlToString(LOG_LEVEL lvl);
 public:
     explicit LogMgr(QObject *parent = nullptr);
     /**

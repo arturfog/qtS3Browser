@@ -11,6 +11,20 @@ QString LogMgr::baseName("qts3browser.log");
 std::mutex LogMgr::mut;
 QFile LogMgr::logfile;
 
+
+const std::string LogMgr::LvlToString(LOG_LEVEL lvl)
+{
+    switch (lvl)
+    {
+    case LOG_LEVEL::DEBUG: return "[DBG]";
+    case LOG_LEVEL::INFO:  return "[INFO]";
+    case LOG_LEVEL::TRACE: return "[TRACE]";
+    case LOG_LEVEL::ERROR: return "[ERR]";
+    }
+
+    return "";
+}
+
 LogMgr::LogMgr(QObject *parent) : QObject(parent) {}
 // --------------------------------------------------------------------------
 void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg)

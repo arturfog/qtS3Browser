@@ -82,10 +82,15 @@ public:
             modes.remove(fileName);
         }
     }
+
     // --------------------------------------------------------------------------
-    void addTransferProgress(const QString key,
-                             const unsigned long current,
-                             const unsigned long total) {
+    Q_SIGNAL void addTransferProgressSignal(const QString key,
+                                   const unsigned long current,
+                                   const unsigned long total);
+    // --------------------------------------------------------------------------
+    Q_SLOT void addTransferProgressSlot(const QString key,
+                                        const unsigned long current,
+                                        const unsigned long total) {
         //LogMgr::debug(Q_FUNC_INFO, key);
         std::lock_guard<std::mutex> lock(mut);
         if(!key.isEmpty()) {
@@ -97,11 +102,12 @@ public:
         }
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE inline int getTransferProgressNum() const {
+    Q_INVOKABLE static int getTransferProgressNum() {
+        std::lock_guard<std::mutex> lock(mut);
         return transfersProgress.size();
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE unsigned long getTransfersCopiedBytes(const QString& key) const {
+    Q_INVOKABLE static unsigned long getTransfersCopiedBytes(const QString& key) {
         //LogMgr::debug(Q_FUNC_INFO);
         if(!key.isEmpty() && transfersProgress.contains(key)) {
             return transfersProgress[key].first();
@@ -109,7 +115,7 @@ public:
         return 0;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE unsigned long getTransfersTotalBytes(const QString& key) const {
+    Q_INVOKABLE static unsigned long getTransfersTotalBytes(const QString& key) {
         //LogMgr::debug(Q_FUNC_INFO);
         if(!key.isEmpty() && transfersProgress.contains(key)) {
             return transfersProgress[key].last();
@@ -117,15 +123,16 @@ public:
         return 0;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getTransfersProgressKey(const int idx) const {
+    Q_INVOKABLE static QString getTransfersProgressKey(const int idx) {
         //LogMgr::debug(Q_FUNC_INFO);
+        std::lock_guard<std::mutex> lock(mut);
         if(transfersProgress.size() > 0 && idx < transfersProgress.size() && idx >= 0) {
             return transfersProgress.keys().at(idx);
         }
         return "";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE inline void clearTransfersProgress() {
+    Q_INVOKABLE static void clearTransfersProgress() {
         std::lock_guard<std::mutex> lock(mut);
         LogMgr::debug(Q_FUNC_INFO);
         transfersProgress.clear();

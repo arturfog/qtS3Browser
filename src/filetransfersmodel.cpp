@@ -3,4 +3,6 @@
 QMap<QString, QList<unsigned long>> FileTransfersModel::transfersProgress;
 std::mutex FileTransfersModel::mut;
 // --------------------------------------------------------------------------
-FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent) {}
+FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent) {
+    QObject::connect(this, &FileTransfersModel::addTransferProgressSignal, this, &FileTransfersModel::addTransferProgressSlot);
+}
