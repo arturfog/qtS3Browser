@@ -6,7 +6,7 @@
     <message>
         <location filename="../qml/AboutPanel.qml" line="76"/>
         <source>Version: </source>
-        <translation type="unfinished"></translation>
+        <translation>Wersja: </translation>
     </message>
 </context>
 <context>
@@ -35,6 +35,17 @@
 <context>
     <name>CreateItemWindow</name>
     <message>
+        <location filename="../qml/CreateItemWindow.qml" line="75"/>
+        <source>Error</source>
+        <translation>Błąd</translation>
+    </message>
+    <message>
+        <location filename="../qml/CreateItemWindow.qml" line="76"/>
+        <location filename="../qml/CreateItemWindow.qml" line="233"/>
+        <source>Directory already exists</source>
+        <translation>Katalog już&#xa0;istnieje</translation>
+    </message>
+    <message>
         <location filename="../qml/CreateItemWindow.qml" line="113"/>
         <source>Create bucket</source>
         <translation>Nowy koszyk</translation>
@@ -50,9 +61,25 @@
         <translation>Nowy lokalny katalog</translation>
     </message>
     <message>
+        <location filename="../qml/CreateItemWindow.qml" line="155"/>
+        <source>Bucket name</source>
+        <translation>Nazwa koszyka</translation>
+    </message>
+    <message>
+        <location filename="../qml/CreateItemWindow.qml" line="157"/>
+        <source>Directory name</source>
+        <translation>Nazwa katalogu</translation>
+    </message>
+    <message>
         <location filename="../qml/CreateItemWindow.qml" line="215"/>
         <source>Create</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../qml/CreateItemWindow.qml" line="224"/>
+        <location filename="../qml/CreateItemWindow.qml" line="230"/>
+        <source>Invalid folder name. It cannot contain &apos;/&apos; sign</source>
+        <translation>Nieprawidłowa nazwa katalogu. Nazwa nie może zawierać&#xa0;znaku &apos;/&apos;</translation>
     </message>
     <message>
         <location filename="../qml/CreateItemWindow.qml" line="271"/>
@@ -62,6 +89,11 @@
 </context>
 <context>
     <name>FileBrowser</name>
+    <message>
+        <location filename="../qml/FileBrowser.qml" line="32"/>
+        <source>Remove?</source>
+        <translation>Usunąć?</translation>
+    </message>
     <message>
         <location filename="../qml/FileBrowser.qml" line="40"/>
         <source>Create folder</source>
@@ -85,22 +117,22 @@
     <message>
         <location filename="../qml/FileBrowser.qml" line="226"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location filename="../qml/FileBrowser.qml" line="256"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar</translation>
     </message>
     <message>
         <location filename="../qml/FileBrowser.qml" line="338"/>
         <source> Item</source>
-        <translation type="unfinished"></translation>
+        <translation> Obiekt</translation>
     </message>
     <message>
         <location filename="../qml/FileBrowser.qml" line="340"/>
         <source> Items</source>
-        <translation type="unfinished"></translation>
+        <translation> Obiekty</translation>
     </message>
 </context>
 <context>
@@ -120,37 +152,62 @@
         <source>Delete</source>
         <translation>Usuń</translation>
     </message>
+    <message>
+        <location filename="../qml/FileDelegate.qml" line="104"/>
+        <source>Remove </source>
+        <translation>Usuń </translation>
+    </message>
 </context>
 <context>
     <name>InfoWindow</name>
     <message>
+        <location filename="../qml/InfoWindow.qml" line="28"/>
+        <source>Info</source>
+        <translation>Informacje</translation>
+    </message>
+    <message>
         <location filename="../qml/InfoWindow.qml" line="108"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar</translation>
     </message>
     <message>
         <location filename="../qml/InfoWindow.qml" line="134"/>
         <source>Modification date</source>
-        <translation type="unfinished"></translation>
+        <translation>Data modyfikacji</translation>
     </message>
     <message>
         <location filename="../qml/InfoWindow.qml" line="160"/>
         <source>Permissions</source>
-        <translation type="unfinished"></translation>
+        <translation>Uprawnienia</translation>
     </message>
     <message>
         <location filename="../qml/InfoWindow.qml" line="187"/>
         <source>Owner</source>
-        <translation type="unfinished"></translation>
+        <translation>Właściciel</translation>
     </message>
     <message>
         <location filename="../qml/InfoWindow.qml" line="241"/>
         <source>Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Ścieżka</translation>
     </message>
 </context>
 <context>
     <name>ManageBookmarksPanel</name>
+    <message>
+        <location filename="../qml/ManageBookmarksPanel.qml" line="93"/>
+        <source>Open</source>
+        <translation>Otwórz</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageBookmarksPanel.qml" line="127"/>
+        <source>Edit</source>
+        <translation>Edytuj</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageBookmarksPanel.qml" line="162"/>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
     <message>
         <location filename="../qml/ManageBookmarksPanel.qml" line="228"/>
         <source>Manage bookmarks</source>
@@ -166,27 +223,77 @@
 <context>
     <name>OperationProgressPanel</name>
     <message>
+        <location filename="../qml/OperationProgressPanel.qml" line="372"/>
+        <source>File transfers</source>
+        <translation>Transfery plików</translation>
+    </message>
+    <message>
         <location filename="../qml/OperationProgressPanel.qml" line="384"/>
         <source>Cancel</source>
         <translation>Anuluj</translation>
+    </message>
+    <message>
+        <location filename="../qml/OperationProgressPanel.qml" line="438"/>
+        <source>Transfers progress</source>
+        <translation>Postęp transferów</translation>
+    </message>
+    <message>
+        <location filename="../qml/OperationProgressPanel.qml" line="505"/>
+        <source>Speed: </source>
+        <translation>Prędkość: </translation>
+    </message>
+    <message>
+        <location filename="../qml/OperationProgressPanel.qml" line="629"/>
+        <source>Transfers queue</source>
+        <translation>Kolejka transferów</translation>
     </message>
 </context>
 <context>
     <name>S3Browser</name>
     <message>
+        <location filename="../qml/S3Browser.qml" line="34"/>
+        <source>Remove ?</source>
+        <translation>Usunąć ?</translation>
+    </message>
+    <message>
+        <location filename="../qml/S3Browser.qml" line="41"/>
+        <source>Overwrite ?</source>
+        <translation>Nadpisać ?</translation>
+    </message>
+    <message>
+        <location filename="../qml/S3Browser.qml" line="46"/>
+        <source>S3 Error</source>
+        <translation>Błąd S3</translation>
+    </message>
+    <message>
+        <location filename="../qml/S3Browser.qml" line="47"/>
+        <source>There is transfer in progress. Please wait for it to complete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/S3Browser.qml" line="73"/>
+        <source>File </source>
+        <translation>Plik </translation>
+    </message>
+    <message>
+        <location filename="../qml/S3Browser.qml" line="73"/>
+        <source> exists. Overwrite ?</source>
+        <translation> istnieje. Nadpisać ?</translation>
+    </message>
+    <message>
         <location filename="../qml/S3Browser.qml" line="110"/>
         <source>Up</source>
-        <translation type="unfinished">Do góry</translation>
+        <translation>Do góry</translation>
     </message>
     <message>
         <location filename="../qml/S3Browser.qml" line="124"/>
         <source>Refresh</source>
-        <translation type="unfinished">Odśwież</translation>
+        <translation>Odśwież</translation>
     </message>
     <message>
         <location filename="../qml/S3Browser.qml" line="135"/>
         <source>New</source>
-        <translation type="unfinished">Nowy</translation>
+        <translation>Nowy</translation>
     </message>
     <message>
         <location filename="../qml/S3Browser.qml" line="148"/>
@@ -196,12 +303,12 @@
     <message>
         <location filename="../qml/S3Browser.qml" line="250"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nazwa</translation>
     </message>
     <message>
         <location filename="../qml/S3Browser.qml" line="273"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozmiar</translation>
     </message>
 </context>
 <context>
@@ -214,7 +321,7 @@
     <message>
         <location filename="../qml/S3ObjectDelegate.qml" line="122"/>
         <source>Copy S3 path</source>
-        <translation type="unfinished"></translation>
+        <translation>Skopiuj adres S3</translation>
     </message>
     <message>
         <location filename="../qml/S3ObjectDelegate.qml" line="132"/>
@@ -230,6 +337,11 @@
         <location filename="../qml/S3ObjectDelegate.qml" line="146"/>
         <source>Delete</source>
         <translation>Usuń</translation>
+    </message>
+    <message>
+        <location filename="../qml/S3ObjectDelegate.qml" line="150"/>
+        <source>Remove </source>
+        <translation>Usunąć </translation>
     </message>
 </context>
 <context>
@@ -272,7 +384,7 @@
     <message>
         <location filename="../qml/SettingsPanel.qml" line="595"/>
         <source>Network timeout (seconds)</source>
-        <translation type="unfinished"></translation>
+        <translation>Opóźnienie sieciowe (sekundy)</translation>
     </message>
     <message>
         <location filename="../qml/SettingsPanel.qml" line="674"/>
@@ -293,7 +405,7 @@
     <message>
         <location filename="../qml/SettingsPanel.qml" line="820"/>
         <source>Log files directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Katalog z logami</translation>
     </message>
     <message>
         <location filename="../qml/SettingsPanel.qml" line="827"/>
@@ -303,7 +415,7 @@
     <message>
         <location filename="../qml/SettingsPanel.qml" line="881"/>
         <source>Please choose a folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Proszę&#xa0;wybrać&#xa0;katalog</translation>
     </message>
     <message>
         <location filename="../qml/SettingsPanel.qml" line="896"/>
@@ -316,7 +428,32 @@
     <message>
         <location filename="../qml/main.qml" line="33"/>
         <source>s3FileBrowser</source>
-        <translation type="unfinished"></translation>
+        <translation>s3FileBrowser</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="84"/>
+        <source>Missing credentials</source>
+        <translation>Brak danych logowania do S3</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="85"/>
+        <source>Before connecting, please configure access and secret keys in settings</source>
+        <translation>Aby połączyć&#xa0;z serwerem ustaw dane logowania w ustawieniach</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="91"/>
+        <source>S3 Error</source>
+        <translation>Błąd S3</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="98"/>
+        <source>Create bucket ?</source>
+        <translation>Stworzyć koszyk ?</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="99"/>
+        <source>There are no buckets. Do you want to create one ?</source>
+        <translation>Brak koszyków S3. Stworzyć&#xa0;nowy ?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="106"/>

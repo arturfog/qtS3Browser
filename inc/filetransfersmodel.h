@@ -11,7 +11,7 @@ class FileTransfersModel : public QObject
 public:
     enum class TransferMode { upload, download };
     Q_ENUMS(TransferMode)
-
+    // --------------------------------------------------------------------------
     explicit FileTransfersModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline int getTransfersNumQML() const { return transfers.size(); }
@@ -46,61 +46,15 @@ public:
         return "32_upload_icon.png";
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void addTransferToQueueQML(const QString &fileName,
-                                    const QString &src,
-                                    const QString &dst)
-    {
-        LogMgr::debug(Q_FUNC_INFO, src, dst);
-        if(!fileName.isEmpty() && !src.isEmpty() && !dst.isEmpty())
-        {
-            if(!transfers.contains(fileName)) {
-                QStringList list({src, dst});
-                if(src.contains("s3://")) {
-                    modes[fileName] = TransferMode::download;
-                } else {
-                    modes[fileName] = TransferMode::upload;
-                }
-                transfers[fileName] = list;
-            }
-        }
-    }
+    Q_INVOKABLE void addTransferToQueueQML(const QString &fileName, const QString &src, const QString &dst);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void removeTransferQML(const QString &fileName) {
-        LogMgr::debug(Q_FUNC_INFO, fileName);
-        if(!fileName.isEmpty() && transfers.contains(fileName)) {
-            transfers.remove(fileName);
-            modes.remove(fileName);
-        }
-    }
+    Q_INVOKABLE void removeTransferQML(const QString &fileName);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE void removeTransferQML(const int idx) {
-        LogMgr::debug(Q_FUNC_INFO);
-
-        if(transfers.size() > 0 && idx < transfers.size() && idx >= 0) {
-            QString fileName(transfers.keys().at(idx));
-            transfers.remove(fileName);
-            modes.remove(fileName);
-        }
-    }
-
+    Q_INVOKABLE void removeTransferQML(const int idx);
     // --------------------------------------------------------------------------
-    Q_SIGNAL void addTransferProgressSignal(const QString key,
-                                   const unsigned long current,
-                                   const unsigned long total);
+    Q_SIGNAL void addTransferProgressSignal(const QString key, const unsigned long current, const unsigned long total);
     // --------------------------------------------------------------------------
-    Q_SLOT void addTransferProgressSlot(const QString key,
-                                        const unsigned long current,
-                                        const unsigned long total) {
-        //LogMgr::debug(Q_FUNC_INFO, key);
-        std::lock_guard<std::mutex> lock(mut);
-        if(!key.isEmpty()) {
-            if(!transfersProgress.contains(key)) {
-                transfersProgress.insert(key, { current, total });
-            } else {
-                transfersProgress[key] = { current, total };
-            }
-        }
-    }
+    Q_SLOT void addTransferProgressSlot(const QString key, const unsigned long current, const unsigned long total);
     // --------------------------------------------------------------------------
     Q_INVOKABLE static int getTransferProgressNum() {
         std::lock_guard<std::mutex> lock(mut);
@@ -123,23 +77,12 @@ public:
         return 0;
     }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE static QString getTransfersProgressKey(const int idx) {
-        //LogMgr::debug(Q_FUNC_INFO);
-        std::lock_guard<std::mutex> lock(mut);
-        if(transfersProgress.size() > 0 && idx < transfersProgress.size() && idx >= 0) {
-            return transfersProgress.keys().at(idx);
-        }
-        return "";
-    }
+    Q_INVOKABLE static QString getTransfersProgressKey(const int idx);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE static void clearTransfersProgress() {
-        std::lock_guard<std::mutex> lock(mut);
-        LogMgr::debug(Q_FUNC_INFO);
-        transfersProgress.clear();
-    }
+    Q_INVOKABLE static void clearTransfersProgress();
 private:
-    QMap<QString, QStringList> transfers;
-    QMap<QString, TransferMode> modes;
+    static QMap<QString, QStringList> transfers;
+    static QMap<QString, TransferMode> modes;
     static QMap<QString, QList<unsigned long>> transfersProgress;
     static std::mutex mut;
 };

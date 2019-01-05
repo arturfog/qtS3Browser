@@ -31,20 +31,20 @@ Item {
     property bool connected: false
     property string footerText: ""
     property CustomMessageDialog msgDialog: CustomMessageDialog {
-        win_title: "Remove ?"
+        win_title: qsTr("Remove ?")
         yesAction: function() {
             s3Model.removeQML(view.currentIndex);
         }
     }
 
     property CustomMessageDialog overwriteDialog: CustomMessageDialog {
-        win_title: "Overwrite ?"
+        win_title: qsTr("Overwrite ?")
         yesAction: function() { downloadInternal() }
     }
 
     property CustomMessageDialog s3Error: CustomMessageDialog {
-        win_title: "S3 Error"
-        msg: "There is transfer in progress. Please wait for it to complete."
+        win_title: qsTr("S3 Error")
+        msg: qsTr("There is transfer in progress. Please wait for it to complete.")
         buttons: StandardButton.Ok
         ico: StandardIcon.Warning
     }
@@ -70,7 +70,7 @@ Item {
         var path = s3Model.getFileBrowserPath()
 
         if(fsModel.fileExistsQML(path + fileName)) {
-            overwriteDialog.msg = "File " + fileName + " exists. Overwrite ?"
+            overwriteDialog.msg = qsTr("File ") + fileName + qsTr(" exists. Overwrite ?")
             overwriteDialog.visible = true
         } else {
             downloadInternal()

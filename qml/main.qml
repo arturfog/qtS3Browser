@@ -81,22 +81,22 @@ ApplicationWindow {
     property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
-        win_title: "Missing credentials"
-        msg: "Before connecting, please configure access and secret keys in settings"
+        win_title: qsTr("Missing credentials")
+        msg: qsTr("Before connecting, please configure access and secret keys in settings")
         buttons: StandardButton.Ok
         ico: StandardIcon.Warning
     }
 
     property CustomMessageDialog s3Error: CustomMessageDialog {
-        win_title: "S3 Error"
+        win_title: qsTr("S3 Error")
         msg: ""
         buttons: StandardButton.Ok
         ico: StandardIcon.Warning
     }
 
     property CustomMessageDialog createBucketsDialog: CustomMessageDialog {
-        win_title: "Create bucket ?"
-        msg: "There are no buckets. Do you want to create one ?"
+        win_title: qsTr("Create bucket ?")
+        msg: qsTr("There are no buckets. Do you want to create one ?")
         yesAction: function() {
             createBucketWindow.visible = true
         }

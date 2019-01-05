@@ -323,15 +323,15 @@ protected:
 private:
     QSettings settings;
     QString currentFile;
-    QList<S3Item> m_s3items;
-    QStringList m_s3Path;
     bool isConnected;
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;
-    FilesystemModel fsm;
-    SettingsModel sm;
-    FileTransfersModel ftm;
-
+    // STATIC VARIABLES
+    static QList<S3Item> m_s3items;
+    static QStringList m_s3Path;
+    static FilesystemModel fsm;
+    static SettingsModel sm;
+    static FileTransfersModel ftm;
     static std::mutex mut;
 };
 

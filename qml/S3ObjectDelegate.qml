@@ -102,7 +102,7 @@ Rectangle {
             icon.source: "qrc:icons/32_about_icon.png"
             icon.color: "transparent"
             enabled: connected
-            text: qsTr('Info')
+            text: qsTr('Info') + tsMgr.emptyString
             onClicked: {
                 infoWindow.x = app_window.x + (app_window.width / 2) - (infoWindow.width / 2)
                 infoWindow.y = app_window.y + (app_window.height / 2) - (infoWindow.height / 2)
@@ -119,7 +119,7 @@ Rectangle {
             icon.source: "qrc:icons/32_file_icon.png"
             icon.color: "transparent"
             enabled: connected
-            text: qsTr('Copy S3 path')
+            text: qsTr('Copy S3 path') + tsMgr.emptyString
             onClicked: {
                 var fileName = s3Model.getItemNameQML(view.currentIndex)
                 s3_browser_clipboard.copy("s3://" + s3Model.getS3PathQML() + fileName)
@@ -129,25 +129,25 @@ Rectangle {
             icon.source: "qrc:icons/32_download_icon.png"
             icon.color: "transparent"
             enabled: connected && s3Model.canDownload()
-            text: qsTr('Download')
+            text: qsTr('Download') + tsMgr.emptyString
             onClicked: { download() }
         }
         MenuItem {
             icon.source: "qrc:icons/32_endpoint_icon.png"
             icon.color: "transparent"
             enabled: connected
-            text: qsTr('Presign link')
+            text: qsTr('Presign link') + tsMgr.emptyString
             onClicked: { }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected && !s3Model.isTransferring()
-            text: qsTr('Delete')
+            text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
                 if(!s3Model.isTransferring()) {
                     var fileName = s3Model.getItemNameQML(view.currentIndex)
-                    msgDialog.msg = "Remove " + fileName + " ?"
+                    msgDialog.msg = qsTr("Remove ") + fileName + " ?"
                     msgDialog.open()
                 } else {
                     s3Error.visible = true

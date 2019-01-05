@@ -2,7 +2,7 @@
 # Travis checkout dir
 #
 # /Users/travis/build/arturfog/qtS3Browser
-brew install qt5 2>&1 > /dev/null
+HOMEBREW_NO_AUTO_UPDATE=1 brew install qt5 2>&1 > /dev/null
 brew link qt5 --force
 
 # AWS

@@ -90,7 +90,7 @@ Rectangle {
   Row {
       Button {
         id:o' + i + '
-        text: "Open"
+        text:"' + qsTr("Open") + tsMgr.emptyString + '"
         font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_go_icon.png"
         icon.color: "transparent"
@@ -124,7 +124,7 @@ Rectangle {
 
       Button {
         id:e' + i + '
-        text: "Edit";
+        text:"' +  qsTr("Edit") + tsMgr.emptyString + '"
         font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_edit_icon.png"
         icon.color: "transparent"
@@ -159,7 +159,7 @@ Rectangle {
 
       Button {
         id:d' + i + '
-        text: "Remove";
+        text:"' + qsTr("Remove") + tsMgr.emptyString + '"
         font.pointSize: getSmallFontSize()
         icon.source: "qrc:icons/32_delete_icon.png"
         icon.color: "transparent"
@@ -225,7 +225,7 @@ Rectangle {
 
                 Text {
                     color: "white"
-                    text: qsTr("Manage bookmarks")
+                    text: qsTr("Manage bookmarks") + tsMgr.emptyString
                     font.bold: true
                     font.pointSize: getLargeFontSize()
                     height: parent.height
@@ -241,7 +241,7 @@ Rectangle {
 
                 Button {
                     id: add
-                    text: qsTr("Add bookmark");
+                    text: qsTr("Add bookmark") + tsMgr.emptyString
                     icon.source: "qrc:icons/32_add_bookmark.png"
                     icon.color: "transparent"
                     font.pointSize: getSmallFontSize()
@@ -249,7 +249,7 @@ Rectangle {
                     onClicked: {
                       createBookmarkWindow.x = app_window.x + (app_window.width / 2) - (createBookmarkWindow.width / 2)
                       createBookmarkWindow.y = app_window.y + (app_window.height / 2) - (createBookmarkWindow.height / 2)
-                      createBookmarkWindow.win_title = qsTr("Add bookmark")
+                      createBookmarkWindow.win_title = qsTr("Add bookmark") + tsMgr.emptyString
                       createBookmarkWindow.book_name = ""
                       createBookmarkWindow.book_path = "s3://"
                       createBookmarkWindow.visible = true;
