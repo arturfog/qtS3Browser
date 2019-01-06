@@ -70,6 +70,32 @@ macx {
 unix {
   LIBS += -L"$$(HOME)/.local/usr/local/lib"
   INCLUDEPATH += "$$(HOME)/.local/usr/local/include"
+  # crashpad
+  INCLUDEPATH += "$$PWD/crashpad/crashpad"
+  INCLUDEPATH += "$$PWD/crashpad/crashpad/third_party/mini_chromium/mini_chromium"
+
+  DEPENDPATH += $$PWD/crashpad/crashpad_libs
+
+  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lclient
+  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libclient.a
+
+  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lutil
+  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libutil.a
+
+  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lbase
+  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libbase.a
+
+#  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lcompat
+#  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libcompat.a
+
+#  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lhandler
+#  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libhandler.a
+
+#  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lsnapshot
+#  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libsnapshot.a
+
+#  unix:!macx: LIBS += -L$$PWD/crashpad/crashpad_libs/ -lminidump
+#  unix:!macx: PRE_TARGETDEPS += $$PWD/crashpad/crashpad_libs/libminidump.a
 }
 
 win32 {

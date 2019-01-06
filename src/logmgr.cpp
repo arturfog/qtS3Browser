@@ -8,6 +8,27 @@
 #include <QDebug>
 #include <sstream>
 
+#include "client/crashpad_client.h"
+#include "client/settings.h"
+
+static bool startCrashpad() {
+    // Cache directory that will store crashpad information and minidumps
+    base::FilePath database("/tmp/crashpad.db");
+    // Path to the out-of-process handler executable
+    base::FilePath handler("crashpad_handler");
+    // URL used to submit minidumps to
+    std::string url("https://sentry.io/api/qtS3Browser/minidump/?sentry_key=<key>");
+    // Optional annotations passed via --annotations to the handler
+    std::map<std::string, std::string> annotations;
+    // Optional arguments to pass to the handler
+    std::vector<std::string> arguments;
+
+    crashpad::CrashpadClient client;
+    bool success = false;
+
+    return success;
+}
+
 QString LogMgr::baseName("qts3browser.log");
 std::mutex LogMgr::mut;
 QFile LogMgr::logfile;

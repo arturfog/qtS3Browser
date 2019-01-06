@@ -43,3 +43,6 @@ conanbuildinfo.txt
 conaninfo.txt
 
 aws
+crashpad
+crashpad_libs
+depot_tools
