@@ -29,7 +29,7 @@ Item {
     property bool connected: false
 
     property CustomMessageDialog msgDialog: CustomMessageDialog {
-        win_title: "Remove?"
+        win_title: qsTr("Remove?")
         yesAction: function() {
             var filePath = folder.get(view.currentIndex, "filePath")
             fsModel.removeQML(filePath);

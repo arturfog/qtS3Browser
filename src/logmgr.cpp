@@ -11,6 +11,20 @@ QString LogMgr::baseName("qts3browser.log");
 std::mutex LogMgr::mut;
 QFile LogMgr::logfile;
 
+
+const std::string LogMgr::LvlToString(LOG_LEVEL lvl)
+{
+    switch (lvl)
+    {
+    case LOG_LEVEL::DEBUG: return "[DBG]";
+    case LOG_LEVEL::INFO:  return "[INFO]";
+    case LOG_LEVEL::TRACE: return "[TRACE]";
+    case LOG_LEVEL::ERR: return "[ERR]";
+    }
+
+    return "";
+}
+
 LogMgr::LogMgr(QObject *parent) : QObject(parent) {}
 // --------------------------------------------------------------------------
 void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg)
@@ -55,7 +69,7 @@ void LogMgr::debug(const std::string &msg)
 // --------------------------------------------------------------------------
 void LogMgr::error(const std::string &msg)
 {
-    log(LOG_LEVEL::ERROR, msg);
+    log(LOG_LEVEL::ERR, msg);
 }
 // --------------------------------------------------------------------------
 void LogMgr::trace(const std::string &msg)
@@ -176,7 +190,7 @@ void LogMgr::trace(const std::string &msg, const T &x)
 template<typename T>
 void LogMgr::error(const std::string &msg, const T &x)
 {
-   log(LOG_LEVEL::ERROR, msg, x);
+   log(LOG_LEVEL::ERR, msg, x);
 }
 // --------------------------------------------------------------------------
 template<typename T>

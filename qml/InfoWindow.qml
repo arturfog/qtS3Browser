@@ -25,7 +25,7 @@ Window {
     minimumWidth: 640; maximumWidth: 640
     width: 640; height: 320;
     color: "#f8f9fa"
-    title: "Info"
+    title: qsTr("Info") + tsMgr.emptyString
 
     property string name: ""
     property string path: ""
@@ -105,7 +105,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: qsTr("Size")
+                    text: qsTr("Size") + tsMgr.emptyString
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -131,7 +131,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: qsTr("Modification date")
+                    text: qsTr("Modification date") + tsMgr.emptyString
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -157,7 +157,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: qsTr("Permissions")
+                    text: qsTr("Permissions") + tsMgr.emptyString
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -184,7 +184,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: qsTr("Owner")
+                    text: qsTr("Owner") + tsMgr.emptyString
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -238,7 +238,7 @@ Window {
                 Text {
                     width: parent.width / 2
                     height: 40
-                    text: qsTr("Path")
+                    text: qsTr("Path") + tsMgr.emptyString
                     font.bold: true
                     verticalAlignment: Text.AlignVCenter
                 }

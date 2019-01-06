@@ -17,30 +17,12 @@ class TranslationsMgr : public QObject
 
 public:
     TranslationsMgr();
-
-    QString getEmptyString() {
+    // --------------------------------------------------------------------------
+    QString getEmptyString() const {
         return "";
     }
-
-    Q_INVOKABLE void selectLanguage(QString language) {
-        LogMgr::debug(Q_FUNC_INFO, language);
-        if(language == QString("pl")) {
-            if(qtTranslator->load("qt_pl", QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
-                qApp->installTranslator(qtTranslator);
-            }
-
-            if(myappTranslator->load("s3browser_pl", "translations")) {
-                qApp->installTranslator(myappTranslator);
-            }
-        }
-
-        if(language == QString("en")) {
-            qApp->removeTranslator(qtTranslator);
-            qApp->removeTranslator(myappTranslator);
-        }
-
-        emit languageChanged();
-    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void selectLanguage(QString language);
 
 signals:
     void languageChanged();

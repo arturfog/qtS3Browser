@@ -72,8 +72,8 @@ Window {
     }
 
     property CustomMessageDialog msgDialog: CustomMessageDialog {
-        win_title: "Error"
-        msg: "Directory already exists"
+        win_title: qsTr("Error")
+        msg: qsTr("Directory already exists")
         ico: StandardIcon.Warning
         buttons: StandardButton.Close
         yesAction: function() { close() }
@@ -152,9 +152,9 @@ Window {
                     height: 40
                     text: {
                         if(create_action === createBucket) {
-                            "Bucket name"
+                            qsTr("Bucket name")
                         } else {
-                            "Directory name"
+                            qsTr("Directory name")
                         }
                     }
                     verticalAlignment: Text.AlignVCenter
@@ -221,16 +221,16 @@ Window {
                         s3Model.createBucketQML(itemName.text)
                     } else if (create_action === createS3Folder) {
                         if(!s3Model.createFolderQML(itemName.text)) {
-                          msgDialog.msg = "Invalid folder name. It cannot contain '/' sign"
+                          msgDialog.msg = qsTr("Invalid folder name. It cannot contain '/' sign")
                           msgDialog.visible = true
                         }
                     } else {
                         var ret = fsModel.createFolderQML(itemName.text, view.path)
                         if(ret === -1) {
-                            msgDialog.msg = "Invalid folder name. It cannot contain '/' sign"
+                            msgDialog.msg = qsTr("Invalid folder name. It cannot contain '/' sign")
                             msgDialog.visible = true
                         } else if (ret === -2) {
-                            msgDialog.msg = "Directory already exists"
+                            msgDialog.msg = qsTr("Directory already exists")
                             msgDialog.visible = true
                         } else {
                             close()

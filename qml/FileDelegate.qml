@@ -101,7 +101,7 @@ Rectangle {
             text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
                 var fileName = folder.get(view.currentIndex, "fileName")
-                msgDialog.msg = "Remove " + fileName + " ?"
+                msgDialog.msg = qsTr("Remove ") + fileName + " ?"
                 msgDialog.open()
             }
         }

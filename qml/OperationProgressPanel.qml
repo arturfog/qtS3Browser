@@ -147,7 +147,7 @@ Rectangle {
 
             Text {
                 height: 40
-                text: Number(' + currentProgress + ')  + " %"
+                text: Number(' + currentProgress + ')  + " %" + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
             }
@@ -178,7 +178,7 @@ Rectangle {
             Text {
                 height: 40
                 width: 120
-                text: "Copied: " + getSizeString(' + currentBytes + ')
+                text: qsTr("Copied: ") + getSizeString(' + currentBytes + ') + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
             }
@@ -208,7 +208,7 @@ Rectangle {
 
             Text {
                 height: 40
-                text: "Total: " + getSizeString(' + totalBytes + ')
+                text: qsTr("Total: ") + getSizeString(' + totalBytes + ') + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
             }
@@ -369,7 +369,7 @@ Rectangle {
 
             Text {
                 color: "white"
-                text: "File transfers"
+                text: qsTr("File transfers") + tsMgr.emptyString
                 font.bold: true
                 font.pointSize: getLargeFontSize()
                 height: parent.height
@@ -381,7 +381,7 @@ Rectangle {
                 id: cancel_btn
                 height: 40
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("Cancel")
+                text: qsTr("Cancel") + tsMgr.emptyString
                 icon.source: "qrc:icons/32_cancel_icon.png"
                 icon.color: "transparent"
                 visible: false
@@ -435,7 +435,7 @@ Rectangle {
                 elide: Text.ElideRight
                 width: parent.width - 400
                 height: 40
-                text: "Transfers progress"
+                text: qsTr("Transfers progress") + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getMediumFontSize()
             }
@@ -502,7 +502,7 @@ Rectangle {
             Text {
                 height: 40
                 width: 100
-                text: "Speed: " + getSizeString(transferSpeedBytes) + "/s"
+                text: qsTr("Speed: ") + getSizeString(transferSpeedBytes) + "/s" + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
             }
@@ -626,7 +626,7 @@ Rectangle {
                 elide: Text.ElideRight
                 width: parent.width - 50
                 height: 40
-                text: "Transfers queue"
+                text: qsTr("Transfers queue") + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getMediumFontSize()
             }

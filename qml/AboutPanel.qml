@@ -73,7 +73,7 @@ Item {
             Text {
                 x: 20
                 y: 10
-                text: qsTr("Version: ") + "1.0.8"
+                text: qsTr("Version: ") + "1.0.9" + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
                 height: 40

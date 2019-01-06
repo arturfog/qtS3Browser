@@ -26,7 +26,12 @@
 #include <QFile>
 #include <QDataStream>
 
+FilesystemModel S3Model::fsm;
+SettingsModel S3Model::sm;
+FileTransfersModel S3Model::ftm;
 std::mutex S3Model::mut;
+QList<S3Item> S3Model::m_s3items;
+QStringList S3Model::m_s3Path;
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -46,7 +51,6 @@ QString S3Item::filePath() const
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent),
       currentFile(),
-      m_s3items(),
       isConnected(false),
       mFileBrowserPath(),
       m_s3itemsBackup()
@@ -124,7 +128,7 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
     std::function<void(const unsigned long long,
                        const unsigned long long, const std::string key)> callback = [&](const unsigned long long bytes,
             const unsigned long long total, const std::string key) {
-        ftm.addTransferProgress(key.c_str(), bytes, total);
+        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
         emit this->setProgressSignal(bytes, total);
     };
 
@@ -161,7 +165,7 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
                        const unsigned long long,
                        const std::string)> callback = [&](const unsigned long long bytes,
             const unsigned long long total, const std::string key) {
-        ftm.addTransferProgress(key.c_str(), bytes, total);
+        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
         emit this->setProgressSignal(bytes, total);
     };
 
@@ -439,7 +443,7 @@ void S3Model::upload(const QString& file, bool isDir)
     std::function<void(const unsigned long long,
                        const unsigned long long, const std::string key)> callback = [&](const unsigned long long bytes,
             const unsigned long long total, const std::string key) {
-        ftm.addTransferProgress(key.c_str(), bytes, total);
+        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
         emit this->setProgressSignal(bytes, total);
     };
 
@@ -466,7 +470,7 @@ void S3Model::download(const QString &key, bool isDir)
                        const unsigned long long,
                        const std::string)> callback = [&](const unsigned long long bytes,
             const unsigned long long total, const std::string key) {
-        ftm.addTransferProgress(key.c_str(), bytes, total);
+        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
         emit this->setProgressSignal(bytes, total);
     };
 
