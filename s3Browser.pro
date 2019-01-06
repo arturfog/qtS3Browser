@@ -24,7 +24,8 @@ SOURCES += src/main.cpp \
     src/settingsmodel.cpp \
     src/translationsmgr.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    translations.qrc
 
 # Additional import path used to resolve QML modules in Qt Creators code model
 QML_IMPORT_PATH =

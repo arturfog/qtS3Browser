@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/s3browser_pl.qm</file>
+    </qresource>
+</RCC>

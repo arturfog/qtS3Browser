@@ -18,7 +18,7 @@ private:
         DEBUG,
         INFO,
         TRACE,
-        ERROR
+        ERR
     };
 
     static void log(const LOG_LEVEL level, const std::string& msg);

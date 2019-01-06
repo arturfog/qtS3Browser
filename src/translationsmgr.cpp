@@ -13,8 +13,10 @@ Q_INVOKABLE void TranslationsMgr::selectLanguage(QString language) {
             qApp->installTranslator(qtTranslator);
         }
 
-        if(myappTranslator->load("s3browser_pl", "translations")) {
+        if(myappTranslator->load("s3browser_pl", ":/translations/")) {
             qApp->installTranslator(myappTranslator);
+        } else {
+            qDebug("false");
         }
     }
 
