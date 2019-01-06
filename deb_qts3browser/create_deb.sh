@@ -16,7 +16,7 @@ fi
 cleanup
 
 mkdir -p build && cd build
-cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,qml.qrc,s3Browser.pro} .
+cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,*.qrc,s3Browser.pro} .
 
 # Build package
 if [ "$ARCH" == "amd64" ]; then
