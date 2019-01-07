@@ -36,7 +36,7 @@ if [ "$ARCH" == "amd64" ]; then
   mkdir -p build && cd build
   cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,*.qrc,s3Browser.pro} .
 
-  /opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
+  /opt/Qt5.11.3/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
  
   wget 'https://sonarqube.com/static/cpp/build-wrapper-linux-x86.zip'
   unzip build-wrapper-linux-x86.zip

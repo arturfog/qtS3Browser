@@ -261,52 +261,46 @@
         <translation>Nadpisać ?</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="46"/>
         <source>S3 Error</source>
-        <translation>Błąd S3</translation>
+        <translation type="vanished">Błąd S3</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="47"/>
-        <source>There is transfer in progress. Please wait for it to complete.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/S3Browser.qml" line="73"/>
+        <location filename="../qml/S3Browser.qml" line="66"/>
         <source>File </source>
         <translation>Plik </translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="73"/>
+        <location filename="../qml/S3Browser.qml" line="66"/>
         <source> exists. Overwrite ?</source>
         <translation> istnieje. Nadpisać ?</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="110"/>
+        <location filename="../qml/S3Browser.qml" line="103"/>
         <source>Up</source>
         <translation>Do góry</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="124"/>
+        <location filename="../qml/S3Browser.qml" line="117"/>
         <source>Refresh</source>
         <translation>Odśwież</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="135"/>
+        <location filename="../qml/S3Browser.qml" line="128"/>
         <source>New</source>
         <translation>Nowy</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="148"/>
+        <location filename="../qml/S3Browser.qml" line="141"/>
         <source>Create bucket</source>
         <translation>Nowy koszyk</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="250"/>
+        <location filename="../qml/S3Browser.qml" line="243"/>
         <source>Name</source>
         <translation>Nazwa</translation>
     </message>
     <message>
-        <location filename="../qml/S3Browser.qml" line="273"/>
+        <location filename="../qml/S3Browser.qml" line="266"/>
         <source>Size</source>
         <translation>Rozmiar</translation>
     </message>
@@ -400,7 +394,7 @@
     <message>
         <location filename="../qml/SettingsPanel.qml" line="734"/>
         <source>Endpoint URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Adres serwera S3</translation>
     </message>
     <message>
         <location filename="../qml/SettingsPanel.qml" line="820"/>
@@ -420,7 +414,7 @@
     <message>
         <location filename="../qml/SettingsPanel.qml" line="896"/>
         <source>Select dir</source>
-        <translation>Wybierz katalog</translation>
+        <translation>Wybierz kat.</translation>
     </message>
 </context>
 <context>

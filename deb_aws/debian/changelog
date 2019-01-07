@@ -1,9 +1,9 @@
-amazon-s3-cpp-sdk (1.6.0) stable; urgency=low
+amazon-s3-cpp-sdk (1.7.28) stable; urgency=low
 
   [ Breaking changes in AWS SDK for C++ ]
-  * Code for future SDK instrumentation and telemetry
+  updated version
 
- -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 12 Sep 2018 15:47:44 +0200
+ -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 29 Sep 2018 15:47:44 +0200
 
 
 

@@ -8,10 +8,12 @@ export DH_VERBOSE=1
 	dh  $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer -DCMAKE_INSTALL_PREFIX=/tmp/usr
 
 override_dh_auto_build:
 	dh_auto_build -- -j 8
-
 override_dh_install:
 	dh_install
+	rm -rf ./debian/amazon-s3-cpp-sdk/tmp/
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip

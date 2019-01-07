@@ -10,7 +10,7 @@ export DH_VERBOSE=1
 override_dh_auto_configure:
 	mkdir build
 	cd build
-	/opt/Qt5.10/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
+	/opt/Qt5.11.3/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
 
 override_dh_auto_build:
 	make -j2
