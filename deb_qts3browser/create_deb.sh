@@ -16,7 +16,7 @@ fi
 cleanup
 
 mkdir -p build && cd build
-cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,*.qrc,s3Browser.pro} .
+cp -vfr ../../{desktop-file,debian,qml,src,translations,inc,icons,*.qrc,s3Browser.pro} .
 
 # Build package
 if [ "$ARCH" == "amd64" ]; then
@@ -34,7 +34,7 @@ cleanup
 # build for sonarcloud
 if [ "$ARCH" == "amd64" ]; then
   mkdir -p build && cd build
-  cp -vfr ../../{desktop-file,debian,qml,src,inc,icons,*.qrc,s3Browser.pro} .
+  cp -vfr ../../{desktop-file,debian,qml,src,translations,inc,icons,*.qrc,s3Browser.pro} .
 
   /opt/Qt5.11.3/bin/qmake -o Makefile s3Browser.pro -spec linux-g++ CONFIG+=release
  
