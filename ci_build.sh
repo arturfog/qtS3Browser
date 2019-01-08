@@ -16,7 +16,7 @@ apt-key add gpg/bintray.key
 #      amd64      #
 #                 #
 ###################
-wget "https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.11.3_amd64.deb"
+wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb"
 wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb"
 dpkg -i amazon-s3-cpp-sdk_1.7.28_amd64.deb
 dpkg -i qt-everywhere_5.11.3_amd64.deb
