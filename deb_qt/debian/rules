@@ -8,14 +8,10 @@ export DH_VERBOSE=1
 	dh  $@
 
 override_dh_auto_configure:
-	./configure -opensource -confirm-license -release -ssl -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /tmp/opt/Qt5.11.3
-
+	./configure -opensource -confirm-license -release -ssl -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /opt/Qt5.11.3
 override_dh_auto_build:
 	dh_auto_build -- -j16
 override_dh_install:
-	mkdir -p ./debian/qt-everywhere/tmp/opt
-	#cp -vfr /tmp/opt ./debian/qt-everywhere/tmp/opt
 	dh_install
-	rm -rfv ./debian/qt-everywhere/tmp
 override_dh_builddeb:
 	dh_builddeb -- -Zgzip

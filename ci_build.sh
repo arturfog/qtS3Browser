@@ -47,8 +47,8 @@ if [ "$?" == "0" ]; then
 
   ln -sf /usr/bin/x86_64-linux-gnu-strip /usr/bin/i686-linux-gnu-strip
 
-  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
-  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb"
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_i386.deb"
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_i386.deb"
   dpkg -i qt-everywhere_5.10.0_i386.deb
   dpkg -i amazon-s3-cpp-sdk_1.6.0_i386.deb
 
