@@ -18,7 +18,6 @@ Architecture: any
 Depends:
  libssl1.0.0,
  zlib1g,
- libcurl3,
  libkrb5-3,
  libgssapi3-heimdal,
  libroken18-heimdal,

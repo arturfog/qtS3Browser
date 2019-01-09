@@ -60,6 +60,13 @@ snap install --edge qts3browser
 -- or --
 
 install .deb packages from https://bintray.com/arturfog/oss-arturfog
+
+# AMAZON S3 (1.7.28)
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb
+# QT 5.11.3
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb
+# qts3browser
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.9_amd64.deb
 ```
 
 ![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)

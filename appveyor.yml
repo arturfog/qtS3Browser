@@ -33,7 +33,7 @@ build_script:
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer ..
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer -DCMAKE_BUILD_TYPE=Release ..
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake --build . --config Release -j 4
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
@@ -47,9 +47,9 @@ build_script:
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Release\aws-cpp-sdk-transfer.lib c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-transfer.dll c:\projects\aws
   
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Debug\aws-c-common.dll c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Debug\aws-checksums.dll c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Debug\aws-c-event-stream.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-common.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-checksums.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-event-stream.dll c:\projects\aws
   
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws

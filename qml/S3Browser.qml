@@ -42,13 +42,6 @@ Item {
         yesAction: function() { downloadInternal() }
     }
 
-    property CustomMessageDialog s3Error: CustomMessageDialog {
-        win_title: qsTr("S3 Error")
-        msg: qsTr("There is transfer in progress. Please wait for it to complete.")
-        buttons: StandardButton.Ok
-        ico: StandardIcon.Warning
-    }
-
     function downloadInternal() {
         if(!s3Model.isTransferring()) {
             ftModel.clearTransfersProgress();

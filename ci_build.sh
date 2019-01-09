@@ -5,6 +5,10 @@
 # update
 apt-get update
 
+# apt-get install libx11-xcb-dev libxcb-composite0-dev libxcb-cursor-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-dri2-0-dev libxcb-dri3-dev libxcb-glx0-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-present-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-render0-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-sync-dev libxcb-util-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xtest0-dev libxcb1-dev
+
+# sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+
 # install all packages
 apt-get install -y build-essential wget libcanberra-gtk-module libx11-xcb1 libx11-6 libxau6 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxxf86vm1 libdouble-conversion1v5 libdrm2 libglapi-mesa libgraphite2-3 libharfbuzz0b libicu55 libpcre16-3 libproxy1v5 libxcb-dri2-0 libxcb-dri3-0  libxcb-glx0 libxcb-present0 libxcb-sync1 libxcb1 libxshmfence1 libssl1.0.0 zlib1g libcurl3 libkrb5-3 libgssapi3-heimdal libroken18-heimdal libgnutls30 libp11-kit0 libstdc++6 libgcc1 libdb5.3 libgl1-mesa-dev libgl1-mesa-glx libgles2-mesa-dev libegl1-mesa fakeroot devscripts dh-make fonts-dejavu-core
 
@@ -16,10 +20,10 @@ apt-key add gpg/bintray.key
 #      amd64      #
 #                 #
 ###################
-wget "https://dl.bintray.com/arturfog/oss-arturfog/qt-everywhere_5.10.0_amd64.deb"
-wget "https://dl.bintray.com/arturfog/oss-arturfog/amazon-s3-cpp-sdk_1.6.0_amd64.deb"
-dpkg -i amazon-s3-cpp-sdk_1.6.0_amd64.deb
-dpkg -i qt-everywhere_5.10.0_amd64.deb
+wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb"
+wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb"
+dpkg -i amazon-s3-cpp-sdk_1.7.28_amd64.deb
+dpkg -i qt-everywhere_5.11.3_amd64.deb
 
 cd deb_qts3browser
 ./create_deb.sh "amd64"
@@ -43,10 +47,10 @@ if [ "$?" == "0" ]; then
 
   ln -sf /usr/bin/x86_64-linux-gnu-strip /usr/bin/i686-linux-gnu-strip
 
-  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.6.0_i386.deb"
-  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.10.0_i386.deb"
-  dpkg -i qt-everywhere_5.10.0_i386.deb
-  dpkg -i amazon-s3-cpp-sdk_1.6.0_i386.deb
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_i386.deb"
+  wget "https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_i386.deb"
+  dpkg -i qt-everywhere_5.11.3_i386.deb
+  dpkg -i amazon-s3-cpp-sdk_1.7.28_i386.deb
 
   #cd deb_qts3browser
   ./create_deb.sh "i386"
