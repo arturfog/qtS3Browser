@@ -14,7 +14,7 @@ override_dh_auto_build:
 	dh_auto_build -- -j16
 override_dh_install:
 	mkdir -p ./debian/qt-everywhere/tmp/opt
-	cp -vfr /tmp/opt ./debian/qt-everywhere/tmp/opt
+	#cp -vfr /tmp/opt ./debian/qt-everywhere/tmp/opt
 	dh_install
 	rm -rfv ./debian/qt-everywhere/tmp
 override_dh_builddeb:

@@ -20,7 +20,7 @@ cp -vfr debian qt-everywhere-5.11.3
 cd qt-everywhere-5.11.3
 
 # Build package
-dpkg-buildpackage -rfakeroot -I.git
+dpkg-buildpackage -nc -rfakeroot -I.git
 
 cd ..
 

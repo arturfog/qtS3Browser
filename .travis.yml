@@ -18,12 +18,12 @@ addons:
       secure: "EkbBnnRu7aGDS7Nn8+YjicaBh3YNwARSgvAx78e9C+tPpdJWnZ/tbOT/Hphm+Pv2HHOkE/f1SvWHRoe7SJlwIIrN4JSKnpqdUOa2id6U1ipnYEd0Sc9Nzt/p0DgpXWQ6vCfemATUN9WZYLnKhHO8gRfGib/Zbs4fcVuBMHN+ACAB4fmhkO/I46XVMY1/dgrUJVbTdrEwC3qvAXrcwM+kupmqJbTZiO90FTenVBqKlK7HtcJTbVS2zwEre/OxaTv338Fm63eQvdDpr/cPO816JiK7uOijVUyW+w5qyGdfhnBUxKLNJ86D2/+GqVHYfsXYT/3j8S0H6CJFVtvpi1ic2nOxsT/jfrsWrNTZniRh0LsmpCx9tQkxzLFB8fvUx4T0vg79tpjpqiFnI34+Oi9KWf5EH471ovlJ/rbQ631/dfueW0gzQgJkGPglCm2+m4rTtcMVQMZO6nnZtw0Hr7rX3SfGvCrTvrdq0iDUIFaHtabFJodfeIPUL7o4vxfJAA8Ou9yXeuAsqsQ9R0LH8v55Wr0ANf1Ofl6yz8PubLfbPxCOihbiWjvEhoA+dHtsNMhAcMiflDr4PU7kLIRNNWjiHqOmEetSZ4253LNNo/vu990XNU2MhJqOZvkAS4fZKKwt2KQw31yBa84TfCjrYF4EN5ovwBWAhvMqV8klBm1ubv8="
 
 before_script:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker pull ubuntu:cosmic; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker pull ubuntu:xenial; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
 
 script:
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR -v $HOME/.ccache:$HOME/.ccache -v $HOME/.sonar:$HOME/.sonar -w $TRAVIS_BUILD_DIR --env CC --env CXX --env TRAVIS_BUILD_DIR --env TRAVIS_BUILD_TYPE ubuntu:cosmic /bin/bash ./ci_build.sh; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR -v $HOME/.ccache:$HOME/.ccache -v $HOME/.sonar:$HOME/.sonar -w $TRAVIS_BUILD_DIR --env CC --env CXX --env TRAVIS_BUILD_DIR --env TRAVIS_BUILD_TYPE ubuntu:xenial /bin/bash ./ci_build.sh; fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then sonar-scanner; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then ./ci_macos.sh; fi
 
