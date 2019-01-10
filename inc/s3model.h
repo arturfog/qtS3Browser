@@ -24,6 +24,7 @@
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QSettings>
+#include <QDateTime>
 #include <QDebug>
 #include "s3client.h"
 
@@ -53,6 +54,8 @@ public:
         NameRole = Qt::UserRole + 1,
         PathRole
     };
+
+    static constexpr const qint64 UPDATE_MIN_DIFF_MS{100};
 
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
     // --------------------------------------------------------------------------
@@ -333,6 +336,7 @@ private:
     static SettingsModel sm;
     static FileTransfersModel ftm;
     static std::mutex mut;
+    static QDateTime lastUpdate;
 };
 
 #endif // S3MODEL_H

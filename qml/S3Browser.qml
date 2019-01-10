@@ -30,6 +30,7 @@ Item {
     property alias path: view.path
     property bool connected: false
     property string footerText: ""
+
     property CustomMessageDialog msgDialog: CustomMessageDialog {
         win_title: qsTr("Remove ?")
         yesAction: function() {
@@ -40,6 +41,10 @@ Item {
     property CustomMessageDialog overwriteDialog: CustomMessageDialog {
         win_title: qsTr("Overwrite ?")
         yesAction: function() { downloadInternal() }
+    }
+
+    property PresignLinkWindow presignWindow: PresignLinkWindow {
+
     }
 
     function downloadInternal() {

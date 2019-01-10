@@ -32,6 +32,7 @@ FileTransfersModel S3Model::ftm;
 std::mutex S3Model::mut;
 QList<S3Item> S3Model::m_s3items;
 QStringList S3Model::m_s3Path;
+QDateTime S3Model::lastUpdate(QDateTime::currentDateTime());
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -57,11 +58,11 @@ S3Model::S3Model(QObject *parent)
 {
     QObject::connect(this, &S3Model::addItemSignal, this, &S3Model::addItemSlot);
 
-    std::function<void(const std::string&)> callback = [&](const std::string& msg) {
+    std::function<void(const std::string&)> errorCallback = [&](const std::string& msg) {
         emit this->showErrorSignal(msg.c_str());
     };
 
-    s3.setErrorHandler(callback);
+    s3.setErrorHandler(errorCallback);
     sm.readCLIConfig();
 
     if(getFileBrowserPath().isEmpty())
@@ -69,6 +70,23 @@ S3Model::S3Model(QObject *parent)
         QString home("file://");
         setFileBrowserPath(home.append(fsm.getHomePath()));
     }
+
+    std::function<void(const unsigned long long, const unsigned long long,
+                       const std::string&)> progressCallback = [&](
+            const unsigned long long bytes,
+            const unsigned long long total,
+            const std::string& key) {
+
+        const QDateTime current(QDateTime::currentDateTime());
+        const qint64 diff_ms = current.toMSecsSinceEpoch() - S3Model::lastUpdate.toMSecsSinceEpoch();
+        if(diff_ms >= UPDATE_MIN_DIFF_MS) {
+            S3Model::lastUpdate = current;
+            emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
+        }
+        emit this->setProgressSignal(bytes, total);
+
+    };
+    s3.setProgressCallback(progressCallback);
 
     std::function<void()> refreshCallback = [&]() { refresh(); };
     s3.setRefreshCallback(refreshCallback);
@@ -124,16 +142,6 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
 void S3Model::uploadQML(const QString &src, const QString &dst)
 {
     LogMgr::debug(Q_FUNC_INFO, src);
-
-    std::function<void(const unsigned long long,
-                       const unsigned long long, const std::string key)> callback = [&](const unsigned long long bytes,
-            const unsigned long long total, const std::string key) {
-        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
-        emit this->setProgressSignal(bytes, total);
-    };
-
-
-
     if(isConnected && (src.isEmpty() == false) && (dst.isEmpty() == false))
     {
         QString tmpDst(dst);
@@ -150,8 +158,7 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
                 tmpSrc.replace("file://", "");
                 s3.uploadFile(bucket.toStdString().c_str(),
                               key.toStdString().c_str(),
-                              tmpSrc.toStdString().c_str(),
-                              callback);
+                              tmpSrc.toStdString().c_str());
             }
         }
     }
@@ -160,15 +167,6 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
 void S3Model::downloadQML(const QString &src, const QString &dst)
 {
     LogMgr::debug(Q_FUNC_INFO, src);
-
-    std::function<void(const unsigned long long,
-                       const unsigned long long,
-                       const std::string)> callback = [&](const unsigned long long bytes,
-            const unsigned long long total, const std::string key) {
-        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
-        emit this->setProgressSignal(bytes, total);
-    };
-
     if(isConnected && (src.isEmpty() == false) && (dst.isEmpty() == false))
     {
         QString tmpSrc(src);
@@ -191,8 +189,7 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
                 {
                     s3.downloadDirectory(bucket.toStdString().c_str(),
                                          key.toStdString().c_str(),
-                                         tmpDst.toStdString().c_str(),
-                                         callback);
+                                         tmpDst.toStdString().c_str());
                 } else {
                     // remove filename from dest dir path
                     const QString filename = dstList.takeLast();
@@ -203,8 +200,7 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
                         currentFile = filename;
                         s3.downloadFile(bucket.toStdString().c_str(),
                                         key.toStdString().c_str(),
-                                        tmpDst.toStdString().c_str(),
-                                        callback);
+                                        tmpDst.toStdString().c_str());
                     }
                 }
             }
@@ -439,14 +435,6 @@ void S3Model::removeObject(const QString &key, bool isDir)
 void S3Model::upload(const QString& file, bool isDir)
 {
     LogMgr::debug(Q_FUNC_INFO, file);
-
-    std::function<void(const unsigned long long,
-                       const unsigned long long, const std::string key)> callback = [&](const unsigned long long bytes,
-            const unsigned long long total, const std::string key) {
-        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
-        emit this->setProgressSignal(bytes, total);
-    };
-
     std::function<void()> refreshCallback = [&]() { refresh(); };
 
     QString filename(file.split("/").last());
@@ -456,24 +444,15 @@ void S3Model::upload(const QString& file, bool isDir)
     currentFile = filename;
 
     if(isDir) {
-        s3.uploadDirectory(bucket.c_str(), key.c_str(), file.toStdString().c_str(), callback);
+        s3.uploadDirectory(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     } else {
-        s3.uploadFile(bucket.c_str(), key.c_str(), file.toStdString().c_str(), callback);
+        s3.uploadFile(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::download(const QString &key, bool isDir)
 {
     LogMgr::debug(Q_FUNC_INFO, key);
-
-    std::function<void(const unsigned long long,
-                       const unsigned long long,
-                       const std::string)> callback = [&](const unsigned long long bytes,
-            const unsigned long long total, const std::string key) {
-        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
-        emit this->setProgressSignal(bytes, total);
-    };
-
     if(!key.isEmpty()) {
         QString out_file(key.split("/").last());
         if(isDir) {
@@ -487,11 +466,9 @@ void S3Model::download(const QString &key, bool isDir)
         const std::string dst(getFileBrowserPath().append(out_file).toStdString());
 
         if(isDir) {
-            s3.downloadDirectory(getCurrentBucket().toStdString().c_str(),
-                                 src.c_str(), dst.c_str(), callback);
+            s3.downloadDirectory(getCurrentBucket().toStdString().c_str(), src.c_str(), dst.c_str());
         } else {
-            s3.downloadFile(getCurrentBucket().toStdString().c_str(),
-                            src.c_str(), dst.c_str(), callback);
+            s3.downloadFile(getCurrentBucket().toStdString().c_str(), src.c_str(), dst.c_str());
         }
     }
 }

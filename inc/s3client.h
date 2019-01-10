@@ -258,10 +258,7 @@ public:
      */
     void downloadFile(const Aws::String &bucket_name,
                       const Aws::String &key_name,
-                      const Aws::String &file_name,
-                      std::function<void (const unsigned long long,
-                                          const unsigned long long,
-                                          const std::string)> progressFunc);
+                      const Aws::String &file_name);
     /**
      * @brief downloadDirectory
      * @param bucket_name
@@ -270,10 +267,7 @@ public:
      */
     void downloadDirectory(const Aws::String &bucket_name,
                            const Aws::String &key_name,
-                           const Aws::String &dir_name,
-                           std::function<void(const unsigned long long bytes,
-                                              const unsigned long long total,
-                                              const std::string key)> progressFunc);
+                           const Aws::String &dir_name);
     /**
      * @brief uploadFile
      * @param bucket_name
@@ -283,10 +277,7 @@ public:
      */
     void uploadFile(const Aws::String &bucket_name,
                     const Aws::String &key_name,
-                    const Aws::String &file_name,
-                    std::function<void(const unsigned long long,
-                                   const unsigned long long,
-                                   const std::string)> progressFunc);
+                    const Aws::String &file_name);
     /**
      * @brief uploadDirectory
      * @param bucket_name
@@ -295,10 +286,7 @@ public:
      */
     void uploadDirectory(const Aws::String &bucket_name,
                          const Aws::String &key_name,
-                         const Aws::String &dir_name,
-                         std::function<void(const unsigned long long,
-                                            const unsigned long long,
-                                            const std::string)> progressFunc);
+                         const Aws::String &dir_name);
     /**
      * @brief cancelDownloadUpload
      */
@@ -355,6 +343,13 @@ public:
      * @param refreshFunc
      */
     void setRefreshCallback(std::function<void()> refreshFunc);
+    /**
+     * @brief setProgressCallback
+     * @param progressFunc
+     */
+    void setProgressCallback(std::function<void(const unsigned long long,
+                                                const unsigned long long,
+                                                const std::string &)> progressFunc);
 };
 
 

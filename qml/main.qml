@@ -78,7 +78,7 @@ ApplicationWindow {
     property int uiFontSize: 10
     property int windowFlags: Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint
     property CreateBookmarkWindow createBookmarkWindow: CreateBookmarkWindow {flags: getWindowFlags() }
-    property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags() }
+    property InfoWindow infoWindow: InfoWindow {flags: getWindowFlags()}
 
     property CustomMessageDialog invalidCredentialsDialog: CustomMessageDialog {
         win_title: qsTr("Missing credentials")
