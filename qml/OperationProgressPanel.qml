@@ -270,7 +270,7 @@ Rectangle {
         }
 
         Column {
-          width: parent.width - 390;
+          width: parent.width - 220;
           Text {
             font.pointSize: 14
             text: "' + keys[i] +'"
@@ -284,6 +284,12 @@ Rectangle {
              font.pointSize: 8
              text: "' + dstPath + '"
            }
+        }
+
+        Button {
+          text: "Cancel"
+          icon.source: "qrc:icons/32_cancel_icon.png"
+          icon.color: "transparent"
         }
     }
 

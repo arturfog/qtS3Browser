@@ -137,7 +137,11 @@ Rectangle {
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Presign link') + tsMgr.emptyString
-            onClicked: { }
+            onClicked: {
+                presignWindow.x = app_window.x + (app_window.width / 2) - (presignWindow.width / 2)
+                presignWindow.y = app_window.y + (app_window.height / 2) - (presignWindow.height / 2)
+                presignWindow.visible = true
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"

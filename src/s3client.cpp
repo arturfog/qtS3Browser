@@ -249,6 +249,15 @@ void S3Client::setRefreshCallback(std::function<void ()> refreshFunc)
     }
 }
 // --------------------------------------------------------------------------
+void S3Client::setProgressCallback(std::function<void(const unsigned long long,
+                                                       const unsigned long long,
+                                                       const std::string&)> progressFunc)
+{
+    if(progressFunc) {
+        m_progressFunc = progressFunc;
+    }
+}
+// --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
                                     const Aws::S3::Model::GetObjectRequest &request,
                                     const Aws::S3::Model::GetObjectOutcome &outcome,
@@ -481,14 +490,9 @@ void S3Client::createFolderHandler(const Aws::S3::S3Client *,
 // --------------------------------------------------------------------------
 void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &key_name,
-                          const Aws::String &file_name,
-                          std::function<void(const unsigned long long bytes,
-                                             const unsigned long long total,
-                                             const std::string key)> progressFunc)
+                          const Aws::String &file_name)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    m_progressFunc = progressFunc;
-
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
                                                  "text/plain", metadata);
@@ -496,13 +500,9 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
 // --------------------------------------------------------------------------
 void S3Client::uploadDirectory(const Aws::String &bucket_name,
                                const Aws::String &key_name,
-                               const Aws::String &dir_name,
-                               std::function<void (const unsigned long long,
-                                                   const unsigned long long,
-                                                   const std::string key)> progressFunc)
+                               const Aws::String &dir_name)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    m_progressFunc = progressFunc;
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     if(transferManager != nullptr) {
         transferManager->UploadDirectory(dir_name, bucket_name, key_name, metadata);
@@ -533,15 +533,9 @@ void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc
 // --------------------------------------------------------------------------
 void S3Client::downloadFile(const Aws::String &bucket_name,
                             const Aws::String &key_name,
-                            const Aws::String &file_name,
-                            std::function<void(const unsigned long long bytes,
-                                               const unsigned long long total,
-                                               const std::string key)> progressFunc)
+                            const Aws::String &file_name)
 {
     LogMgr::debug(Q_FUNC_INFO, file_name.c_str());
-
-    m_progressFunc = progressFunc;
-
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
 
@@ -549,15 +543,9 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
 // --------------------------------------------------------------------------
 void S3Client::downloadDirectory(const Aws::String &bucket_name,
                                  const Aws::String &key_name,
-                                 const Aws::String &dir_name,
-                                 std::function<void(const unsigned long long bytes,
-                                                const unsigned long long total,
-                                                const std::string key)> progressFunc)
+                                 const Aws::String &dir_name)
 {
     LogMgr::debug(Q_FUNC_INFO, dir_name.c_str());
-
-    m_progressFunc = progressFunc;
-
     auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     if(transferManager != nullptr) {
         transferManager->DownloadToDirectory(dir_name, bucket_name, key_name);

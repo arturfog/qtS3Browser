@@ -41,15 +41,15 @@ deploy:
     dry_run: false
     on: develop
     condition: $TRAVIS_OS_NAME = linux
-  - provider: releases
-    api_key:
-      - secure: "UImREZGf0CVpMJzQ4t2fRKT6uEeooBoM+oScazwdnkU1Bp3pV5JHgn3/U8knHgqQLIIwoEQYhCPWcikuMZhCIWuDWJ5b8T6NU7QfKD4HZBRymkhksFH5kQDLq8O7DvO4wHWI3NrXhGSIqrbMl/w/t65YnfQHD48E9UVw3jMHbI9IAlfSFiSl/ppeS3F32cH1H7CaW1mlnbpBmgyR5B5cWG814rQBE8ouHqpEeDJvIF+U1kXT5nwJhPk/hPEwT7EIdlbaobmsCsDDPoPygZFJDNDvcl366irOcwL69Ro8cNyKZY4GMZ+H/A1n3MoKRfHHosBxO6mrtfxpuM9diqPyA4xUckKMi1LWzB+sQGpy2mHa3K5+3cmpDZiMBHTe6UXRLWME3+Pv8bRp2JBUChK/wzgB28Gxh0pzRnV8K/Dg68RLCB1iywYcWAdU3S2Z/YGyLE3/bqiWAHV85OxmDjrJGUOmIOHumayMMvci5GpE4rOkYD1vCf3/GxcZubV1fRhGoO8m8JjiSn1+XBuAbpJA6SgscRknrH7IWpM4Pn4URHum/9aiEh7fa3JCMH1GffeLHoB+dUJPwKv/yh5oyvP4P7DbMgQVJl++VuSwsuupcK4x5pLSYKMkekHrMgY+nCX4sXgM+mz2DYVkYrmuo6JH8b+cm2bGjexEny5Q/+6uMKo="
-    file:
-      - "./build/deploy/*.dmg"
-      - "./deb_qts3browser/*.deb"
+  - provider: bintray
+    file: ".travis_desc_mac.json"
+    user: "arturfog"
+    key:
+      - secure: "RQ0uErGhXAMwNImMHk4ZIOwiazOXGiFGlEEfPHtZpH9p5FzcRFYdL9ClcwRscbArW1xzLbTYOMs4fkiExZp9h4fZ/Qc8lwM+Z2YYmNwKSgh5MVKgPfsGaeI8bcW4l4ZBxNZ4ZrUAfJeQZDVsZNAxc/Fy3B7h69Px2WDaWdXq/RDFK0CmkfKWfmI6pIxbmwsE14ehniA/fwXpaD+sOpXby2PbGDmv+wvsZASYYttBiz4/RZAU/2oDB+oAF3NApLzC8p4xC7pJ/MRJ9XHcHVDjaD1gmGZKbfWKIWSJPicXlw2YS5/3QyqF573Y9iCTLq37kL4HMmgqxtj0pk1nEnz8osDWZaIf4VjL0Oi7gW2kwSs8TWtJ2shbKC0tezdAqTnBaMSP0NpV6Slp2fOGl+2TIF1zSTdQaA2FHtQgZ7fHC4PkVoctc7x3r6wos/vWhueWSXLhR0576hm0uYLkiBxNU/JtTs5uqJaEacbKfy9RwxOzmjRbw6oducwhhG0aWvd386u5xlxkZqTEd9szKX4XNuuoTUHfCrDmZ1Q2q3gfnBNPJeKLnZUKQ6PCyhn4TyH7FEJ0WLV9PMtVUIfGt5jycH5egQ+e7dmdzzAOtoOkVioZ/EelxN7nE2CdHXKF7ackVqvWpQYQYAMuPZZR/09fWNr/TFHkniG+pxm7fo8w3Yo="
     skip_cleanup: true
-    on:
-      tags: true
+    dry_run: false
+    on: develop
+    condition: $TRAVIS_OS_NAME = osx
 
 notifications:
   email: false

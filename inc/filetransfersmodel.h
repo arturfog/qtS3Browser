@@ -52,7 +52,9 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeTransferQML(const int idx);
     // --------------------------------------------------------------------------
-    Q_SIGNAL void addTransferProgressSignal(const QString key, const unsigned long current, const unsigned long total);
+    Q_SIGNAL void addTransferProgressSignal(const QString key,
+                                            const unsigned long current,
+                                            const unsigned long total);
     // --------------------------------------------------------------------------
     Q_SLOT void addTransferProgressSlot(const QString key, const unsigned long current, const unsigned long total);
     // --------------------------------------------------------------------------
