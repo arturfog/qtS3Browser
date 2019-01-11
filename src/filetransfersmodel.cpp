@@ -9,6 +9,13 @@ FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent) {
     QObject::connect(this, &FileTransfersModel::addTransferProgressSignal, this, &FileTransfersModel::addTransferProgressSlot);
 }
 // --------------------------------------------------------------------------
+Q_INVOKABLE void FileTransfersModel::clearTransfersQueue()
+{
+    LogMgr::debug(Q_FUNC_INFO);
+    modes.clear();
+    transfers.clear();
+}
+// --------------------------------------------------------------------------
 Q_INVOKABLE void FileTransfersModel::addTransferToQueueQML(const QString &fileName,
                                 const QString &src,
                                 const QString &dst)
@@ -28,21 +35,17 @@ Q_INVOKABLE void FileTransfersModel::addTransferToQueueQML(const QString &fileNa
     }
 }
 // --------------------------------------------------------------------------
-Q_SLOT void FileTransfersModel::addTransferProgressSlot(const QString key,
+Q_SLOT void FileTransfersModel::addTransferProgressSlot(const QString& key,
                                     const unsigned long current,
                                     const unsigned long total) {
     //LogMgr::debug(Q_FUNC_INFO, key);
     std::lock_guard<std::mutex> lock(mut);
     if(!key.isEmpty()) {
-        if(!transfersProgress.contains(key)) {
-            transfersProgress.insert(key, { current, total });
-        } else {
-            transfersProgress[key] = { current, total };
-        }
+        transfersProgress.insert(key, { current, total });
     }
 }
 // --------------------------------------------------------------------------
-Q_INVOKABLE QString FileTransfersModel::getTransfersProgressKey(const int idx) {
+Q_INVOKABLE const QString FileTransfersModel::getTransfersProgressKey(const int idx) const {
     //LogMgr::debug(Q_FUNC_INFO);
     std::lock_guard<std::mutex> lock(mut);
     if(transfersProgress.size() > 0 && idx < transfersProgress.size() && idx >= 0) {

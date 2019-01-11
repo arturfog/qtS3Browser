@@ -4,11 +4,41 @@
 // ----------------------------------------------------------------------------
 SettingsModel::SettingsModel(QObject *parent) : QObject(parent) {}
 // ----------------------------------------------------------------------------
-QString SettingsModel::extractKey(const QString& line) {
+int SettingsModel::getRegionIdxQML() const
+{
+    LogMgr::debug(Q_FUNC_INFO);
+    int regionIdx{0};
+    if(settings.contains("RegionIdx")) {
+        regionIdx = settings.value("RegionIdx").toInt();
+    }
+
+    if(regionIdx < 0 || regionIdx > MAX_REGION_IDX) {
+        regionIdx = 0;
+    }
+
+    return regionIdx;
+}
+// ----------------------------------------------------------------------------
+int SettingsModel::getTimeoutIdxQML() const
+{
+    LogMgr::debug(Q_FUNC_INFO);
+    int timeoutIdx{0};
+    if(settings.contains("TimeoutIdx")) {
+        timeoutIdx = settings.value("TimeoutIdx").toInt();
+    }
+
+    if(timeoutIdx < 0 || timeoutIdx > MAX_TIMEOUT_IDX) {
+        timeoutIdx = 0;
+    }
+
+    return timeoutIdx;
+}
+// ----------------------------------------------------------------------------
+const QString SettingsModel::extractKey(const QString& line) {
     if(!line.isEmpty()) {
         const int startIdx = line.indexOf('=');
         if(startIdx > 0) {
-            const QString key = line.mid(startIdx + 1).trimmed();
+            const QString key(line.mid(startIdx + 1).trimmed());
             return key;
         }
     }
@@ -20,16 +50,17 @@ void SettingsModel::parseCLIConfig(const QString& credentialsFilePath) {
 
     if(credentialsFilePath.isEmpty()) { return; }
     QFile file(credentialsFilePath);
-    if(!file.exists()) { return; }
-    file.open(QIODevice::ReadOnly);
-    if(file.isReadable()) {
-        QTextStream in(&file);
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            if(!line.isEmpty() && line.contains("access_key_id")) {
-                settings.setValue("AccessKey", extractKey(line));
-            } else if(!line.isEmpty() && line.contains("secret_access_key")) {
-                settings.setValue("SecretKey", extractKey(line));
+    if(file.exists())  {
+        file.open(QIODevice::ReadOnly);
+        if(file.isReadable()) {
+            QTextStream in(&file);
+            while (!in.atEnd()) {
+                QString line = in.readLine();
+                if(!line.isEmpty() && line.contains("access_key_id")) {
+                    settings.setValue("AccessKey", extractKey(line));
+                } else if(!line.isEmpty() && line.contains("secret_access_key")) {
+                    settings.setValue("SecretKey", extractKey(line));
+                }
             }
         }
     }
@@ -50,7 +81,7 @@ void SettingsModel::readCLIConfig()
     if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
         return;
     }
-    QString os(QSysInfo::productType());
+    const QString os(QSysInfo::productType());
     if(os == "windows") {
          // Windows location is "%UserProfile%\.aws"
         parseCLIConfig(winDefaultLocation);

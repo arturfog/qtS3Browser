@@ -60,167 +60,200 @@ Item {
         return number
     }
 
-    function updateTransfers() {
-        var transfersLen = ftModel.getTransferProgressNum();
+    function createTransferProgressObject(key, currentProgress, currentBytes, totalBytes) {
+        var newObject = Qt.createQmlObject('
+        import QtQuick 2.5;
+        import QtQuick.Controls 2.2;
 
-        for(var i = transfers_list.children.length; i > 0 ; i--) {
-          transfers_list.children[i-1].destroy()
+        Rectangle {
+            x: 5
+            width: parent.width - 10;
+            height: 65
+            color: "transparent"
+
+                Row {
+                    x: 10
+                    y: 4
+                    width: parent.width
+                    height: 40
+
+                    Text {
+                        wrapMode: Text.NoWrap
+                        elide: Text.ElideRight
+                        width: parent.width - 560
+                        height: 40
+                        text: "' + key + '"
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Rectangle {
+                        width: 1
+                        color: "#dbdbdb"
+                        height: parent.height - 5
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    ProgressBar {
+                        id: current_pb
+                        height: parent.height
+                        width: 160
+                        value: ' + currentProgress + '
+                        to: 100.0
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Rectangle {
+                        width: 1
+                        color: "#dbdbdb"
+                        height: parent.height - 5
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Text {
+                        height: 40
+                        text: Number(' + currentProgress + ')  + " %"
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Rectangle {
+                        width: 1
+                        color: "#dbdbdb"
+                        height: parent.height - 5
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Image {
+                        source: "qrc:icons/32_server_icon.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        height: 40
+                        width: 120
+                        text: qsTr("Copied: ") + getSizeString(' + currentBytes + ') + tsMgr.emptyString
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Rectangle {
+                        width: 1
+                        color: "#dbdbdb"
+                        height: parent.height - 5
+                    }
+
+                    Rectangle {
+                        width: 5
+                        height: parent.height
+                        color: "transparent"
+                    }
+
+                    Image {
+                        source: "qrc:icons/32_hdd_icon2.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        height: 40
+                        text: qsTr("Total: ") + getSizeString(' + totalBytes + ') + tsMgr.emptyString
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: getSmallFontSize()
+                    }
+                }
+
+            Rectangle {
+                width: parent.width
+                color: "gray"
+                height: 1
+            }
         }
+        ', transfers_list, "dynamicTransfers");
+    }
+
+    function updateTransferProgressObject(children_, currentProgress, currentBytes) {
+        //children_.children[0].children[0].text
+        var progressBar_ = children_.children[0].children[4]
+        var progressText_ = children_.children[0].children[8]
+        var currentText_ = children_.children[0].children[13]
+        var totalText_ = children_.children[0].children[18]
+
+        progressBar_.value = currentProgress
+        progressText_.text = Number(currentProgress)  + " %"
+        currentText_.text = qsTr("Copied: ") + getSizeString(currentBytes) + tsMgr.emptyString
+        //totalText_.text = qsTr("Total: ") + getSizeString(totalBytes) + tsMgr.emptyString
+    }
+
+    function updateTransfers() {
+        var transfersLen = ftModel.getTransferProgressNum()
+        var transfersItemsLen = transfers_list.children.length
 
         if(transfersLen > 0) {
-            for(i = 0; i < transfersLen; i++)
+            for(var i = 0; i < transfersLen; i++)
             {
+                var keyExists = false;
                 var key = ftModel.getTransfersProgressKey(i);
                 var currentBytes = ftModel.getTransfersCopiedBytes(key)
                 var totalBytes = ftModel.getTransfersTotalBytes(key)
                 var currentProgress = (((currentBytes / totalBytes) * 100) | 0)
 
-var newObject = Qt.createQmlObject('
-import QtQuick 2.5;
-import QtQuick.Controls 2.2;
 
-Rectangle {
-    x: 5
-    width: parent.width - 10;
-    height: 65
-    color: "transparent"
+                for(var j = transfersItemsLen; j > 0 ; j--) {
+                  var children_ = transfers_list.children[j - 1]
+                  var key_ = children_.children[0].children[0].text
+                  if(key_ === key) {
+                      keyExists = true
+                      break
+                  }
+                }
 
-        Row {
-            x: 10
-            y: 4
-            width: parent.width
-            height: 40
-
-            Text {
-                wrapMode: Text.NoWrap
-                elide: Text.ElideRight
-                width: parent.width - 560
-                height: 40
-                text: "' + key + '"
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
+                if(keyExists) {
+                    updateTransferProgressObject(children_, currentProgress, currentBytes)
+                } else {
+                    createTransferProgressObject(key, currentProgress, currentBytes, totalBytes)
+                }
             }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            ProgressBar {
-                id: current_pb
-                height: parent.height
-                width: 160
-                value: ' + currentProgress + '
-                to: 100.0
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Text {
-                height: 40
-                text: Number(' + currentProgress + ')  + " %" + tsMgr.emptyString
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Image {
-                source: "qrc:icons/32_server_icon.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Text {
-                height: 40
-                width: 120
-                text: qsTr("Copied: ") + getSizeString(' + currentBytes + ') + tsMgr.emptyString
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Rectangle {
-                width: 1
-                color: "#dbdbdb"
-                height: parent.height - 5
-            }
-
-            Rectangle {
-                width: 5
-                height: parent.height
-                color: "transparent"
-            }
-
-            Image {
-                source: "qrc:icons/32_hdd_icon2.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Text {
-                height: 40
-                text: qsTr("Total: ") + getSizeString(' + totalBytes + ') + tsMgr.emptyString
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: getSmallFontSize()
-            }
-        }
-
-    Rectangle {
-        width: parent.width
-        color: "gray"
-        height: 1
-    }
-}
-', transfers_list, "dynamicTransfers");
+        } else {
+            for(i = transfersItemsLen; i > 0 ; i--) {
+              transfers_list.children[i-1].destroy();
             }
         }
     }
@@ -393,8 +426,13 @@ Rectangle {
                 visible: false
                 onClicked: {
                     if(s3Model.isTransferring()) {
+                        ftModel.clearTransfersQueue()
                         s3Model.cancelDownloadUploadQML()
                         ftModel.clearTransfersProgress()
+                        cancel_btn.visible = false
+
+                        updateTransfersQueue()
+                        updateTransfers()
                     }
                 }
                 background: Rectangle {

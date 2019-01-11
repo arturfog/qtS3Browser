@@ -32,7 +32,6 @@ FileTransfersModel S3Model::ftm;
 std::mutex S3Model::mut;
 QList<S3Item> S3Model::m_s3items;
 QStringList S3Model::m_s3Path;
-QDateTime S3Model::lastUpdate(QDateTime::currentDateTime());
 // --------------------------------------------------------------------------
 S3Item::S3Item(const QString &name, const QString &path)
     : m_name(name), m_path(path)
@@ -75,14 +74,9 @@ S3Model::S3Model(QObject *parent)
                        const std::string&)> progressCallback = [&](
             const unsigned long long bytes,
             const unsigned long long total,
-            const std::string& key) {
-
-        const QDateTime current(QDateTime::currentDateTime());
-        const qint64 diff_ms = current.toMSecsSinceEpoch() - S3Model::lastUpdate.toMSecsSinceEpoch();
-        if(diff_ms >= UPDATE_MIN_DIFF_MS) {
-            S3Model::lastUpdate = current;
-            emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
-        }
+            const std::string& key)
+    {
+        emit ftm.addTransferProgressSignal(key.c_str(), bytes, total);
         emit this->setProgressSignal(bytes, total);
 
     };
@@ -241,6 +235,44 @@ Q_INVOKABLE void S3Model::removeQML(const int idx) {
     }
 }
 // --------------------------------------------------------------------------
+QString S3Model::getObjectSizeQML(const QString &name)
+{
+    LogMgr::debug(Q_FUNC_INFO, name);
+    auto search = s3.objectInfoVec.find(name.toStdString().c_str());
+    if (search != s3.objectInfoVec.end()) {
+        return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
+    } else {
+        return "0";
+    }
+}
+// --------------------------------------------------------------------------
+void S3Model::saveSettingsQML(const QString &startPath,
+                              const QString &accessKey,
+                              const QString &secretKey,
+                              const int regionIdx,
+                              const QString &region,
+                              const int timeoutIdx,
+                              const QString &timeout,
+                              const QString &endpoint,
+                              const QString &logsDir,
+                              const bool logsEnabled)
+{
+    LogMgr::debug(Q_FUNC_INFO);
+    settings.setValue("StartPath", startPath);
+    settings.setValue("AccessKey", accessKey);
+    settings.setValue("SecretKey", secretKey);
+    settings.setValue("RegionIdx", regionIdx);
+    settings.setValue("Region", region);
+    settings.setValue("Endpoint", endpoint);
+    settings.setValue("TimeoutIdx", timeoutIdx);
+    settings.setValue("Timeout", timeout);
+    settings.setValue("LogsDir", logsDir);
+    settings.setValue("LogsEnabled", logsEnabled);
+    settings.sync();
+
+    s3.reloadCredentials();
+}
+// --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
     std::lock_guard<std::mutex> lock(mut);
@@ -303,6 +335,22 @@ QString S3Model::getPathWithoutBucket() const
         return m_s3Path.mid(1).join("");
     }
     return "";
+}
+// --------------------------------------------------------------------------
+void S3Model::addItemSlot(const QString &item, const QString &path)
+{
+    setConnectedQML(true);
+    if(!item.isEmpty())
+    {
+        addS3Item(S3Item(item, path));
+    }
+    else
+    {
+        if(getCurrentPathDepthQML() <= 0)
+        {
+            emit noBucketsSignal();
+        }
+    }
 }
 // --------------------------------------------------------------------------
 QString S3Model::getS3PathQML() const {
