@@ -23,25 +23,16 @@ private:
      * @param line
      * @return
      */
-    static QString extractKey(const QString& line);
+    static const QString extractKey(const QString& line);
+    //
+    static const constexpr int MAX_TIMEOUT_IDX = 6;
+    static const constexpr int MAX_REGION_IDX = 5;
 public:
     explicit SettingsModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getRegionIdxQML() const {
-        LogMgr::debug(Q_FUNC_INFO);
-        if(settings.contains("RegionIdx")) {
-            return settings.value("RegionIdx").toInt();
-        }
-        return 0;
-    }
+    Q_INVOKABLE int getRegionIdxQML() const;
     // --------------------------------------------------------------------------
-    Q_INVOKABLE int getTimeoutIdxQML() const {
-        LogMgr::debug(Q_FUNC_INFO);
-        if(settings.contains("TimeoutIdx")) {
-            return settings.value("TimeoutIdx").toInt();
-        }
-        return 0;
-    }
+    Q_INVOKABLE int getTimeoutIdxQML() const;
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline QString getAccesKeyQML() const { return settings.value("AccessKey").toString();}
     // --------------------------------------------------------------------------

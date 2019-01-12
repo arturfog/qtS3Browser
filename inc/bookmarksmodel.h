@@ -40,6 +40,11 @@ public:
      * @brief loadBookmarks
      */
     void loadBookmarks();
+    /**
+     * @brief getBookmarksPath
+     * @return
+     */
+    const QString getBookmarksPath() const;
 private:
     QMap<QString, QString> bookmarks;
 };

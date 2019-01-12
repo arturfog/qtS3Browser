@@ -19,7 +19,7 @@
     },
 
     "files":
-    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/$1",
+    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/s3browser_1.0.10.dmg",
           "matrixParams": {
             "override": 1
           }

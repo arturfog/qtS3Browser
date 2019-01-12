@@ -54,27 +54,12 @@ public:
         NameRole = Qt::UserRole + 1,
         PathRole
     };
-
-    static constexpr const qint64 UPDATE_MIN_DIFF_MS{100};
-
+    // --------------------------------------------------------------------------
     Q_SIGNAL void addItemSignal(const QString& item, const QString& path);
     // --------------------------------------------------------------------------
     Q_SIGNAL void clearItemsSignal();
     // --------------------------------------------------------------------------
-    Q_SLOT void addItemSlot(const QString& item, const QString& path) {
-        setConnectedQML(true);
-        if(!item.isEmpty())
-        {
-            addS3Item(S3Item(item, path));
-        }
-        else
-        {
-            if(getCurrentPathDepthQML() <= 0)
-            {
-                emit noBucketsSignal();
-            }
-        }
-    }
+    Q_SLOT void addItemSlot(const QString& item, const QString& path);
     // --------------------------------------------------------------------------
     Q_SIGNAL void showErrorSignal(const QString& msg);
     // --------------------------------------------------------------------------
@@ -128,19 +113,11 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeQML(const int idx);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE QString getObjectSizeQML(const QString& name) {
-        LogMgr::debug(Q_FUNC_INFO, name);
-        auto search = s3.objectInfoVec.find(name.toStdString().c_str());
-        if (search != s3.objectInfoVec.end()) {
-            return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
-        } else {
-            return "0";
-        }
-    }
+    Q_INVOKABLE QString getObjectSizeQML(const QString& name);
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline void clearS3PathQML() { m_s3Path.clear(); }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE inline void clearItemsQML() { LogMgr::debug(Q_FUNC_INFO); clearItems(); }
+    Q_INVOKABLE inline void clearItemsQML() { clearItems(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void saveSettingsQML(const QString& startPath,
                                      const QString& accessKey,
@@ -151,22 +128,7 @@ public:
                                      const QString& timeout,
                                      const QString& endpoint,
                                      const QString& logsDir,
-                                     const bool logsEnabled) {
-        LogMgr::debug(Q_FUNC_INFO);
-        settings.setValue("StartPath", startPath);
-        settings.setValue("AccessKey", accessKey);
-        settings.setValue("SecretKey", secretKey);
-        settings.setValue("RegionIdx", regionIdx);
-        settings.setValue("Region", region);
-        settings.setValue("Endpoint", endpoint);
-        settings.setValue("TimeoutIdx", timeoutIdx);
-        settings.setValue("Timeout", timeout);
-        settings.setValue("LogsDir", logsDir);
-        settings.setValue("LogsEnabled", logsEnabled);
-        settings.sync();
-
-        s3.reloadCredentials();
-    }
+                                     const bool logsEnabled);
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline QString getCurrentFileQML() const { return currentFile; }
     // --------------------------------------------------------------------------
@@ -336,7 +298,6 @@ private:
     static SettingsModel sm;
     static FileTransfersModel ftm;
     static std::mutex mut;
-    static QDateTime lastUpdate;
 };
 
 #endif // S3MODEL_H

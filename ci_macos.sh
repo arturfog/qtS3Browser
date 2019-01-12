@@ -8,7 +8,7 @@ brew link qt5 --force
 # AWS
 cd deb_aws 
 
-./build.sh
+./build_mac.sh
 
 # deb aws
 cd ..

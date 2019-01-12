@@ -1,9 +1,6 @@
 #include "inc/filesystemmodel.h"
 
-FilesystemModel::FilesystemModel(QObject *parent) : QObject(parent)
-{
-
-}
+FilesystemModel::FilesystemModel(QObject *parent) : QObject(parent) {}
 // --------------------------------------------------------------------------
 Q_INVOKABLE void FilesystemModel::removeQML(const QString& path) {
     LogMgr::debug(Q_FUNC_INFO, path);
