@@ -210,7 +210,6 @@ Item {
     }
 
     function updateTransferProgressObject(children_, currentProgress, currentBytes) {
-        //children_.children[0].children[0].text
         var progressBar_ = children_.children[0].children[4]
         var progressText_ = children_.children[0].children[8]
         var currentText_ = children_.children[0].children[13]
@@ -430,6 +429,11 @@ Rectangle {
                         s3Model.cancelDownloadUploadQML()
                         ftModel.clearTransfersProgress()
                         cancel_btn.visible = false
+
+//                        var transfersItemsLen = transfers_list.children.length
+//                        for(var i = transfersItemsLen; i > 0 ; i--) {
+//                          transfers_list.children[i-1].destroy();
+//                        }
 
                         updateTransfersQueue()
                         updateTransfers()
