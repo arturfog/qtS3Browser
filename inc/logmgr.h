@@ -26,50 +26,31 @@ private:
     template <typename T>
     static void log(const LOG_LEVEL level, const std::string &msg, T const& x);
 
+    template <typename T, typename R>
+    static void log(const LOG_LEVEL level, const std::string &msg, T const& x, R const& y);
+
     static const std::string LvlToString(LOG_LEVEL lvl);
 public:
     explicit LogMgr(QObject *parent = nullptr);
-    /**
-     * @brief debug
-     * @param msg
-     * @param arg1
-     */
-    static void debug(const std::string &msg, const QString &arg1, const QString &arg2);
-    /**
-     * @brief debug
-     * @param msg
-     * @param arg1
-     */
-    static void debug(const std::string &msg, const std::string& arg1);
-    /**
-     * @brief debug
-     * @param msg
-     * @param arg1
-     */
-    static void debug(const std::string &msg, const QString& arg1);
-    /**
-     * @brief debug
-     * @param msg
-     * @param arg1
-     */
-    static void debug(const std::string &msg, const char* arg1);
-    /**
-     * @brief debug
-     * @param msg
-     */
+
+    // DEBUG
     static void debug(const std::string &msg);
+
+    static void debug(const std::string &msg, const char* arg1);
+
+    static void debug(const std::string &msg, const QString& x);
+
+    static void debug(const std::string &msg, const std::string& x);
+
+    static void debug(const std::string &msg, const QString& x, const QString& y);
+
+    static void debug(const std::string &msg, const QString& x, const int y);
 
     // ERROR
     static void error(const std::string &msg);
 
-    template <typename T>
-    static void error(const std::string &msg, T const& x);
-
     // TRACE
     static void trace(const std::string &msg);
-
-    template <typename T>
-    static void trace(const std::string &msg, T const& x);
 
     /**
      * @brief logsEnabled

@@ -272,6 +272,21 @@ void S3Model::saveSettingsQML(const QString &startPath,
 
     s3.reloadCredentials();
 }
+
+const QString S3Model::generatePresignLinkQML(const QString& key, const int timeoutSec)
+{
+    LogMgr::debug(Q_FUNC_INFO, key, timeoutSec);
+    if(!key.isEmpty()) {
+        const std::string bucket(getCurrentBucket().toStdString());
+        const std::string link(s3.getPresignLink(bucket.c_str(),
+                                                 key.toStdString().c_str(),
+                                                 timeoutSec));
+
+        return link.c_str();
+    }
+
+    return QString();
+}
 // --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {

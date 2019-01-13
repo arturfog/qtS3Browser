@@ -337,7 +337,8 @@ public:
      * @return
      */
     std::string getPresignLink(const Aws::String &bucket_name,
-                               const Aws::String &key_name);
+                               const Aws::String &key_name,
+                               const int expirationTimeSec);
     /**
      * @brief setRefreshCallback
      * @param refreshFunc

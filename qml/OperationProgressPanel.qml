@@ -254,6 +254,7 @@ Item {
             for(i = transfersItemsLen; i > 0 ; i--) {
               transfers_list.children[i-1].destroy();
             }
+            cancel_btn.visible = false;
         }
     }
 
@@ -322,6 +323,10 @@ Rectangle {
           text: "Cancel"
           icon.source: "qrc:icons/32_cancel_icon.png"
           icon.color: "transparent"
+          onClicked: {
+            ftModel.removeTransferQML(' + i + ')
+            updateTransfersQueue()
+          }
         }
     }
 
