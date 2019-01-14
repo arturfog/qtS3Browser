@@ -235,10 +235,13 @@ std::string S3Client::getETAG(const Aws::String &name)
 }
 // --------------------------------------------------------------------------
 std::string S3Client::getPresignLink(const Aws::String &bucket_name,
-                                     const Aws::String &key_name)
+                                     const Aws::String &key_name,
+                                     const int expirationTimeSec)
 {
-    Aws::String url =
-            s3_client->GeneratePresignedUrl(bucket_name, key_name, Aws::Http::HttpMethod::HTTP_GET);
+    Aws::String url = s3_client->GeneratePresignedUrl(bucket_name,
+                                                      key_name,
+                                                      Aws::Http::HttpMethod::HTTP_GET,
+                                                      expirationTimeSec);
     return url.c_str();
 }
 // --------------------------------------------------------------------------

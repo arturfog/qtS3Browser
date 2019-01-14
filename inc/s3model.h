@@ -134,6 +134,8 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline void cancelDownloadUploadQML() { cancelDownloadUpload(); }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE const QString generatePresignLinkQML(const QString &key, const int timeoutSec);
+    // --------------------------------------------------------------------------
     Q_INVOKABLE QString getOwnerQML(const QString &name) { return s3.getOwner(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getEtagQML(const QString &name) { return s3.getETAG(name.toStdString().c_str()).c_str(); }
@@ -217,7 +219,7 @@ public:
      * @brief getPathWithoutBucket
      * @return
      */
-    QString getPathWithoutBucket() const;
+    Q_INVOKABLE QString getPathWithoutBucket() const;
     /**
      * @brief getCurrentPathDepth
      * @return

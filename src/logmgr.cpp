@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QDebug>
+#include <sstream>
 
 QString LogMgr::baseName("qts3browser.log");
 std::mutex LogMgr::mut;
@@ -36,45 +37,28 @@ void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg)
     writeToFile(log);
 }
 // --------------------------------------------------------------------------
-void LogMgr::debug(const std::string &msg, const std::string &arg1)
-{
-    log(LOG_LEVEL::DEBUG, msg, arg1);
-}
-// --------------------------------------------------------------------------
-void LogMgr::debug(const std::string &msg, const QString &arg1)
-{
-    LogMgr::debug(msg, arg1.toStdString());
-}
-// --------------------------------------------------------------------------
-void LogMgr::debug(const std::string &msg, const QString &arg1, const QString &arg2)
-{
-    QString tmpArg(arg1);
-    tmpArg.append(" ").append(arg2);
-    LogMgr::debug(msg, tmpArg.toStdString());
-}
-// --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg, const char *arg1)
 {
     if(arg1 != nullptr) {
-        LogMgr::debug(msg, std::string(arg1));
+        LogMgr::log(LOG_LEVEL::DEBUG, msg, std::string(arg1));
     } else {
-        LogMgr::debug(msg, "nullptr");
+        LogMgr::log(LOG_LEVEL::DEBUG, msg, "nullptr");
     }
 }
 // --------------------------------------------------------------------------
 void LogMgr::debug(const std::string &msg)
 {
-    log(LOG_LEVEL::DEBUG, msg);
+    LogMgr::log(LOG_LEVEL::DEBUG, msg);
 }
 // --------------------------------------------------------------------------
 void LogMgr::error(const std::string &msg)
 {
-    log(LOG_LEVEL::ERR, msg);
+    LogMgr::log(LOG_LEVEL::ERR, msg);
 }
 // --------------------------------------------------------------------------
 void LogMgr::trace(const std::string &msg)
 {
-    log(LOG_LEVEL::TRACE, msg);
+    LogMgr::log(LOG_LEVEL::TRACE, msg);
 }
 // --------------------------------------------------------------------------
 bool LogMgr::logsEnabled()
@@ -182,25 +166,48 @@ void LogMgr::closeLog()
 }
 // --------------------------------------------------------------------------
 template<typename T>
-void LogMgr::trace(const std::string &msg, const T &x)
-{
-    log(LOG_LEVEL::TRACE, msg, x);
-}
-// --------------------------------------------------------------------------
-template<typename T>
-void LogMgr::error(const std::string &msg, const T &x)
-{
-   log(LOG_LEVEL::ERR, msg, x);
-}
-// --------------------------------------------------------------------------
-template<typename T>
 void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg, const T &x)
 {
     const QString now = QDateTime::currentDateTime().toString();
-    QString log(LvlToString(level).c_str());
-    log.append(now).append(" : ").append(msg.c_str());
-    log.append(" (").append(x.c_str()).append(") ");
+    std::stringstream tmpLog;
+    tmpLog << LvlToString(level) << " " << now.toStdString() << " : " << msg;
+    tmpLog << " (" << x << ") ";
 
-    std::cout << log.toStdString() << std::endl;
-    writeToFile(log);
+    std::string log(tmpLog.str());
+    std::cout << log << std::endl;
+    writeToFile(log.c_str());
+}
+// --------------------------------------------------------------------------
+template<typename T, typename R>
+void LogMgr::log(const LogMgr::LOG_LEVEL level, const std::string &msg, const T &x, const R &y)
+{
+    const QString now = QDateTime::currentDateTime().toString();
+    std::stringstream tmpLog;
+    tmpLog << LvlToString(level) << " " << now.toStdString() << " : " << msg;
+    tmpLog << " (" << x << ") ";
+    tmpLog << " (" << y << ") ";
+
+    std::string log(tmpLog.str());
+    std::cout << log << std::endl;
+    writeToFile(log.c_str());
+}
+// --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const QString &x)
+{
+    log(LOG_LEVEL::DEBUG, msg, x.toStdString());
+}
+// --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const std::string& x)
+{
+    log(LOG_LEVEL::DEBUG, msg, x);
+}
+// --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const QString &x, const QString &y)
+{
+    log(LOG_LEVEL::DEBUG, msg, x.toStdString(), y.toStdString());
+}
+// --------------------------------------------------------------------------
+void LogMgr::debug(const std::string &msg, const QString &x, const int y)
+{
+    log(LOG_LEVEL::DEBUG, msg, x.toStdString(), y);
 }

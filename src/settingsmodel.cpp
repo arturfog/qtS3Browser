@@ -55,7 +55,7 @@ void SettingsModel::parseCLIConfig(const QString& credentialsFilePath) {
         if(file.isReadable()) {
             QTextStream in(&file);
             while (!in.atEnd()) {
-                QString line = in.readLine();
+                QString line(in.readLine());
                 if(!line.isEmpty() && line.contains("access_key_id")) {
                     settings.setValue("AccessKey", extractKey(line));
                 } else if(!line.isEmpty() && line.contains("secret_access_key")) {

@@ -56,7 +56,6 @@ Q_INVOKABLE const QString FileTransfersModel::getTransfersProgressKey(const int 
 // --------------------------------------------------------------------------
 Q_INVOKABLE void FileTransfersModel::removeTransferQML(const int idx) {
     LogMgr::debug(Q_FUNC_INFO);
-
     if(transfers.size() > 0 && idx < transfers.size() && idx >= 0) {
         QString fileName(transfers.keys().at(idx));
         transfers.remove(fileName);

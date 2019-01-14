@@ -138,6 +138,8 @@ Rectangle {
             enabled: connected
             text: qsTr('Presign link') + tsMgr.emptyString
             onClicked: {
+                var fileName = s3Model.getItemNameQML(view.currentIndex)
+                presignWindow.key = s3Model.getPathWithoutBucket() + fileName
                 presignWindow.x = app_window.x + (app_window.width / 2) - (presignWindow.width / 2)
                 presignWindow.y = app_window.y + (app_window.height / 2) - (presignWindow.height / 2)
                 presignWindow.visible = true

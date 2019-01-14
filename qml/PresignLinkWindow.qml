@@ -33,19 +33,22 @@ Window {
     property string borderColor: "gray"
     readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
+    property string key: ""
 
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
         if(input.text.length > 40 && input_field.height === 30) {
             input_field_rect.height += sizeInc
             input_field.height += sizeInc
-            settings_win.maximumHeight += sizeInc
-            settings_win.height += sizeInc
+            create_item_rect.height += sizeInc
+            presign_win.maximumHeight += sizeInc
+            presign_win.height += sizeInc
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
-            settings_win.maximumHeight -= sizeInc
-            settings_win.height -= sizeInc
+            create_item_rect.height -= sizeInc
+            presign_win.maximumHeight -= sizeInc
+            presign_win.height -= sizeInc
         }
     }
 
@@ -146,11 +149,12 @@ Window {
                 width: parent.width - 20
                 height: 40
                 x: 10
+                id: link_rect
 
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     y: 10
-                    id: item_name_input_rect
+                    id: link_input_rect
                     width: parent.width
                     height: 30
                     border.color: "gray"
@@ -158,22 +162,20 @@ Window {
                     color: "#efefef"
 
                     TextInput {
-                        id: itemName
+                        id: linkURL
                         x: 10
-                        width: parent.width
+                        width: parent.width - 10
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: getSmallFontSize()
                         maximumLength: 128
                         wrapMode: Text.WrapAnywhere
-                        onActiveFocusChanged: focusChangedHandler(itemName, item_name_input_rect);
-                        onTextChanged: extendInputText(itemName, item_name_input_rect, create_item_rect)
+                        onTextChanged: extendInputText(linkURL, link_input_rect, link_rect)
                     }
                 }
             }
-            // ------------- S3 start path -------------
+            // ------------- timeout -------------
             Rectangle {
-                id: start_path_rect
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "transparent"
                 width: parent.width
@@ -228,7 +230,7 @@ Window {
                         height: 40
                         x: 10
                         Rectangle {
-                            id: start_path_input_rect
+                            id: timeout_input_rect
                             x: 10
                             width: parent.width
                             height: 30
@@ -236,7 +238,7 @@ Window {
                             anchors.verticalCenter: parent.verticalCenter
 
                             SpinBox {
-                                id: startPath
+                                id: timeout_spin
                                 x: 10
                                 width: parent.width - 20
                                 height: parent.height
@@ -281,7 +283,7 @@ Window {
                         height: 40
                         x: 10
                         Rectangle {
-                            id: language_input_rect
+                            id: timeout_units_rect
                             x: 10
                             width: parent.width
                             height: 30
@@ -292,16 +294,12 @@ Window {
                             color: "#f8f9fa"
 
                             ComboBox {
-                                id: language
+                                id: units_combo
                                 width: parent.width
                                 height: parent.height
                                 font.pointSize: inputFontSize
-                                //currentIndex: settingsModel.getTimeoutIdxQML()
                                 model: [ "seconds",
                                     "minutes" ]
-                                onCurrentTextChanged: {
-
-                                }
                             }
 
                         }
@@ -326,7 +324,15 @@ Window {
                 icon.color: "transparent"
                 font.pointSize: getSmallFontSize()
                 onClicked: {
-                        var ret = s3Model
+                        var units = 1
+                        if(units_combo.currentIndex == 1) {
+                            units = 60;
+                        }
+
+                        var time = timeout_spin.value * units;
+                        var ret_link = s3Model.generatePresignLinkQML(key, time)
+
+                        linkURL.text = ret_link
                 }
 
                 background: Rectangle {
