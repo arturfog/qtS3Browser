@@ -40,11 +40,13 @@ Window {
         if(input.text.length > 40 && input_field.height === 30) {
             input_field_rect.height += sizeInc
             input_field.height += sizeInc
+            create_item_rect.height += sizeInc
             presign_win.maximumHeight += sizeInc
             presign_win.height += sizeInc
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
+            create_item_rect.height -= sizeInc
             presign_win.maximumHeight -= sizeInc
             presign_win.height -= sizeInc
         }
@@ -162,13 +164,13 @@ Window {
                     TextInput {
                         id: linkURL
                         x: 10
-                        width: parent.width
+                        width: parent.width - 10
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: getSmallFontSize()
                         maximumLength: 128
                         wrapMode: Text.WrapAnywhere
-                        onTextChanged: extendInputText(linkURL, link_input_rect, create_item_rect)
+                        onTextChanged: extendInputText(linkURL, link_input_rect, link_rect)
                     }
                 }
             }
@@ -296,12 +298,8 @@ Window {
                                 width: parent.width
                                 height: parent.height
                                 font.pointSize: inputFontSize
-                                //currentIndex: settingsModel.getTimeoutIdxQML()
                                 model: [ "seconds",
                                     "minutes" ]
-                                onCurrentTextChanged: {
-
-                                }
                             }
 
                         }
@@ -326,8 +324,13 @@ Window {
                 icon.color: "transparent"
                 font.pointSize: getSmallFontSize()
                 onClicked: {
-                        var seconds = timeout_spin.value;
-                        var ret_link = s3Model.generatePresignLinkQML(key, seconds)
+                        var units = 1
+                        if(units_combo.currentIndex == 1) {
+                            units = 60;
+                        }
+
+                        var time = timeout_spin.value * units;
+                        var ret_link = s3Model.generatePresignLinkQML(key, time)
 
                         linkURL.text = ret_link
                 }

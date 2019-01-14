@@ -219,7 +219,7 @@ public:
      * @brief getPathWithoutBucket
      * @return
      */
-    QString getPathWithoutBucket() const;
+    Q_INVOKABLE QString getPathWithoutBucket() const;
     /**
      * @brief getCurrentPathDepth
      * @return
