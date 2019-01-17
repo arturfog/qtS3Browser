@@ -51,11 +51,13 @@ Window {
         if(input.text.length > 40 && input_field.height === 30) {
             input_field_rect.height += sizeInc
             input_field.height += sizeInc
+            input_field.parent.y += 20
             create_item_win.maximumHeight += sizeInc
             create_item_win.height += sizeInc
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
+            input_field.parent.y -= 20
             create_item_win.maximumHeight -= sizeInc
             create_item_win.height -= sizeInc
         }
@@ -188,7 +190,7 @@ Window {
                     TextInput {
                         id: itemName
                         x: 10
-                        width: parent.width
+                        width: parent.width - 20
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: getSmallFontSize()

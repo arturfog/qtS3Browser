@@ -44,11 +44,13 @@ Window {
         if(input.text.length > 40 && input_field.height === 30) {
             input_field_rect.height += sizeInc
             input_field.height += sizeInc
+            input_field.parent.height += sizeInc
             create_bookmark_win.maximumHeight += sizeInc
             create_bookmark_win.height += sizeInc
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
+            input_field.parent.height -= sizeInc
             create_bookmark_win.maximumHeight -= sizeInc
             create_bookmark_win.height -= sizeInc
         }

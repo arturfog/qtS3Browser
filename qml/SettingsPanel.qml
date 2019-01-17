@@ -45,15 +45,13 @@ Item {
     function extendInputText(input, input_field, input_field_rect) {
         let sizeInc = 40;
         if(input.text.length > 40 && input_field.height === 30) {
-            input_field_rect.height += sizeInc
             input_field.height += sizeInc
-            settings_win.maximumHeight += sizeInc
-            settings_win.height += sizeInc
+            input_field_rect.height += sizeInc
+            input_field.parent.y += 20
         } else if(input.text.length <= 40 && input_field.height > 30) {
             input_field_rect.height -= sizeInc
             input_field.height -= sizeInc
-            settings_win.maximumHeight -= sizeInc
-            settings_win.height -= sizeInc
+            input_field.parent.y -= 20
         }
     }
 
