@@ -85,6 +85,8 @@ public:
     Q_INVOKABLE const QString getTransfersProgressKey(const int idx) const;
     // --------------------------------------------------------------------------
     Q_INVOKABLE void clearTransfersProgress();
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void removeTransferProgressQML(const QString &key);
 private:
     static QMap<QString, QStringList> transfers;
     static QMap<QString, TransferMode> modes;

@@ -221,10 +221,13 @@ Item {
         //totalText_.text = qsTr("Total: ") + getSizeString(totalBytes) + tsMgr.emptyString
     }
 
+    function deleteTransferProgressObject(children_) {
+        children_.destroy();
+    }
+
     function updateTransfers() {
         var transfersLen = ftModel.getTransferProgressNum()
         var transfersItemsLen = transfers_list.children.length
-
         if(transfersLen > 0) {
             for(var i = 0; i < transfersLen; i++)
             {
@@ -233,12 +236,16 @@ Item {
                 var currentBytes = ftModel.getTransfersCopiedBytes(key)
                 var totalBytes = ftModel.getTransfersTotalBytes(key)
                 var currentProgress = (((currentBytes / totalBytes) * 100) | 0)
-
+                transfersItemsLen = transfers_list.children.length
 
                 for(var j = transfersItemsLen; j > 0 ; j--) {
                   var children_ = transfers_list.children[j - 1]
                   var key_ = children_.children[0].children[0].text
                   if(key_ === key) {
+                      if(currentProgress >= 100) {
+                          deleteTransferProgressObject(children_)
+                          break;
+                      }
                       keyExists = true
                       break
                   }
@@ -246,11 +253,12 @@ Item {
 
                 if(keyExists) {
                     updateTransferProgressObject(children_, currentProgress, currentBytes)
-                } else {
+                } else if(currentProgress < 100) {
                     createTransferProgressObject(key, currentProgress, currentBytes, totalBytes)
                 }
             }
         } else {
+            transfersItemsLen = transfers_list.children.length
             for(i = transfersItemsLen; i > 0 ; i--) {
               transfers_list.children[i-1].destroy();
             }
@@ -365,10 +373,10 @@ Rectangle {
         onSetProgressSignal: {
             currentBytes = current
             totalBytes = total
-            updateTransfers()
 
             var currentDate = new Date()
-            var seconds = currentDate.getSeconds() - lastDate.getSeconds()
+
+            var seconds = (currentDate - lastDate) / 1000
 
             if(totalBytes > 0 && seconds > 0) {
                 var bytesdiff = current - lastTotalBytes
@@ -379,12 +387,16 @@ Rectangle {
                 lastTotalBytes = current
             }
 
-            lastDate = currentDate
+
+            if ( (currentDate - lastDate) >= 100) {
+                updateTransfers();
+                lastDate = currentDate
+            }
 
             if(s3Model.isTransferring()) {
                 cancel_btn.visible = true
             } else {
-                cancel_btn.visible = false
+                cancel_btn.visible = false;
             }
         }
     }

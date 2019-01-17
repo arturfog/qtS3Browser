@@ -41,7 +41,11 @@ Q_SLOT void FileTransfersModel::addTransferProgressSlot(const QString& key,
     //LogMgr::debug(Q_FUNC_INFO, key);
     std::lock_guard<std::mutex> lock(mut);
     if(!key.isEmpty()) {
-        transfersProgress.insert(key, { current, total });
+        if(transfersProgress.size() <= 200) {
+            transfersProgress.insert(key, { current, total });
+        } else {
+
+        }
     }
 }
 // --------------------------------------------------------------------------
@@ -75,5 +79,12 @@ Q_INVOKABLE void FileTransfersModel::clearTransfersProgress() {
     std::lock_guard<std::mutex> lock(mut);
     LogMgr::debug(Q_FUNC_INFO);
     transfersProgress.clear();
+}
+// --------------------------------------------------------------------------
+void FileTransfersModel::removeTransferProgressQML(const QString &key)
+{
+    if(transfersProgress.contains(key)) {
+        transfersProgress.remove(key);
+    }
 }
 // --------------------------------------------------------------------------

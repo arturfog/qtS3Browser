@@ -60,6 +60,7 @@ private:
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;
     static Aws::String lastTransferedFile;
+    static bool m_isTransfering;
     /**
      * @brief downloadProgress
      * @param manager
