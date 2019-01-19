@@ -60,7 +60,8 @@ private:
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;
     static Aws::String lastTransferedFile;
-    static bool m_isTransfering;
+    static std::shared_ptr<Aws::Transfer::TransferManager> transferManager;
+    static Aws::String m_lastItem;
     /**
      * @brief downloadProgress
      * @param manager
@@ -175,7 +176,7 @@ public:
         Aws::String owner;
     };
     static Aws::String currentPrefix;
-    static std::map<Aws::String, ObjectInfo_S> objectInfoVec;
+    static std::map<Aws::String, ObjectInfo_S> objectInfoVec;    
     /**
      * @brief S3Client
      */
@@ -292,11 +293,6 @@ public:
      * @brief cancelDownloadUpload
      */
     void cancelDownloadUpload();
-    /**
-     * @brief isTransferring
-     * @return
-     */
-    bool isTransferring() const;
     /**
      * @brief setErrorHandler
      * @param errorFunc

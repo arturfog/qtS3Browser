@@ -53,7 +53,8 @@ Aws::String S3Client::currentPrefix;
 std::vector<std::string> S3Client::items;
 Aws::Transfer::TransferManagerConfiguration S3Client::transferConfig(S3Client::executor.get());
 Aws::String S3Client::lastTransferedFile;
-bool S3Client::m_isTransfering = false;
+std::shared_ptr<Aws::Transfer::TransferManager> S3Client::transferManager;
+Aws::String S3Client::m_lastItem;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -127,7 +128,6 @@ void S3Client::reloadCredentials()
     loadConfig();
 
     s3_client = std::make_shared<Aws::S3::S3Client>(Aws::S3::S3Client(credentials, config));
-    this->s3_client = s3_client;
     transferConfig.s3Client = s3_client;
 }
 // --------------------------------------------------------------------------
@@ -248,18 +248,14 @@ std::string S3Client::getPresignLink(const Aws::String &bucket_name,
 // --------------------------------------------------------------------------
 void S3Client::setRefreshCallback(std::function<void ()> refreshFunc)
 {
-    if(refreshFunc) {
-        m_refreshFunc = refreshFunc;
-    }
+    if(refreshFunc) { m_refreshFunc = refreshFunc; }
 }
 // --------------------------------------------------------------------------
 void S3Client::setProgressCallback(std::function<void(const unsigned long long,
                                                        const unsigned long long,
                                                        const std::string&)> progressFunc)
 {
-    if(progressFunc) {
-        m_progressFunc = progressFunc;
-    }
+    if(progressFunc) { m_progressFunc = progressFunc; }
 }
 // --------------------------------------------------------------------------
 void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
@@ -317,33 +313,19 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
 void S3Client::uploadProgress(const Aws::Transfer::TransferManager*,
                               const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
 {
-    if(!handle->HasPendingParts() && !handle->HasQueuedParts()) {
-        m_isTransfering = false;
-    } else {
-        m_isTransfering = true;
-    }
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize(), handle->GetKey().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Client::downloadProgress(const Aws::Transfer::TransferManager* ,
                                 const std::shared_ptr<const Aws::Transfer::TransferHandle>& handle)
-{
-    if(!handle->HasPendingParts() && !handle->HasQueuedParts()) {
-        m_isTransfering = false;
-    } else {
-        m_isTransfering = true;
-    }
+{    
     m_progressFunc(handle->GetBytesTransferred(), handle->GetBytesTotalSize(), handle->GetKey().c_str());
 }
 // --------------------------------------------------------------------------
 void S3Client::statusUpdate(const Aws::Transfer::TransferManager *,
-                            const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
+                            const std::shared_ptr<const Aws::Transfer::TransferHandle> &)
 {
-    if(handle->GetStatus() == Aws::Transfer::TransferStatus::COMPLETED) {
-        if(!handle->HasPendingParts() && !handle->HasQueuedParts()) {
-            m_refreshFunc();
-        }
-    }
+
 }
 // --------------------------------------------------------------------------
 void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
@@ -397,6 +379,7 @@ void S3Client::deleteObject(const Aws::String &bucket_name,
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
     Aws::S3::Model::DeleteObjectRequest object_request;
+    m_lastItem = key_name;
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
 
@@ -407,6 +390,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
+    m_lastItem = false;
     Aws::S3::Model::ListObjectsRequest list_request;
     list_request.SetBucket(bucket_name);
 
@@ -421,30 +405,32 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
         unsigned long items = object_list.size();
         for (auto const &s3_object : object_list)
         {
-            --items;
-            if(items <= 1) {
-                deleteObject(bucket_name, s3_object.GetKey());
-            } else {
-                deleteObject(bucket_name, s3_object.GetKey());
+            if(items > 0) {
+                items--;
             }
+            if(items == 0) {
+                m_lastItem = s3_object.GetKey();
+            }
+            deleteObject(bucket_name, s3_object.GetKey());
         }
     }
 }
 // --------------------------------------------------------------------------
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
-                                   const Aws::S3::Model::DeleteObjectRequest &,
+                                   const Aws::S3::Model::DeleteObjectRequest &request,
                                    const Aws::S3::Model::DeleteObjectOutcome &outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    if (outcome.IsSuccess())
+    if (outcome.IsSuccess() && (m_lastItem.compare(request.GetKey()) == 0) )
     {
-        // TODO: execute only on last file
-        //m_refreshFunc();
+        m_lastItem = "";
+        m_refreshFunc();
     }
     else
     {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
+        LogMgr::error(outcome.GetError().GetMessage().c_str());
+        //m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -510,9 +496,11 @@ void S3Client::uploadFile(const Aws::String &bucket_name,
                           const Aws::String &file_name)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-    transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
+    transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    if(transferManager != nullptr) {
+        transferHandle = transferManager->UploadFile(file_name, bucket_name, key_name,
                                                  "text/plain", metadata);
+    }
 }
 // --------------------------------------------------------------------------
 void S3Client::uploadDirectory(const Aws::String &bucket_name,
@@ -520,7 +508,7 @@ void S3Client::uploadDirectory(const Aws::String &bucket_name,
                                const Aws::String &dir_name)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     if(transferManager != nullptr) {
         transferManager->UploadDirectory(dir_name, bucket_name, key_name, metadata);
     }
@@ -528,16 +516,11 @@ void S3Client::uploadDirectory(const Aws::String &bucket_name,
 // --------------------------------------------------------------------------
 void S3Client::cancelDownloadUpload()
 {
+    // TODO: manage handles
     LogMgr::debug(Q_FUNC_INFO);
-    m_isTransfering = false;
     if(transferHandle != nullptr) {
         transferHandle->Cancel();
     }
-}
-// --------------------------------------------------------------------------
-bool S3Client::isTransferring() const
-{
-    return m_isTransfering;
 }
 // --------------------------------------------------------------------------
 void S3Client::setErrorHandler(std::function<void(const std::string&)> errorFunc)
@@ -550,9 +533,10 @@ void S3Client::downloadFile(const Aws::String &bucket_name,
                             const Aws::String &file_name)
 {
     LogMgr::debug(Q_FUNC_INFO, file_name.c_str());
-    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
-    transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
-
+    transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    if(transferManager != nullptr) {
+        transferHandle = transferManager->DownloadFile(bucket_name, key_name, file_name);
+    }
 }
 // --------------------------------------------------------------------------
 void S3Client::downloadDirectory(const Aws::String &bucket_name,
@@ -560,7 +544,7 @@ void S3Client::downloadDirectory(const Aws::String &bucket_name,
                                  const Aws::String &dir_name)
 {
     LogMgr::debug(Q_FUNC_INFO, dir_name.c_str());
-    auto transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
+    transferManager = Aws::Transfer::TransferManager::Create(transferConfig);
     if(transferManager != nullptr) {
         transferManager->DownloadToDirectory(dir_name, bucket_name, key_name);
     }

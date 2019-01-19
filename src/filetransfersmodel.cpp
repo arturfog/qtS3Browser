@@ -4,6 +4,7 @@ QMap<QString, QStringList> FileTransfersModel::transfers;
 QMap<QString, FileTransfersModel::TransferMode> FileTransfersModel::modes;
 QMap<QString, QList<unsigned long>> FileTransfersModel::transfersProgress;
 std::mutex FileTransfersModel::mut;
+FileTransfersModel::TransferMode FileTransfersModel::m_transferDriection;
 // --------------------------------------------------------------------------
 FileTransfersModel::FileTransfersModel(QObject *parent) : QObject(parent) {
     QObject::connect(this, &FileTransfersModel::addTransferProgressSignal, this, &FileTransfersModel::addTransferProgressSlot);
@@ -41,11 +42,7 @@ Q_SLOT void FileTransfersModel::addTransferProgressSlot(const QString& key,
     //LogMgr::debug(Q_FUNC_INFO, key);
     std::lock_guard<std::mutex> lock(mut);
     if(!key.isEmpty()) {
-        if(transfersProgress.size() <= 200) {
-            transfersProgress.insert(key, { current, total });
-        } else {
-
-        }
+        transfersProgress.insert(key, { current, total });
     }
 }
 // --------------------------------------------------------------------------
@@ -76,13 +73,15 @@ Q_INVOKABLE void FileTransfersModel::removeTransferQML(const QString &fileName) 
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void FileTransfersModel::clearTransfersProgress() {
-    std::lock_guard<std::mutex> lock(mut);
     LogMgr::debug(Q_FUNC_INFO);
+    std::lock_guard<std::mutex> lock(mut);
     transfersProgress.clear();
 }
 // --------------------------------------------------------------------------
 void FileTransfersModel::removeTransferProgressQML(const QString &key)
 {
+    LogMgr::debug(Q_FUNC_INFO);
+    std::lock_guard<std::mutex> lock(mut);
     if(transfersProgress.contains(key)) {
         transfersProgress.remove(key);
     }

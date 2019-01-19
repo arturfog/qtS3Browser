@@ -82,16 +82,48 @@ public:
         return 0;
     }
     // --------------------------------------------------------------------------
+    Q_INVOKABLE unsigned long getAllTransfersTotalBytes() const {
+        unsigned long long sum = 0;
+
+        for(auto key : transfersProgress.keys()) {
+            sum += transfersProgress[key].last();
+        }
+        return sum / 1024;
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE unsigned long getAllTransfersCurrentBytes() const {
+        unsigned long long sum = 0;
+
+        for(auto key : transfersProgress.keys()) {
+            sum += transfersProgress[key].first();
+        }
+        return sum / 1024;
+    }
+    // --------------------------------------------------------------------------
     Q_INVOKABLE const QString getTransfersProgressKey(const int idx) const;
     // --------------------------------------------------------------------------
     Q_INVOKABLE void clearTransfersProgress();
     // --------------------------------------------------------------------------
     Q_INVOKABLE void removeTransferProgressQML(const QString &key);
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE TransferMode getTransferDirection() const { return m_transferDriection; }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE bool isTransferring() {
+        for(auto key : transfersProgress.keys()) {
+            if(transfersProgress[key].first() != transfersProgress[key].last()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE void setTransferDirection(TransferMode direction) { m_transferDriection = direction; }
 private:
     static QMap<QString, QStringList> transfers;
     static QMap<QString, TransferMode> modes;
     static QMap<QString, QList<unsigned long>> transfersProgress;
     static std::mutex mut;
+    static TransferMode m_transferDriection;
 };
 
 #endif // FILETRANSFERSMODEL_H

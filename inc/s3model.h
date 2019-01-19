@@ -69,8 +69,6 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE inline bool isConnectedQML() const { return isConnected; }
     // --------------------------------------------------------------------------
-    Q_INVOKABLE inline bool isTransferring() const { return s3.isTransferring(); }
-    // --------------------------------------------------------------------------
     Q_INVOKABLE inline void setConnectedQML(const bool state) { isConnected = state; }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getS3PathQML() const;
@@ -141,6 +139,8 @@ public:
     Q_INVOKABLE QString getEtagQML(const QString &name) { return s3.getETAG(name.toStdString().c_str()).c_str(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString getModificationDateQML(const QString &name) { return s3.getModificationDate(name.toStdString().c_str()).c_str(); }
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE long long getCurrentUploadTotalBytes() const { return m_currentUploadBytes; }
     // --------------------------------------------------------------------------
     Q_INVOKABLE void search(const QString& txt) {
         LogMgr::debug(Q_FUNC_INFO, txt);
@@ -293,6 +293,7 @@ private:
     bool isConnected;
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;
+    long long m_currentUploadBytes;
     // STATIC VARIABLES
     static QList<S3Item> m_s3items;
     static QStringList m_s3Path;

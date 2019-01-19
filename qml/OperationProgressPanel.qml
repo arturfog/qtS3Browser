@@ -27,17 +27,16 @@ Item {
     property double totalBytes: 0
     property string icon: "qrc:icons/32_transfer_icon.png"
 
+    property int sumTotalKBytes: 0
+    property int sumCurrentKBytes: 0
     property var lastDate: new Date()
-    property double lastTotalBytes: 0
-    property double transferSpeedBytes: 0
+    property var lastDateFast: new Date()
+    property int transferSpeedBytes: 0
     property int secondsLeft: 0
+    property bool needsRefresh: false
 
     onVisibleChanged: {
-        lastTotalBytes = 0
-        totalBytes = 0
-        transferSpeedBytes = 0
-        secondsLeft = 0
-        lastDate = new Date()
+        lastDate = 0
         updateTransfersQueue()
         updateTransfers()
     }
@@ -49,6 +48,16 @@ Item {
             return Number(bytes / 1024).toFixed(1)  + " KB"
         } else {
             return Number(bytes)  + " B"
+        }
+    }
+
+    function getSizeString2(kbytes) {
+        if(kbytes > 1048576) {
+            return Number(kbytes / 1048576).toFixed(1)  + " GB"
+        } else if(kbytes >= 1024) {
+            return Number(kbytes / 1024).toFixed(1)  + " MB"
+        } else {
+            return Number(kbytes)  + " KB"
         }
     }
 
@@ -228,6 +237,7 @@ Item {
     function updateTransfers() {
         var transfersLen = ftModel.getTransferProgressNum()
         var transfersItemsLen = transfers_list.children.length
+
         if(transfersLen > 0) {
             for(var i = 0; i < transfersLen; i++)
             {
@@ -257,13 +267,84 @@ Item {
                     createTransferProgressObject(key, currentProgress, currentBytes, totalBytes)
                 }
             }
+            if(ftModel.getTransferDirection() === 0) {
+                sumTotalKBytes = s3Model.getCurrentUploadTotalBytes()
+            } else {
+                sumTotalKBytes = ftModel.getAllTransfersTotalBytes()
+            }
+            sumCurrentKBytes = ftModel.getAllTransfersCurrentBytes()
         } else {
             transfersItemsLen = transfers_list.children.length
             for(i = transfersItemsLen; i > 0 ; i--) {
               transfers_list.children[i-1].destroy();
             }
-            cancel_btn.visible = false;
         }
+    }
+
+    function createTransferQueueObject(srcPath, dstPath, icon, keys, i) {
+        var newObject = Qt.createQmlObject('
+            import QtQuick 2.5;
+            import QtQuick.Controls 2.2;
+
+            Rectangle {
+                x: 5
+                width: parent.width - 10;
+                height: 65
+                color: "transparent"
+
+                Row {
+                width: parent.width;
+                height: 45
+                anchors.verticalCenter: parent.verticalCenter
+                id: bookmarks_item
+                x: 10
+
+                    Image
+                    {
+                        source: "qrc:icons/' + icon +'"
+                    }
+
+                    Rectangle
+                    {
+                        width: 10
+                        height: 10
+                    }
+
+                    Column {
+                      width: parent.width - 220;
+                      Text {
+                        font.pointSize: 14
+                        text: "' + keys[i] +'"
+                       }
+
+                       Text {
+                         font.pointSize: 8
+                         text: \'<a href="' + srcPath +'">' + srcPath + '</a>\'
+                       }
+                       Text {
+                         font.pointSize: 8
+                         text: "' + dstPath + '"
+                       }
+                    }
+
+                    Button {
+                      text: "Cancel"
+                      icon.source: "qrc:icons/32_cancel_icon.png"
+                      icon.color: "transparent"
+                      onClicked: {
+                        ftModel.removeTransferQML(' + i + ')
+                        updateTransfersQueue()
+                      }
+                    }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    color: "gray"
+                    height: 1
+                }
+            }
+            ', transfers_queue_list, "dynamicTransfersQueue");
     }
 
     function updateTransfersQueue() {
@@ -282,69 +363,7 @@ Item {
                 var srcPath = ftModel.getTransferSrcPathQML(i)
                 var dstPath = ftModel.getTransferDstPathQML(i)
                 var icon = ftModel.getTransferIconQML(keys[i])
-                var newObject = Qt.createQmlObject('
-import QtQuick 2.5;
-import QtQuick.Controls 2.2;
-
-Rectangle {
-    x: 5
-    width: parent.width - 10;
-    height: 65
-    color: "transparent"
-
-    Row {
-        width: parent.width;
-        height: 45
-        anchors.verticalCenter: parent.verticalCenter
-        id: bookmarks_item
-        x: 10
-
-        Image
-        {
-            source: "qrc:icons/' + icon +'"
-        }
-
-        Rectangle
-        {
-            width: 10
-            height: 10
-        }
-
-        Column {
-          width: parent.width - 220;
-          Text {
-            font.pointSize: 14
-            text: "' + keys[i] +'"
-           }
-
-           Text {
-             font.pointSize: 8
-             text: \'<a href="' + srcPath +'">' + srcPath + '</a>\'
-           }
-           Text {
-             font.pointSize: 8
-             text: "' + dstPath + '"
-           }
-        }
-
-        Button {
-          text: "Cancel"
-          icon.source: "qrc:icons/32_cancel_icon.png"
-          icon.color: "transparent"
-          onClicked: {
-            ftModel.removeTransferQML(' + i + ')
-            updateTransfersQueue()
-          }
-        }
-    }
-
-Rectangle {
-    width: parent.width
-    color: "gray"
-    height: 1
-}
-}
-                ', transfers_queue_list, "dynamicTransfersQueue");
+                createTransferQueueObject(srcPath, dstPath, icon, keys, i)
             }
         }
     }
@@ -371,32 +390,28 @@ Rectangle {
     Connections {
         target: s3Model
         onSetProgressSignal: {
-            currentBytes = current
-            totalBytes = total
+            if(lastDate === 0) {
+                sumCurrentKBytes = 0
+                sumTotalKBytes = 0
+                transferSpeedBytes = 0
+                secondsLeft = 0
+                lastDate = new Date()
+                lastDateFast = new Date()
+            }
 
             var currentDate = new Date()
-
             var seconds = (currentDate - lastDate) / 1000
-
-            if(totalBytes > 0 && seconds > 0) {
-                var bytesdiff = current - lastTotalBytes
-                secondsLeft = (totalBytes - currentBytes) / transferSpeedBytes
-                if(bytesdiff > 0) {
-                    transferSpeedBytes = (bytesdiff / seconds)
+            if(seconds > 0) {
+                transferSpeedBytes = sumCurrentKBytes / seconds
+                if(transferSpeedBytes > 0) {
+                    secondsLeft = ((sumTotalKBytes - sumCurrentKBytes) / transferSpeedBytes)
                 }
-                lastTotalBytes = current
             }
 
-
-            if ( (currentDate - lastDate) >= 100) {
+            // wait 100 ms
+            if ( (currentDate - lastDateFast) >= 100) {
                 updateTransfers();
-                lastDate = currentDate
-            }
-
-            if(s3Model.isTransferring()) {
-                cancel_btn.visible = true
-            } else {
-                cancel_btn.visible = false;
+                lastDateFast = currentDate
             }
         }
     }
@@ -441,16 +456,12 @@ Rectangle {
                 icon.color: "transparent"
                 visible: false
                 onClicked: {
-                    if(s3Model.isTransferring()) {
+                    if(ftModel.isTransferring()) {
                         ftModel.clearTransfersQueue()
                         s3Model.cancelDownloadUploadQML()
                         ftModel.clearTransfersProgress()
                         cancel_btn.visible = false
-
-//                        var transfersItemsLen = transfers_list.children.length
-//                        for(var i = transfersItemsLen; i > 0 ; i--) {
-//                          transfers_list.children[i-1].destroy();
-//                        }
+                        lastDate = 0
 
                         updateTransfersQueue()
                         updateTransfers()
@@ -498,12 +509,58 @@ Rectangle {
             Text {
                 wrapMode: Text.NoWrap
                 elide: Text.ElideRight
-                width: parent.width - 400
+                width: parent.width - 500
                 height: 40
                 text: qsTr("Transfers progress") + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getMediumFontSize()
             }
+
+
+            //-----------------------------------------
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Rectangle {
+                width: 1
+                color: "#dbdbdb"
+                height: parent.height - 5
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Image {
+                source: "qrc:icons/32_server_icon.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+
+            Text {
+                height: 40
+                text: qsTr("Copied: ") + getSizeString2(sumCurrentKBytes)
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: getSmallFontSize()
+            }
+
+            Rectangle {
+                width: 5
+                height: parent.height
+                color: "transparent"
+            }
+            //-----------------------------------------
+
 
             Rectangle {
                 width: 5
@@ -567,7 +624,7 @@ Rectangle {
             Text {
                 height: 40
                 width: 100
-                text: qsTr("Speed: ") + getSizeString(transferSpeedBytes) + "/s" + tsMgr.emptyString
+                text: qsTr("Speed: ") + getSizeString2(transferSpeedBytes) + "/s" + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: getSmallFontSize()
             }
@@ -655,22 +712,37 @@ Rectangle {
                     var src = ftModel.getTransferSrcPathQML(0);
                     var dst = ftModel.getTransferDstPathQML(0);
 
-                    if(s3Model.isConnectedQML() && (s3Model.isTransferring() === false))
+                    if(s3Model.isConnectedQML() && (ftModel.isTransferring() === false))
                     {
-                        cancel_btn.visible = false
                         if(ftModel.getTransferModeQML(0) === 1)
                         {
                             s3Model.downloadQML(src, dst)
-                            ftModel.removeTransferQML(0);
-                            updateTransfersQueue()
                         }
                         else if (ftModel.getTransferModeQML(0) === 0)
                         {
                             s3Model.uploadQML(src, dst)
-                            ftModel.removeTransferQML(0);
-                            updateTransfersQueue()
                         }
+                        ftModel.removeTransferQML(0);
+                        updateTransfersQueue()
                     }
+                }
+
+                if(!ftModel.isTransferring()) {
+                    if(progress_win.visible === true) {
+                        cancel_btn.visible = false;
+                        updateTransfers();
+                        vbar.position = 0
+                        vbar_queue.position = 0
+                    }
+
+                    if(s3Model.isConnectedQML() && needsRefresh) {
+                        s3Model.refreshQML()
+                        mainPanel.file_panel.refresh()
+                        needsRefresh = false
+                    }
+                } else {
+                    cancel_btn.visible = true;
+                    needsRefresh = true
                 }
             }
         }
@@ -724,7 +796,6 @@ Rectangle {
                         if (wheel.angleDelta.y > 0)
                         {
                             vbar_queue.decrease()
-
                         }
                         else
                         {

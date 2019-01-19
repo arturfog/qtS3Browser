@@ -128,6 +128,7 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
                 isDir = true;
             }
 
+            ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
             download(m_s3items.at(idx).fileName(), isDir);
         }
     }
@@ -150,6 +151,9 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
             {
                 QString tmpSrc(src);
                 tmpSrc.replace("file://", "");
+
+                ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
+                m_currentUploadBytes = fsm.getFileSizeInKB(tmpSrc);
                 s3.uploadFile(bucket.toStdString().c_str(),
                               key.toStdString().c_str(),
                               tmpSrc.toStdString().c_str());
@@ -173,6 +177,7 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 
             if(!key.isEmpty() && !bucket.isEmpty())
             {
+                ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
                 QString tmpDst(dst);
                 // TODO: check if source exist
 
@@ -272,7 +277,7 @@ void S3Model::saveSettingsQML(const QString &startPath,
 
     s3.reloadCredentials();
 }
-
+// --------------------------------------------------------------------------
 const QString S3Model::generatePresignLinkQML(const QString& key, const int timeoutSec)
 {
     LogMgr::debug(Q_FUNC_INFO, key, timeoutSec);
@@ -506,9 +511,12 @@ void S3Model::upload(const QString& file, bool isDir)
 
     currentFile = filename;
 
+    ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
     if(isDir) {
+        m_currentUploadBytes = fsm.getFolderSizeInKB(file);
         s3.uploadDirectory(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     } else {
+        m_currentUploadBytes = fsm.getFileSizeInKB(file);
         s3.uploadFile(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     }
 }
@@ -528,6 +536,7 @@ void S3Model::download(const QString &key, bool isDir)
         const std::string src(getPathWithoutBucket().append(out_file).toStdString());
         const std::string dst(getFileBrowserPath().append(out_file).toStdString());
 
+        ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
         if(isDir) {
             s3.downloadDirectory(getCurrentBucket().toStdString().c_str(), src.c_str(), dst.c_str());
         } else {

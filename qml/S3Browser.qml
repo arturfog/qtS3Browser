@@ -48,7 +48,7 @@ Item {
     }
 
     function downloadInternal() {
-        if(!s3Model.isTransferring()) {
+        if(!ftModel.isTransferring()) {
             ftModel.clearTransfersProgress();
             s3Model.downloadQML(view.currentIndex)
             switchPanel(transfer_btn, progressPanel)
@@ -84,6 +84,8 @@ Item {
         s3_panel.connected = s3Model.isConnectedQML()
         file_panel.connected = s3Model.isConnectedQML()
         path = s3Model.getS3PathQML();
+        view.positionViewAtBeginning()
+        view.currentIndex = 0
     }
 
     Connections {
@@ -110,6 +112,8 @@ Item {
                 onClicked: {
                     s3Model.goBackQML()
                     path = s3Model.getS3PathQML()
+                    view.positionViewAtBeginning()
+                    view.currentIndex = 0
                 }
             }
 
