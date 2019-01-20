@@ -509,7 +509,7 @@ Item {
             Text {
                 wrapMode: Text.NoWrap
                 elide: Text.ElideRight
-                width: parent.width - 500
+                width: parent.width - 520
                 height: 40
                 text: qsTr("Transfers progress") + tsMgr.emptyString
                 verticalAlignment: Text.AlignVCenter

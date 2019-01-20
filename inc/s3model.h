@@ -128,8 +128,6 @@ public:
                                      const QString& logsDir,
                                      const bool logsEnabled);
     // --------------------------------------------------------------------------
-    Q_INVOKABLE inline QString getCurrentFileQML() const { return currentFile; }
-    // --------------------------------------------------------------------------
     Q_INVOKABLE inline void cancelDownloadUploadQML() { cancelDownloadUpload(); }
     // --------------------------------------------------------------------------
     Q_INVOKABLE const QString generatePresignLinkQML(const QString &key, const int timeoutSec);
@@ -289,7 +287,6 @@ protected:
     S3Client s3;
 private:
     QSettings settings;
-    QString currentFile;
     bool isConnected;
     QString mFileBrowserPath;
     QList<S3Item> m_s3itemsBackup;

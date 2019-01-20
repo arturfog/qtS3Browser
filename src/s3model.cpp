@@ -50,7 +50,6 @@ QString S3Item::filePath() const
 // --------------------------------------------------------------------------
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent),
-      currentFile(),
       isConnected(false),
       mFileBrowserPath(),
       m_s3itemsBackup()
@@ -153,10 +152,19 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
                 tmpSrc.replace("file://", "");
 
                 ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
-                m_currentUploadBytes = fsm.getFileSizeInKB(tmpSrc);
-                s3.uploadFile(bucket.toStdString().c_str(),
-                              key.toStdString().c_str(),
-                              tmpSrc.toStdString().c_str());
+
+                const QFileInfo fileInfo(tmpSrc);
+                if(fileInfo.isDir() && fileInfo.isWritable()) {
+                    m_currentUploadBytes = fsm.getFolderSizeInKB(tmpSrc);
+                    s3.uploadDirectory(bucket.toStdString().c_str(),
+                                       key.toStdString().c_str(),
+                                       tmpSrc.toStdString().c_str());
+                } else {
+                    m_currentUploadBytes = fsm.getFileSizeInKB(tmpSrc);
+                    s3.uploadFile(bucket.toStdString().c_str(),
+                                  key.toStdString().c_str(),
+                                  tmpSrc.toStdString().c_str());
+                }
             }
         }
     }
@@ -183,23 +191,28 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 
                 tmpDst.replace("file://", "");
                 QStringList dstList = tmpDst.split("/");
-                // destination exist and is directory
-                if(canDownload(tmpDst))
-                {
-                    s3.downloadDirectory(bucket.toStdString().c_str(),
-                                         key.toStdString().c_str(),
-                                         tmpDst.toStdString().c_str());
-                } else {
+                if(!dstList.empty()) {
                     // remove filename from dest dir path
                     const QString filename = dstList.takeLast();
-                    const QString dstDir = dstList.join("/");
-                    // dst dir exists
+                    QString dstDir = dstList.join("/");
+                    // destination exist and is directory
+
+                    if(filename.compare("") == 0) {
+                        dstList.takeLast();
+                        dstDir = dstList.join("/");
+                    }
+
                     if(canDownload(dstDir))
                     {
-                        currentFile = filename;
-                        s3.downloadFile(bucket.toStdString().c_str(),
+                        if(filename.compare("") == 0) {
+                            s3.downloadDirectory(bucket.toStdString().c_str(),
+                                             key.toStdString().c_str(),
+                                             tmpDst.toStdString().c_str());
+                        } else {
+                            s3.downloadFile(bucket.toStdString().c_str(),
                                         key.toStdString().c_str(),
                                         tmpDst.toStdString().c_str());
+                        }
                     }
                 }
             }
@@ -509,8 +522,6 @@ void S3Model::upload(const QString& file, bool isDir)
     const std::string bucket = getCurrentBucket().toStdString();
     const std::string key = getPathWithoutBucket().append(filename).toStdString();
 
-    currentFile = filename;
-
     ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
     if(isDir) {
         m_currentUploadBytes = fsm.getFolderSizeInKB(file);
@@ -529,9 +540,6 @@ void S3Model::download(const QString &key, bool isDir)
         if(isDir) {
             out_file = key;
         }
-
-        // for progress window
-        currentFile = out_file;
 
         const std::string src(getPathWithoutBucket().append(out_file).toStdString());
         const std::string dst(getFileBrowserPath().append(out_file).toStdString());
