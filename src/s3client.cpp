@@ -390,7 +390,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
-    m_lastItem = false;
+    m_lastItem = "";
     Aws::S3::Model::ListObjectsRequest list_request;
     list_request.SetBucket(bucket_name);
 
