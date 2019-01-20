@@ -148,10 +148,10 @@ Rectangle {
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
-            enabled: connected && !s3Model.isTransferring()
+            enabled: connected && !ftModel.isTransferring()
             text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
-                if(!s3Model.isTransferring()) {
+                if(!ftModel.isTransferring()) {
                     var fileName = s3Model.getItemNameQML(view.currentIndex)
                     msgDialog.msg = qsTr("Remove ") + fileName + " ?"
                     msgDialog.open()

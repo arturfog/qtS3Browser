@@ -77,6 +77,36 @@ Q_INVOKABLE QString FilesystemModel::permissions(const QString& path) const {
     return readable.append(writeable).append(executable);
 }
 // --------------------------------------------------------------------------
+long FilesystemModel::getFolderSizeInKB(const QString &path) const
+{
+    LogMgr::debug(Q_FUNC_INFO, path);
+    qint64 size = 0;
+
+    if(!path.isEmpty()) {
+        QDir dir(path);
+        QDir::Filters fileFilters = QDir::Files|QDir::System|QDir::Hidden;
+            for(QString filePath : dir.entryList(fileFilters)) {
+                QFileInfo fi(dir, filePath);
+                size+= fi.size();
+            }
+    }
+
+    return size / 1024;
+}
+// --------------------------------------------------------------------------
+long FilesystemModel::getFileSizeInKB(const QString &path) const
+{
+    LogMgr::debug(Q_FUNC_INFO, path);
+    qint64 size = 0;
+
+    if(!path.isEmpty()) {
+        QFile file(path);
+        size = file.size();
+    }
+
+    return size / 1024;
+}
+// --------------------------------------------------------------------------
 Q_INVOKABLE bool FilesystemModel::isDirQML(const QString& path) const {
     LogMgr::debug(Q_FUNC_INFO, path);
 

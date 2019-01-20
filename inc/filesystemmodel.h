@@ -29,6 +29,9 @@ public:
     // --------------------------------------------------------------------------
     Q_INVOKABLE QString permissions(const QString& path) const;
     // --------------------------------------------------------------------------
+    Q_INVOKABLE long int getFolderSizeInKB(const QString& path) const;
+    // --------------------------------------------------------------------------
+    Q_INVOKABLE long int getFileSizeInKB(const QString& path) const;
 };
 
 #endif // FILESYSTEMMODEL_H

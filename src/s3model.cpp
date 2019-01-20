@@ -50,7 +50,6 @@ QString S3Item::filePath() const
 // --------------------------------------------------------------------------
 S3Model::S3Model(QObject *parent)
     : QAbstractListModel(parent),
-      currentFile(),
       isConnected(false),
       mFileBrowserPath(),
       m_s3itemsBackup()
@@ -128,6 +127,7 @@ Q_INVOKABLE void S3Model::downloadQML(const int idx) {
                 isDir = true;
             }
 
+            ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
             download(m_s3items.at(idx).fileName(), isDir);
         }
     }
@@ -150,9 +150,21 @@ void S3Model::uploadQML(const QString &src, const QString &dst)
             {
                 QString tmpSrc(src);
                 tmpSrc.replace("file://", "");
-                s3.uploadFile(bucket.toStdString().c_str(),
-                              key.toStdString().c_str(),
-                              tmpSrc.toStdString().c_str());
+
+                ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
+
+                const QFileInfo fileInfo(tmpSrc);
+                if(fileInfo.isDir() && fileInfo.isWritable()) {
+                    m_currentUploadBytes = fsm.getFolderSizeInKB(tmpSrc);
+                    s3.uploadDirectory(bucket.toStdString().c_str(),
+                                       key.toStdString().c_str(),
+                                       tmpSrc.toStdString().c_str());
+                } else {
+                    m_currentUploadBytes = fsm.getFileSizeInKB(tmpSrc);
+                    s3.uploadFile(bucket.toStdString().c_str(),
+                                  key.toStdString().c_str(),
+                                  tmpSrc.toStdString().c_str());
+                }
             }
         }
     }
@@ -173,28 +185,34 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 
             if(!key.isEmpty() && !bucket.isEmpty())
             {
+                ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
                 QString tmpDst(dst);
                 // TODO: check if source exist
 
                 tmpDst.replace("file://", "");
                 QStringList dstList = tmpDst.split("/");
-                // destination exist and is directory
-                if(canDownload(tmpDst))
-                {
-                    s3.downloadDirectory(bucket.toStdString().c_str(),
-                                         key.toStdString().c_str(),
-                                         tmpDst.toStdString().c_str());
-                } else {
+                if(!dstList.empty()) {
                     // remove filename from dest dir path
                     const QString filename = dstList.takeLast();
-                    const QString dstDir = dstList.join("/");
-                    // dst dir exists
+                    QString dstDir = dstList.join("/");
+                    // destination exist and is directory
+
+                    if(filename.compare("") == 0) {
+                        dstList.takeLast();
+                        dstDir = dstList.join("/");
+                    }
+
                     if(canDownload(dstDir))
                     {
-                        currentFile = filename;
-                        s3.downloadFile(bucket.toStdString().c_str(),
+                        if(filename.compare("") == 0) {
+                            s3.downloadDirectory(bucket.toStdString().c_str(),
+                                             key.toStdString().c_str(),
+                                             tmpDst.toStdString().c_str());
+                        } else {
+                            s3.downloadFile(bucket.toStdString().c_str(),
                                         key.toStdString().c_str(),
                                         tmpDst.toStdString().c_str());
+                        }
                     }
                 }
             }
@@ -272,7 +290,7 @@ void S3Model::saveSettingsQML(const QString &startPath,
 
     s3.reloadCredentials();
 }
-
+// --------------------------------------------------------------------------
 const QString S3Model::generatePresignLinkQML(const QString& key, const int timeoutSec)
 {
     LogMgr::debug(Q_FUNC_INFO, key, timeoutSec);
@@ -504,11 +522,12 @@ void S3Model::upload(const QString& file, bool isDir)
     const std::string bucket = getCurrentBucket().toStdString();
     const std::string key = getPathWithoutBucket().append(filename).toStdString();
 
-    currentFile = filename;
-
+    ftm.setTransferDirection(FileTransfersModel::TransferMode::upload);
     if(isDir) {
+        m_currentUploadBytes = fsm.getFolderSizeInKB(file);
         s3.uploadDirectory(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     } else {
+        m_currentUploadBytes = fsm.getFileSizeInKB(file);
         s3.uploadFile(bucket.c_str(), key.c_str(), file.toStdString().c_str());
     }
 }
@@ -522,12 +541,10 @@ void S3Model::download(const QString &key, bool isDir)
             out_file = key;
         }
 
-        // for progress window
-        currentFile = out_file;
-
         const std::string src(getPathWithoutBucket().append(out_file).toStdString());
         const std::string dst(getFileBrowserPath().append(out_file).toStdString());
 
+        ftm.setTransferDirection(FileTransfersModel::TransferMode::download);
         if(isDir) {
             s3.downloadDirectory(getCurrentBucket().toStdString().c_str(), src.c_str(), dst.c_str());
         } else {

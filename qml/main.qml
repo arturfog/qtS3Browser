@@ -208,6 +208,8 @@ ApplicationWindow {
                                 s3Model.clearS3PathQML();
                                 s3Model.setConnectedQML(false)
                                 s3Model.cancelDownloadUploadQML();
+                                ftModel.clearTransfersProgress();
+                                ftModel.clearTransfersQueue();
                                 mainPanel.s3_panel.connected = s3Model.isConnectedQML()
                                 mainPanel.file_panel.connected = s3Model.isConnectedQML()
                                 mainPanel.s3_panel.path = settingsModel.getStartPathQML()

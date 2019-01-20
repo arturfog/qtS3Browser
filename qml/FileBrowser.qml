@@ -41,7 +41,7 @@ Item {
     }
 
     function upload() {
-        if(!s3Model.isTransferring()) {
+        if(!ftModel.isTransferring()) {
             var filePath = folder.get(view.currentIndex, "filePath")
             ftModel.clearTransfersProgress();
             switchPanel(transfer_btn, progressPanel)
@@ -57,6 +57,12 @@ Item {
             // upload in progress, add transfer to queue
             ftModel.addTransferToQueueQML(fileName, localPath, s3path)
         }
+    }
+
+    function refresh() {
+        var tmpPath = view.path
+        view.path = "/"
+        view.path = tmpPath
     }
 
     ToolBar {
@@ -75,6 +81,8 @@ Item {
                     if(folder.parentFolder.toString().length > 0) {
                         view.path = folder.parentFolder
                         s3Model.setFileBrowserPath(view.path)
+                        view.positionViewAtBeginning()
+                        view.currentIndex = 0
                     }
                 }
             }
@@ -86,9 +94,7 @@ Item {
                 icon.color: "transparent"
                 text: qsTr("Refresh") + tsMgr.emptyString
                 onClicked: {
-                    var tmpPath = view.path
-                    view.path = "/"
-                    view.path = tmpPath
+                    refresh()
                 }
             }
 
@@ -188,11 +194,12 @@ Item {
                         wrapMode: Text.WrapAnywhere
                         font.pointSize: getSmallFontSize()
                         selectByMouse: true
-
                         Keys.onReturnPressed: {
-                            if(fsModel.isDirQML(text)) {
+                            if(fsModel.isDirQML(file_browser_path_text.text)) {
                                 path = "file://" + file_browser_path_text.text
                                 s3Model.setFileBrowserPath(path)
+                                view.positionViewAtBeginning()
+                                view.currentIndex = 0
                             }
                         }
                     }
@@ -206,7 +213,12 @@ Item {
                         icon.source: "qrc:icons/32_go_icon.png"
                         icon.color: "transparent"
                         onClicked: {
-                            path = "file://" + file_browser_path_text.text
+                            if(fsModel.isDirQML(file_browser_path_text.text)) {
+                                path = "file://" + file_browser_path_text.text
+                                s3Model.setFileBrowserPath(path)
+                                view.positionViewAtBeginning()
+                                view.currentIndex = 0
+                            }
                         }
                     }
                 }
