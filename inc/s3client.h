@@ -58,10 +58,8 @@ private:
 
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
-    static std::vector<std::string> items;
-    static Aws::String lastTransferedFile;
+    static std::vector<std::string> items;    
     static std::shared_ptr<Aws::Transfer::TransferManager> transferManager;
-    static Aws::String m_lastItem;
     /**
      * @brief downloadProgress
      * @param manager
@@ -117,6 +115,17 @@ private:
                                     const Aws::S3::Model::DeleteObjectRequest& request,
                                     const Aws::S3::Model::DeleteObjectOutcome& outcome,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context);
+
+    /**
+     * @brief deleteObjectHandler
+     * @param request
+     * @param handler
+     * @param context
+     */
+    static void deleteObjectsHandler(const Aws::S3::S3Client*,
+                                     const Aws::S3::Model::DeleteObjectsRequest&,
+                                     const Aws::S3::Model::DeleteObjectsOutcome&,
+                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext>&);
     /**
      * @brief deleteBucketHandler
      * @param client

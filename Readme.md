@@ -1,4 +1,7 @@
 # qtS3Browser
+
+[![pipeline status](https://img.shields.io/badge/code%20mirror-gitlab-blue.svg)](https://gitlab.com/arturfog/qts3browser/commits/master)
+
 | Service | Status                                         |
 | ------- | ---------------------------------------------- |
 | Snap | [![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser) |

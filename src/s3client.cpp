@@ -52,9 +52,7 @@ std::map<Aws::String, S3Client::ObjectInfo_S> S3Client::objectInfoVec;
 Aws::String S3Client::currentPrefix;
 std::vector<std::string> S3Client::items;
 Aws::Transfer::TransferManagerConfiguration S3Client::transferConfig(S3Client::executor.get());
-Aws::String S3Client::lastTransferedFile;
 std::shared_ptr<Aws::Transfer::TransferManager> S3Client::transferManager;
-Aws::String S3Client::m_lastItem;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -182,6 +180,11 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
             objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
 
             m_stringFunc(s3_object.GetKey().c_str());
+        }
+
+        if(outcome.GetResult().GetIsTruncated()) {
+            outcome.GetResult().GetNextMarker();
+            //listObjects(request.GetBucket(), request.GetPrefix(), &listObjectsHandler);
         }
     }
     else
@@ -337,9 +340,8 @@ void S3Client::errorHandler(const Aws::Transfer::TransferManager* ,
 }
 // --------------------------------------------------------------------------
 void S3Client::transferInitiatedHandler(const Aws::Transfer::TransferManager *,
-                                        const std::shared_ptr<const Aws::Transfer::TransferHandle> &handle)
+                                        const std::shared_ptr<const Aws::Transfer::TransferHandle> &)
 {
-    lastTransferedFile = handle->GetKey();
 }
 // --------------------------------------------------------------------------
 void S3Client::getBuckets(std::function<void(const std::string&)> func) {
@@ -379,7 +381,6 @@ void S3Client::deleteObject(const Aws::String &bucket_name,
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
     Aws::S3::Model::DeleteObjectRequest object_request;
-    m_lastItem = key_name;
     object_request.WithBucket(bucket_name).WithKey(key_name);
     s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
 
@@ -390,47 +391,64 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
 {
     LogMgr::debug(Q_FUNC_INFO, bucket_name.c_str());
 
-    m_lastItem = "";
     Aws::S3::Model::ListObjectsRequest list_request;
     list_request.SetBucket(bucket_name);
+    Aws::S3::Model::DeleteObjectsRequest delete_request;
+    delete_request.SetBucket(bucket_name);
+    Aws::S3::Model::Delete delObj;
 
     if(key_name != "") {
         list_request.SetPrefix(key_name);
     }
 
-    auto outcome = s3_client->ListObjects(list_request);
+    const auto outcome = s3_client->ListObjects(list_request);
     if(outcome.IsSuccess()) {
-        Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
-
-        unsigned long items = object_list.size();
-        for (auto const &s3_object : object_list)
+        const auto object_list = outcome.GetResult().GetContents();
+        for (const auto &s3_object : object_list)
         {
-            if(items > 0) {
-                items--;
-            }
-            if(items == 0) {
-                m_lastItem = s3_object.GetKey();
-            }
-            deleteObject(bucket_name, s3_object.GetKey());
+            Aws::S3::Model::ObjectIdentifier id;
+            id.SetKey(s3_object.GetKey());
+            delObj.AddObjects(id);
         }
+
+
+        delete_request.SetDelete(delObj);
+        s3_client->DeleteObjectsAsync(delete_request, &deleteObjectsHandler);
     }
 }
 // --------------------------------------------------------------------------
 void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
-                                   const Aws::S3::Model::DeleteObjectRequest &request,
+                                   const Aws::S3::Model::DeleteObjectRequest &,
                                    const Aws::S3::Model::DeleteObjectOutcome &outcome,
                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    if (outcome.IsSuccess() && (m_lastItem.compare(request.GetKey()) == 0) )
+    if (outcome.IsSuccess())
     {
-        m_lastItem = "";
         m_refreshFunc();
     }
     else
     {
         LogMgr::error(outcome.GetError().GetMessage().c_str());
         //m_errorFunc(outcome.GetError().GetMessage().c_str());
+    }
+}
+// --------------------------------------------------------------------------
+void S3Client::deleteObjectsHandler(const Aws::S3::S3Client *,
+                                    const Aws::S3::Model::DeleteObjectsRequest &,
+                                    const Aws::S3::Model::DeleteObjectsOutcome &outcome,
+                                    const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
+{
+
+    LogMgr::debug(Q_FUNC_INFO);
+    if (outcome.IsSuccess())
+    {
+        m_refreshFunc();
+    }
+    else
+    {
+        LogMgr::error(outcome.GetError().GetMessage().c_str());
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------

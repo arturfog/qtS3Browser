@@ -140,11 +140,6 @@ Item {
                 folder: path
             }
 
-            Keys.onReturnPressed: {
-                var url = folder.get(view.currentIndex, "fileURL")
-                folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
-            }
-
             delegate: FileDelegate { }
 
             headerPositioning: ListView.OverlayHeader

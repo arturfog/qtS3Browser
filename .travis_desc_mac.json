@@ -7,8 +7,8 @@
         "website_url": "https://github.com/arturfog/",
         "vcs_url": "https://github.com/arturfog/qtS3Browser",
         "licenses": ["GPL-3.0"],
-        "public_download_numbers": false,
-        "public_stats": false
+        "public_download_numbers": true,
+        "public_stats": true
     },
 
     "version": {
@@ -19,7 +19,7 @@
     },
 
     "files":
-    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/s3browser_1.0.12.dmg",
+    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/s3browser_1.0.13.dmg",
           "matrixParams": {
             "override": 1
           }

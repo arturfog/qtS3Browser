@@ -25,6 +25,8 @@ Rectangle {
     height:34
     color: "transparent"
 
+    property bool isSelected: false
+
     Row {
         anchors.fill: parent
 
@@ -42,6 +44,8 @@ Rectangle {
             font.pointSize: getSmallFontSize()
             width: parent.width - 130
             anchors.verticalCenter: parent.verticalCenter
+
+            color: isSelected ? "blue" : "black"
         }
 
         Text {
@@ -108,12 +112,21 @@ Rectangle {
     }
 
     MouseArea {
+        Keys.onReturnPressed: {
+            var url = folder.get(view.currentIndex, "fileURL")
+            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+        }
+
         id:mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
-            if (mouse.button === Qt.RightButton) { contextMenu.popup() }
+            if (mouse.button === Qt.RightButton) {
+                contextMenu.popup()
+            } else {
+                isSelected = !isSelected
+            }
         }
 
         onDoubleClicked: {

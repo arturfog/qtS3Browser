@@ -1,5 +1,5 @@
 name: qts3browser
-version: '1.0.12' 
+version: '1.0.13' 
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
@@ -61,6 +61,8 @@ parts:
        - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_armhf.deb
     source-type: deb
     stage-packages:
+        - on amd64: i965-va-driver
+        - on i386: i965-va-driver
         - fontconfig
         - icu-devtools
         - libcups2
@@ -115,7 +117,6 @@ parts:
         - libxcb-xinerama0
         - libpulse0
         - vdpau-va-driver
-        - i965-va-driver
         - mesa-utils
         - mesa-vdpau-drivers
         - fonts-freefont-ttf
@@ -146,8 +147,8 @@ parts:
   application:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_i386.deb
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_i386.deb
       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
     source-type: deb
     override-build: |

@@ -1,9 +1,10 @@
-qts3browser (1.0.12) stable; urgency=low
+qts3browser (1.0.13) stable; urgency=low
 
   [ Breaking changes in qts3browser ]
-  * UI improvements
+  * Fixed bugs
+  * Created new bugs to fix later :)
 
- -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 12 Sep 2018 15:47:44 +0200
+ -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 12 Jan 2019 15:47:44 +0200
 
 
 
