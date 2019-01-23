@@ -53,6 +53,7 @@ Aws::String S3Client::currentPrefix;
 std::vector<std::string> S3Client::items;
 Aws::Transfer::TransferManagerConfiguration S3Client::transferConfig(S3Client::executor.get());
 std::shared_ptr<Aws::Transfer::TransferManager> S3Client::transferManager;
+std::shared_ptr<Aws::S3::S3Client> S3Client::m_s3client;
 // --------------------------------------------------------------------------
 void S3Client::init() {
     Aws::SDKOptions options;
@@ -71,7 +72,7 @@ void S3Client::init() {
         config.writeRateLimiter = m_limiter;
 #endif
         std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
-        this->s3_client = s3_client;
+        m_s3client = s3_client;
 
         //
         transferConfig.s3Client = s3_client;
@@ -125,11 +126,13 @@ void S3Client::reloadCredentials()
 {
     loadConfig();
 
-    s3_client = std::make_shared<Aws::S3::S3Client>(Aws::S3::S3Client(credentials, config));
-    transferConfig.s3Client = s3_client;
+    m_s3client = std::make_shared<Aws::S3::S3Client>(Aws::S3::S3Client(credentials, config));
+    transferConfig.s3Client = m_s3client;
 }
 // --------------------------------------------------------------------------
-void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &key,
+void S3Client::listObjects(const Aws::String &bucket_name,
+                           const Aws::String &key,
+                           const Aws::String &marker,
                            std::function<void(const std::string&)> func) {
 
     LogMgr::debug(Q_FUNC_INFO);
@@ -143,9 +146,14 @@ void S3Client::listObjects(const Aws::String &bucket_name, const Aws::String &ke
             objects_request.SetPrefix(key);
         }
 
-        objectInfoVec.clear();
+        if(!marker.empty()) {
+            objects_request.SetMarker(marker);
+        } else {
+            objectInfoVec.clear();
+        }
+
         m_stringFunc = func;
-        s3_client->ListObjectsAsync(objects_request, &listObjectsHandler);
+        m_s3client->ListObjectsAsync(objects_request, &listObjectsHandler);
     }
 }
 // --------------------------------------------------------------------------
@@ -160,7 +168,7 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
         Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
         const auto common_list = outcome.GetResult().GetCommonPrefixes();
-        const auto key = request.GetPrefix();
+        const auto key(request.GetPrefix());
         for (auto const &s3_object : common_list)
         {
             std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
@@ -175,16 +183,21 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
             objectInfo.etag = s3_object.GetETag();
             objectInfo.owner = s3_object.GetOwner().GetDisplayName();
 
-            Aws::String key = s3_object.GetKey();
-            std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+            const auto key(s3_object.GetKey());
+            const std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
             objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
 
             m_stringFunc(s3_object.GetKey().c_str());
         }
 
         if(outcome.GetResult().GetIsTruncated()) {
-            outcome.GetResult().GetNextMarker();
-            //listObjects(request.GetBucket(), request.GetPrefix(), &listObjectsHandler);
+            const auto nextMarker = object_list.back();
+            if(!nextMarker.GetKey().empty()) {
+                listObjects(request.GetBucket(),
+                        request.GetPrefix(),
+                        nextMarker.GetKey(),
+                        m_stringFunc);
+            }
         }
     }
     else
@@ -199,7 +212,7 @@ void S3Client::getObjectInfo(const Aws::String &bucket_name,
     LogMgr::debug(Q_FUNC_INFO);
     Aws::S3::Model::GetObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
-    s3_client->GetObjectAsync(object_request, &getObjectInfoHandler);
+    m_s3client->GetObjectAsync(object_request, &getObjectInfoHandler);
 }
 // --------------------------------------------------------------------------
 std::string S3Client::getModificationDate(const Aws::String &name)
@@ -242,7 +255,7 @@ std::string S3Client::getPresignLink(const Aws::String &bucket_name,
                                      const Aws::String &key_name,
                                      const int expirationTimeSec)
 {
-    Aws::String url = s3_client->GeneratePresignedUrl(bucket_name,
+    Aws::String url = m_s3client->GeneratePresignedUrl(bucket_name,
                                                       key_name,
                                                       Aws::Http::HttpMethod::HTTP_GET,
                                                       expirationTimeSec);
@@ -293,7 +306,7 @@ void S3Client::createBucket(const Aws::String &bucket_name)
     LogMgr::debug(Q_FUNC_INFO);
     Aws::S3::Model::CreateBucketRequest request;
     request.SetBucket(bucket_name);
-    s3_client->CreateBucketAsync(request, &createBucketHandler);
+    m_s3client->CreateBucketAsync(request, &createBucketHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::createBucketHandler(const Aws::S3::S3Client *,
@@ -349,7 +362,7 @@ void S3Client::getBuckets(std::function<void(const std::string&)> func) {
 
     m_stringFunc = func;
     objectInfoVec.clear();
-    s3_client->ListBucketsAsync(&getBucketsHandler);
+    m_s3client->ListBucketsAsync(&getBucketsHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
@@ -382,7 +395,7 @@ void S3Client::deleteObject(const Aws::String &bucket_name,
 
     Aws::S3::Model::DeleteObjectRequest object_request;
     object_request.WithBucket(bucket_name).WithKey(key_name);
-    s3_client->DeleteObjectAsync(object_request, &deleteObjectHandler);
+    m_s3client->DeleteObjectAsync(object_request, &deleteObjectHandler);
 
 }
 // --------------------------------------------------------------------------
@@ -401,7 +414,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
         list_request.SetPrefix(key_name);
     }
 
-    const auto outcome = s3_client->ListObjects(list_request);
+    const auto outcome = m_s3client->ListObjects(list_request);
     if(outcome.IsSuccess()) {
         const auto object_list = outcome.GetResult().GetContents();
         for (const auto &s3_object : object_list)
@@ -413,7 +426,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
 
 
         delete_request.SetDelete(delObj);
-        s3_client->DeleteObjectsAsync(delete_request, &deleteObjectsHandler);
+        m_s3client->DeleteObjectsAsync(delete_request, &deleteObjectsHandler);
     }
 }
 // --------------------------------------------------------------------------
@@ -430,7 +443,7 @@ void S3Client::deleteObjectHandler(const Aws::S3::S3Client *,
     else
     {
         LogMgr::error(outcome.GetError().GetMessage().c_str());
-        //m_errorFunc(outcome.GetError().GetMessage().c_str());
+        m_errorFunc(outcome.GetError().GetMessage().c_str());
     }
 }
 // --------------------------------------------------------------------------
@@ -459,7 +472,7 @@ void S3Client::deleteBucket(const Aws::String &bucket_name)
     Aws::S3::Model::DeleteBucketRequest request;
     request.SetBucket(bucket_name);
 
-    s3_client->DeleteBucketAsync(request, &deleteBucketHandler);
+    m_s3client->DeleteBucketAsync(request, &deleteBucketHandler);
 
     // TODO: Remove all objects inside
 }
@@ -490,7 +503,7 @@ void S3Client::createFolder(const Aws::String &bucket_name,
     object_request.SetBucket(bucket_name);
     object_request.SetKey(key_name);
 
-    s3_client->PutObjectAsync(object_request, &createFolderHandler);
+    m_s3client->PutObjectAsync(object_request, &createFolderHandler);
 }
 // --------------------------------------------------------------------------
 void S3Client::createFolderHandler(const Aws::S3::S3Client *,

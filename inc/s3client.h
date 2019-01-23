@@ -41,7 +41,6 @@
 
 class S3Client {
 private:
-    std::shared_ptr<Aws::S3::S3Client> s3_client;
     Aws::Client::ClientConfiguration config;
     Aws::Auth::AWSCredentials credentials;
     Aws::SDKOptions options;
@@ -56,6 +55,7 @@ private:
     static std::function<void()> m_refreshFunc;
     static std::function<void(const unsigned long bytes, const unsigned long total, const std::string key)> m_progressFunc;
 
+    static std::shared_ptr<Aws::S3::S3Client> m_s3client;
     static std::shared_ptr<Aws::Utils::Threading::PooledThreadExecutor> executor;
     static Aws::Transfer::TransferManagerConfiguration transferConfig;
     static std::vector<std::string> items;    
@@ -213,7 +213,9 @@ public:
      * @param key
      * @param func
      */
-    void listObjects(const Aws::String &bucket_name, const Aws::String &key,
+    static void listObjects(const Aws::String &bucket_name,
+                     const Aws::String &key,
+                     const Aws::String &marker,
                      std::function<void(const std::string&)> func);
 
     // DELETE OBJECT
