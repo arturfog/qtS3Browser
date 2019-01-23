@@ -12,7 +12,7 @@ Simple **Amazon S3** client written in C++/QT
 
 ![Main Window](https://github.com/arturfog/qtS3Browser/raw/master/assets/app_main.png)
 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/qts3browser)
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/qts3browser) [![Join the chat at https://gitter.im/arturfog/qtS3Browser](https://badges.gitter.im/arturfog/qtS3Browser.svg)](https://gitter.im/arturfog/qtS3Browser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Testing:
 
