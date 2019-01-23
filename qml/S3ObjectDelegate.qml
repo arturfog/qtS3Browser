@@ -63,6 +63,12 @@ Rectangle {
     Row {
         anchors.fill: parent
 
+        CheckBox {
+            id: check
+            anchors.verticalCenter: parent.verticalCenter
+            rightPadding: 10
+        }
+
         Image {
             id: icon
             width: delegate.height - 2
@@ -76,7 +82,7 @@ Rectangle {
             elide: Text.ElideRight
             text: fileName
             font.pointSize: getSmallFontSize()
-            width: parent.width - 135
+            width: parent.width - 140
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -183,12 +189,11 @@ Rectangle {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
-
-            if (mouse.button === Qt.RightButton)
-            {
+            if (mouse.button === Qt.RightButton) {
                 contextMenu.popup()
+            } else {
+                check.checked = !check.checked
             }
-
         }
 
         onDoubleClicked:  {

@@ -85,7 +85,7 @@ https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everyw
 https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
 ```
 
-![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)
+![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_osx_icon.png)
 ### MacOS X (dmg)
 Application will be released as .dmg file
 
@@ -93,7 +93,7 @@ Application will be released as .dmg file
 
 https://bintray.com/arturfog/dmg-arturfog/qts3browser
 
-![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_win10_icon.png)
+![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_win_icon.png)
 ### Windows
 Application will be relased as standalone .zip and installer file
 

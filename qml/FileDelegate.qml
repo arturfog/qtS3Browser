@@ -30,6 +30,12 @@ Rectangle {
     Row {
         anchors.fill: parent
 
+        CheckBox {
+            id: check
+            anchors.verticalCenter: parent.verticalCenter
+            rightPadding: 10
+        }
+
         Image {
             id: icon
             width: delegate.height - 2
@@ -42,10 +48,8 @@ Rectangle {
             elide: Text.ElideRight
             text: fileName
             font.pointSize: getSmallFontSize()
-            width: parent.width - 130
+            width: parent.width - 140
             anchors.verticalCenter: parent.verticalCenter
-
-            color: isSelected ? "blue" : "black"
         }
 
         Text {
@@ -125,7 +129,7 @@ Rectangle {
             if (mouse.button === Qt.RightButton) {
                 contextMenu.popup()
             } else {
-                isSelected = !isSelected
+                check.checked = !check.checked
             }
         }
 

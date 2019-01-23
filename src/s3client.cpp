@@ -414,7 +414,7 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
         list_request.SetPrefix(key_name);
     }
 
-    const auto outcome = m_s3client->ListObjects(list_request);
+    auto outcome = m_s3client->ListObjects(list_request);
     if(outcome.IsSuccess()) {
         const auto object_list = outcome.GetResult().GetContents();
         for (const auto &s3_object : object_list)
@@ -424,6 +424,24 @@ void S3Client::deleteDirectory(const Aws::String &bucket_name,
             delObj.AddObjects(id);
         }
 
+#ifdef QT_DEBUG
+        // TODO: refactor
+        while(outcome.GetResult().GetIsTruncated()) {
+            list_request.SetMarker(object_list.back().GetKey());
+            outcome = m_s3client->ListObjects(list_request);
+            if(outcome.IsSuccess()) {
+                const auto object_list = outcome.GetResult().GetContents();
+                for (const auto &s3_object : object_list)
+                {
+                    Aws::S3::Model::ObjectIdentifier id;
+                    id.SetKey(s3_object.GetKey());
+                    delObj.AddObjects(id);
+                }
+            } else {
+                break;
+            }
+        }
+#endif
 
         delete_request.SetDelete(delObj);
         m_s3client->DeleteObjectsAsync(delete_request, &deleteObjectsHandler);

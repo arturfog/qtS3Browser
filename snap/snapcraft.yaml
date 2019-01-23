@@ -15,11 +15,13 @@ apps:
     - home
     - mount-observe
     - network
+    - network-bind
     - opengl
     - pulseaudio
     - unity7
     - x11
-    - hardware-observe
+    - mount-observe
+    - removable-media
     desktop: usr/share/applications/s3browser.desktop
     environment:
         LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.11.3/lib:$SNAP/opt/Qt5.11.3/plugins/platforms
@@ -27,8 +29,8 @@ apps:
         QML2_IMPORT_PATH: $SNAP/opt/Qt5.11.3/qml
         QT_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins
         QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins/platforms
-        QT_XCB_GL_INTEGRATION: none
-        QT_STYLE_OVERRIDE: gtk
+        #QT_XCB_GL_INTEGRATION: none
+        #QT_STYLE_OVERRIDE: gtk
         #QT_QPA_PLATFORMTHEME: gtk3
         #QT_XCB_GL_INTEGRATION: xcb_egl
         #QT_LOGGING_RULES: "*.debug=false"

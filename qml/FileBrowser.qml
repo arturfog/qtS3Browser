@@ -146,7 +146,7 @@ Item {
 
             header: Column {
                 width: browser.width
-                height: 72
+                height: 80
                 z:2
 
                 Rectangle {
@@ -218,14 +218,22 @@ Item {
                     }
                 }
 
-
-
                 Row {
                     width: parent.width
-                    height: 32
+                    height: 40
+
                     Rectangle {
-                        width: parent.width - 102
-                        height: 32
+                        width: 40
+                        height: 40
+
+                        CheckBox {
+
+                        }
+                    }
+
+                    Rectangle {
+                        width: parent.width - 112
+                        height: 40
                         Text {
                             x: 30
                             width: 230
@@ -249,13 +257,13 @@ Item {
 
                     Rectangle {
                         width: 1
-                        height: 32
+                        height: 40
                         color: "black"
                     }
 
                     Rectangle {
                         width: 100
-                        height: 32
+                        height: 40
                         Text {
                             x: 3
                             width: 100
