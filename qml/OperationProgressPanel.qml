@@ -70,152 +70,11 @@ Item {
     }
 
     function createTransferProgressObject(key, currentProgress, currentBytes, totalBytes) {
-        var newObject = Qt.createQmlObject('
-        import QtQuick 2.5;
-        import QtQuick.Controls 2.2;
-
-        Rectangle {
-            x: 5
-            width: parent.width - 10;
-            height: 65
-            color: "transparent"
-
-                Row {
-                    x: 10
-                    y: 4
-                    width: parent.width
-                    height: 40
-
-                    Text {
-                        wrapMode: Text.NoWrap
-                        elide: Text.ElideRight
-                        width: parent.width - 560
-                        height: 40
-                        text: "' + key + '"
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: getSmallFontSize()
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Rectangle {
-                        width: 1
-                        color: "#dbdbdb"
-                        height: parent.height - 5
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    ProgressBar {
-                        id: current_pb
-                        height: parent.height
-                        width: 160
-                        value: ' + currentProgress + '
-                        to: 100.0
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Rectangle {
-                        width: 1
-                        color: "#dbdbdb"
-                        height: parent.height - 5
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Text {
-                        height: 40
-                        text: Number(' + currentProgress + ')  + " %"
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: getSmallFontSize()
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Rectangle {
-                        width: 1
-                        color: "#dbdbdb"
-                        height: parent.height - 5
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Image {
-                        source: "qrc:icons/32_server_icon.png"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Text {
-                        height: 40
-                        width: 120
-                        text: qsTr("Copied: ") + getSizeString(' + currentBytes + ') + tsMgr.emptyString
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: getSmallFontSize()
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Rectangle {
-                        width: 1
-                        color: "#dbdbdb"
-                        height: parent.height - 5
-                    }
-
-                    Rectangle {
-                        width: 5
-                        height: parent.height
-                        color: "transparent"
-                    }
-
-                    Image {
-                        source: "qrc:icons/32_hdd_icon2.png"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Text {
-                        height: 40
-                        text: qsTr("Total: ") + getSizeString(' + totalBytes + ') + tsMgr.emptyString
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: getSmallFontSize()
-                    }
-                }
-
-            Rectangle {
-                width: parent.width
-                color: "gray"
-                height: 1
-            }
-        }
-        ', transfers_list, "dynamicTransfers");
+        var component = Qt.createComponent("TransferProgressItem.qml");
+        component.createObject(transfers_list, {"currentProgress": currentProgress,
+                                   "currentBytes": currentBytes,
+                                   "totalBytes": totalBytes,
+                                   "key": key});
     }
 
     function updateTransferProgressObject(children_, currentProgress, currentBytes) {
@@ -232,6 +91,13 @@ Item {
 
     function deleteTransferProgressObject(children_) {
         children_.destroy();
+    }
+
+    function clearTransferProgressChildren() {
+        var transfersItemsLen = transfers_list.children.length
+        for(var i = transfersItemsLen; i > 0 ; i--) {
+          transfers_list.children[i-1].destroy();
+        }
     }
 
     function updateTransfers() {
@@ -274,77 +140,17 @@ Item {
             }
             sumCurrentKBytes = ftModel.getAllTransfersCurrentBytes()
         } else {
-            transfersItemsLen = transfers_list.children.length
-            for(i = transfersItemsLen; i > 0 ; i--) {
-              transfers_list.children[i-1].destroy();
-            }
+            clearTransferProgressChildren()
         }
     }
 
     function createTransferQueueObject(srcPath, dstPath, icon, keys, i) {
-        var newObject = Qt.createQmlObject('
-            import QtQuick 2.5;
-            import QtQuick.Controls 2.2;
-
-            Rectangle {
-                x: 5
-                width: parent.width - 10;
-                height: 65
-                color: "transparent"
-
-                Row {
-                width: parent.width;
-                height: 45
-                anchors.verticalCenter: parent.verticalCenter
-                id: bookmarks_item
-                x: 10
-
-                    Image
-                    {
-                        source: "qrc:icons/' + icon +'"
-                    }
-
-                    Rectangle
-                    {
-                        width: 10
-                        height: 10
-                    }
-
-                    Column {
-                      width: parent.width - 220;
-                      Text {
-                        font.pointSize: 14
-                        text: "' + keys[i] +'"
-                       }
-
-                       Text {
-                         font.pointSize: 8
-                         text: \'<a href="' + srcPath +'">' + srcPath + '</a>\'
-                       }
-                       Text {
-                         font.pointSize: 8
-                         text: "' + dstPath + '"
-                       }
-                    }
-
-                    Button {
-                      text: "Cancel"
-                      icon.source: "qrc:icons/32_cancel_icon.png"
-                      icon.color: "transparent"
-                      onClicked: {
-                        ftModel.removeTransferQML(' + i + ')
-                        updateTransfersQueue()
-                      }
-                    }
-                }
-
-                Rectangle {
-                    width: parent.width
-                    color: "gray"
-                    height: 1
-                }
-            }
-            ', transfers_queue_list, "dynamicTransfersQueue");
+        var component = Qt.createComponent("TransferQueueItem.qml");
+        component.createObject(transfers_queue_list, {"icon": icon,
+                                   "srcPath": srcPath,
+                                   "dstPath": dstPath,
+                                   "keys": keys,
+                                   "i": i});
     }
 
     function updateTransfersQueue() {
@@ -409,7 +215,7 @@ Item {
             }
 
             // wait 100 ms
-            if ( (currentDate - lastDateFast) >= 100) {
+            if ( (currentDate - lastDateFast) >= 200) {
                 updateTransfers();
                 lastDateFast = currentDate
             }
@@ -460,6 +266,9 @@ Item {
                         ftModel.clearTransfersQueue()
                         s3Model.cancelDownloadUploadQML()
                         ftModel.clearTransfersProgress()
+
+                        clearTransferProgressChildren()
+
                         cancel_btn.visible = false
                         lastDate = 0
 
@@ -733,6 +542,7 @@ Item {
                         updateTransfers();
                         vbar.position = 0
                         vbar_queue.position = 0
+                        clearTransferProgressChildren()
                     }
 
                     if(s3Model.isConnectedQML() && needsRefresh) {

@@ -25,8 +25,16 @@ Rectangle {
     height:34
     color: "transparent"
 
+    property bool isSelected: false
+
     Row {
         anchors.fill: parent
+
+        CheckBox {
+            id: check
+            anchors.verticalCenter: parent.verticalCenter
+            rightPadding: 10
+        }
 
         Image {
             id: icon
@@ -40,7 +48,7 @@ Rectangle {
             elide: Text.ElideRight
             text: fileName
             font.pointSize: getSmallFontSize()
-            width: parent.width - 130
+            width: parent.width - 140
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -108,12 +116,21 @@ Rectangle {
     }
 
     MouseArea {
+        Keys.onReturnPressed: {
+            var url = folder.get(view.currentIndex, "fileURL")
+            folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
+        }
+
         id:mouseArea
-        anchors.fill: parent
+        x: 35
+        width: parent.width - 35
+        height: parent.height
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onClicked: {
             view.currentIndex = index
-            if (mouse.button === Qt.RightButton) { contextMenu.popup() }
+            if (mouse.button === Qt.RightButton) {
+                contextMenu.popup()
+            }
         }
 
         onDoubleClicked: {

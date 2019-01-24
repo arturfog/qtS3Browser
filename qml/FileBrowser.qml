@@ -140,18 +140,13 @@ Item {
                 folder: path
             }
 
-            Keys.onReturnPressed: {
-                var url = folder.get(view.currentIndex, "fileURL")
-                folder.get(view.currentIndex, "fileIsDir") ? view.path = url : Qt.openUrlExternally(url)
-            }
-
             delegate: FileDelegate { }
 
             headerPositioning: ListView.OverlayHeader
 
             header: Column {
                 width: browser.width
-                height: 72
+                height: 80
                 z:2
 
                 Rectangle {
@@ -223,14 +218,29 @@ Item {
                     }
                 }
 
-
-
                 Row {
                     width: parent.width
-                    height: 32
+                    height: 40
+
                     Rectangle {
-                        width: parent.width - 102
-                        height: 32
+                        width: 40
+                        height: 40
+
+                        CheckBox {
+                            onCheckedChanged: {
+                                for(var child in view.contentItem.children) {
+                                    if(view.contentItem.children[child] instanceof FileDelegate) {
+                                        var checkbox = view.contentItem.children[child].children[0].children[0]
+                                        checkbox.checked = checked
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        width: parent.width - 112
+                        height: 40
                         Text {
                             x: 30
                             width: 230
@@ -254,13 +264,13 @@ Item {
 
                     Rectangle {
                         width: 1
-                        height: 32
+                        height: 40
                         color: "black"
                     }
 
                     Rectangle {
                         width: 100
-                        height: 32
+                        height: 40
                         Text {
                             x: 3
                             width: 100

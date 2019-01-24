@@ -162,6 +162,7 @@ Item {
     }
 
     ScrollView {
+        id: scroll
         width: parent.width
         height: parent.height - top_buttons_row.height
         y: top_buttons_row.height
@@ -182,7 +183,7 @@ Item {
 
             header: Column {
                 width: s3_browser.width
-                height: 72
+                height: 80
                 z:2
 
                 Rectangle {
@@ -241,10 +242,27 @@ Item {
 
                 Row {
                     width: parent.width
-                    height: 32
+                    height: 40
+
                     Rectangle {
-                        width: parent.width - 102
-                        height: 32
+                        width: 40
+                        height: 40
+
+                        CheckBox {
+                            onCheckedChanged: {
+                                for(var child in view.contentItem.children) {
+                                    if(view.contentItem.children[child] instanceof S3ObjectDelegate) {
+                                        var checkbox = view.contentItem.children[child].children[0].children[0]
+                                        checkbox.checked = checked
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        width: parent.width - 112
+                        height: 40
                         Text {
                             x: 30
                             width: 230
@@ -259,15 +277,16 @@ Item {
                             }
                         }
                     }
+
                     Rectangle {
                         width: 1
-                        height: 32
+                        height: 40
                         color: "black"
                     }
 
                     Rectangle {
                         width: 100
-                        height: 32
+                        height: 40
                         Text {
                             x: 3
                             width: 100

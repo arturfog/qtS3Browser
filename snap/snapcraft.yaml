@@ -1,5 +1,5 @@
 name: qts3browser
-version: '1.0.12' 
+version: '1.0.13' 
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
@@ -15,11 +15,13 @@ apps:
     - home
     - mount-observe
     - network
+    - network-bind
     - opengl
     - pulseaudio
     - unity7
     - x11
-    - hardware-observe
+    - mount-observe
+    - removable-media
     desktop: usr/share/applications/s3browser.desktop
     environment:
         LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.11.3/lib:$SNAP/opt/Qt5.11.3/plugins/platforms
@@ -27,8 +29,8 @@ apps:
         QML2_IMPORT_PATH: $SNAP/opt/Qt5.11.3/qml
         QT_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins
         QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins/platforms
-        QT_XCB_GL_INTEGRATION: none
-        QT_STYLE_OVERRIDE: gtk
+        #QT_XCB_GL_INTEGRATION: none
+        #QT_STYLE_OVERRIDE: gtk
         #QT_QPA_PLATFORMTHEME: gtk3
         #QT_XCB_GL_INTEGRATION: xcb_egl
         #QT_LOGGING_RULES: "*.debug=false"
@@ -61,6 +63,8 @@ parts:
        - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_armhf.deb
     source-type: deb
     stage-packages:
+        - on amd64: i965-va-driver
+        - on i386: i965-va-driver
         - fontconfig
         - icu-devtools
         - libcups2
@@ -115,7 +119,6 @@ parts:
         - libxcb-xinerama0
         - libpulse0
         - vdpau-va-driver
-        - i965-va-driver
         - mesa-utils
         - mesa-vdpau-drivers
         - fonts-freefont-ttf
@@ -146,8 +149,8 @@ parts:
   application:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_i386.deb
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_i386.deb
       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
     source-type: deb
     override-build: |

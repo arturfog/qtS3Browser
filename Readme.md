@@ -1,12 +1,14 @@
 # qtS3Browser
+
+
 | Service | Status                                         |
 | ------- | ---------------------------------------------- |
 | Snap | [![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser) |
 | Travis CI | [![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#) |
 | Appveyor | [![Build status](https://ci.appveyor.com/api/projects/status/niv2eo6816w73tp9?svg=true)](https://ci.appveyor.com/project/arturfog/qts3browser) |
-| Coverity | [![Covertiy status](https://scan.coverity.com/projects/16944/badge.svg)](https://scan.coverity.com/projects/arturfog-qts3browser) |
+| Gitlab (mirror) | [![gitlab mirror](https://img.shields.io/badge/code%20mirror-gitlab-blue.svg)](https://gitlab.com/arturfog/qts3browser/commits/master) |
 | SonarCloud | [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=arturfog_qtS3Browser&metric=alert_status)](https://sonarcloud.io/dashboard?id=arturfog_qtS3Browser) |
-| Gitter | [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/qtS3Browser/community) |
+| Gitter | [![Gitter](https://badges.gitter.im/arturfog/qtS3Browser.svg)](https://gitter.im/arturfog/qtS3Browser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) |
 
 Simple **Amazon S3** client written in C++/QT
 
@@ -20,11 +22,11 @@ It's recommended to use S3rver (https://github.com/jamhall/s3rver)
 
 ## Build:
 
-![ubuntu](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_ubuntu_icon.png)
+![ubuntu](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_ubuntu_icon.png)
 ### Ubuntu
 - use build_ubuntu.sh script
 
-![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)
+![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_osx_icon.png)
 ### MacOS X 
 - use build_osx.sh script
 #### To build qts3browser, following software is required
@@ -39,7 +41,7 @@ brew install qt5 2>&1 > /dev/null
 brew link qt5 --force
 ```
 
-![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_win10_icon.png)
+![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_win_icon.png)
 ### Windows 10
 - use build_win10.bat script
 #### To build qts3browser, following software is required
@@ -49,27 +51,41 @@ brew link qt5 --force
 
 ## Installation
 
-![ubuntu](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_ubuntu_icon.png)
-### Ubuntu
-Application will be released as snap and .deb packages (i386,x64) available on bintray
+![ubuntu](https://github.com/arturfog/qts3browser/raw/master/assets/64_ubuntu_icon.png)![fedora](https://github.com/arturfog/qts3browser/raw/master/assets/64_fedora_icon.png)![arch](https://github.com/arturfog/qts3browser/raw/master/assets/64_arch_icon.png)![mint](https://github.com/arturfog/qts3browser/raw/master/assets/64_mint_icon.png)![rpi](https://github.com/arturfog/qts3browser/raw/master/assets/64_rpi_icon.png)
+
 ```sh
 # note: application is still under active development (it's only released in experimental 'edge' channel)
 
 snap install --edge qts3browser
+```
 
--- or --
-
+![ubuntu](https://github.com/arturfog/qts3browser/raw/master/assets/64_ubuntu_icon.png)
+### Ubuntu
 install .deb packages from https://bintray.com/arturfog/oss-arturfog
 
+```sh
 # AMAZON S3 (1.7.28)
 https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb
 # QT 5.11.3
 https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb
 # qts3browser
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.9_amd64.deb
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_amd64.deb
 ```
 
-![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_osx_icon.png)
+![rpi](https://github.com/arturfog/qts3browser/raw/master/assets/64_rpi_icon.png)
+### Rasbian
+install .deb packages from https://bintray.com/arturfog/oss-arturfog
+
+```sh
+# AMAZON S3 (1.7.28)
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_armhf.deb
+# QT 5.11.3
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_armhf.deb
+# qts3browser
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
+```
+
+![osx](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_osx_icon.png)
 ### MacOS X (dmg)
 Application will be released as .dmg file
 
@@ -77,7 +93,7 @@ Application will be released as .dmg file
 
 https://bintray.com/arturfog/dmg-arturfog/qts3browser
 
-![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/128_win10_icon.png)
+![windows10](https://github.com/arturfog/qtS3Browser/raw/master/assets/64_win_icon.png)
 ### Windows
 Application will be relased as standalone .zip and installer file
 

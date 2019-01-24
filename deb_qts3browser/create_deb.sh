@@ -20,7 +20,10 @@ cp -vfr ../../{desktop-file,debian,qml,src,translations,inc,icons,*.qrc,s3Browse
 
 # Build package
 if [ "$ARCH" == "amd64" ]; then
-  dpkg-buildpackage -rfakeroot -I.git
+  dpkg-buildpackage -us -b -rfakeroot -I.git
+elif [ "$ARCH" == "armhf" ]; then
+  dpkg-buildpackage -us -b -aarmhf -rfakeroot -I.git
+  cp -vf debian/rulesarmhf debian/rules
 else
   cp -vf debian/rules32 debian/rules
   cp -vf debian/control32 debian/control

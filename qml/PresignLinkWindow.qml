@@ -243,6 +243,7 @@ Window {
                                 width: parent.width - 20
                                 height: parent.height
                                 font.pointSize: inputFontSize
+                                from: 1
                             }
                         }
                     }

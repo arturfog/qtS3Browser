@@ -93,7 +93,7 @@ Q_INVOKABLE QString S3Model::getFileBrowserPath() const {
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE bool S3Model::canDownload() const {
-    LogMgr::debug(Q_FUNC_INFO, getFileBrowserPath());
+    //LogMgr::debug(Q_FUNC_INFO, getFileBrowserPath());
     const QFileInfo fileInfo(getFileBrowserPath());
     if(fileInfo.isDir() && fileInfo.isWritable()) {
         return true;
@@ -255,7 +255,7 @@ Q_INVOKABLE void S3Model::removeQML(const int idx) {
 // --------------------------------------------------------------------------
 QString S3Model::getObjectSizeQML(const QString &name)
 {
-    LogMgr::debug(Q_FUNC_INFO, name);
+    //LogMgr::debug(Q_FUNC_INFO, name);
     auto search = s3.objectInfoVec.find(name.toStdString().c_str());
     if (search != s3.objectInfoVec.end()) {
         return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
@@ -308,8 +308,8 @@ const QString S3Model::generatePresignLinkQML(const QString& key, const int time
 // --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
+    //LogMgr::debug(Q_FUNC_INFO, item.fileName());
     std::lock_guard<std::mutex> lock(mut);
-    LogMgr::debug(Q_FUNC_INFO, item.fileName());
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_s3items << item;
     endInsertRows();
@@ -428,7 +428,7 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
             qsKey = getPathWithoutBucket();
         }
         s3.currentPrefix = getPathWithoutBucket().toStdString().c_str();
-        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), callback);
+        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), "", callback);
     }
 }
 // --------------------------------------------------------------------------
