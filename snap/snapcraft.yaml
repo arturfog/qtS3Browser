@@ -62,8 +62,7 @@ parts:
        - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_armhf.deb
     source-type: deb
     stage-packages:
-        - i965-va-driver on amd64
-        - i965-va-driver on i386
+        - i965-va-driver
         - fontconfig
         - icu-devtools
         - libcups2
