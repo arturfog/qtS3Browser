@@ -8,7 +8,7 @@
 | Appveyor | [![Build status](https://ci.appveyor.com/api/projects/status/niv2eo6816w73tp9?svg=true)](https://ci.appveyor.com/project/arturfog/qts3browser) |
 | Gitlab (mirror) | [![gitlab mirror](https://img.shields.io/badge/code%20mirror-gitlab-blue.svg)](https://gitlab.com/arturfog/qts3browser/commits/master) |
 | SonarCloud | [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=arturfog_qtS3Browser&metric=alert_status)](https://sonarcloud.io/dashboard?id=arturfog_qtS3Browser) |
-| Gitter | [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/qtS3Browser/community) |
+| Gitter | [![Gitter](https://badges.gitter.im/arturfog/qtS3Browser.svg)](https://gitter.im/arturfog/qtS3Browser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) |
 
 Simple **Amazon S3** client written in C++/QT
 

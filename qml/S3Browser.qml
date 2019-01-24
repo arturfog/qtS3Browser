@@ -249,7 +249,14 @@ Item {
                         height: 40
 
                         CheckBox {
-
+                            onCheckedChanged: {
+                                for(var child in view.contentItem.children) {
+                                    if(view.contentItem.children[child] instanceof S3ObjectDelegate) {
+                                        var checkbox = view.contentItem.children[child].children[0].children[0]
+                                        checkbox.checked = checked
+                                    }
+                                }
+                            }
                         }
                     }
 

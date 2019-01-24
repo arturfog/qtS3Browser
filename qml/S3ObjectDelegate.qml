@@ -184,15 +184,21 @@ Rectangle {
     }
 
     MouseArea {
+        x: 35
+        width: parent.width - 35
+        height: parent.height
         id:mouseArea
-        anchors.fill: parent
+        //anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+
         onClicked: {
             view.currentIndex = index
             if (mouse.button === Qt.RightButton) {
                 contextMenu.popup()
             } else {
-                check.checked = !check.checked
+                if(check.pressed) {
+                    check.toggle()
+                }
             }
         }
 
