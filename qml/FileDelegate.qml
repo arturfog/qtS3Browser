@@ -34,6 +34,14 @@ Rectangle {
             id: check
             anchors.verticalCenter: parent.verticalCenter
             rightPadding: 10
+
+            onCheckedChanged: {
+                if(checked) {
+                    browser.multiSelectItems += 1
+                } else {
+                    browser.multiSelectItems -= 1
+                }
+            }
         }
 
         Image {
@@ -97,11 +105,25 @@ Rectangle {
             }
         }
         MenuItem {
+            id: uploadMenuItem
             icon.source: "qrc:icons/32_upload_icon.png"
             icon.color: "transparent"
             enabled: connected
             text: qsTr('Upload') + tsMgr.emptyString
             onClicked: { upload() }
+        }
+        MenuItem {
+            visible: multiSelectItems > 0
+            height: (multiSelectItems > 0) ? uploadMenuItem.height : 0
+            icon.source: "qrc:icons/32_upload_icon.png"
+            icon.color: "transparent"
+            enabled: connected
+            text: qsTr('Upload') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            onClicked: {
+                //var fileName = folder.get(view.currentIndex, "fileName")
+                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
+                //msgDialog.open()
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
@@ -111,6 +133,18 @@ Rectangle {
                 var fileName = folder.get(view.currentIndex, "fileName")
                 msgDialog.msg = qsTr("Remove ") + fileName + " ?"
                 msgDialog.open()
+            }
+        }
+        MenuItem {
+            visible: multiSelectItems > 0
+            height: (multiSelectItems > 0) ? uploadMenuItem.height : 0
+            icon.source: "qrc:icons/32_delete_icon.png"
+            icon.color: "transparent"
+            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            onClicked: {
+                //var fileName = folder.get(view.currentIndex, "fileName")
+                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
+                //msgDialog.open()
             }
         }
     }

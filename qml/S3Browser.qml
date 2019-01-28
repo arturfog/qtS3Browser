@@ -30,6 +30,7 @@ Item {
     property alias path: view.path
     property bool connected: false
     property string footerText: ""
+    property int multiSelectItems: 0
 
     property CustomMessageDialog msgDialog: CustomMessageDialog {
         win_title: qsTr("Remove ?")

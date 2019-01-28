@@ -67,6 +67,14 @@ Rectangle {
             id: check
             anchors.verticalCenter: parent.verticalCenter
             rightPadding: 10
+
+            onCheckedChanged: {
+                if(checked) {
+                    s3_browser.multiSelectItems += 1
+                } else {
+                    s3_browser.multiSelectItems -= 1
+                }
+            }
         }
 
         Image {
@@ -132,11 +140,25 @@ Rectangle {
             }
         }
         MenuItem {
+            id: downloadMenuItem
             icon.source: "qrc:icons/32_download_icon.png"
             icon.color: "transparent"
             enabled: connected && s3Model.canDownload()
             text: qsTr('Download') + tsMgr.emptyString
             onClicked: { download() }
+        }
+        MenuItem {
+            visible: multiSelectItems > 0
+            height: (multiSelectItems > 0) ? downloadMenuItem.height : 0
+            icon.source: "qrc:icons/32_download_icon.png"
+            icon.color: "transparent"
+            enabled: connected && s3Model.canDownload()
+            text: qsTr('Download') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            onClicked: {
+                //var fileName = folder.get(view.currentIndex, "fileName")
+                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
+                //msgDialog.open()
+            }
         }
         MenuItem {
             icon.source: "qrc:icons/32_endpoint_icon.png"
@@ -164,6 +186,19 @@ Rectangle {
                 } else {
                     s3Error.visible = true
                 }
+            }
+        }
+        MenuItem {
+            visible: multiSelectItems > 0
+            height: (multiSelectItems > 0) ? downloadMenuItem.height : 0
+            icon.source: "qrc:icons/32_delete_icon.png"
+            icon.color: "transparent"
+            enabled: connected && !ftModel.isTransferring()
+            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            onClicked: {
+                //var fileName = folder.get(view.currentIndex, "fileName")
+                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
+                //msgDialog.open()
             }
         }
     }
@@ -196,9 +231,6 @@ Rectangle {
             if (mouse.button === Qt.RightButton) {
                 contextMenu.popup()
             } else {
-                if(check.pressed) {
-                    check.toggle()
-                }
             }
         }
 
