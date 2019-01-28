@@ -34,6 +34,14 @@ Rectangle {
             id: check
             anchors.verticalCenter: parent.verticalCenter
             rightPadding: 10
+
+            onCheckedChanged: {
+                if(checked) {
+                    browser.multiSelectItems += 1
+                } else {
+                    browser.multiSelectItems -= 1
+                }
+            }
         }
 
         Image {
@@ -97,6 +105,7 @@ Rectangle {
             }
         }
         MenuItem {
+            id: uploadMenuItem
             icon.source: "qrc:icons/32_upload_icon.png"
             icon.color: "transparent"
             enabled: connected
@@ -104,13 +113,36 @@ Rectangle {
             onClicked: { upload() }
         }
         MenuItem {
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? uploadMenuItem.height : 0
+            icon.source: "qrc:icons/32_upload_icon.png"
+            icon.color: "transparent"
+            enabled: connected
+            text: qsTr('Upload') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
+            onClicked: {
+                uploadDialog.msg = qsTr('Upload') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                uploadDialog.open()
+            }
+        }
+        MenuItem {
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
                 var fileName = folder.get(view.currentIndex, "fileName")
-                msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                msgDialog.open()
+                delDialog.msg = qsTr("Remove ") + fileName + " ?"
+                delDialog.open()
+            }
+        }
+        MenuItem {
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? uploadMenuItem.height : 0
+            icon.source: "qrc:icons/32_delete_icon.png"
+            icon.color: "transparent"
+            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
+            onClicked: {
+                delDialog.msg = qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                delDialog.open()
             }
         }
     }

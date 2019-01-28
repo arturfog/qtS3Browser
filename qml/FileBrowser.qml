@@ -27,12 +27,56 @@ Item {
     width: 300
     property alias path: view.path
     property bool connected: false
+    property int multiSelectItems: 0
 
-    property CustomMessageDialog msgDialog: CustomMessageDialog {
-        win_title: qsTr("Remove?")
+    function uploadMultiple() {
+        var checkboxIdx = 0
+        for(var child in view.contentItem.children) {
+            if(view.contentItem.children[child] instanceof FileDelegate) {
+                var checkbox = view.contentItem.children[child].children[0].children[0]
+                if(checkbox.checked) {
+                    var fileName = folder.get(checkboxIdx, "fileName")
+                    var s3path = "s3://" + s3Model.getS3PathQML() + fileName
+                    var localPath = folder.get(checkboxIdx, "filePath")
+                    // upload in progress, add transfer to queue
+                    ftModel.addTransferToQueueQML(fileName, localPath, s3path)
+                }
+                checkboxIdx += 1
+            }
+        }
+    }
+
+    function deleteMultiple() {
+        for(var child in view.contentItem.children) {
+            if(view.contentItem.children[child] instanceof FileDelegate) {
+                var checkbox = view.contentItem.children[child].children[0].children[0]
+                if(checkbox.checked) {
+
+                }
+            }
+        }
+    }
+
+    property CustomMessageDialog delDialog: CustomMessageDialog {
+        win_title: qsTr("Remove ?")
         yesAction: function() {
-            var filePath = folder.get(view.currentIndex, "filePath")
-            fsModel.removeQML(filePath);
+            if(multiSelectItems <= 1) {
+                var filePath = folder.get(view.currentIndex, "filePath")
+                fsModel.removeQML(filePath);
+                multiSelectItems -= 1
+            } else {
+                deleteMultiple()
+                multiSelectItems = 0
+            }
+        }
+    }
+
+    property CustomMessageDialog uploadDialog: CustomMessageDialog {
+        win_title: qsTr("Upload ?")
+        yesAction: function() {
+            if(multiSelectItems > 1) {
+                uploadMultiple()
+            }
         }
     }
 

@@ -30,11 +30,54 @@ Item {
     property alias path: view.path
     property bool connected: false
     property string footerText: ""
+    property int multiSelectItems: 0
 
-    property CustomMessageDialog msgDialog: CustomMessageDialog {
+    function downloadMultiple() {
+        var checkboxIdx = 0
+        for(var child in view.contentItem.children) {
+            if(view.contentItem.children[child] instanceof S3ObjectDelegate) {
+                var checkbox = view.contentItem.children[child].children[0].children[0]
+                if(checkbox.checked) {
+                    var fileName = s3Model.getItemNameQML(checkboxIdx)
+                    var s3path = "s3://" + s3Model.getS3PathQML() + fileName
+
+                    var path = s3Model.getFileBrowserPath()
+                    var localPath = "file://" + path + fileName
+                    ftModel.addTransferToQueueQML(fileName, s3path, localPath)
+                }
+                checkboxIdx +=1
+            }
+        }
+    }
+
+    function deleteMultiple() {
+        for(var child in view.contentItem.children) {
+            if(view.contentItem.children[child] instanceof S3ObjectDelegate) {
+                var checkbox = view.contentItem.children[child].children[0].children[0]
+                if(checkbox.checked) {
+
+                }
+            }
+        }
+    }
+
+    property CustomMessageDialog delDialog: CustomMessageDialog {
         win_title: qsTr("Remove ?")
         yesAction: function() {
-            s3Model.removeQML(view.currentIndex);
+            if(multiSelectItems <= 1) {
+                s3Model.removeQML(view.currentIndex);
+            } else {
+                deleteMultiple()
+            }
+        }
+    }
+
+    property CustomMessageDialog dlDialog: CustomMessageDialog {
+        win_title: qsTr("Download ?")
+        yesAction: function() {
+            if(multiSelectItems > 1) {
+                downloadMultiple()
+            }
         }
     }
 
