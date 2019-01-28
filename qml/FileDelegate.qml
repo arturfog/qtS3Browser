@@ -113,16 +113,15 @@ Rectangle {
             onClicked: { upload() }
         }
         MenuItem {
-            visible: multiSelectItems > 0
-            height: (multiSelectItems > 0) ? uploadMenuItem.height : 0
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? uploadMenuItem.height : 0
             icon.source: "qrc:icons/32_upload_icon.png"
             icon.color: "transparent"
             enabled: connected
-            text: qsTr('Upload') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            text: qsTr('Upload') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
             onClicked: {
-                //var fileName = folder.get(view.currentIndex, "fileName")
-                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                //msgDialog.open()
+                uploadDialog.msg = qsTr('Upload') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                uploadDialog.open()
             }
         }
         MenuItem {
@@ -131,20 +130,19 @@ Rectangle {
             text: qsTr('Delete') + tsMgr.emptyString
             onClicked: {
                 var fileName = folder.get(view.currentIndex, "fileName")
-                msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                msgDialog.open()
+                delDialog.msg = qsTr("Remove ") + fileName + " ?"
+                delDialog.open()
             }
         }
         MenuItem {
-            visible: multiSelectItems > 0
-            height: (multiSelectItems > 0) ? uploadMenuItem.height : 0
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? uploadMenuItem.height : 0
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
-            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
             onClicked: {
-                //var fileName = folder.get(view.currentIndex, "fileName")
-                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                //msgDialog.open()
+                delDialog.msg = qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                delDialog.open()
             }
         }
     }

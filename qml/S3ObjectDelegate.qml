@@ -148,16 +148,15 @@ Rectangle {
             onClicked: { download() }
         }
         MenuItem {
-            visible: multiSelectItems > 0
-            height: (multiSelectItems > 0) ? downloadMenuItem.height : 0
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? downloadMenuItem.height : 0
             icon.source: "qrc:icons/32_download_icon.png"
             icon.color: "transparent"
             enabled: connected && s3Model.canDownload()
-            text: qsTr('Download') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            text: qsTr('Download') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
             onClicked: {
-                //var fileName = folder.get(view.currentIndex, "fileName")
-                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                //msgDialog.open()
+                dlDialog.msg = qsTr('Download') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                dlDialog.open()
             }
         }
         MenuItem {
@@ -181,24 +180,23 @@ Rectangle {
             onClicked: {
                 if(!ftModel.isTransferring()) {
                     var fileName = s3Model.getItemNameQML(view.currentIndex)
-                    msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                    msgDialog.open()
+                    delDialog.msg = qsTr("Remove ") + fileName + " ?"
+                    delDialog.open()
                 } else {
                     s3Error.visible = true
                 }
             }
         }
         MenuItem {
-            visible: multiSelectItems > 0
-            height: (multiSelectItems > 0) ? downloadMenuItem.height : 0
+            visible: multiSelectItems > 1
+            height: (multiSelectItems > 1) ? downloadMenuItem.height : 0
             icon.source: "qrc:icons/32_delete_icon.png"
             icon.color: "transparent"
             enabled: connected && !ftModel.isTransferring()
-            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("item/s") + tsMgr.emptyString
+            text: qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString
             onClicked: {
-                //var fileName = folder.get(view.currentIndex, "fileName")
-                //msgDialog.msg = qsTr("Remove ") + fileName + " ?"
-                //msgDialog.open()
+                delDialog.msg = qsTr('Delete') + " " + multiSelectItems + " " + qsTr("items") + tsMgr.emptyString + " ?"
+                delDialog.open()
             }
         }
     }
