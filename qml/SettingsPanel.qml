@@ -32,6 +32,7 @@ Item {
     property string borderColor: "gray"
     readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
+    property var inputForRightClick: secretKey
 
     onVisibleChanged: {
         startPath.text = settingsModel.getStartPathQML()
@@ -62,6 +63,40 @@ Item {
         } else {
             input_rect.color = "#efefef"
             input_rect.border.color = borderColor
+        }
+    }
+
+    function getAbsolutePosition(node) {
+        var returnPos = {};
+        returnPos.x = 0;
+        returnPos.y = 0;
+        if(node !== undefined && node !== null) {
+            var parentValue = getAbsolutePosition(node.parent);
+            returnPos.x = parentValue.x + node.x;
+            returnPos.y = parentValue.y + node.y;
+        }
+        return returnPos;
+    }
+
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: "Cut"
+            onTriggered: {
+                inputForRightClick.cut()
+            }
+        }
+        MenuItem {
+            text: "Copy"
+            onTriggered: {
+                inputForRightClick.copy()
+            }
+        }
+        MenuItem {
+            text: "Paste"
+            onTriggered: {
+                inputForRightClick.paste()
+            }
         }
     }
 
@@ -219,6 +254,20 @@ Item {
                             wrapMode: Text.WrapAnywhere
                             onTextChanged: extendInputText(startPath, start_path_input_rect, start_path_rect)
                             onActiveFocusChanged: focusChangedHandler(startPath, start_path_input_rect)
+                            selectByMouse: true
+
+                            MouseArea {
+                                anchors.fill: parent
+                                acceptedButtons: Qt.RightButton
+                                hoverEnabled: true
+                                onClicked: {
+                                    inputForRightClick = startPath
+                                    var parentValue = getAbsolutePosition(inputForRightClick);
+                                    contextMenu.x = mouse.x;
+                                    contextMenu.y = parentValue.y
+                                    contextMenu.open();
+                                }
+                            }
                         }
                     }
                 }
@@ -383,6 +432,20 @@ Item {
                             wrapMode: Text.WrapAnywhere
                             onTextChanged: extendInputText(secretKey, secret_key_input_rect, secret_key_rect)
                             onActiveFocusChanged: focusChangedHandler(secretKey, secret_key_input_rect)
+                            selectByMouse: true
+
+                            MouseArea {
+                                anchors.fill: parent
+                                acceptedButtons: Qt.RightButton
+                                hoverEnabled: true
+                                onClicked: {
+                                    inputForRightClick = secretKey
+                                    var parentValue = getAbsolutePosition(inputForRightClick);
+                                    contextMenu.x = mouse.x;
+                                    contextMenu.y = parentValue.y
+                                    contextMenu.open();
+                                }
+                            }
                         }
 
                     }
@@ -468,6 +531,20 @@ Item {
                             wrapMode: Text.WrapAnywhere
                             onTextChanged: extendInputText(accessKey, access_key_input_rect, access_key_rect)
                             onActiveFocusChanged: focusChangedHandler(accessKey, access_key_input_rect)
+                            selectByMouse: true
+
+                            MouseArea {
+                                anchors.fill: parent
+                                acceptedButtons: Qt.RightButton
+                                hoverEnabled: true
+                                onClicked: {
+                                    inputForRightClick = accessKey
+                                    var parentValue = getAbsolutePosition(inputForRightClick);
+                                    contextMenu.x = mouse.x;
+                                    contextMenu.y = parentValue.y
+                                    contextMenu.open();
+                                }
+                            }
                         }
 
                     }
@@ -767,6 +844,20 @@ Item {
                             wrapMode: Text.WrapAnywhere
                             onTextChanged: extendInputText(endpointURL, endpoint_input_rect, endpoint_url_rect)
                             onActiveFocusChanged: focusChangedHandler(endpointURL, endpoint_input_rect)
+                            selectByMouse: true
+
+                            MouseArea {
+                                anchors.fill: parent
+                                acceptedButtons: Qt.RightButton
+                                hoverEnabled: true
+                                onClicked: {
+                                    inputForRightClick = endpointURL
+                                    var parentValue = getAbsolutePosition(inputForRightClick);
+                                    contextMenu.x = mouse.x;
+                                    contextMenu.y = parentValue.y
+                                    contextMenu.open();
+                                }
+                            }
                         }
                     }
                 }
