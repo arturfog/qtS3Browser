@@ -32,6 +32,9 @@ Window {
     property alias book_path: bookmarkPath.text
     property alias win_title: create_bookmark_win.title
     property string borderColor: "gray"
+    property int selectStart
+    property int selectEnd
+    property int curPos
 
     property string oldName: ""
 
@@ -65,6 +68,41 @@ Window {
             input_rect.border.color = borderColor
         }
     }
+
+    function getAbsolutePosition(node) {
+        var returnPos = {};
+        returnPos.x = 0;
+        returnPos.y = 0;
+        if(node !== undefined && node !== null) {
+            var parentValue = getAbsolutePosition(node.parent);
+            returnPos.x = parentValue.x + node.x;
+            returnPos.y = parentValue.y + node.y;
+        }
+        return returnPos;
+    }
+
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: "Cut"
+            onTriggered: {
+                bookmarkPath.cut()
+            }
+        }
+        MenuItem {
+            text: "Copy"
+            onTriggered: {
+                bookmarkPath.copy()
+            }
+        }
+        MenuItem {
+            text: "Paste"
+            onTriggered: {
+                bookmarkPath.paste()
+            }
+        }
+    }
+
 
     Rectangle {
         color: "#3367d6"
@@ -162,7 +200,6 @@ Window {
                         wrapMode: Text.WrapAnywhere
                         onTextChanged: extendInputText(bookmarkName, bookmark_name_input_rect, create_bookmark_rect)
                         onActiveFocusChanged: focusChangedHandler(bookmarkName, bookmark_name_input_rect)
-
                     }
                 }
             }
@@ -222,6 +259,21 @@ Window {
                         wrapMode: Text.WrapAnywhere
                         onTextChanged: extendInputText(bookmarkPath, bookmark_url_input_rect, create_bookmark_rect)
                         onActiveFocusChanged: focusChangedHandler(bookmarkPath, bookmark_url_input_rect)
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            hoverEnabled: true
+                            onClicked: {
+                                selectStart = bookmarkPath.selectionStart;
+                                selectEnd = bookmarkPath.selectionEnd;
+                                curPos = bookmarkPath.cursorPosition;
+                                var parentValue = getAbsolutePosition(bookmarkPath);
+                                contextMenu.x = mouse.x;
+                                contextMenu.y = parentValue.y
+                                contextMenu.open();
+                            }
+                        }
                     }
                 }
             }

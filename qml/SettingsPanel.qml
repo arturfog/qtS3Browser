@@ -33,6 +33,9 @@ Item {
     readonly property int labelFontSize: getMediumFontSize()
     readonly property int inputFontSize: getSmallFontSize()
     property var inputForRightClick: secretKey
+    property int selectStart
+    property int selectEnd
+    property int curPos
 
     onVisibleChanged: {
         startPath.text = settingsModel.getStartPathQML()
@@ -262,10 +265,15 @@ Item {
                                 hoverEnabled: true
                                 onClicked: {
                                     inputForRightClick = startPath
+                                    selectStart = inputForRightClick.selectionStart;
+                                    selectEnd = inputForRightClick.selectionEnd;
+                                    curPos = inputForRightClick.cursorPosition;
                                     var parentValue = getAbsolutePosition(inputForRightClick);
                                     contextMenu.x = mouse.x;
                                     contextMenu.y = parentValue.y
                                     contextMenu.open();
+                                    inputForRightClick.cursorPosition = curPos;
+                                    inputForRightClick.select(selectStart,selectEnd);
                                 }
                             }
                         }
@@ -440,6 +448,9 @@ Item {
                                 hoverEnabled: true
                                 onClicked: {
                                     inputForRightClick = secretKey
+                                    selectStart = inputForRightClick.selectionStart;
+                                    selectEnd = inputForRightClick.selectionEnd;
+                                    curPos = inputForRightClick.cursorPosition;
                                     var parentValue = getAbsolutePosition(inputForRightClick);
                                     contextMenu.x = mouse.x;
                                     contextMenu.y = parentValue.y

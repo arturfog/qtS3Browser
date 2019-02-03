@@ -31,6 +31,9 @@ Item {
     property bool connected: false
     property string footerText: ""
     property int multiSelectItems: 0
+    property int selectStart
+    property int selectEnd
+    property int curPos
 
     function downloadMultiple() {
         var checkboxIdx = 0
@@ -129,6 +132,40 @@ Item {
         path = s3Model.getS3PathQML();
         view.positionViewAtBeginning()
         view.currentIndex = 0
+    }
+
+    function getAbsolutePosition(node) {
+        var returnPos = {};
+        returnPos.x = 0;
+        returnPos.y = 0;
+        if(node !== undefined && node !== null) {
+            var parentValue = getAbsolutePosition(node.parent);
+            returnPos.x = parentValue.x + node.x;
+            returnPos.y = parentValue.y + node.y;
+        }
+        return returnPos;
+    }
+
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: "Cut"
+            onTriggered: {
+                s3_browser_path_text.cut()
+            }
+        }
+        MenuItem {
+            text: "Copy"
+            onTriggered: {
+                s3_browser_path_text.copy()
+            }
+        }
+        MenuItem {
+            text: "Paste"
+            onTriggered: {
+                s3_browser_path_text.paste()
+            }
+        }
     }
 
     Connections {
@@ -269,6 +306,21 @@ Item {
                         wrapMode: Text.WrapAnywhere
                         text: path.replace("s3://","")
                         Keys.onReturnPressed: { gotoPressed(s3_browser_path_text) }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            hoverEnabled: true
+                            onClicked: {
+                                selectStart = s3_browser_path_text.selectionStart;
+                                selectEnd = s3_browser_path_text.selectionEnd;
+                                curPos = s3_browser_path_text.cursorPosition;
+                                var parentValue = getAbsolutePosition(s3_browser_path_text);
+                                contextMenu.x = mouse.x;
+                                contextMenu.y = parentValue.y
+                                contextMenu.open();
+                            }
+                        }
                     }
 
                     Button {
