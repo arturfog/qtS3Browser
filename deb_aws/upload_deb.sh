@@ -4,4 +4,4 @@ if [ -z "$API_KEY" ]; then
   exit
 fi
 
-curl -v -T 'amazon-s3-cpp-sdk_1.6.0_amd64.deb' -H 'X-Bintray-Debian-Distribution: stretch' -H 'X-Bintray-Debian-Component: main' -H 'X-Bintray-Debian-Architecture: amd64' -uarturfog:${API_KEY} https://api.bintray.com/content/arturfog/oss-arturfog/amazon-s3-cpp-sdk/1.6.0/amazon-s3-cpp-sdk_1.6.0_amd64.deb
+curl -v -T 'amazon-s3-cpp-sdk_1.8.29_amd64.deb' -H 'X-Bintray-Debian-Distribution: stretch' -H 'X-Bintray-Debian-Component: main' -H 'X-Bintray-Debian-Architecture: amd64' -uarturfog:${API_KEY} https://api.bintray.com/content/arturfog/oss-arturfog/amazon-s3-cpp-sdk/1.8.29/amazon-s3-cpp-sdk_1.8.29_amd64.deb
