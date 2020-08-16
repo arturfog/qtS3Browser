@@ -1,9 +1,9 @@
-qt-everywhere (5.11.3) stable; urgency=low
+qt-everywhere (5.15.0) stable; urgency=low
 
   [ Breaking changes in QT SDK for C++ ]
   * updated version
 
- -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 30 Sep 2018 15:47:44 +0200
+ -- Artur Fogiel <arturprojekty1988@gmail.com>  Sun, 14 Aug 2020 15:47:44 +0200
 
 
 

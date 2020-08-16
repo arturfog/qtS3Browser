@@ -1,10 +1,10 @@
 #!/bin/bash
 
-VERSION="5.11.3"
+VERSION="5.15.0"
 # download
 if [ ! -e "qt-everywhere-src-${VERSION}.tar.xz" ]; then
   echo "Downloading sources ..."
-  wget https://download.qt.io/archive/qt/5.11/${VERSION}/single/qt-everywhere-src-${VERSION}.tar.xz
+  wget https://download.qt.io/archive/qt/5.15/${VERSION}/single/qt-everywhere-src-${VERSION}.tar.xz
 fi
 echo "Downloaded sources ..."
 

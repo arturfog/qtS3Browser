@@ -8,10 +8,14 @@ export DH_VERBOSE=1
 	dh  $@
 
 override_dh_auto_configure:
-	./configure -opensource -confirm-license -release -ssl -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /opt/Qt5.11.3
-override_dh_auto_build:
-	dh_auto_build -- -j16
-override_dh_install:
-	dh_install
+	./configure -opensource -confirm-license -release -ssl -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /opt/Qt5.15.0
+
+override_dh_auto_build-arch:
+	dh_auto_build -- -j 6
+
+override_dh_auto_install-arch:
+	dh_auto_install -Smakefile -- INSTALL_ROOT=$(CURDIR)/debian/tmp/
+	mv $(CURDIR)/debian/tmp/opt $(CURDIR)/debian/qt-everywhere/
+
 override_dh_builddeb:
 	dh_builddeb -- -Zgzip

@@ -12,11 +12,11 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	dh_auto_build -- -j 8
+
 override_dh_install:
 	dh_install
 	rm -rf ./debian/amazon-s3-cpp-sdk/tmp/
-	#cp -rf ./debian/amazon-s3-cpp-sdk/usr/lib/x86_64-linux-gnu/* ./debian/amazon-s3-cpp-sdk/usr/lib/x86_64-linux-gnu/
-	#rm -rf ./debian/amazon-s3-cpp-sdk/usr/lib/x86_64-linux-gnu/
+
 #override_dh_shlibdeps:
 #	echo "Skip ..."
 override_dh_builddeb:
