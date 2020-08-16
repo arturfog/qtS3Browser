@@ -8,7 +8,7 @@ export DH_VERBOSE=1
 	dh  $@
 
 override_dh_auto_configure:
-	./configure -opensource -confirm-license -release -ssl -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /opt/Qt5.15.0
+	./configure -opensource -confirm-license -release -ssl -bundled-xcb-xinput -skip qtwayland -skip qtwebengine -skip qtscript -nomake examples -prefix /opt/Qt5.15.0
 
 override_dh_auto_build-arch:
 	dh_auto_build -- -j 6

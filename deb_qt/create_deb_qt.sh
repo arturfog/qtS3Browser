@@ -18,7 +18,9 @@ cleanup
 #sudo apt-get install -y libraspberrypi-dev
 #sudo apt-get install libdrm-dev libgles2-mesa-dev
 #sudo apt install libfbclient2 libodbc1 libpq5 libsybdb5 libgles2-mesa-dev libxext-dev libinput-dev libxkbcommon-dev
+#sudo apt install libfontconfig1-dev libfreetype6-dev libx11-dev libx11-xcb-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libxcb-glx0-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxcd-xinerama-dev libxkbcommon-dev libxkbcommon-x11-dev
 
+#sudo apt install make g++ pkg-config libgl1-mesa-dev libxcb*-dev libfontconfig1-dev libxkbcommon-x11-dev python libgtk-3-dev
 
 #./checkout.sh
 

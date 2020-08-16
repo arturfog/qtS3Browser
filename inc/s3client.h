@@ -41,7 +41,7 @@
 
 class S3Client {
 private:
-    Aws::Client::ClientConfiguration config;
+    Aws::Client::ClientConfiguration* config;
     Aws::Auth::AWSCredentials credentials;
     Aws::SDKOptions options;
     std::shared_ptr<Aws::Transfer::TransferHandle> transferHandle;

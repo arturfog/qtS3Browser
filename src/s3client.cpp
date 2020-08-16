@@ -59,19 +59,22 @@ void S3Client::init() {
     Aws::SDKOptions options;
     Aws::InitAPI(options);
     {
+        config = new Aws::Client::ClientConfiguration();
         retryStrategy = std::shared_ptr<Aws::Client::DefaultRetryStrategy>(new Aws::Client::DefaultRetryStrategy(5));
-        config.retryStrategy = retryStrategy;
+        config->retryStrategy = retryStrategy;
 
         loadConfig();
 
 #ifdef QT_DEBUG
+/*
         config.scheme = Aws::Http::Scheme::HTTP;
         auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 3929000);
         //auto m_limiter = Aws::MakeShared<Aws::Utils::RateLimits::DefaultRateLimiter<>>(ALLOCATION_TAG.c_str(), 29000);
         config.readRateLimiter = m_limiter;
         config.writeRateLimiter = m_limiter;
+*/
 #endif
-        std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, config));
+        std::shared_ptr<Aws::S3::S3Client> s3_client(new Aws::S3::S3Client(credentials, *config));
         m_s3client = s3_client;
 
         //
@@ -103,21 +106,21 @@ void S3Client::loadConfig()
     if(settings.contains("Region")) {
         const QString reg = settings.value("Region").toString();
         if(!reg.isEmpty()) {
-            config.region = reg.toStdString().c_str();
+            config->region = reg.toStdString().c_str();
         }
     }
 
     if(settings.contains("Endpoint")) {
         const QString end = settings.value("Endpoint").toString();
         if(!end.isEmpty()) {
-            config.endpointOverride = end.toStdString().c_str();
+            config->endpointOverride = end.toStdString().c_str();
         }
     }
 
     if(settings.contains("Timeout")) {
         const int timeout = settings.value("Timeout").toInt();
         if(timeout > 0) {
-            config.requestTimeoutMs = (timeout * 1000);
+            config->requestTimeoutMs = (timeout * 1000);
         }
     }
 }
@@ -126,7 +129,7 @@ void S3Client::reloadCredentials()
 {
     loadConfig();
 
-    m_s3client = std::make_shared<Aws::S3::S3Client>(Aws::S3::S3Client(credentials, config));
+    m_s3client = std::make_shared<Aws::S3::S3Client>(Aws::S3::S3Client(credentials, *config));
     transferConfig.s3Client = m_s3client;
 }
 // --------------------------------------------------------------------------
