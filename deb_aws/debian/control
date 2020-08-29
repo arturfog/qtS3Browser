@@ -4,8 +4,6 @@ Priority: optional
 Maintainer: Artur Fogiel <arturprojekty1988@gmail.com>
 Build-Depends:
  debhelper (>= 7.0.50),
- g++,
- make,
  pkg-config,
  zlib1g-dev, 
  libssl-dev, 

@@ -20,7 +20,7 @@ cp -vfr debian amazon-s3-cpp-sdk-1.8.29
 
 # Build package
 cd amazon-s3-cpp-sdk-1.8.29
-dpkg-buildpackage -rfakeroot -I.git
+CC=i686-linux-gnu-gcc-7 CXX=i686-linux-gnu-g++-7 dpkg-buildpackage -ai386 -rfakeroot -I.git
 
 cd ..
 cleanup

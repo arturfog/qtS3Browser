@@ -63,7 +63,11 @@ return QDir::homePath();
 #elif _WIN32
 return QString("/").append(QDir::homePath());
 #else
-return QDir::homePath();
+QDir home(QDir::homePath());
+if(!home.exists()) {
+    return QString("/Users");
+}
+return home;
 #endif
 }
 // --------------------------------------------------------------------------
