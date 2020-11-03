@@ -14,7 +14,7 @@ Package: amazon-s3-cpp-sdk
 Section: misc
 Architecture: any
 Depends:
- libssl1.0.0,
+ libssl1.1,
  zlib1g,
  libkrb5-3,
  libgssapi3-heimdal,

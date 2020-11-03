@@ -5,6 +5,9 @@ description: |
           Amazon S3 client written in QT.
 grade: 'stable' 
 confinement: 'strict' 
+base: core18
+architectures:
+  - build-on: amd64, i386, armhf
 
 apps:
   s3browser:
@@ -23,11 +26,11 @@ apps:
     - removable-media
     desktop: usr/share/applications/s3browser.desktop
     environment:
-        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.11.3/lib:$SNAP/opt/Qt5.11.3/plugins/platforms
-        QML_IMPORT_PATH: $SNAP/opt/Qt5.11.3/qml
-        QML2_IMPORT_PATH: $SNAP/opt/Qt5.11.3/qml
-        QT_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins
-        QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.11.3/plugins/platforms
+        LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/opt/Qt5.15.0/lib:$SNAP/opt/Qt5.15.0/plugins/platforms
+        QML_IMPORT_PATH: $SNAP/opt/Qt5.15.0/qml
+        QML2_IMPORT_PATH: $SNAP/opt/Qt5.15.0/qml
+        QT_PLUGIN_PATH: $SNAP/opt/Qt5.15.0/plugins
+        QT_QPA_PLATFORM_PLUGIN_PATH: $SNAP/opt/Qt5.15.0/plugins/platforms
         #QT_XCB_GL_INTEGRATION: none
         QT_STYLE_OVERRIDE: gtk
         QT_FONT_DPI: 96
@@ -43,9 +46,12 @@ parts:
       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_armhf.deb
     source-type: deb
     stage-packages:
-       - libssl1.0.0
+       - libssl1.1
        - zlib1g
-       - libcurl3
+       - on i386:
+           - libcurl3
+       - on amd64:
+           - libcurl4
        - libkrb5-3
        - libgssapi3-heimdal
        - libroken18-heimdal
@@ -58,22 +64,29 @@ parts:
   qt510:
     plugin: dump
     source: 
-       - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb
-       - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_i386.deb
+       - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_amd64.deb
+       - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_i386.deb
        - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_armhf.deb
     source-type: deb
     stage-packages:
-        - i965-va-driver
+        - on amd64: 
+            - i965-va-driver
+            - libdrm-amdgpu1
+            - libdrm-intel1
+            - libdrm-nouveau2
+            - libdrm-radeon1
+        - on i386:      
+             - i965-va-driver
+             - libdrm-amdgpu1
+             - libdrm-intel1
+             - libdrm-nouveau2
+             - libdrm-radeon1
         - fontconfig
         - icu-devtools
         - libcups2
         - libdbus-1-3
         - libdrm2
         - libdrm-common
-        - libdrm-amdgpu1
-        - libdrm-nouveau2
-        - libdrm-radeon1
-        - libdrm-intel1
         - libfontconfig1
         - libfreetype6
         - libgbm1
@@ -114,7 +127,7 @@ parts:
         - libxkbcommon-x11-0
         - libxrender1
         - zlib1g
-        - libdouble-conversion1v5
+        - libdouble-conversion1
         - libxcb-xinerama0
         - libpulse0
         - vdpau-va-driver
@@ -148,8 +161,8 @@ parts:
   application:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.14_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.14_i386.deb
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.15_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.15_i386.deb
       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
     source-type: deb
     override-build: |
@@ -165,12 +178,12 @@ parts:
       - libxext6
       - libxfixes3
       - libxxf86vm1
-      - libdouble-conversion1v5
+      - libdouble-conversion1
       - libdrm2
       - libglapi-mesa
       - libgraphite2-3
       - libharfbuzz0b
-      - libicu55
+      - libicu60
       - libpcre16-3
       - libproxy1v5
       - libxcb-dri2-0

@@ -2,8 +2,8 @@
 clone_folder: c:\projects\qts3browser
 
 platform:
- - x86
-image: Visual Studio 2015
+ - x64
+image: Visual Studio 2019
 
 configuration: Release
 
@@ -12,14 +12,15 @@ branches:
     - master
 
 install:
-  - set MINGW_PATH=C:\Qt\5.15.1\mingw81_32
-  - set QTDIR=C:\Qt\5.15.1\msvc2019
-  - set PATH=C:\Program Files (x86)\MSBuild\14.0\bin;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
+  - set MINGW_PATH=C:\Qt\5.15.1\msvc2019_64
+  - set QTDIR=C:\Qt\5.15.1\msvc2019_64
+  - set PATH=C:\Program Files (x86)\MSBuild\14.0\bin;%MINGW_PATH%\bin;C:\MinGW\msys\1.0\bin\;%QTDIR%\bin;;%PATH%
   # Install Inno Setup
   - choco install InnoSetup
 
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+  # - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
   # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
@@ -27,36 +28,37 @@ build_script:
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" mkdir c:\projects\aws
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd .\deb_aws
   
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/aws/aws-sdk-cpp.git 
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/arturfog/aws-sdk-cpp.git
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer -DCMAKE_BUILD_TYPE=Release ..
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev --build .
+  # - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev --build .
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" dir
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" make -j 2
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" msbuild /p:Configuration=Release ALL_BUILD.vcxproj
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-core\Release\aws-cpp-sdk-core.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-core.dll c:\projects\aws
- 
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-core.dll c:\projects\aws
+  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws*.dll c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-s3\Release\aws-cpp-sdk-s3.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-s3.dll c:\projects\aws
- 
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-s3.dll c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\aws-cpp-sdk-transfer\Release\aws-cpp-sdk-transfer.lib c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-transfer.dll c:\projects\aws
-  
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-common.dll c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-checksums.dll c:\projects\aws
-  - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-event-stream.dll c:\projects\aws
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-cpp-sdk-transfer.dll c:\projects\aws
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-common.dll c:\projects\aws
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-checksums.dll c:\projects\aws
+  #- if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" cp C:\projects\qts3browser\deb_aws\aws-sdk-cpp\build\bin\Release\aws-c-event-stream.dll c:\projects\aws
   
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-core\include\* c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-s3\include\* c:\projects\aws
   - if exist "C:\projects\qts3browser\deb_aws\aws-sdk-cpp" xcopy /F /E C:\projects\qts3browser\deb_aws\aws-sdk-cpp\aws-cpp-sdk-transfer\include\* c:\projects\aws
-  
+  - cd C:\projects\qts3browser
   - mkdir .\build && cd .\build
-  - qmake -v && qmake ..\s3Browser.pro "CONFIG+=release" "CONFIG+=qml_release" -spec win32-msvc -config release && nmake /f Makefile.Release
+  - qmake -v 
+  - qmake ..\s3Browser.pro "CONFIG+=release" "CONFIG+=qml_release" -spec win32-msvc -config release
+  - dir
+  - nmake VERBOSE=1 /f Makefile.Release
 
   # Bundle all dependencies
   - ps: |
@@ -66,14 +68,18 @@ build_script:
       cp release\s3browser.exe distrib
       
       #mkdir distrib\64
-      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\msvcp140.dll" distrib
-      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.OPENMP\vcomp140.dll" distrib
-      cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\vcruntime140.dll" distrib
+      dir "c:\Windows\system32\*vc*.dll"
+      cp "c:\Windows\system32\msvcp140.dll" distrib
+      cp "c:\Windows\system32\vcomp140.dll" distrib
+      cp "c:\Windows\system32\vcruntime140.dll" distrib
+      # cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\msvcp140.dll" distrib
+      # cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.OPENMP\vcomp140.dll" distrib
+      # cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x86\Microsoft.VC140.CRT\vcruntime140.dll" distrib
       #cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.CRT\msvcp140.dll" distrib\64
       #cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.OPENMP\vcomp140.dll" distrib\64
       #cp "c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\redist\x64\Microsoft.VC140.CRT\vcruntime140.dll" distrib\64
-      cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x86\*" distrib
-      #cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x64\*" distrib\64
+      #cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x86\*" distrib
+      cp "c:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x64\*" distrib\64
 
       7z a -y distrib.zip distrib
 

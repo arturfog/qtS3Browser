@@ -4,7 +4,7 @@
 | Service | Status                                         |
 | ------- | ---------------------------------------------- |
 | Snap | [![qts3browser](https://snapcraft.io/qts3browser/badge.svg)](https://snapcraft.io/qts3browser) |
-| Travis CI | [![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#) |
+| Travis CI | [![Travis Status](https://travis-ci.com/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#) |
 | Appveyor | [![Build status](https://ci.appveyor.com/api/projects/status/niv2eo6816w73tp9?svg=true)](https://ci.appveyor.com/project/arturfog/qts3browser) |
 | Gitlab (mirror) | [![gitlab mirror](https://img.shields.io/badge/code%20mirror-gitlab-blue.svg)](https://gitlab.com/arturfog/qts3browser/commits/master) |
 | SonarCloud | [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=arturfog_qtS3Browser&metric=alert_status)](https://sonarcloud.io/dashboard?id=arturfog_qtS3Browser) |

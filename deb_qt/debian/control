@@ -30,5 +30,5 @@ Package: qt-everywhere
 Section: misc
 Architecture: any
 Depends:
- libssl1.0.0
+ libssl1.1
 Description: Complete software development framework. QT. Easily create connected devices, UIs and applications with native C++ performance. It's powerful, yet compact, has intuitive tools and libraries and will blow your mind!
