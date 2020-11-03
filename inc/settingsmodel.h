@@ -26,7 +26,7 @@ private:
     static const QString extractKey(const QString& line);
     //
     static const constexpr int MAX_TIMEOUT_IDX = 6;
-    static const constexpr int MAX_REGION_IDX = 5;
+    static const constexpr int MAX_REGION_IDX = 20;
 public:
     explicit SettingsModel(QObject *parent = nullptr);
     // --------------------------------------------------------------------------

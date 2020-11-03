@@ -1,5 +1,5 @@
 name: qts3browser
-version: '1.0.14' 
+version: '1.0.15' 
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
@@ -38,8 +38,8 @@ parts:
   aws:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_i386.deb
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_amd64.deb
+      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_i386.deb
       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_armhf.deb
     source-type: deb
     stage-packages:

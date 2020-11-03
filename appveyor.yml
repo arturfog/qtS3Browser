@@ -12,9 +12,9 @@ branches:
     - master
 
 install:
-  - set MINGW_PATH=C:\Qt\Tools\mingw81_32
-  - set QTDIR=C:\Qt\5.15.0\msvc2019
-  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
+  - set MINGW_PATH=C:\Qt\5.15.1\mingw81_32
+  - set QTDIR=C:\Qt\5.15.1\msvc2019
+  - set PATH=C:\Program Files (x86)\MSBuild\14.0\bin;%MINGW_PATH%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
   # Install Inno Setup
   - choco install InnoSetup
 
@@ -32,7 +32,7 @@ build_script:
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer -DCMAKE_BUILD_TYPE=Release ..
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev --build . --config Release -j 4
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev --build . --config Release
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
