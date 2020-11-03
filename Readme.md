@@ -3,7 +3,7 @@
 
 | Service | Status                                         |
 | ------- | ---------------------------------------------- |
-| Snap | [![Snap Status](https://build.snapcraft.io/badge/arturfog/qtS3Browser.svg)](https://build.snapcraft.io/user/arturfog/qtS3Browser) |
+| Snap | [![qts3browser](https://snapcraft.io/qts3browser/badge.svg)](https://snapcraft.io/qts3browser) |
 | Travis CI | [![Travis Status](https://travis-ci.org/arturfog/qtS3Browser.svg?branch=master)](https://travis-ci.org/arturfog/qtS3Browser#) |
 | Appveyor | [![Build status](https://ci.appveyor.com/api/projects/status/niv2eo6816w73tp9?svg=true)](https://ci.appveyor.com/project/arturfog/qts3browser) |
 | Gitlab (mirror) | [![gitlab mirror](https://img.shields.io/badge/code%20mirror-gitlab-blue.svg)](https://gitlab.com/arturfog/qts3browser/commits/master) |
@@ -64,12 +64,12 @@ snap install --edge qts3browser
 install .deb packages from https://bintray.com/arturfog/oss-arturfog
 
 ```sh
-# AMAZON S3 (1.7.28)
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_amd64.deb
-# QT 5.11.3
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_amd64.deb
+# AMAZON S3 (1.8.29)
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_amd64.deb
+# QT 5.15.0
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_amd64.deb
 # qts3browser
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.13_amd64.deb
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.14_amd64.deb
 ```
 
 ![rpi](https://github.com/arturfog/qts3browser/raw/master/assets/64_rpi_icon.png)
@@ -77,10 +77,10 @@ https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser
 install .deb packages from https://bintray.com/arturfog/oss-arturfog
 
 ```sh
-# AMAZON S3 (1.7.28)
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.7.28_armhf.deb
-# QT 5.11.3
-https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.11.3_armhf.deb
+# AMAZON S3 (1.8.29)
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_armhf.deb
+# QT 5.15.0
+https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_armhf.deb
 # qts3browser
 https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
 ```
