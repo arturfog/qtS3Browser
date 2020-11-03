@@ -2,7 +2,7 @@ language: cpp
 compiler:
   - gcc
 cache: ccache
-matrix:
+jobs:
   include:
     - os: osx
       osx_image: xcode9.4
@@ -26,29 +26,23 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then docker run -it -v $TRAVIS_BUILD_DIR:$TRAVIS_BUILD_DIR -v $HOME/.ccache:$HOME/.ccache -v $HOME/.sonar:$HOME/.sonar -w $TRAVIS_BUILD_DIR --env CC --env CXX --env TRAVIS_BUILD_DIR --env TRAVIS_BUILD_TYPE ubuntu:xenial /bin/bash ./ci_build.sh; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then ./ci_macos.sh; fi
 
-cache:
-  directories:
-    - '$HOME/.sonar/cache'
-
 deploy:
   - provider: bintray
     file: ".travis_desc.json"
     user: "arturfog"
     key:
       - secure: "RQ0uErGhXAMwNImMHk4ZIOwiazOXGiFGlEEfPHtZpH9p5FzcRFYdL9ClcwRscbArW1xzLbTYOMs4fkiExZp9h4fZ/Qc8lwM+Z2YYmNwKSgh5MVKgPfsGaeI8bcW4l4ZBxNZ4ZrUAfJeQZDVsZNAxc/Fy3B7h69Px2WDaWdXq/RDFK0CmkfKWfmI6pIxbmwsE14ehniA/fwXpaD+sOpXby2PbGDmv+wvsZASYYttBiz4/RZAU/2oDB+oAF3NApLzC8p4xC7pJ/MRJ9XHcHVDjaD1gmGZKbfWKIWSJPicXlw2YS5/3QyqF573Y9iCTLq37kL4HMmgqxtj0pk1nEnz8osDWZaIf4VjL0Oi7gW2kwSs8TWtJ2shbKC0tezdAqTnBaMSP0NpV6Slp2fOGl+2TIF1zSTdQaA2FHtQgZ7fHC4PkVoctc7x3r6wos/vWhueWSXLhR0576hm0uYLkiBxNU/JtTs5uqJaEacbKfy9RwxOzmjRbw6oducwhhG0aWvd386u5xlxkZqTEd9szKX4XNuuoTUHfCrDmZ1Q2q3gfnBNPJeKLnZUKQ6PCyhn4TyH7FEJ0WLV9PMtVUIfGt5jycH5egQ+e7dmdzzAOtoOkVioZ/EelxN7nE2CdHXKF7ackVqvWpQYQYAMuPZZR/09fWNr/TFHkniG+pxm7fo8w3Yo="
-    skip_cleanup: true
-    dry_run: false
-    on: master
-    condition: $TRAVIS_OS_NAME = linux
+    on: 
+      branch: master
+      condition: $TRAVIS_OS_NAME = linux
   - provider: bintray
     file: ".travis_desc_mac.json"
     user: "arturfog"
     key:
       - secure: "RQ0uErGhXAMwNImMHk4ZIOwiazOXGiFGlEEfPHtZpH9p5FzcRFYdL9ClcwRscbArW1xzLbTYOMs4fkiExZp9h4fZ/Qc8lwM+Z2YYmNwKSgh5MVKgPfsGaeI8bcW4l4ZBxNZ4ZrUAfJeQZDVsZNAxc/Fy3B7h69Px2WDaWdXq/RDFK0CmkfKWfmI6pIxbmwsE14ehniA/fwXpaD+sOpXby2PbGDmv+wvsZASYYttBiz4/RZAU/2oDB+oAF3NApLzC8p4xC7pJ/MRJ9XHcHVDjaD1gmGZKbfWKIWSJPicXlw2YS5/3QyqF573Y9iCTLq37kL4HMmgqxtj0pk1nEnz8osDWZaIf4VjL0Oi7gW2kwSs8TWtJ2shbKC0tezdAqTnBaMSP0NpV6Slp2fOGl+2TIF1zSTdQaA2FHtQgZ7fHC4PkVoctc7x3r6wos/vWhueWSXLhR0576hm0uYLkiBxNU/JtTs5uqJaEacbKfy9RwxOzmjRbw6oducwhhG0aWvd386u5xlxkZqTEd9szKX4XNuuoTUHfCrDmZ1Q2q3gfnBNPJeKLnZUKQ6PCyhn4TyH7FEJ0WLV9PMtVUIfGt5jycH5egQ+e7dmdzzAOtoOkVioZ/EelxN7nE2CdHXKF7ackVqvWpQYQYAMuPZZR/09fWNr/TFHkniG+pxm7fo8w3Yo="
-    skip_cleanup: true
-    dry_run: false
-    on: master
-    condition: $TRAVIS_OS_NAME = osx
+    on: 
+      branch: master
+      condition: $TRAVIS_OS_NAME = osx
 
 notifications:
   email: false

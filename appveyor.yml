@@ -33,6 +33,8 @@ build_script:
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev -DBUILD_SHARED_LIBS=ON -DENABLE_TESTING=OFF -DBUILD_ONLY=s3 -DBUILD_ONLY=transfer -DCMAKE_BUILD_TYPE=Release ..
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cmake -Wno-error=dev --build .
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" dir
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" make -j 2
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd ..\..\..\
 
