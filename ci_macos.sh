@@ -6,7 +6,7 @@ HOMEBREW_NO_AUTO_UPDATE=1 brew install qt5 2>&1 > /dev/null
 brew link qt5 --force
 
 # AWS
-cd deb_aws 
+cd deb_aws
 
 ./build_mac.sh
 
@@ -33,9 +33,10 @@ cp -vfr ../deb_aws/aws-sdk-cpp/aws-cpp-sdk-s3/include/* ./
 /usr/local/opt/qt5/bin/qmake ../s3Browser.pro CONFIG+=release && make
 /usr/local/opt/qt5/bin/macdeployqt s3browser.app -always-overwrite -verbose=2 -qmldir=../qml
 
+export PATH="$PATH:/Applications/Xcode-9.4.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
 curl -o /tmp/macdeployqtfix.py https://raw.githubusercontent.com/aurelien-rainone/macdeployqtfix/master/macdeployqtfix.py
 
-python /tmp/macdeployqtfix.py ./s3browser.app/Contents/MacOS/qts3browser /usr/local/Cellar/qt5/5.11.2/
+python /tmp/macdeployqtfix.py ./s3browser.app/Contents/MacOS/qts3browser /usr/local/Cellar/qt5/5.13.2/
 
 cp libaws-cpp-sdk*.dylib ./s3browser.app/Contents/Frameworks/
 install_name_tool -id libaws-cpp-sdk-core.dylib s3browser.app/Contents/Frameworks/libaws-cpp-sdk-core.dylib

@@ -28,7 +28,7 @@ build_script:
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" mkdir c:\projects\aws
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd .\deb_aws
   
-  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 https://github.com/arturfog/aws-sdk-cpp.git
+  - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" git clone --depth 1 --branch 1.8.29 https://github.com/arturfog/aws-sdk-cpp.git
   
   - if not exist "c:\projects\aws\aws-cpp-sdk-core.lib" cd aws-sdk-cpp && mkdir build && cd build
   
