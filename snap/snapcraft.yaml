@@ -7,7 +7,7 @@ grade: 'stable'
 confinement: 'strict' 
 base: core18
 architectures:
-  - build-on: amd64, i386, armhf
+  - build-on: [amd64, i386, armhf]
 
 apps:
   s3browser:
