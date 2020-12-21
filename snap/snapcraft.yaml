@@ -7,7 +7,15 @@ grade: 'stable'
 confinement: 'strict' 
 base: core18
 architectures:
-  - build-on: [amd64, i386, armhf]
+  - build-on: amd64
+    run-on: amd64
+
+  - build-on: i386
+    run-on: i386
+
+  - build-on: armhf
+    run-on: armhf
+    build-error: ignore
 
 apps:
   s3browser:
@@ -136,9 +144,9 @@ parts:
         - fonts-freefont-ttf
         - dbus-x11
         - libegl1-mesa
-        - libva-drm1
-        - libva-x11-1
-        - libva1
+        - libva-drm2
+        - libva-x11-2
+        - libva2
         - libvdpau1
         - libxcb-composite0
         - libxcb-xv0
