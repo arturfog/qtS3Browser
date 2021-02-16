@@ -1,5 +1,5 @@
 name: qts3browser
-version: '1.0.15' 
+version: '1.1.0' 
 summary: Amazon S3 client written in QT
 description: |
           Amazon S3 client written in QT.
@@ -9,12 +9,6 @@ base: core18
 architectures:
   - build-on: amd64
     run-on: amd64
-  
-  - build-on: i386
-    run-on: i386
-  
-  - build-on: armhf
-    run-on: [armhf, arm64]
 
 apps:
   s3browser:
@@ -48,17 +42,12 @@ parts:
   aws:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_i386.deb
-      - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.29_armhf.deb
+      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.142_amd64.deb
     source-type: deb
     stage-packages:
        - libssl1.1
        - zlib1g
-       - on i386:
-           - libcurl3
-       - on amd64:
-           - libcurl4
+       - libcurl4
        - libkrb5-3
        - libgssapi3-heimdal
        - libroken18-heimdal
@@ -72,8 +61,6 @@ parts:
     plugin: dump
     source: 
        - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_amd64.deb
-       - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_i386.deb
-       - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_armhf.deb
     source-type: deb
     stage-packages:
         - on amd64: 
@@ -82,12 +69,6 @@ parts:
             - libdrm-intel1
             - libdrm-nouveau2
             - libdrm-radeon1
-        - on i386:      
-             - i965-va-driver
-             - libdrm-amdgpu1
-             - libdrm-intel1
-             - libdrm-nouveau2
-             - libdrm-radeon1
         - fontconfig
         - icu-devtools
         - libcups2
@@ -169,8 +150,6 @@ parts:
     plugin: dump
     source: 
       - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.15_amd64.deb
-      - on i386: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.15_i386.deb
-      - on armhf: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.12_armhf.deb
     source-type: deb
     override-build: |
       snapcraftctl build

@@ -12,14 +12,14 @@
     },
 
     "version": {
-        "name": "1.0.15",
+        "name": "1.1.0",
         "desc": "",
-        "released": "2020-11-03",
+        "released": "2021-02-17",
         "gpgSign": true
     },
 
     "files":
-    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/s3browser_1.0.15.dmg",
+    [{"includePattern": "build/deploy/s3browser.dmg", "uploadPattern": "dmg/s3browser_1.1.0.dmg",
           "matrixParams": {
             "override": 1
           }

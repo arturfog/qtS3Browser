@@ -1,4 +1,4 @@
-amazon-s3-cpp-sdk (1.8.29) stable; urgency=low
+amazon-s3-cpp-sdk (1.8.142) stable; urgency=low
 
   [ Breaking changes in AWS SDK for C++ ]
   updated version

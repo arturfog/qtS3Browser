@@ -12,9 +12,9 @@
     },
 
     "version": {
-        "name": "1.0.15",
+        "name": "1.1.0",
         "desc": "",
-        "released": "2020-11-03",
+        "released": "2021-02-17",
         "gpgSign": true
     },
 
@@ -26,14 +26,6 @@
             "deb_component": "main",
             "deb_architecture": "amd64"
           }
-      },
-      {"includePattern": "deb_qts3browser/(qts3browser.*_i386\.deb)", "uploadPattern": "pool/main/m/qts3browser/$1",
-          "matrixParams": {
-            "override": 1,
-            "deb_distribution": "stretch",
-            "deb_component": "main",
-            "deb_architecture": "i386"
-          }
-      }],
+    }],
     "publish": true
 }
