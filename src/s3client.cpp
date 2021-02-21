@@ -91,37 +91,42 @@ void S3Client::init() {
 void S3Client::loadConfig()
 {
     LogMgr::debug(Q_FUNC_INFO);
+    try 
+    {
+        QSettings settings;
+        if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
+            const QString sk = settings.value("SecretKey").toString();
+            const QString ak = settings.value("AccessKey").toString();
 
-    QSettings settings;
-    if(settings.contains("AccessKey") && settings.contains("SecretKey")) {
-        const QString sk = settings.value("SecretKey").toString();
-        const QString ak = settings.value("AccessKey").toString();
-
-        if(!sk.isEmpty() && !ak.isEmpty()) {
-            credentials.SetAWSSecretKey(sk.toStdString().c_str());
-            credentials.SetAWSAccessKeyId(ak.toStdString().c_str());
+            if(!sk.isEmpty() && !ak.isEmpty()) {
+                credentials.SetAWSSecretKey(sk.toStdString().c_str());
+                credentials.SetAWSAccessKeyId(ak.toStdString().c_str());
+            }
         }
-    }
 
-    if(settings.contains("Region")) {
-        const QString reg = settings.value("Region").toString();
-        if(!reg.isEmpty()) {
-            config->region = reg.toStdString().c_str();
+        if(settings.contains("Region")) {
+            const QString reg = settings.value("Region").toString();
+            if(!reg.isEmpty()) {
+                config->region = reg.toStdString().c_str();
+            }
         }
-    }
 
-    if(settings.contains("Endpoint")) {
-        const QString end = settings.value("Endpoint").toString();
-        if(!end.isEmpty()) {
-            config->endpointOverride = end.toStdString().c_str();
+        if(settings.contains("Endpoint")) {
+            const QString end = settings.value("Endpoint").toString();
+            if(!end.isEmpty()) {
+                config->endpointOverride = end.toStdString().c_str();
+            }
         }
-    }
 
-    if(settings.contains("Timeout")) {
-        const int timeout = settings.value("Timeout").toInt();
-        if(timeout > 0) {
-            config->requestTimeoutMs = (timeout * 1000);
+        if(settings.contains("Timeout")) {
+            const int timeout = settings.value("Timeout").toInt();
+            if(timeout > 0) {
+                config->requestTimeoutMs = (timeout * 1000);
+            }
         }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        m_errorFunc((exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
@@ -166,46 +171,52 @@ void S3Client::listObjectsHandler(const Aws::S3::S3Client *,
                                   const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    if (outcome.IsSuccess())
+    try
     {
-        Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
-
-        const auto common_list = outcome.GetResult().GetCommonPrefixes();
-        const auto key(request.GetPrefix());
-        for (auto const &s3_object : common_list)
+        if (outcome.IsSuccess())
         {
-            std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
-            m_stringFunc(item);
-        }
+            Aws::Vector<Aws::S3::Model::Object> object_list = outcome.GetResult().GetContents();
 
-        ObjectInfo_S objectInfo;
-        for (auto const &s3_object : object_list)
-        {
-            objectInfo.size = s3_object.GetSize();
-            objectInfo.lastModified = s3_object.GetLastModified();
-            objectInfo.etag = s3_object.GetETag();
-            objectInfo.owner = s3_object.GetOwner().GetDisplayName();
+            const auto common_list = outcome.GetResult().GetCommonPrefixes();
+            const auto key(request.GetPrefix());
+            for (auto const &s3_object : common_list)
+            {
+                std::string item = regex_replace(s3_object.GetPrefix().c_str(), std::regex(key), "");
+                m_stringFunc(item);
+            }
 
-            const auto key(s3_object.GetKey());
-            const std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
-            objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
+            ObjectInfo_S objectInfo;
+            for (auto const &s3_object : object_list)
+            {
+                objectInfo.size = s3_object.GetSize();
+                objectInfo.lastModified = s3_object.GetLastModified();
+                objectInfo.etag = s3_object.GetETag();
+                objectInfo.owner = s3_object.GetOwner().GetDisplayName();
 
-            m_stringFunc(s3_object.GetKey().c_str());
-        }
+                const auto key(s3_object.GetKey());
+                const std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+                objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
 
-        if(outcome.GetResult().GetIsTruncated()) {
-            const auto nextMarker = object_list.back();
-            if(!nextMarker.GetKey().empty()) {
-                listObjects(request.GetBucket(),
-                        request.GetPrefix(),
-                        nextMarker.GetKey(),
-                        m_stringFunc);
+                m_stringFunc(s3_object.GetKey().c_str());
+            }
+
+            if(outcome.GetResult().GetIsTruncated()) {
+                const auto nextMarker = object_list.back();
+                if(!nextMarker.GetKey().empty()) {
+                    listObjects(request.GetBucket(),
+                            request.GetPrefix(),
+                            nextMarker.GetKey(),
+                            m_stringFunc);
+                }
             }
         }
-    }
-    else
-    {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
+        else
+        {
+            m_errorFunc(outcome.GetError().GetMessage().c_str());
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        m_errorFunc((exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
@@ -283,24 +294,29 @@ void S3Client::getObjectInfoHandler(const Aws::S3::S3Client *,
                                     const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     LogMgr::debug(Q_FUNC_INFO);
-
-    if (outcome.IsSuccess())
+    try 
     {
-        ObjectInfo_S objectInfo;
+        if (outcome.IsSuccess())
+        {
+            ObjectInfo_S objectInfo;
 
-        objectInfo.size = outcome.GetResult().GetContentLength();
-        objectInfo.type = outcome.GetResult().GetContentType();
-//        // ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601) << std::endl;
-        objectInfo.lastModified = outcome.GetResult().GetLastModified();
-        objectInfo.etag = outcome.GetResult().GetETag();
-        Aws::String key = request.GetKey();
-        std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
+            objectInfo.size = outcome.GetResult().GetContentLength();
+            objectInfo.type = outcome.GetResult().GetContentType();
+    //        // ToLocalTimeString(Aws::Utils::DateFormat::ISO_8601) << std::endl;
+            objectInfo.lastModified = outcome.GetResult().GetLastModified();
+            objectInfo.etag = outcome.GetResult().GetETag();
+            Aws::String key = request.GetKey();
+            std::string item = regex_replace(key.c_str(), std::regex(currentPrefix), "");
 
-        objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
-    }
-    else
-    {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
+            objectInfoVec.emplace(std::make_pair(item.c_str(), objectInfo));
+        }
+        else
+        {
+            m_errorFunc(outcome.GetError().GetMessage().c_str());
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        m_errorFunc((exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
@@ -324,8 +340,8 @@ void S3Client::createBucketHandler(const Aws::S3::S3Client *,
     }
     else
     {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
-        LogMgr::error(outcome.GetError().GetMessage().c_str());
+        const std::exception_ptr exp = std::current_exception();
+        m_errorFunc((exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
@@ -373,21 +389,27 @@ void S3Client::getBucketsHandler(const Aws::S3::S3Client *,
                                  const std::shared_ptr<const Aws::Client::AsyncCallerContext> &)
 {
     LogMgr::debug(Q_FUNC_INFO);
-    if (outcome.IsSuccess())
+    try 
     {
-        Aws::Vector<Aws::S3::Model::Bucket> bucket_list = outcome.GetResult().GetBuckets();
-        for (auto const &bucket : bucket_list)
+        if (outcome.IsSuccess())
         {
-            m_stringFunc(bucket.GetName().c_str());
-        }
+            Aws::Vector<Aws::S3::Model::Bucket> bucket_list = outcome.GetResult().GetBuckets();
+            for (auto const &bucket : bucket_list)
+            {
+                m_stringFunc(bucket.GetName().c_str());
+            }
 
-        if(bucket_list.size() == 0) {
-            m_stringFunc("");
+            if(bucket_list.size() == 0) {
+                m_stringFunc("");
+            }
         }
-    }
-    else
-    {
-        m_errorFunc(outcome.GetError().GetMessage().c_str());
+        else
+        {
+            m_errorFunc(outcome.GetError().GetMessage().c_str());
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        m_errorFunc((exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
