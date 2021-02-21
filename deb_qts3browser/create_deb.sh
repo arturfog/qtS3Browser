@@ -33,7 +33,7 @@ fi
 cd ..
 
 cleanup
-
+exit
 # build for sonarcloud
 if [ "$ARCH" == "amd64" ]; then
   mkdir -p build && cd build

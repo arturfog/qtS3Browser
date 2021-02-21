@@ -42,7 +42,7 @@ parts:
   aws:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/a/amazon-s3-cpp-sdk/amazon-s3-cpp-sdk_1.8.142_amd64.deb
+      - on amd64: https://github.com/arturfog/qtS3Browser/releases/download/1.1.0-pre/amazon-s3-cpp-sdk_1.8.142_amd64.deb
     source-type: deb
     stage-packages:
        - libssl1.1
@@ -60,7 +60,7 @@ parts:
   qt510:
     plugin: dump
     source: 
-       - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/q/qt-everywhere/qt-everywhere_5.15.0_amd64.deb
+       - on amd64: https://github.com/arturfog/qtS3Browser/releases/download/1.1.0-pre/qt-everywhere_5.15.0_amd64.deb
     source-type: deb
     stage-packages:
         - on amd64: 
@@ -149,7 +149,7 @@ parts:
   application:
     plugin: dump
     source: 
-      - on amd64: https://dl.bintray.com/arturfog/oss-arturfog/pool/main/m/qts3browser/qts3browser_1.0.15_amd64.deb
+      - on amd64: https://github.com/arturfog/qtS3Browser/releases/download/1.1.0-pre/qts3browser_1.1.0_amd64.deb
     source-type: deb
     override-build: |
       snapcraftctl build
