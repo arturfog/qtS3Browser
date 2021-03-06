@@ -221,19 +221,24 @@ void S3Model::downloadQML(const QString &src, const QString &dst)
 }
 // --------------------------------------------------------------------------
 Q_INVOKABLE void S3Model::gotoQML(const QString &path) {
-    LogMgr::debug(Q_FUNC_INFO, path);
-    if(!path.isEmpty()) {
-        const QStringList pathItems = path.split("s3://");
-        // if more then 2, path is invalid and contains more than one 's3://'
-        if(pathItems.count() == 2) {
-            m_s3Path.clear();
-            for(auto item: pathItems[1].split("/")) {
-                if(!item.isEmpty()) {
-                    m_s3Path.append(item + "/");
+    try {
+        LogMgr::debug(Q_FUNC_INFO, path);
+        if(!path.isEmpty()) {
+            const QStringList pathItems = path.split("s3://");
+            // if more then 2, path is invalid and contains more than one 's3://'
+            if(pathItems.count() == 2) {
+                m_s3Path.clear();
+                for(auto item: pathItems[1].split("/")) {
+                    if(!item.isEmpty()) {
+                        m_s3Path.append(item + "/");
+                    }
                 }
+                refresh();
             }
-            refresh();
         }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
@@ -256,10 +261,16 @@ Q_INVOKABLE void S3Model::removeQML(const int idx) {
 QString S3Model::getObjectSizeQML(const QString &name)
 {
     //LogMgr::debug(Q_FUNC_INFO, name);
-    auto search = s3.objectInfoVec.find(name.toStdString().c_str());
-    if (search != s3.objectInfoVec.end()) {
-        return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
-    } else {
+    try {
+        auto search = s3.objectInfoVec.find(name.toStdString().c_str());
+        if (search != s3.objectInfoVec.end()) {
+            return QString::number(s3.objectInfoVec.at(name.toStdString().c_str()).size);
+        } else {
+            return "0";
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
         return "0";
     }
 }
@@ -302,17 +313,22 @@ const QString S3Model::generatePresignLinkQML(const QString& key, const int time
 
         return link.c_str();
     }
-
     return QString();
 }
 // --------------------------------------------------------------------------
 void S3Model::addS3Item(const S3Item &item)
 {
-    //LogMgr::debug(Q_FUNC_INFO, item.fileName());
-    std::lock_guard<std::mutex> lock(mut);
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    m_s3items << item;
-    endInsertRows();
+    //
+    try 
+    {
+        std::lock_guard<std::mutex> lock(mut);
+        beginInsertRows(QModelIndex(), rowCount(), rowCount());
+        m_s3items << item;
+        endInsertRows();
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
+    }
 }
 // --------------------------------------------------------------------------
 void S3Model::clearItems() {
@@ -330,35 +346,55 @@ int S3Model::rowCount(const QModelIndex & parent) const {
 // --------------------------------------------------------------------------
 void S3Model::goTo(const QString &path)
 {
-    LogMgr::debug(Q_FUNC_INFO, path);
-    if(!path.isEmpty()) {
-        if(!path.contains("/")) {
-            m_s3Path.push_back(path + "/");
-        } else {
-            m_s3Path.push_back(path);
+    try 
+    {
+        LogMgr::debug(Q_FUNC_INFO, path);
+        if(!path.isEmpty()) 
+        {
+            if(!path.contains("/")) {
+                m_s3Path.push_back(path + "/");
+            } else {
+                m_s3Path.push_back(path);
+            }
         }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
 void S3Model::goBack()
 {
-    LogMgr::debug(Q_FUNC_INFO);
-    if(!m_s3Path.isEmpty()) { m_s3Path.removeLast(); }
-    if (m_s3Path.count() < 1) {
-        getBuckets();
-    } else {
-        getObjects(getPathWithoutBucket().toStdString(), true);
+    try 
+    {
+        LogMgr::debug(Q_FUNC_INFO);
+        if(!m_s3Path.isEmpty()) { m_s3Path.removeLast(); }
+        if (m_s3Path.count() < 1) {
+            getBuckets();
+        } else {
+            getObjects(getPathWithoutBucket().toStdString(), true);
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------
 QString S3Model::getCurrentBucket() const
 {
-    LogMgr::debug(Q_FUNC_INFO);
-    if (m_s3Path.count() >= 1) {
-        QString tmp(m_s3Path[0]);
-        return tmp.replace("/", "");
+    try 
+    {
+        LogMgr::debug(Q_FUNC_INFO);
+        if (m_s3Path.count() >= 1) {
+            QString tmp(m_s3Path[0]);
+            return tmp.replace("/", "");
+        }
+        return "";
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
+        return "";
     }
-    return "";
 }
 // --------------------------------------------------------------------------
 QString S3Model::getPathWithoutBucket() const
@@ -409,26 +445,31 @@ void S3Model::getObjects(const std::string &item, bool goBack) {
             emit this->addItemSignal(qsItem, path);
         }
     };
-    QString qsBucket(getCurrentBucket());
-    if(qsBucket.isEmpty() && (item.empty() == false)) {
-        emit this->clearItemsSignal();
-        goTo(item.c_str());
-        qsBucket = getCurrentBucket();
-    }
-    QString qsKey(item.c_str());
-    if(qsKey.compare(qsBucket) == 0 || item.empty()) {
-        qsKey = "";
-    }
-    if(qsKey.isEmpty() || qsKey.contains("/")) {
-        emit this->clearItemsSignal();
-        if (qsKey.contains("/")) {
-            if(goBack == false) {
-                goTo(item.c_str());
-            }
-            qsKey = getPathWithoutBucket();
+    try {
+        QString qsBucket(getCurrentBucket());
+        if(qsBucket.isEmpty() && (item.empty() == false)) {
+            emit this->clearItemsSignal();
+            goTo(item.c_str());
+            qsBucket = getCurrentBucket();
         }
-        s3.currentPrefix = getPathWithoutBucket().toStdString().c_str();
-        s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), "", callback);
+        QString qsKey(item.c_str());
+        if(qsKey.compare(qsBucket) == 0 || item.empty()) {
+            qsKey = "";
+        }
+        if(qsKey.isEmpty() || qsKey.contains("/")) {
+            emit this->clearItemsSignal();
+            if (qsKey.contains("/")) {
+                if(goBack == false) {
+                    goTo(item.c_str());
+                }
+                qsKey = getPathWithoutBucket();
+            }
+            s3.currentPrefix = getPathWithoutBucket().toStdString().c_str();
+            s3.listObjects(qsBucket.toStdString().c_str(), qsKey.toStdString().c_str(), "", callback);
+        }
+    } catch(...) {
+        const std::exception_ptr exp = std::current_exception();
+        LogMgr::debug(Q_FUNC_INFO, (exp ? exp.__cxa_exception_type()->name() : "null"));
     }
 }
 // --------------------------------------------------------------------------

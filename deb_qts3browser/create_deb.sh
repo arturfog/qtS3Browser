@@ -31,7 +31,7 @@ else
 fi
 
 cd ..
-
+exit
 cleanup
 exit
 # build for sonarcloud
