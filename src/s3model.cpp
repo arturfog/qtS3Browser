@@ -349,6 +349,7 @@ void S3Model::goTo(const QString &path)
     try 
     {
         LogMgr::debug(Q_FUNC_INFO, path);
+        std::lock_guard<std::mutex> lock(mut);
         if(!path.isEmpty()) 
         {
             if(!path.contains("/")) {
@@ -485,7 +486,7 @@ void S3Model::getObjectInfo(const QString &key)
 void S3Model::getBuckets() {
     LogMgr::debug(Q_FUNC_INFO);
     emit this->clearItemsSignal();
-
+    std::lock_guard<std::mutex> lock(mut);
     std::function<void(const std::string&)> callback = [&](const std::string& item) {
         emit this->addItemSignal(QString(item.c_str()), "/");
     };

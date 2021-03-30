@@ -146,7 +146,7 @@ parts:
 
   application:
     plugin: dump
-    source: https://github.com/arturfog/qtS3Browser/releases/download/1.1.0-pre/qts3browser_1.1.1_amd64.deb
+    source: https://github.com/arturfog/qtS3Browser/releases/download/1.1.0-pre/qts3browser_1.1.2_amd64.deb
     source-type: deb
     override-build: |
       snapcraftctl build
